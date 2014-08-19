@@ -9,6 +9,9 @@ class CreateCountries < ActiveRecord::Migration
     end
   end
 
+  # Ref:
+  # http://stefangabos.ro/other-projects/list-of-world-countries-with-national-flags/#download
+  #
   def self.up
     execute "
       INSERT INTO `countries` (`name`, `alpha_2`, `alpha_3`) VALUES
