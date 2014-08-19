@@ -1,0 +1,63 @@
+Wine
++.name
++.vintage
++ country
++ apelation
++ type
++ grape
+- single_estate
+- maturation_type
+- maturation_period
+- alcohol
+- sugar
+- acidity
+- ph
++ notes
++ occasion
++ food
++ allergies
+- vegetarian
+- vegan
+- organic
+
+Occasion
+- name
+
+Food
+- name
+
+Note
+- name
+
+Allergies
+- name
+
+Maturation
+- name
+
+Type
+- name
+
+GrapeName
+- name
+
+Grape
+- grapename
+- quantity
+
+Vintage
++ producer
+- year
+- region
+- subregion1
+- subregion2
+- zones
+
+Producer
+- name
+- country
+
+Country
+- name
+- alpha_2
+- alpha_3
