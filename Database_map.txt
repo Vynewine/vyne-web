@@ -21,6 +21,9 @@ Wine
 - vegan
 - organic
 
+Appellation
+- name
+
 WineOccasion
 - name
 
