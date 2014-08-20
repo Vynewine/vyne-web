@@ -1,8 +1,10 @@
 Wine
 +.name
-+.vintage
-+ country
-+ apelation
+-.vintage (year)
++ producer
++ subregion < region < country
+- area
++ appellation
 + type
 + grape
 - single_estate
@@ -19,6 +21,8 @@ Wine
 - vegetarian
 - vegan
 - organic
+
+
 
 Occasion
 - name
@@ -44,15 +48,6 @@ GrapeName
 Grape
 - grapename
 - quantity
-
-Vintage
-- year
-+ producer
-+ subregion
-? region
-? subregion1
-? subregion2
-? zones
 
 Producer
 - name

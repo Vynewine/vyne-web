@@ -27,7 +27,7 @@ class ProducersController < ApplicationController
   # POST /producers.json
   def create
     @producer = Producer.new(producer_params)
-	@producer.country = Country.find( params[ :country ] )
+  	@producer.country = Country.find( params[ :country ] )
     respond_to do |format|
       if @producer.save
         format.html { redirect_to @producer, notice: 'Producer was successfully created.' }
@@ -42,7 +42,7 @@ class ProducersController < ApplicationController
   # PATCH/PUT /producers/1
   # PATCH/PUT /producers/1.json
   def update
-	@producer.country = Country.find( params[ :country ] )
+  	@producer.country = Country.find( params[ :country ] )
     respond_to do |format|
       if @producer.update(producer_params)
         format.html { redirect_to @producer, notice: 'Producer was successfully updated.' }

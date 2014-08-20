@@ -1,6 +1,6 @@
-class CreateProducers < ActiveRecord::Migration
+class CreateRegions < ActiveRecord::Migration
   def change
-    create_table :producers do |t|
+    create_table :regions do |t|
       t.string :name
       t.integer :country_id
 
