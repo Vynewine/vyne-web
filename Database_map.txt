@@ -24,30 +24,30 @@ Wine
 
 
 
-Occasion
+WineOccasion
 - name
 
-Food
+WineFood
 - name
 
-Note
+WineNote
 - name
 
-Allergies
+WineAllergy
 - name
 
-Maturation
+WineMaturation
 - name
 
-Type
-- name
-
-GrapeName
+WineType
 - name
 
 Grape
-- grapename
++ grapename
 - quantity
+
+GrapeName
+- name
 
 Producer
 - name

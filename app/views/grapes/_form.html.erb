@@ -1,0 +1,28 @@
+<%= form_for(@grape) do |f| %>
+  <% if @grape.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@grape.errors.count, "error") %> prohibited this grape from being saved:</h2>
+
+      <ul>
+      <% @grape.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :grapename_id %><br>
+    <%= select_tag :grapename,
+        options_from_collection_for_select(@grapenames, "id", "name", :selected => @grape.grapename_id),
+        :prompt => "Choose a grape type"
+    %>
+  </div>
+  <div class="field">
+    <%= f.label :quantity %><br>
+    <%= f.number_field :quantity %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
