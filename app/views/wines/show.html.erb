@@ -1,0 +1,59 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @wine.name %>
+</p>
+
+<p>
+  <strong>Vintage:</strong>
+  <%= @wine.vintage %>
+</p>
+
+<p>
+  <strong>Area:</strong>
+  <%= @wine.area %>
+</p>
+
+<p>
+  <strong>Single estate:</strong>
+  <%= @wine.single_estate %>
+</p>
+
+<p>
+  <strong>Alcohol:</strong>
+  <%= @wine.alcohol %>
+</p>
+
+<p>
+  <strong>Sugar:</strong>
+  <%= @wine.sugar %>
+</p>
+
+<p>
+  <strong>Acidity:</strong>
+  <%= @wine.acidity %>
+</p>
+
+<p>
+  <strong>Ph:</strong>
+  <%= @wine.ph %>
+</p>
+
+<p>
+  <strong>Vegetarian:</strong>
+  <%= @wine.vegetarian %>
+</p>
+
+<p>
+  <strong>Vegan:</strong>
+  <%= @wine.vegan %>
+</p>
+
+<p>
+  <strong>Organic:</strong>
+  <%= @wine.organic %>
+</p>
+
+<%= link_to 'Edit', edit_wine_path(@wine) %> |
+<%= link_to 'Back', wines_path %>

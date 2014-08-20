@@ -5,17 +5,17 @@ Wine
 + subregion < region < country
 - area
 + appellation
-+ type
-+ grape
+* type
+* grape
 - single_estate
 - alcohol
 - sugar
 - acidity
 - ph
-+ occasion
-+ food
-+ notes
-+ allergies
+* occasion
+* food
+* notes
+* allergies
 + maturation
 - vegetarian
 - vegan

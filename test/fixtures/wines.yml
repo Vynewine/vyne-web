@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  vintage: 1
+  area: MyString
+  single_estate: false
+  alcohol: 1
+  sugar: 1
+  acidity: 1
+  ph: 1
+  vegetarian: false
+  vegan: false
+  organic: false
+
+two:
+  name: MyString
+  vintage: 1
+  area: MyString
+  single_estate: false
+  alcohol: 1
+  sugar: 1
+  acidity: 1
+  ph: 1
+  vegetarian: false
+  vegan: false
+  organic: false

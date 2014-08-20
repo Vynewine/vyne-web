@@ -1,0 +1,110 @@
+<%= form_for(@wine) do |f| %>
+  <% if @wine.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@wine.errors.count, "error") %> prohibited this wine from being saved:</h2>
+
+      <ul>
+      <% @wine.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :vintage %><br>
+    <%= f.number_field :vintage %>
+  </div>
+  <div class="field">
+    <%= f.label :producer %><br>
+    <%= select_tag :producer,
+        options_from_collection_for_select(@producers, "id", "name", :selected => @wine.producer_id),
+        :prompt => "Choose a producer"
+    %>
+  </div>
+  <div class="field">
+    <%= f.label :subregion %><br>
+    <%= select_tag :subregion,
+        options_from_collection_for_select(@subregions, "id", "name", :selected => @wine.subregion_id),
+        :prompt => "Choose a sub-region"
+    %>
+  </div>
+  <div class="field">
+    <%= f.label :area %><br>
+    <%= f.text_field :area %>
+  </div>
+  <div class="field">
+    <%= f.label :appellation %><br>
+    <%= select_tag :appellation,
+        options_from_collection_for_select(@appellations, "id", "name", :selected => @wine.appellation_id),
+        :prompt => "Choose an appellation"
+    %>
+  </div>
+  <div class="field">
+    <%= f.label :type %><br>
+    (Coming!)
+  </div>
+  <div class="field">
+    <%= f.label :grape %><br>
+    (Coming!)
+  </div>
+  <div class="field">
+    <%= f.label :single_estate %><br>
+    <%= f.check_box :single_estate %>
+  </div>
+  <div class="field">
+    <%= f.label :alcohol %><br>
+    <%= f.number_field :alcohol %>
+  </div>
+  <div class="field">
+    <%= f.label :sugar %><br>
+    <%= f.number_field :sugar %>
+  </div>
+  <div class="field">
+    <%= f.label :acidity %><br>
+    <%= f.number_field :acidity %>
+  </div>
+  <div class="field">
+    <%= f.label :ph %><br>
+    <%= f.number_field :ph %>
+  </div>
+  <div class="field">
+    <%= f.label :occasion %><br>
+    (Coming!)
+  </div>
+  <div class="field">
+    <%= f.label :food %><br>
+    (Coming!)
+  </div>
+  <div class="field">
+    <%= f.label :notes %><br>
+    (Coming!)
+  </div>
+  <div class="field">
+    <%= f.label :allergies %><br>
+    (Coming!)
+  </div>
+  <div class="field">
+    <%= f.label :maturation %><br>
+    (Coming!)
+  </div>
+  <div class="field">
+    <%= f.label :vegetarian %><br>
+    <%= f.check_box :vegetarian %>
+  </div>
+  <div class="field">
+    <%= f.label :vegan %><br>
+    <%= f.check_box :vegan %>
+  </div>
+  <div class="field">
+    <%= f.label :organic %><br>
+    <%= f.check_box :organic %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
