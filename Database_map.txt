@@ -46,18 +46,27 @@ Grape
 - quantity
 
 Vintage
-+ producer
 - year
-- region
-- subregion1
-- subregion2
-- zones
++ producer
++ subregion
+? region
+? subregion1
+? subregion2
+? zones
 
 Producer
 - name
-- country
++ country
 
-Country
+Subregion
 - name
-- alpha_2
++ region
+
+Region
+- name
++ country
++ subregion
+  ountry
+  name
+  alpha_2
 - alpha_3
