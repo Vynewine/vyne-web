@@ -1,0 +1,27 @@
+<h1>Listing wine_maturations</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Maturation type</th>
+      <th>Period</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @wine_maturations.each do |wine_maturation| %>
+      <tr>
+        <td><%= wine_maturation.maturation_type.name %></td>
+        <td><%= wine_maturation.period %></td>
+        <td><%= link_to 'Show', wine_maturation %></td>
+        <td><%= link_to 'Edit', edit_wine_maturation_path(wine_maturation) %></td>
+        <td><%= link_to 'Destroy', wine_maturation, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Wine maturation', new_wine_maturation_path %>

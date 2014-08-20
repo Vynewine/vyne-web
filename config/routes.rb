@@ -9,6 +9,14 @@ Rails.application.routes.draw do
   resources :subregions
   resources :grapenames
   resources :grapes
+  resources :wine_types
+  resources :maturation_types
+  resources :wine_maturations
+  resources :wine_allergies
+  resources :wine_notes
+  resources :wine_foods
+  resources :wine_occasions
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

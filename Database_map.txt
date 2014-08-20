@@ -8,21 +8,18 @@ Wine
 + type
 + grape
 - single_estate
-- maturation_type
-- maturation_period
 - alcohol
 - sugar
 - acidity
 - ph
-+ notes
 + occasion
 + food
++ notes
 + allergies
++ maturation
 - vegetarian
 - vegan
 - organic
-
-
 
 WineOccasion
 - name
@@ -37,6 +34,10 @@ WineAllergy
 - name
 
 WineMaturation
+- maturation_type_id
+- period
+
+MaturationType
 - name
 
 WineType

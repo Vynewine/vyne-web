@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Maturation type:</strong>
+  <%= @wine_maturation.maturation_type.name %>
+</p>
+
+<p>
+  <strong>Period:</strong>
+  <%= @wine_maturation.period %>
+</p>
+
+<%= link_to 'Edit', edit_wine_maturation_path(@wine_maturation) %> |
+<%= link_to 'Back', wine_maturations_path %>

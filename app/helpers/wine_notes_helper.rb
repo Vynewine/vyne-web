@@ -1,0 +1,2 @@
+module WineNotesHelper
+end

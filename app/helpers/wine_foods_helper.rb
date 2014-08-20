@@ -1,0 +1,2 @@
+module WineFoodsHelper
+end

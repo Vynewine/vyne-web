@@ -1,0 +1,2 @@
+module WineAllergiesHelper
+end
