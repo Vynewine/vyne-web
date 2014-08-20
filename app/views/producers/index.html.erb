@@ -13,7 +13,7 @@
     <% @producers.each do |producer| %>
       <tr>
         <td><%= producer.name %></td>
-        <td><%= producer.country %></td>
+        <td><%= producer.country.name %></td>
         <td><%= link_to 'Show', producer %></td>
         <td><%= link_to 'Edit', edit_producer_path(producer) %></td>
         <td><%= link_to 'Destroy', producer, method: :delete, data: { confirm: 'Are you sure?' } %></td>

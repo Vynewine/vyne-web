@@ -17,7 +17,10 @@
   </div>
   <div class="field">
     <%= f.label :country %><br>
-    <%= f.text_field :country %>
+    <%= select_tag :country,
+        options_from_collection_for_select(@countries, "id", "name", :selected => @producer.country.id),
+        :prompt => "Choose a country"
+    %>
   </div>
   <div class="actions">
     <%= f.submit %>
