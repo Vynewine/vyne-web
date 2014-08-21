@@ -9,13 +9,13 @@ Rails.application.routes.draw do
   resources :subregions
   resources :grapenames
   resources :grapes
-  resources :wine_types
-  resources :maturation_types
-  resources :wine_maturations
-  resources :wine_allergies
-  resources :wine_notes
-  resources :wine_foods
-  resources :wine_occasions
+  resources :types
+  resources :bottlings
+  resources :maturations
+  resources :allergies
+  resources :notes
+  resources :foods
+  resources :occasions
   resources :appellations
   resources :wines
 

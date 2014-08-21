@@ -1,5 +1,8 @@
 class CreateCountries < ActiveRecord::Migration
-  def change
+  # Ref:
+  # http://stefangabos.ro/other-projects/list-of-world-countries-with-national-flags/#download
+  #
+  def up
     create_table :countries do |t|
       t.string :name
       t.string :alpha_2
@@ -7,12 +10,6 @@ class CreateCountries < ActiveRecord::Migration
 
       t.timestamps
     end
-  end
-
-  # Ref:
-  # http://stefangabos.ro/other-projects/list-of-world-countries-with-national-flags/#download
-  #
-  def self.up
     execute "
       INSERT INTO `countries` (`name`, `alpha_2`, `alpha_3`) VALUES
       ('Afghanistan', 'af', 'afg'),
@@ -69,7 +66,7 @@ class CreateCountries < ActiveRecord::Migration
       ('Congo, The Democratic Republic of the', 'cd', 'cod'),
       ('Cook Islands', 'ck', 'cok'),
       ('Costa Rica', 'cr', 'cri'),
-      ('Cote d\'Ivoire', 'ci', 'civ'),
+      ('Cote d''Ivoire', 'ci', 'civ'),
       ('Croatia', 'hr', 'hrv'),
       ('Cuba', 'cu', 'cub'),
       ('Curacao', 'cw', 'cuw'),
@@ -132,11 +129,11 @@ class CreateCountries < ActiveRecord::Migration
       ('Kazakhstan', 'kz', 'kaz'),
       ('Kenya', 'ke', 'ken'),
       ('Kiribati', 'ki', 'kir'),
-      ('Korea, Democratic People\'s Republic of', 'kp', 'prk'),
+      ('Korea, Democratic People''s Republic of', 'kp', 'prk'),
       ('Korea, Republic of', 'kr', 'kor'),
       ('Kuwait', 'kw', 'kwt'),
       ('Kyrgyzstan', 'kg', 'kgz'),
-      ('Lao People\'s Democratic Republic', 'la', 'lao'),
+      ('Lao People''s Democratic Republic', 'la', 'lao'),
       ('Latvia', 'lv', 'lva'),
       ('Lebanon', 'lb', 'lbn'),
       ('Lesotho', 'ls', 'lso'),
@@ -266,8 +263,8 @@ class CreateCountries < ActiveRecord::Migration
       ('Zimbabwe', 'zw', 'zwe')"
   end
 
-  def self.down
-    Countries.delete_all
+  def down
+    drop_table :countries
   end
 
 end

@@ -1,3 +1,5 @@
+<%= @wine %>
+
 <%= form_for(@wine) do |f| %>
   <% if @wine.errors.any? %>
     <div id="error_explanation">
@@ -46,6 +48,26 @@
   </div>
   <div class="field">
     <%= f.label :type %><br>
+
+<%= field_set_tag 'type_ids' do %>
+  <% @types.each do |type| %>
+    <p>
+      <%= check_box_tag 'wine[type_ids][]',
+          type.id,
+          @wine.types.include?(type),
+          id: 'type_ids_' + type.id.to_s %>
+      <%= label_tag 'type_ids_' + type.id.to_s, type.name %></p>
+  <% end %>
+<% end %>
+
+
+
+<%= f.fields_for :wine_types do |builder| %>
+test
+  <% # render "types", :f => builder %>
+<% end %>
+
+
     (Coming!)
   </div>
   <div class="field">

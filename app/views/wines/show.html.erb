@@ -10,10 +10,27 @@
   <%= @wine.vintage %>
 </p>
 
+                                    <p>
+                                      producer
+                                    </p>
+                                    <p>
+                                      subregion
+                                    </p>
+
 <p>
   <strong>Area:</strong>
   <%= @wine.area %>
 </p>
+
+
+                                    <p>appellation</p>
+                      <p>
+                        <strong>Type</strong>
+                        <%= @wine.types.each do |type| %>
+                          <span><%= type.name %></span>
+                        <% end %>
+                      </p>
+                                    <p>grape</p>
 
 <p>
   <strong>Single estate:</strong>
@@ -39,6 +56,12 @@
   <strong>Ph:</strong>
   <%= @wine.ph %>
 </p>
+
+                                    <p>occasion</p>
+                                    <p>food</p>
+                                    <p>notes</p>
+                                    <p>allergies</p>
+                                    <p>maturation</p>
 
 <p>
   <strong>Vegetarian:</strong>

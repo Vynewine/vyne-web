@@ -1,4 +1,4 @@
-class WinesController < ApplicationController
+  class WinesController < ApplicationController
   before_action :set_wine, only: [:show, :edit, :update, :destroy]
 
   # GET /wines
@@ -27,17 +27,33 @@ class WinesController < ApplicationController
     @subregions = Subregion.all
     @appellations = Appellation.all
     # @wineMaturations = WineMaturation.all
+
+    @types = Type.all
   end
 
   # GET /wines/1/edit
   def edit
+    # @wine = Wine.find(wine_params[:id])
+    @producers = Producer.all
+    @subregions = Subregion.all
+    @appellations = Appellation.all
+
+    @types = Type.all
+
+    # wine_type = @wine.wine_types.build
+
   end
 
   # POST /wines
   # POST /wines.json
   def create
+    params[:wine][:type_ids] ||= []
     @wine = Wine.new(wine_params)
-
+    # type_ids = params[:type_ids].reject(&:blank?) unless params[:type_ids].nil?
+    params[:wine][:type_ids].each do |key, value|
+      @wine.types_wines.build(type_id: value)
+    end
+    
     respond_to do |format|
       if @wine.save
         format.html { redirect_to @wine, notice: 'Wine was successfully created.' }
@@ -52,6 +68,10 @@ class WinesController < ApplicationController
   # PATCH/PUT /wines/1
   # PATCH/PUT /wines/1.json
   def update
+    params[:wine][:type_ids] ||= []
+    params[:wine][:type_ids].each do |key, value|
+      @wine.types_wines.build(type_id: value)
+    end
     respond_to do |format|
       if @wine.update(wine_params)
         format.html { redirect_to @wine, notice: 'Wine was successfully updated.' }

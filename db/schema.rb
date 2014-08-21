@@ -13,6 +13,12 @@
 
 ActiveRecord::Schema.define(version: 20140820151210) do
 
+  create_table "allergies", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "allergies_wines", force: true do |t|
     t.integer  "wine_id"
     t.integer  "allergy_id"
@@ -26,10 +32,22 @@ ActiveRecord::Schema.define(version: 20140820151210) do
     t.datetime "updated_at"
   end
 
+  create_table "bottlings", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "countries", force: true do |t|
     t.string   "name"
     t.string   "alpha_2"
     t.string   "alpha_3"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "foods", force: true do |t|
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -61,7 +79,14 @@ ActiveRecord::Schema.define(version: 20140820151210) do
     t.datetime "updated_at"
   end
 
-  create_table "maturation_types", force: true do |t|
+  create_table "maturations", force: true do |t|
+    t.integer  "bottling_id"
+    t.integer  "period"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "notes", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -70,6 +95,12 @@ ActiveRecord::Schema.define(version: 20140820151210) do
   create_table "notes_wines", force: true do |t|
     t.integer  "wine_id"
     t.integer  "note_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "occasions", force: true do |t|
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -102,46 +133,15 @@ ActiveRecord::Schema.define(version: 20140820151210) do
     t.datetime "updated_at"
   end
 
+  create_table "types", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "types_wines", force: true do |t|
     t.integer  "wine_id"
     t.integer  "type_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "wine_allergies", force: true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "wine_foods", force: true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "wine_maturations", force: true do |t|
-    t.integer  "maturation_type_id"
-    t.integer  "period"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "wine_notes", force: true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "wine_occasions", force: true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "wine_types", force: true do |t|
-    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
