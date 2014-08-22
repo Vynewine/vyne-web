@@ -22,15 +22,13 @@
     <%= f.number_field :vintage %>
   </div>
   <div class="field">
-    <%= f.label :producer %><br>
-    <%= select_tag :producer,
-        options_from_collection_for_select(@producers, "id", "name", :selected => @wine.producer_id),
-        :prompt => "Choose a producer"
-    %>
+    <%= f.label :producer_id %><br>
+    <%= f.select :producer_id, options_from_collection_for_select(@producers, "id", "name", :selected => @wine.producer_id),
+        :prompt => "Choose a producer" %>
   </div>
   <div class="field">
-    <%= f.label :subregion %><br>
-    <%= select_tag :subregion,
+    <%= f.label :subregion_id %><br>
+    <%= f.select :subregion_id,
         options_from_collection_for_select(@subregions, "id", "name", :selected => @wine.subregion_id),
         :prompt => "Choose a sub-region"
     %>
@@ -40,39 +38,33 @@
     <%= f.text_field :area %>
   </div>
   <div class="field">
-    <%= f.label :appellation %><br>
-    <%= select_tag :appellation,
+    <%= f.label :appellation_id %><br>
+    <%= f.select :appellation_id,
         options_from_collection_for_select(@appellations, "id", "name", :selected => @wine.appellation_id),
         :prompt => "Choose an appellation"
     %>
   </div>
-  <div class="field">
-    <%= f.label :type %><br>
-
-<%= field_set_tag 'type_ids' do %>
-  <% @types.each do |type| %>
-    <p>
-      <%= check_box_tag 'wine[type_ids][]',
-          type.id,
-          @wine.types.include?(type),
-          id: 'type_ids_' + type.id.to_s %>
-      <%= label_tag 'type_ids_' + type.id.to_s, type.name %></p>
-  <% end %>
-<% end %>
-
-
-
-<%= f.fields_for :wine_types do |builder| %>
-test
-  <% # render "types", :f => builder %>
-<% end %>
-
-
-    (Coming!)
+  <div class="field green">
+    <%= f.label :type_ids %><br>
+    <% @types.each do |type| %>
+      <p>
+        <%= check_box_tag 'wine[type_ids][]', type.id, @wine.types.include?(type) %>
+        <!-- , id: 'type_ids_' + type.id.to_s  -->
+        <%= label_tag 'type_ids_' + type.id.to_s, type.name %>
+      </p>
+    <% end %>
+    <% # f.fields_for :wine_types do |builder| %>
+      <% # render "types", :f => builder %>
+    <% # end %>
   </div>
-  <div class="field">
+  <div class="field red">
     <%= f.label :grape %><br>
-    (Coming!)
+    <% @grapes.each do |grape| %>
+      <p>
+        <%= check_box_tag 'wine[grape_ids][]', grape.id, @wine.types.include?(grape) %>
+        <%= label_tag 'grape_ids_' + grape.id.to_s, grape.grapename.name %>
+      </p>
+    <% end %>
   </div>
   <div class="field">
     <%= f.label :single_estate %><br>
@@ -94,25 +86,50 @@ test
     <%= f.label :ph %><br>
     <%= f.number_field :ph %>
   </div>
-  <div class="field">
+  <div class="field red">
     <%= f.label :occasion %><br>
-    (Coming!)
+    <% @occasions.each do |occasion| %>
+    <p>
+      <%= check_box_tag 'wine[occasion_ids][]', occasion.id, @wine.occasions.include?(occasion) %>
+      <%= label_tag 'occasion_ids_' + occasion.id.to_s, occasion.name %>
+    </p>
+    <% end %>
   </div>
-  <div class="field">
+  <div class="field red">
     <%= f.label :food %><br>
-    (Coming!)
+    <% @foods.each do |food| %>
+    <p>
+      <%= check_box_tag 'wine[food_ids][]', food.id, @wine.foods.include?(food) %>
+      <%= label_tag 'food_ids_' + food.id.to_s, food.name %>
+    </p>
+    <% end %>
   </div>
-  <div class="field">
+  <div class="field red">
     <%= f.label :notes %><br>
-    (Coming!)
+    <% @notes.each do |note| %>
+    <p>
+      <%= check_box_tag 'wine[note_ids][]', note.id, @wine.notes.include?(note) %>
+      <%= label_tag 'note_ids_' + note.id.to_s, note.name %>
+    </p>
+    <% end %>
   </div>
-  <div class="field">
+  <div class="field red">
     <%= f.label :allergies %><br>
-    (Coming!)
+    <% @allergies.each do |allergy| %>
+    <p>
+      <%= check_box_tag 'wine[allergie_ids][]', allergy.id, @wine.allergies.include?(allergy) %>
+      <%= label_tag 'allergy_ids_' + allergy.id.to_s, allergy.name %>
+    </p>
+    <% end %>
   </div>
-  <div class="field">
+  <div class="field red">
     <%= f.label :maturation %><br>
-    (Coming!)
+    <% @maturations.each do |maturation| %>
+    <p>
+      <%= maturation.bottling.name %>
+      <%= maturation.period %>
+    </p>
+    <% end %>
   </div>
   <div class="field">
     <%= f.label :vegetarian %><br>

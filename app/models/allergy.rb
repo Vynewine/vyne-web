@@ -1,4 +1,3 @@
 class Allergy < ActiveRecord::Base
-  has_many :allergies_wines
-  has_many :wines, :through => :allergies_wines
+  has_and_belongs_to_many :wines
 end

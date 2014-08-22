@@ -10,26 +10,29 @@
   <%= @wine.vintage %>
 </p>
 
-                                    <p>
-                                      producer
-                                    </p>
-                                    <p>
-                                      subregion
-                                    </p>
+<p>
+  <strong>Producer:</strong>
+  <%= if @wine.producer.nil? then 'Unknown' else @wine.producer.name end %>
+</p>
+<p>
+  <strong>Sub-region:</strong>
+  <%= if @wine.subregion.nil? then 'Unknown' else @wine.subregion.name end %>
+</p>
 
 <p>
   <strong>Area:</strong>
   <%= @wine.area %>
 </p>
-
-
-                                    <p>appellation</p>
-                      <p>
-                        <strong>Type</strong>
-                        <%= @wine.types.each do |type| %>
-                          <span><%= type.name %></span>
-                        <% end %>
-                      </p>
+<p>
+  <strong>Appellation:</strong>
+  <%= if @wine.appellation.nil? then 'Unknown' else @wine.appellation.name end %>
+</p>
+<p>
+  <strong>Type:</strong>
+  <% @wine.types.each do |type| %>
+    <span><%= type.name %></span>
+  <% end %>
+</p>
                                     <p>grape</p>
 
 <p>

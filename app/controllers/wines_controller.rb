@@ -15,45 +15,31 @@
   # GET /wines/new
   def new
     @wine = Wine.new
-
-    # :wine_types, :through => :types_wines
-    # :wine_grapes, :through => :grapes_wines
-    # :wine_occasions, :through => :occasions_wines
-    # :wine_foods, :through => :foods_wines
-    # :wine_notes, :through => :notes_wines
-    # :wine_allergies, :through => :allergies_wines
-
     @producers = Producer.all
     @subregions = Subregion.all
     @appellations = Appellation.all
-    # @wineMaturations = WineMaturation.all
-
     @types = Type.all
   end
 
   # GET /wines/1/edit
   def edit
-    # @wine = Wine.find(wine_params[:id])
     @producers = Producer.all
     @subregions = Subregion.all
     @appellations = Appellation.all
-
     @types = Type.all
-
-    # wine_type = @wine.wine_types.build
-
+    @grapes = Grape.all
+    @occasions = Occasion.all
+    @foods = Food.all
+    @notes = Note.all
+    @allergies = Allergy.all
+    @maturations = Maturation.all
   end
 
   # POST /wines
   # POST /wines.json
   def create
-    params[:wine][:type_ids] ||= []
     @wine = Wine.new(wine_params)
-    # type_ids = params[:type_ids].reject(&:blank?) unless params[:type_ids].nil?
-    params[:wine][:type_ids].each do |key, value|
-      @wine.types_wines.build(type_id: value)
-    end
-    
+    params[:wine][:type_ids] ||= []
     respond_to do |format|
       if @wine.save
         format.html { redirect_to @wine, notice: 'Wine was successfully created.' }
@@ -69,9 +55,9 @@
   # PATCH/PUT /wines/1.json
   def update
     params[:wine][:type_ids] ||= []
-    params[:wine][:type_ids].each do |key, value|
-      @wine.types_wines.build(type_id: value)
-    end
+puts "-------------------------------"
+puts params[:wine][:producer_id]
+puts "-------------------------------"
     respond_to do |format|
       if @wine.update(wine_params)
         format.html { redirect_to @wine, notice: 'Wine was successfully updated.' }
@@ -101,6 +87,7 @@
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def wine_params
-      params.require(:wine).permit(:name, :vintage, :area, :single_estate, :alcohol, :sugar, :acidity, :ph, :vegetarian, :vegan, :organic)
+      params.require(:wine).permit(:name, :vintage, :area, :single_estate, :alcohol, :sugar, :acidity, :ph, :vegetarian, :vegan, :organic, :producer_id, :subregion_id, :appellation_id, type_ids: [])
+      # params.require(:wine).permit()
     end
 end

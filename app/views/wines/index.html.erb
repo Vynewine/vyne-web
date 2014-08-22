@@ -5,11 +5,11 @@
     <tr>
       <th>Name</th>
       <th>Vintage</th>
-<th>producer</th>
-<th>subregion</th>
+      <th>Producer</th>
+      <th>Sub-region</th>
       <th>Area</th>
-<th>appellation</th>
-<th>type</th>
+      <th>Appellation</th>
+      <th>Type</th>
 <th>grape</th>
       <th>Single estate</th>
       <th>Alcohol</th>
@@ -33,11 +33,15 @@
       <tr>
         <td><%= wine.name %></td>
         <td><%= wine.vintage %></td>
-<td> - <!-- producer --></td>
-<td> - <!-- subregion --></td>
+        <td><%= if wine.producer.nil? then ' - ' else wine.producer.name end %></td>
+        <td><%= if wine.subregion.nil? then ' - ' else wine.subregion.name end %></td>
         <td><%= wine.area %></td>
-<td> - <!-- appellation --></td>
-<td> - <!-- type --></td>
+        <td><%= if wine.appellation.nil? then ' - ' else wine.appellation.name end %></td>
+        <td>
+          <% wine.types.each do |type| %>
+            <%= type.name %>
+          <% end %>
+        </td>
 <td> - <!-- grape --></td>
         <td><%= wine.single_estate %></td>
         <td><%= wine.alcohol %></td>

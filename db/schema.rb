@@ -19,12 +19,15 @@ ActiveRecord::Schema.define(version: 20140820151210) do
     t.datetime "updated_at"
   end
 
-  create_table "allergies_wines", force: true do |t|
-    t.integer  "wine_id"
-    t.integer  "allergy_id"
+  create_table "allergies_wines", id: false, force: true do |t|
+    t.integer  "allergy_id", null: false
+    t.integer  "wine_id",    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "allergies_wines", ["allergy_id"], name: "index_allergies_wines_on_allergy_id"
+  add_index "allergies_wines", ["wine_id"], name: "index_allergies_wines_on_wine_id"
 
   create_table "appellations", force: true do |t|
     t.string   "name"
@@ -52,12 +55,15 @@ ActiveRecord::Schema.define(version: 20140820151210) do
     t.datetime "updated_at"
   end
 
-  create_table "foods_wines", force: true do |t|
-    t.integer  "wine_id"
-    t.integer  "food_id"
+  create_table "foods_wines", id: false, force: true do |t|
+    t.integer  "food_id",    null: false
+    t.integer  "wine_id",    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "foods_wines", ["food_id"], name: "index_foods_wines_on_food_id"
+  add_index "foods_wines", ["wine_id"], name: "index_foods_wines_on_wine_id"
 
   create_table "grapenames", force: true do |t|
     t.string   "name"
@@ -72,12 +78,15 @@ ActiveRecord::Schema.define(version: 20140820151210) do
     t.datetime "updated_at"
   end
 
-  create_table "grapes_wines", force: true do |t|
-    t.integer  "wine_id"
-    t.integer  "grape_id"
+  create_table "grapes_wines", id: false, force: true do |t|
+    t.integer  "grape_id",   null: false
+    t.integer  "wine_id",    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "grapes_wines", ["grape_id"], name: "index_grapes_wines_on_grape_id"
+  add_index "grapes_wines", ["wine_id"], name: "index_grapes_wines_on_wine_id"
 
   create_table "maturations", force: true do |t|
     t.integer  "bottling_id"
@@ -92,12 +101,15 @@ ActiveRecord::Schema.define(version: 20140820151210) do
     t.datetime "updated_at"
   end
 
-  create_table "notes_wines", force: true do |t|
-    t.integer  "wine_id"
-    t.integer  "note_id"
+  create_table "notes_wines", id: false, force: true do |t|
+    t.integer  "note_id",    null: false
+    t.integer  "wine_id",    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "notes_wines", ["note_id"], name: "index_notes_wines_on_note_id"
+  add_index "notes_wines", ["wine_id"], name: "index_notes_wines_on_wine_id"
 
   create_table "occasions", force: true do |t|
     t.string   "name"
@@ -105,12 +117,15 @@ ActiveRecord::Schema.define(version: 20140820151210) do
     t.datetime "updated_at"
   end
 
-  create_table "occasions_wines", force: true do |t|
-    t.integer  "wine_id"
-    t.integer  "occasion_id"
+  create_table "occasions_wines", id: false, force: true do |t|
+    t.integer  "occasion_id", null: false
+    t.integer  "wine_id",     null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "occasions_wines", ["occasion_id"], name: "index_occasions_wines_on_occasion_id"
+  add_index "occasions_wines", ["wine_id"], name: "index_occasions_wines_on_wine_id"
 
   create_table "producers", force: true do |t|
     t.string   "name"
@@ -139,12 +154,15 @@ ActiveRecord::Schema.define(version: 20140820151210) do
     t.datetime "updated_at"
   end
 
-  create_table "types_wines", force: true do |t|
-    t.integer  "wine_id"
-    t.integer  "type_id"
+  create_table "types_wines", id: false, force: true do |t|
+    t.integer  "type_id",    null: false
+    t.integer  "wine_id",    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "types_wines", ["type_id"], name: "index_types_wines_on_type_id"
+  add_index "types_wines", ["wine_id"], name: "index_types_wines_on_wine_id"
 
   create_table "wines", force: true do |t|
     t.string   "name"

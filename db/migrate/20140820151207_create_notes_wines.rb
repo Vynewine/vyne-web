@@ -1,9 +1,8 @@
 class CreateNotesWines < ActiveRecord::Migration
   def change
-    create_table :notes_wines do |t|
-      t.integer :wine_id
-      t.integer :note_id
-
+    create_join_table :notes, :wines do |t|
+      t.index :wine_id
+      t.index :note_id
       t.timestamps
     end
   end

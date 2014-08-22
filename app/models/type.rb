@@ -1,4 +1,3 @@
 class Type < ActiveRecord::Base
-  has_many :types_wines
-  has_many :wines, :through => :types_wines
+  has_and_belongs_to_many :wines
 end

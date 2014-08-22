@@ -1,5 +1,4 @@
 class Grape < ActiveRecord::Base
   belongs_to :grapename
-  has_many :grapes_wines
-  has_many :wines, :through => :grapes_wines
+  has_and_belongs_to_many :wines
 end
