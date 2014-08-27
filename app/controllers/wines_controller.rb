@@ -19,6 +19,9 @@
     @subregions = Subregion.all
     @appellations = Appellation.all
     @types = Type.all
+    # @wine.occasions.build
+    # @occasion.wine.build
+    # 3.times { @wine.occasions.build }
   end
 
   # GET /wines/1/edit
@@ -33,6 +36,7 @@
     @notes = Note.all
     @allergies = Allergy.all
     @maturations = Maturation.all
+    # 3.times { @wine.occasions.build }
   end
 
   # POST /wines
@@ -87,7 +91,27 @@ puts "-------------------------------"
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def wine_params
-      params.require(:wine).permit(:name, :vintage, :area, :single_estate, :alcohol, :sugar, :acidity, :ph, :vegetarian, :vegan, :organic, :producer_id, :subregion_id, :appellation_id, type_ids: [])
+      params.require(:wine).permit(
+        :name,
+        :vintage,
+        :area,
+        :single_estate,
+        :alcohol,
+        :sugar,
+        :acidity,
+        :ph,
+        :vegetarian,
+        :vegan,
+        :organic,
+        :producer_id,
+        :subregion_id,
+        :appellation_id,
+        :occasion_tokens,
+        :food_tokens,
+        :note_tokens,
+        type_ids: [],
+        occasions_attributes: [:name]
+      )
       # params.require(:wine).permit()
     end
 end

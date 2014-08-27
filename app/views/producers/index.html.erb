@@ -14,9 +14,21 @@
       <tr>
         <td><%= producer.name %></td>
         <td><%= producer.country.name %></td>
-        <td><%= link_to 'Show', producer %></td>
-        <td><%= link_to 'Edit', edit_producer_path(producer) %></td>
-        <td><%= link_to 'Destroy', producer, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td class="button-wrapper">
+          <%= link_to producer do %>
+            <i class="flaticon stroke zoom-1"></i>
+          <% end %>
+        </td>
+        <td class="button-wrapper">
+          <%= link_to edit_producer_path(producer) do %>
+            <i class="flaticon stroke pencil-2"></i>
+          <% end %>
+        </td>
+        <td class="button-wrapper">
+          <%= link_to producer, method: :delete, data: { confirm: 'Are you sure?' } do %>
+            <i class="flaticon stroke trash-2"></i>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>

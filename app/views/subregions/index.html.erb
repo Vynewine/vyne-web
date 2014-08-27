@@ -14,9 +14,21 @@
       <tr>
         <td><%= subregion.name %></td>
         <td><%= subregion.region.name %></td>
-        <td><%= link_to 'Show', subregion %></td>
-        <td><%= link_to 'Edit', edit_subregion_path(subregion) %></td>
-        <td><%= link_to 'Destroy', subregion, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td class="button-wrapper">
+          <%= link_to subregion do %>
+            <i class="flaticon stroke zoom-1"></i>
+          <% end %>
+        </td>
+        <td class="button-wrapper">
+          <%= link_to edit_subregion_path(subregion) do %>
+            <i class="flaticon stroke pencil-2"></i>
+          <% end %>
+        </td>
+        <td class="button-wrapper">
+          <%= link_to subregion, method: :delete, data: { confirm: 'Are you sure?' } do %>
+            <i class="flaticon stroke trash-2"></i>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>

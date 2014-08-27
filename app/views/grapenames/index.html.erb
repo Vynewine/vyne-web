@@ -12,9 +12,21 @@
     <% @grapenames.each do |grapename| %>
       <tr>
         <td><%= grapename.name %></td>
-        <td><%= link_to 'Show', grapename %></td>
-        <td><%= link_to 'Edit', edit_grapename_path(grapename) %></td>
-        <td><%= link_to 'Destroy', grapename, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td class="button-wrapper">
+          <%= link_to grapename do %>
+            <i class="flaticon stroke zoom-1"></i>
+          <% end %>
+        </td>
+        <td class="button-wrapper">
+          <%= link_to edit_grapename_path(grapename) do %>
+            <i class="flaticon stroke pencil-2"></i>
+          <% end %>
+        </td>
+        <td class="button-wrapper">
+          <%= link_to grapename, method: :delete, data: { confirm: 'Are you sure?' } do %>
+            <i class="flaticon stroke trash-2"></i>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>

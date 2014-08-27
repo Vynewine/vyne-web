@@ -4,7 +4,11 @@ class FoodsController < ApplicationController
   # GET /foods
   # GET /foods.json
   def index
-    @foods = Food.all
+    if params[:q]
+      @foods = Food.where("name like ?", "%#{params[:q]}%")
+    else
+      @foods = Food.all
+    end
   end
 
   # GET /foods/1

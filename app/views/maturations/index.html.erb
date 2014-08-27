@@ -14,9 +14,21 @@
       <tr>
         <td><%= maturation.bottling.name %></td>
         <td><%= maturation.period %></td>
-        <td><%= link_to 'Show', maturation %></td>
-        <td><%= link_to 'Edit', edit_maturation_path(maturation) %></td>
-        <td><%= link_to 'Destroy', maturation, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td class="button-wrapper">
+          <%= link_to maturation do %>
+            <i class="flaticon stroke zoom-1"></i>
+          <% end %>
+        </td>
+        <td class="button-wrapper">
+          <%= link_to edit_maturation_path(maturation) do %>
+            <i class="flaticon stroke pencil-2"></i>
+          <% end %>
+        </td>
+        <td class="button-wrapper">
+          <%= link_to maturation, method: :delete, data: { confirm: 'Are you sure?' } do %>
+            <i class="flaticon stroke trash-2"></i>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>

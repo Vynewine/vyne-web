@@ -12,9 +12,21 @@
     <% @appellations.each do |appellation| %>
       <tr>
         <td><%= appellation.name %></td>
-        <td><%= link_to 'Show', appellation %></td>
-        <td><%= link_to 'Edit', edit_appellation_path(appellation) %></td>
-        <td><%= link_to 'Destroy', appellation, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td class="button-wrapper">
+          <%= link_to appellation do %>
+            <i class="flaticon stroke zoom-1"></i>
+          <% end %>
+        </td>
+        <td class="button-wrapper">
+          <%= link_to edit_appellation_path(appellation) do %>
+            <i class="flaticon stroke pencil-2"></i>
+          <% end %>
+        </td>
+        <td class="button-wrapper">
+          <%= link_to appellation, method: :delete, data: { confirm: 'Are you sure?' } do %>
+            <i class="flaticon stroke trash-2"></i>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>

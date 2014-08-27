@@ -4,12 +4,32 @@ class OccasionsController < ApplicationController
   # GET /occasions
   # GET /occasions.json
   def index
-    @occasions = Occasion.all
+    if params[:q]
+      @occasions = Occasion.where("name like ?", "%#{params[:q]}%")
+    else
+      @occasions = Occasion.all
+    end
   end
 
   # GET /occasions/1
   # GET /occasions/1.json
   def show
+    # if params[:value]
+      # @occasion = Occasion.find(params[:value])
+
+      # @results1 = Tradename.find_by_contents(query, :models => [Tradename, Client], :limit => :all)
+      # if @results1.empty? 
+      #   @results2 = Word.find_by_contents(query, :models => [Word, Tradename, Client], :limit => :all)
+      #     if @results2.empty?
+      #       @results = Client.find_by_contents(query, :models => [Client], :limit => :all)
+      #     else
+      #       @results = @results2
+      #     end
+      # else
+      #   @results = @results1
+      # end
+
+    # end
   end
 
   # GET /occasions/new

@@ -60,9 +60,23 @@
   <%= @wine.ph %>
 </p>
 
-                                    <p>occasion</p>
+<p>
+  <strong>Occasions</strong>
+  <ul>
+<% @wine.occasions.each do |occasion| %>
+    <li><%= occasion.name %></li>
+<% end %>
+  </ul>
+</p>
                                     <p>food</p>
-                                    <p>notes</p>
+<p>
+  <strong>Notes</strong>
+  <ul>
+<% @wine.notes.each do |note| %>
+    <li><%= note.name %></li>
+<% end %>
+  </ul>
+</p>
                                     <p>allergies</p>
                                     <p>maturation</p>
 
