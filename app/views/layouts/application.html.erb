@@ -5,25 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0 " />
   <meta charset="utf-8">
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
 <body>
   <div id="wrapper"<% if params[:controller] == 'home' %> class="home-page"<% end %>>
+<% if params[:controller] == 'devise/sessions' %>
+    <div class="bg-page">
+      <%= image_tag "img-10.jpg", :alt => "image description" %>
+    </div>
+<% end %>
     <div class="w1">
       <header id="header">
         <div class="header-holder">
           <strong class="logo">
-            <a href="#">
-              <span data-picture data-alt="image description">
-                <span data-src="logo.png" ></span>
-                <span data-src="logo-2x.png"
-                data-media="(-webkit-min-device-pixel-ratio:1.5), (min-resolution:144dpi)" ></span>
+<%= link_to home_index_path do %>
+              <%= image_tag "logo-2x.png", :alt => "image description" %>
+              <!-- <span data-picture data-alt="image description"> -->
+                <!-- <span data-src="/assets/logo.png" ></span> -->
+                <!-- <span data-src="/assets/logo-2x.png" data-media="(-webkit-min-device-pixel-ratio:1.5), (min-resolution:144dpi)" ></span> -->
                 <noscript>
-                  <img src="logo.png" width="75" height="13" alt="image description" >
+                  <img src="/assets/logo.png" width="75" height="13" alt="image description" >
                 </noscript>
               </span>
-            </a>
+<% end %>
           </strong>
           <a href="#" class="opener"><span></span></a>
 <% if user_signed_in? %>
@@ -53,6 +57,31 @@
 <%= yield %>
       </div>
     </div>
+
+<div class="aside-bar">
+  <nav>
+    <ul class="nav">
+      <li class="sign-in"><a href="#">Sign in</a></li>
+      <li class="hidden"><a href="#" class="order">Track order</a></li>
+      <li class="hidden"><a href="#" class="profile">Profile</a></li>
+      <li class="hidden"><a href="#" class="payment">Payment</a></li>
+      <li class="hidden"><a href="#" class="support">Support</a></li>
+      <li><a href="#" class="promotions">Promotions</a></li>
+      <li class="hidden"><a href="#" class="history">Order History</a></li>
+      <li class="hidden"><a href="#" class="share">Share</a></li>
+    </ul>
+  </nav>
+  <nav>
+    <ul class="nav">
+      <li><a href="#" class="home">Home</a></li>
+      <li><a href="#" class="about">About</a></li>
+    </ul>
+  </nav>
+  <a href="#" class="sign-out hidden">Sign out</a>
+</div>
+
+
   </div>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
 </body>
 </html>

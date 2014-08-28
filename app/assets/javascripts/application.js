@@ -17,17 +17,23 @@
 
 
 var ready = function() {
-
-    var tokenFields = ["occasion", "food", "note"];
-
-    for (var i = 0; i < tokenFields.length; i++) {
-        $("#wine_" + tokenFields[i] + "_tokens").tokenInput("/" + tokenFields[i] + "s.json", {
-            crossDomain: false,
-            prePopulate: $("#wine_" + tokenFields[i] + "_tokens").data("pre"),
-            theme: 'facebook'
-        });
+    if (typeof(admin) !== 'undefined' && admin !== null && admin === true) {
+        var tokenFields = ["occasion", "food", "note"];
+        for (var i = 0; i < tokenFields.length; i++) {
+            $("#wine_" + tokenFields[i] + "_tokens").tokenInput("/" + tokenFields[i] + "s.json", {
+                crossDomain: false,
+                prePopulate: $("#wine_" + tokenFields[i] + "_tokens").data("pre"),
+                theme: 'facebook'
+            });
+        }
+    } else {
+        // Transferred from client.js
+        jcf.customForms.replaceAll();
+        initCycleCarousel();
+        initBackgroundResize();
+        initPushMenu();
+        initChosenTimeText();
     }
-
 
 };
 $(document).ready(ready);

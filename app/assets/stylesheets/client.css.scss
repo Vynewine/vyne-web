@@ -153,7 +153,7 @@ button::-moz-focus-inner{
     left: -41px;
     width:35px;
     height:35px;
-    background: url(/images/sprite.png) no-repeat -86px -1px;
+    background: url(/assets/sprite.png) no-repeat -86px -1px;
 }
 .services-list .phone:after{
     background-position:-86px -42px;
@@ -200,7 +200,7 @@ button::-moz-focus-inner{
     margin:0 auto;
     width:20px;
     height:12px;
-    background: url(/images/sprite.png) no-repeat -59px -24px;
+    background: url(/assets/sprite.png) no-repeat -59px -24px;
     text-indent:-9999px;
     overflow:hidden;
 }
@@ -220,7 +220,7 @@ button::-moz-focus-inner{
     left: 17px;
     width:16px;
     height:17px;
-    background: url(../images/sprite.png) no-repeat -1px 0;
+    background: url(../assets/sprite.png) no-repeat -1px 0;
 }
 .btn.message{
     background:rgba(255,255,255, 0.75);
@@ -286,7 +286,7 @@ button::-moz-focus-inner{
     margin-left: -19px;
     width:35px;
     height:46px;
-    background: url(../images/sprite.png) no-repeat -44px -40px;
+    background: url(../assets/sprite.png) no-repeat -44px -40px;
 }
 .speak-text h3,
 .quality-text h3,
@@ -316,7 +316,7 @@ button::-moz-focus-inner{
     right: 48px;
     width:41px;
     height:134px;
-    background: url(../images/sprite.png) no-repeat -1px -89px;
+    background: url(../assets/sprite.png) no-repeat -1px -89px;
 }
 .aside-bar .hidden{display:none;}
 .aside-bar.login .hidden{display:block;}
@@ -340,7 +340,7 @@ button::-moz-focus-inner{
     left: -24px;
     width:11px;
     height:13px;
-    background: url(../images/sprite.png) no-repeat -140px -20px;
+    background: url(../assets/sprite.png) no-repeat -140px -20px;
 }
 .nav .promotions:after{
     background-position:-156px -20px;
@@ -410,7 +410,7 @@ button::-moz-focus-inner{
     left: -22px;
     width:12px;
     height:13px;
-    background: url(../images/sprite.png) no-repeat -194px -51px;
+    background: url(../assets/sprite.png) no-repeat -194px -51px;
 }
 .information-text{
     text-align:center;
@@ -426,7 +426,7 @@ button::-moz-focus-inner{
     margin-left:-20px;
     width:41px;
     height:36px;
-    background: url(../images/sprite.png) no-repeat -52px -94px;
+    background: url(../assets/sprite.png) no-repeat -52px -94px;
 }
 #main .information-text h1{
     margin-bottom: 35px;
@@ -529,7 +529,7 @@ button::-moz-focus-inner{
     margin:3px 0 0 10px;
     width:13px;
     height:14px;
-    background: url(../images/sprite.png) no-repeat -156px -1px;
+    background: url(../assets/sprite.png) no-repeat -156px -1px;
 }
 .time-box p{
     margin:0;
@@ -548,7 +548,7 @@ button::-moz-focus-inner{
     left:-22px;
     width:13px;
     height:14px;
-    background: url(../images/sprite.png) no-repeat -141px -1px;
+    background: url(../assets/sprite.png) no-repeat -141px -1px;
 }
 .time-box p span{
     font-weight:bold;
@@ -601,7 +601,7 @@ button::-moz-focus-inner{
     margin-left: -21px;
     width: 39px;
     height:40px;
-    background: url(../images/sprite.png) no-repeat -1px -40px;
+    background: url(../assets/sprite.png) no-repeat -1px -40px;
 }
 .success .verified-box{display:block;}
 .question-box {
@@ -667,7 +667,7 @@ button::-moz-focus-inner{
     left: -17px;
     width:12px;
     height:9px;
-    background: url(../images/sprite.png) no-repeat -180px -53px;
+    background: url(../assets/sprite.png) no-repeat -180px -53px;
 }
 input[type="submit"]{
     width:100%;
@@ -698,7 +698,7 @@ input[type="submit"]:hover{
     margin-left: -21px;
     width:44px;
     height:46px;
-    background: url(../images/sprite.png) no-repeat -152px -91px;
+    background: url(../assets/sprite.png) no-repeat -152px -91px;
 }
 #main .call-box h1{
     line-height:36px;
@@ -791,7 +791,7 @@ input[type="submit"]:hover{
     margin-left: -9px;
     width:20px;
     height:72px;
-    background: url(../images/sprite.png) no-repeat -168px -171px;
+    background: url(../assets/sprite.png) no-repeat -168px -171px;
 }
 .quality-text h3{margin-bottom: 17px;}
 .order-holder{
@@ -815,7 +815,7 @@ input[type="submit"]:hover{
     width:54px;
     height:65px;
     margin-left: -26px;
-    background: url(../images/sprite.png) no-repeat -2px -225px;
+    background: url(../assets/sprite.png) no-repeat -2px -225px;
 }
 .speed-box h3{margin-bottom: 12px;}
 .speed-box h3 span{display:block;}
@@ -848,7 +848,7 @@ input[type="submit"]:hover{
     margin-left:-14px;
     width:28px;
     height:28px;
-    background: url(../images/sprite.png) no-repeat -164px -140px;
+    background: url(../assets/sprite.png) no-repeat -164px -140px;
 }
 .question-list{
     list-style:none;
@@ -875,7 +875,7 @@ input[type="submit"]:hover{
     left: -20px;
     width:12px;
     height:13px;
-    background: url(../images/sprite.png) no-repeat -148px -144px;
+    background: url(../assets/sprite.png) no-repeat -148px -144px;
 }
 .question-list span{
     display:block;
@@ -927,7 +927,7 @@ input[type="submit"]:hover{
     width:100% !important;
 }
 .select-area .select-opener {
-    background: url(../images/sprite.png) no-repeat -146px -163px;
+    background: url(../assets/sprite.png) no-repeat -146px -163px;
     position: absolute;
     height: 8px;
     width: 14px;
@@ -1001,7 +1001,7 @@ input[type="submit"]:hover{
     margin-left: -21px;
     width:43px;
     height:43px;
-    background: url(../images/sprite.png) no-repeat -50px -135px;
+    background: url(../assets/sprite.png) no-repeat -50px -135px;
 }
 .type{
     display:block;
@@ -1060,7 +1060,7 @@ input[type="submit"]:hover{
     left: 12px;
     width:43px;
     height:44px;
-    background: url(../images/sprite.png) no-repeat -60px -240px;
+    background: url(../assets/sprite.png) no-repeat -60px -240px;
     margin-top: -22px;
 }
 .product-list .block{
@@ -1102,7 +1102,7 @@ input[type="submit"]:hover{
     left: -11px;
     width:11px;
     height:11px;
-    background: url(../images/sprite.png) no-repeat -167px -52px;
+    background: url(../assets/sprite.png) no-repeat -167px -52px;
 }
 .product-list .type{padding-bottom: 1px;}
 .call-box.speak{padding-top:141px;}
@@ -1139,7 +1139,7 @@ input[type="submit"]:hover{
     overflow:hidden;
     width:46px;
     height:46px;
-    background: url(../images/sprite.png) no-repeat -47px -180px;
+    background: url(../assets/sprite.png) no-repeat -47px -180px;
 }
 .social-networks a:hover{opacity:0.8;}
 .social-networks .twitter{background-position:-96px -180px;}
@@ -1172,7 +1172,7 @@ input[type="submit"]:hover{
     left: 12px;
     width:17px;
     height:13px;
-    background: url(../images/sprite.png) no-repeat -148px -74px;
+    background: url(../assets/sprite.png) no-repeat -148px -74px;
 }
 .sign-in-form .password-row:after{
     background-position:-167px -70px;
@@ -1245,7 +1245,9 @@ input[type="submit"]:hover{
     line-height: 44px;
     color:#fff;
 }
-#main .sign-in-box h1{margin-bottom: 49px;}
+#main .sign-in-box h1{
+    margin: 49px 0; // was only bottom
+}
 .sign-in-form.profile-form input[type="submit"]{
     width:109px;
     background:rgba(255,255,255,0.85);
@@ -1580,7 +1582,7 @@ input[type="submit"]:hover{
     .social-networks .email,
     .sign-in-form .password-row:after,
     .payment-holder .row:after{
-        background-image: url(../images/sprite-2x.png);
+        background-image: url(../assets/sprite-2x.png);
         background-size:207px 293px;
     }
 }

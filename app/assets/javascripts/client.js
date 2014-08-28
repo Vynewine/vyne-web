@@ -1,11 +1,12 @@
 // page init
-jQuery(function(){
-    jcf.customForms.replaceAll();
-    initCycleCarousel();
-    initBackgroundResize();
-    initPushMenu();
-    initChosenTimeText();
-});
+// Transferred to application.js
+// jQuery(function(){
+//     jcf.customForms.replaceAll();
+//     initCycleCarousel();
+//     initBackgroundResize();
+//     initPushMenu();
+//     initChosenTimeText();
+// });
 
 // cycle scroll gallery init
 function initCycleCarousel() {
