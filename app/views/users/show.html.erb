@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>E-mail:</strong>
+  <%= @user.email %>
+</p>
+
+<p>
+  <strong>Roles:</strong>
+  <%= @user.roles.map(&:name).join(" - ") %>
+</p>
+
+<%= link_to 'Edit', edit_user_path(@user) %> |
+<%= link_to 'Back', users_path %>

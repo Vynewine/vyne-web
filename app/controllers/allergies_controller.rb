@@ -1,4 +1,7 @@
 class AllergiesController < ApplicationController
+  layout "admin"
+  before_action :authenticate_user!
+  authorize_actions_for SupplierAuthorizer # Triggers user check
   before_action :set_allergy, only: [:show, :edit, :update, :destroy]
 
   # GET /allergies

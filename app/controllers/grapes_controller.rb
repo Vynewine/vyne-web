@@ -1,4 +1,7 @@
 class GrapesController < ApplicationController
+  layout "admin"
+  before_action :authenticate_user!
+  authorize_actions_for SupplierAuthorizer # Triggers user check
   before_action :set_grape, only: [:show, :edit, :update, :destroy]
 
   # GET /grapes

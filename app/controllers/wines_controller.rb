@@ -1,4 +1,6 @@
-  class WinesController < ApplicationController
+class WinesController < ApplicationController
+  layout "admin"
+  before_filter :authenticate_user!
   before_action :set_wine, only: [:show, :edit, :update, :destroy]
 
   # GET /wines

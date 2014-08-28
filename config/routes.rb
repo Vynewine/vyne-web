@@ -1,23 +1,28 @@
 Rails.application.routes.draw do
 
   root :to => "home#index"
-
   get 'home/index'
 
-  resources :producers
-  resources :regions
-  resources :subregions
-  resources :grapenames
-  resources :grapes
-  resources :types
-  resources :bottlings
-  resources :maturations
-  resources :allergies
-  resources :notes
-  resources :foods
-  resources :occasions
-  resources :appellations
-  resources :wines
+  devise_for :users
+
+  scope "/admin" do
+    resources :producers
+    resources :regions
+    resources :subregions
+    resources :grapenames
+    resources :grapes
+    resources :types
+    resources :bottlings
+    resources :maturations
+    resources :allergies
+    resources :notes
+    resources :foods
+    resources :occasions
+    resources :appellations
+    resources :wines
+    resources :roles
+    resources :users
+  end
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

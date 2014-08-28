@@ -1,4 +1,7 @@
 class ProducersController < ApplicationController
+  layout "admin"
+  before_action :authenticate_user!
+  authorize_actions_for SupplierAuthorizer # Triggers user check
   before_action :set_producer, only: [:show, :edit, :update, :destroy]
 
   # GET /producers
@@ -15,19 +18,19 @@ class ProducersController < ApplicationController
   # GET /producers/new
   def new
     @producer = Producer.new
-  	@countries = Country.all
+    @countries = Country.all
   end
 
   # GET /producers/1/edit
   def edit
-  	@countries = Country.all
+    @countries = Country.all
   end
 
   # POST /producers
   # POST /producers.json
   def create
     @producer = Producer.new(producer_params)
-  	@producer.country = Country.find( params[ :country ] )
+    @producer.country = Country.find( params[ :country ] )
     respond_to do |format|
       if @producer.save
         format.html { redirect_to @producer, notice: 'Producer was successfully created.' }
@@ -42,7 +45,7 @@ class ProducersController < ApplicationController
   # PATCH/PUT /producers/1
   # PATCH/PUT /producers/1.json
   def update
-  	@producer.country = Country.find( params[ :country ] )
+    @producer.country = Country.find( params[ :country ] )
     respond_to do |format|
       if @producer.update(producer_params)
         format.html { redirect_to @producer, notice: 'Producer was successfully updated.' }
