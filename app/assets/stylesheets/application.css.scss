@@ -20,6 +20,8 @@ html, body {
     padding: 0;
 }
 
+// Admin area:
+
 .left-block {
     display: block;
     float: left;
@@ -100,3 +102,7 @@ div.main {
         color: black;
     }
 }
+
+// -------------------
+
+@import 'client';
