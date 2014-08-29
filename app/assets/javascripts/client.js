@@ -8,22 +8,31 @@
 //     initChosenTimeText();
 // });
 
-// cycle scroll gallery init
-function initCycleCarousel() {
-    jQuery('.cycle-gallery').scrollAbsoluteGallery({
-        mask: '.mask',
-        slider: '.slideset',
-        slides: '.slide',
-        btnPrev: 'a.btn-prev',
-        btnNext: 'a.btn-next',
-        generatePagination: '.pagination',
-        stretchSlideToMask: true,
-        maskAutoSize: true,
-        autoRotation: false,
-        switchTime: 3000,
-        animSpeed: 500
-    });
+function loadCrappyCode(){
+    console.log('loadCrappyCode');
+    jcf.customForms.replaceAll();
+    // initCycleCarousel();
+    initBackgroundResize();
+    initPushMenu();
+    initChosenTimeText();
 }
+// console.log(1);
+// cycle scroll gallery init
+// function initCycleCarousel() {
+//     jQuery('.cycle-gallery').scrollAbsoluteGallery({
+//         mask: '.mask',
+//         slider: '.slideset',
+//         slides: '.slide',
+//         btnPrev: 'a.btn-prev',
+//         btnNext: 'a.btn-next',
+//         generatePagination: '.pagination',
+//         stretchSlideToMask: true,
+//         maskAutoSize: true,
+//         autoRotation: false,
+//         switchTime: 3000,
+//         animSpeed: 500
+//     });
+// }
 
 // stretch background to fill blocks
 function initBackgroundResize() {
@@ -227,6 +236,7 @@ function initChosenTimeText(){
 /*
  * jQuery Cycle Carousel plugin
  */
+/*
 ;(function($){
     function ScrollAbsoluteGallery(options) {
         this.options = $.extend({
@@ -587,7 +597,7 @@ function initChosenTimeText(){
         });
     };
 }(jQuery));
-
+*/
 /*
  * JavaScript Custom Forms Module
  */

@@ -9,7 +9,7 @@
 </head>
 <body>
   <div id="wrapper"<% if params[:controller] == 'home' %> class="home-page"<% end %>>
-<% if params[:controller] == 'devise/sessions' %>
+<% if params[:controller] == 'devise/sessions' || params[:controller] == 'devise/registrations' %>
     <div class="bg-page">
       <%= image_tag "img-10.jpg", :alt => "image description" %>
     </div>
@@ -43,10 +43,11 @@
           %>
 <% end %>
 <% else %>
-          <%= link_to "Sign up",
+          <%# link_to "Sign up",
           new_user_registration_path,
           :class => "login-link"
-          %><%= link_to "sign in",
+          %>
+          <%= link_to "sign in",
           new_user_session_path,
           :class => "login-link"
           %>
@@ -61,7 +62,9 @@
 <div class="aside-bar">
   <nav>
     <ul class="nav">
-      <li class="sign-in"><a href="#">Sign in</a></li>
+      <li class="sign-in">
+        <%= link_to "Sign in", new_user_session_path %>
+      </li>
       <li class="hidden"><a href="#" class="order">Track order</a></li>
       <li class="hidden"><a href="#" class="profile">Profile</a></li>
       <li class="hidden"><a href="#" class="payment">Payment</a></li>
@@ -73,7 +76,7 @@
   </nav>
   <nav>
     <ul class="nav">
-      <li><a href="#" class="home">Home</a></li>
+      <li><%= link_to 'Home', home_index_path %></li>
       <li><a href="#" class="about">About</a></li>
     </ul>
   </nav>
@@ -82,6 +85,7 @@
 
 
   </div>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application' %>
 </body>
 </html>

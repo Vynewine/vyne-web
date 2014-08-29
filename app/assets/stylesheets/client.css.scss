@@ -1512,14 +1512,14 @@ input[type="submit"]:hover{
     margin-bottom: 20px;
 }
 #main .address-box h1{margin-bottom: 83px;}
-.address-box input[type="submit"]{
-    background:rgba(255,255,255, 0.45);
-    font-size:24px;
-    color:#24282a;
-    position:absolute;
-    bottom: 73px;
-    left:0;
-}
+// .address-box input[type="submit"]{
+//     background:rgba(255,255,255, 0.45);
+//     font-size:24px;
+//     color:#24282a;
+//     position:absolute;
+//     bottom: 73px;
+//     left:0;
+// }
 .address-box input[type="submit"]:hover{background:rgba(255,255,255, 0.6);}
 .sign-in-form.success .address-box input[type="submit"]{
     background:rgba(229, 51, 79, 0.75);

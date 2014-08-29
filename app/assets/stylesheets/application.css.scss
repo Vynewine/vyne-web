@@ -106,3 +106,22 @@ div.main {
 // -------------------
 
 @import 'client';
+
+.form-step-last {
+    display: none;
+}
+
+.button-wrapper {
+    padding: 30px 0;
+    & > .btn {
+        background: rgba(0, 0, 0, 0.4);
+        color: white;
+        text-shadow: 0px 0px 10px rgba(0, 0, 0, 1);
+        font-size: 12px;
+        padding: 10px 0;
+        &:hover {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+        }
+    }
+}
