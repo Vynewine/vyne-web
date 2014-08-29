@@ -30,28 +30,8 @@
 <% end %>
           </strong>
           <a href="#" class="opener"><span></span></a>
-<% if user_signed_in? %>
-          <%= link_to "sign out",
-          destroy_user_session_path,
-          :method => :delete,
-          :class => "login-link"
-          %>
-<% if current_user.has_role?(:supplier) || current_user.has_role?(:admin) || current_user.has_role?(:superadmin) %>
-          <%= link_to 'Admin',
-          producers_path,
-          :class => "login-link"
-          %>
-<% end %>
-<% else %>
-          <%# link_to "Sign up",
-          new_user_registration_path,
-          :class => "login-link"
-          %>
-          <%= link_to "sign in",
-          new_user_session_path,
-          :class => "login-link"
-          %>
-<% end %>
+          <!-- :class => "login-link" -->
+
         </div>
       </header>
       <div id="main">
@@ -62,9 +42,30 @@
 <div class="aside-bar">
   <nav>
     <ul class="nav">
+<% if user_signed_in? %>
       <li class="sign-in">
-        <%= link_to "Sign in", new_user_session_path %>
+          <%= link_to "Sign out",
+          destroy_user_session_path,
+          :method => :delete
+          %>
       </li>
+<% if current_user.has_role?(:supplier) ||
+      current_user.has_role?(:admin) ||
+      current_user.has_role?(:superadmin)
+%>
+      <li class="sign-in">
+          <%= link_to 'Admin',
+          producers_path
+          %>
+      </li>
+<% end %>
+<% else %>
+      <li class="sign-in">
+          <%= link_to "Sign in",
+          new_user_session_path
+          %>
+      </li>
+<% end %>
       <li class="hidden"><a href="#" class="order">Track order</a></li>
       <li class="hidden"><a href="#" class="profile">Profile</a></li>
       <li class="hidden"><a href="#" class="payment">Payment</a></li>
