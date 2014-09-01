@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  has_and_belongs_to_many :addresses
   after_create :assign_default_role
 
   # creatable_by?(user) can use methods like...
