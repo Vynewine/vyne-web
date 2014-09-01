@@ -12,15 +12,8 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :grapename_id %><br>
-    <%= select_tag :grapename,
-        options_from_collection_for_select(@grapenames, "id", "name", :selected => @grape.grapename_id),
-        :prompt => "Choose a grape type"
-    %>
-  </div>
-  <div class="field">
-    <%= f.label :quantity %><br>
-    <%= f.number_field :quantity %>
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
   </div>
   <div class="actions">
     <%= f.submit %>

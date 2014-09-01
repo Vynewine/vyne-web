@@ -43,3 +43,7 @@ var loadJSON = function(path, success, error) {
     xhr.open("GET", path, true);
     xhr.send();
 };
+
+String.prototype.capitalise = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+};

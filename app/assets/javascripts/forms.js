@@ -55,8 +55,8 @@ var formStepSetup = function() {
                 });
             }
         });
-        $buttonDone.click(function(e){
-            e.preventDefault();
-        });
+        // $buttonDone.click(function(e){
+            // e.preventDefault();
+        // });
     });
 };

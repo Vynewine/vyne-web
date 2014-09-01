@@ -54,9 +54,20 @@
       <% # render "types", :f => builder %>
     <% # end %>
   </div>
-  <div class="field red">
-    <%= f.label :grape %><br>
-    <%= @grapes %>
+  <div class="field">
+    <%= f.label :composition %><br>
+    <%= debug @compositions %>
+    <a href="#" class="add_nested_field" data-parent-entity="wine" data-nested-entity="compositions" data-field-name="grape,quantity" data-last-sum="1">Add composition</a>
+    <%= f.fields_for :compositions do |c| %>
+    <div class="field">
+      <%= c.label :grape %><br />
+      <%= c.text_field :grape %>
+    </div>
+    <div class="field">
+        <%= c.label :quantity %><br />
+        <%= c.text_field :quantity %>
+    </div>
+    <% end %>
   </div>
   <div class="field">
     <%= f.label :single_estate %><br>

@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Grape:</strong>
+  <%= @grape.grape.name %>
+</p>
+
+<p>
+  <strong>Quantity:</strong>
+  <%= @composition.quantity %>
+</p>
+
+<%= link_to 'Edit', edit_composition_path(@composition) %> |
+<%= link_to 'Back', compositions_path %>

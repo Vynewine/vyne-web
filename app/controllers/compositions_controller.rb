@@ -1,37 +1,39 @@
-class GrapesController < ApplicationController
+class CompositionsController < ApplicationController
   layout "admin"
   before_action :authenticate_user!
   authorize_actions_for SupplierAuthorizer # Triggers user check
   before_action :set_grape, only: [:show, :edit, :update, :destroy]
 
-  # GET /grapes
-  # GET /grapes.json
+  # GET /compositions
+  # GET /compositions.json
   def index
-    @grapes = Grape.all
+    @compositions = Composition.all
   end
 
-  # GET /grapes/1
-  # GET /grapes/1.json
+  # GET /compositions/1
+  # GET /compositions/1.json
   def show
   end
 
-  # GET /grapes/new
+  # GET /compositions/new
   def new
-    @grape = Grape.new
+    @grape = Composition.new
+    @grapenames = Grape.all
   end
 
-  # GET /grapes/1/edit
+  # GET /compositions/1/edit
   def edit
+    @grapenames = Grape.all
   end
 
-  # POST /grapes
-  # POST /grapes.json
+  # POST /compositions
+  # POST /compositions.json
   def create
-    @grape = Grape.new(grape_params)
-
+    @grape = Composition.new(grape_params)
+    @grape.grapename = Grape.find( params[ :grapename ] )
     respond_to do |format|
       if @grape.save
-        format.html { redirect_to @grape, notice: 'Grape was successfully created.' }
+        format.html { redirect_to @grape, notice: 'Composition was successfully created.' }
         format.json { render :show, status: :created, location: @grape }
       else
         format.html { render :new }
@@ -40,12 +42,12 @@ class GrapesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /grapes/1
-  # PATCH/PUT /grapes/1.json
+  # PATCH/PUT /compositions/1
+  # PATCH/PUT /compositions/1.json
   def update
     respond_to do |format|
       if @grape.update(grape_params)
-        format.html { redirect_to @grape, notice: 'Grape was successfully updated.' }
+        format.html { redirect_to @grape, notice: 'Composition was successfully updated.' }
         format.json { render :show, status: :ok, location: @grape }
       else
         format.html { render :edit }
@@ -54,12 +56,12 @@ class GrapesController < ApplicationController
     end
   end
 
-  # DELETE /grapes/1
-  # DELETE /grapes/1.json
+  # DELETE /compositions/1
+  # DELETE /compositions/1.json
   def destroy
     @grape.destroy
     respond_to do |format|
-      format.html { redirect_to grapes_url, notice: 'Grape was successfully destroyed.' }
+      format.html { redirect_to compositions_url, notice: 'Composition was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -67,11 +69,11 @@ class GrapesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_grape
-      @grape = Grape.find(params[:id])
+      @grape = Composition.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def grape_params
-      params.require(:grape).permit(:name)
+      params.require(:composition).permit(:grape_id, :quantity)
     end
 end

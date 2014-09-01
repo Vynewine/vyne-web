@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140901110441) do
+ActiveRecord::Schema.define(version: 20140901111804) do
 
   create_table "addresses", force: true do |t|
     t.string   "street"
@@ -59,6 +59,17 @@ ActiveRecord::Schema.define(version: 20140901110441) do
     t.datetime "updated_at"
   end
 
+  create_table "compositions", force: true do |t|
+    t.integer  "grape_id"
+    t.integer  "wine_id"
+    t.integer  "quantity"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "compositions", ["grape_id"], name: "index_compositions_on_grape_id"
+  add_index "compositions", ["wine_id"], name: "index_compositions_on_wine_id"
+
   create_table "countries", force: true do |t|
     t.string   "name"
     t.string   "alpha_2"
@@ -83,28 +94,11 @@ ActiveRecord::Schema.define(version: 20140901110441) do
   add_index "foods_wines", ["food_id"], name: "index_foods_wines_on_food_id"
   add_index "foods_wines", ["wine_id"], name: "index_foods_wines_on_wine_id"
 
-  create_table "grapenames", force: true do |t|
+  create_table "grapes", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  create_table "grapes", force: true do |t|
-    t.integer  "grapename_id"
-    t.integer  "quantity"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "grapes_wines", id: false, force: true do |t|
-    t.integer  "grape_id",   null: false
-    t.integer  "wine_id",    null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "grapes_wines", ["grape_id"], name: "index_grapes_wines_on_grape_id"
-  add_index "grapes_wines", ["wine_id"], name: "index_grapes_wines_on_wine_id"
 
   create_table "maturations", force: true do |t|
     t.integer  "bottling_id"
@@ -217,6 +211,13 @@ ActiveRecord::Schema.define(version: 20140901110441) do
   end
 
   add_index "users_roles", ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id"
+
+  create_table "warehouses", force: true do |t|
+    t.string   "title"
+    t.integer  "address_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "wines", force: true do |t|
     t.string   "name"

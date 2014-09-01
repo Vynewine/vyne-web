@@ -1,0 +1,28 @@
+<%= form_for(@composition) do |f| %>
+  <% if @composition.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@composition.errors.count, "error") %> prohibited this composition from being saved:</h2>
+
+      <ul>
+      <% @composition.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :grape_id %><br>
+    <%= select_tag :grape,
+        options_from_collection_for_select(@grapes, "id", "name", :selected => @composition.grape_id),
+        :prompt => "Choose a composition type"
+    %>
+  </div>
+  <div class="field">
+    <%= f.label :quantity %><br>
+    <%= f.number_field :quantity %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

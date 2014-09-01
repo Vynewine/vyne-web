@@ -23,7 +23,9 @@ class WinesController < ApplicationController
     @types = Type.all
     # @wine.occasions.build
     # @occasion.wine.build
-    # 3.times { @wine.occasions.build }
+    # 3.times { @wine.compositions.build }
+    @wine.compositions.build
+    # @compositions = @wine.compositions
   end
 
   # GET /wines/1/edit
@@ -32,13 +34,14 @@ class WinesController < ApplicationController
     @subregions = Subregion.all
     @appellations = Appellation.all
     @types = Type.all
-    @grapes = Grape.all
+    # @grapes = Grape.all
     @occasions = Occasion.all
     @foods = Food.all
     @notes = Note.all
     @allergies = Allergy.all
     @maturations = Maturation.all
     # 3.times { @wine.occasions.build }
+    @compositions = @wine.compositions
   end
 
   # POST /wines
@@ -112,7 +115,8 @@ puts "-------------------------------"
         :food_tokens,
         :note_tokens,
         type_ids: [],
-        occasions_attributes: [:name]
+        occasions_attributes: [:name],
+        :compositions_attributes => [:id, :grape_id, :quantity]
       )
       # params.require(:wine).permit()
     end

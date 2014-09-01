@@ -28,9 +28,7 @@
     <li><%= link_to 'Producers', producers_path %></li>
     <li><%= link_to 'Regions', regions_path %></li>
     <li><%= link_to 'Sub-regions', subregions_path %></li>
-    <li><%= link_to 'Grape types', grapenames_path %></li>
-    <!-- <li><%= link_to 'Grapes', grapes_path %></li> -->
-
+    <li><%= link_to 'Grapes', grapes_path %></li>
     <li><%= link_to 'Types', types_path %></li>
     <li><%= link_to 'Bottlings', bottlings_path %></li>
     <li><%= link_to 'Maturations', maturations_path %></li>
@@ -44,6 +42,7 @@
     <li><%= link_to 'Users', users_path %></li>
     <li><%= link_to 'Roles', roles_path %></li>
     <li><%= link_to 'Addresses', addresses_path %></li>
+    <li><%= link_to 'Warehouses', warehouses_path %></li>
   <% end %>
   </ul>
 </header>
@@ -52,8 +51,10 @@
   <p class="alert"><%= alert %></p>
 </div>
 
-<div class="main">
-  <%= yield %>
+<div class="main-wrapper">
+  <div class="main">
+<%= yield %>
+  </div>
 </div>
 
 <!-- <footer> -->

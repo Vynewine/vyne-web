@@ -6,13 +6,11 @@ class Wine < ActiveRecord::Base
   belongs_to :maturation
 
   has_and_belongs_to_many :types
-  has_and_belongs_to_many :grapes
+  # has_and_belongs_to_many :grapes
   has_and_belongs_to_many :occasions
   has_and_belongs_to_many :foods
   has_and_belongs_to_many :notes
   has_and_belongs_to_many :allergies
-
-  accepts_nested_attributes_for :occasions
 
   attr_accessor :occasion_tokens
   attr_accessor :food_tokens
@@ -27,5 +25,9 @@ class Wine < ActiveRecord::Base
   def note_tokens=(ids)
     self.note_ids = ids.split(",")
   end
+
+  has_many :compositions
+  has_many :grapes, through: :compositions
+  accepts_nested_attributes_for :compositions
 
 end

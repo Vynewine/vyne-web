@@ -3,8 +3,7 @@
 <table>
   <thead>
     <tr>
-      <th>Grapename</th>
-      <th>Quantity</th>
+      <th>Name</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -12,11 +11,22 @@
   <tbody>
     <% @grapes.each do |grape| %>
       <tr>
-        <td><%= grape.grapename.name %></td>
-        <td><%= grape.quantity %></td>
-        <td><%= link_to 'Show', grape %></td>
-        <td><%= link_to 'Edit', edit_grape_path(grape) %></td>
-        <td><%= link_to 'Destroy', grape, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= grape.name %></td>
+        <td class="button-wrapper">
+          <%= link_to grape do %>
+            <i class="flaticon stroke zoom-1"></i>
+          <% end %>
+        </td>
+        <td class="button-wrapper">
+          <%= link_to edit_grape_path(grape) do %>
+            <i class="flaticon stroke pencil-2"></i>
+          <% end %>
+        </td>
+        <td class="button-wrapper">
+          <%= link_to grape, method: :delete, data: { confirm: 'Are you sure?' } do %>
+            <i class="flaticon stroke trash-2"></i>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>

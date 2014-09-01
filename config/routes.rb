@@ -9,7 +9,6 @@ Rails.application.routes.draw do
     resources :producers
     resources :regions
     resources :subregions
-    resources :grapenames
     resources :grapes
     resources :types
     resources :bottlings
@@ -23,6 +22,7 @@ Rails.application.routes.draw do
     resources :roles
     resources :users
     resources :addresses
+    resources :warehouses
   end
 
   # The priority is based upon order of creation: first created -> highest priority.
