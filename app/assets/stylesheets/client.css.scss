@@ -669,6 +669,10 @@ button::-moz-focus-inner{
     height:9px;
     background: url(../assets/sprite.png) no-repeat -180px -53px;
 }
+input[type="submit"].disabled {
+    opacity: .8;
+    color: darkred;
+}
 input[type="submit"]{
     width:100%;
     background:rgba(229, 51, 79, 0.85);
@@ -1526,12 +1530,18 @@ input[type="submit"]:hover{
     color:#e2e2e2;
 }
 .sign-in-form.success .address-box input[type="submit"]:hover{background:rgba(229, 51, 79, 0.85);}
-.success-address{
+
+.address-message { // Used to be success-address
     display:none;
     padding-top:20px;
 }
-#main .success-address p{font-size:18px;}
-.sign-in-form.success .success-address{display:block;}
+#main .address-message   // Used to be success-address
+p{font-size:18px;
+}
+.sign-in-form.success .address-message { // Used to be success-address
+    display:block;
+}
+
 @media only screen and (min-width:1150px){
     .pushed #header{margin:0 !important;}
 }

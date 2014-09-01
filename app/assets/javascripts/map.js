@@ -37,8 +37,11 @@ function MapUtility() {
         // postcode = "SW6-6 ha";
         var filteredCode = postcode.toUpperCase().replace(/[^A-Z0-9]/g, "");
         var key = "AIzaSyBG_RQQigx8WsMaYH9dxe1hQVYlhbTZHro"
-        var address = "https://maps.googleapis.com/maps/api/geocode/json?address=London+" + filteredCode + "&key=" + key;
+        var address = "https://maps.googleapis.com/maps/api/geocode/json?address=London+" + filteredCode + "+UK&key=" + key;
         console.log(address);
-        loadJSON(address, methodParam, function(xhr) { console.error(xhr); } );
+        var errorMethod = function(xhr) {
+            console.error("Geocode API error (JSON): ", xhr);
+        };
+        loadJSON(address, methodParam, errorMethod);
     };
 }

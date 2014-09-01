@@ -37,13 +37,12 @@
         <div class="fieldset form-step form-step-last">
             <h1>Address</h1>
             <div class="address-box">
-                <p>Enter your postcode to see whether VYNZ is available in your area </p>
+                <p>Enter your postcode to see whether VYNZ is available in your area</p>
                 <input id="clientPostCode" type="text" placeholder="Postcode" />
-                <div class="success-address">
-                    <p>VYNZ delivers in your area</p>
-                </div>
+                <small id="address_holder"></small>
+                <div class="address-message"><p></p></div>
             </div>
-            <%= f.submit "Sign up" %>
+            <%= f.submit "Sign up", :disabled => 'disabled', :class => 'disabled' %>
             <%= devise_error_messages! %>
         </div>
     <% end %>
