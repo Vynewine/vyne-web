@@ -4,4 +4,6 @@ class HomeController < ApplicationController
   def warehouses
     @warehouses = Warehouse.all
   end
+  def welcome
+  end
 end

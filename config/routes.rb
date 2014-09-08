@@ -1,8 +1,19 @@
 Rails.application.routes.draw do
 
   root :to => "home#index"
+
+  # Global pages
+
+  # Index:
   get 'home/index'
+
+  # Sign up:
   get 'warehouses/addresses' => 'home#warehouses'
+
+  # Signed only:
+  get 'welcome' => 'home#welcome'
+
+  # ------------
 
   devise_for :users
 

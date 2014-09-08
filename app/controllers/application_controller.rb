@@ -14,4 +14,14 @@ class ApplicationController < ActionController::Base
     }
   end
 
+  # Devise overrides for signing in
+  def after_sign_in_path_for(resource_or_scope)
+    welcome_path
+  end
+
+  # Devise overrides for signing up
+  def after_sign_up_path_for(resource)
+    welcome_path
+  end
+
 end
