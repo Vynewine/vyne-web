@@ -2,6 +2,7 @@ Rails.application.routes.draw do
 
   root :to => "home#index"
   get 'home/index'
+  get 'warehouses/addresses' => 'home#warehouses'
 
   devise_for :users
 

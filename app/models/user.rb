@@ -17,8 +17,10 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
+  validates :name, :email, :mobile, :presence => true
   # belongs_to :roles
   def assign_default_role
-    self.add_role(:client)
+    # puts "assigning"
+    # self.add_role(:client)
   end
 end

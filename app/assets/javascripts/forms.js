@@ -1,6 +1,6 @@
 // Fades in and out the different register steps
 var formStepSetup = function() {
-    var formSteps = $('.form-step')
+    var formSteps = $('.form-step');
     // console.log(formSteps);
     formSteps.each(function() {
         var $buttonNext = $(this).find( "a.btn-next" );
@@ -26,37 +26,35 @@ var formStepSetup = function() {
                 $('.address-message').hide();
                 $('#address_holder').hide();
             } else {
-                console.log('postcode is ' + postcode);
+                // console.log('postcode is ' + postcode);
                 var mapUtil = new MapUtility();
-                var coordinates = mapUtil.locateAndDo(postcode, function(data) {
-                    if (data.error_message) {
-                        console.error("Geocode API error: ", data.error_message);
-                    } else {
-                        var distance = mapUtil.calculateDistancesFor(data.results[0].geometry.location.lng, data.results[0].geometry.location.lat);
-                        var guessedAddress = data.results[0].formatted_address;
-                        if (guessedAddress == "London, UK") {
-                            $('.address-message>p').html("Unknown address, please try again.");
-                            $('.address-message').fadeIn();
+                mapUtil.findCoordinatesAndExecute(postcode, function(coordinates) {
+                    console.log('coordinates:', coordinates);
+                    mapUtil.calculateDistancesForAllWarehouses(coordinates.lng, coordinates.lat, function(deliverable) {
+                        console.log('delivers here?', deliverable);
+                        if (deliverable) {
+                            $('.address-message>p').html("VYNZ delivers to this area.");
+                            $buttonDone.removeAttr('disabled');
+                            $buttonDone.removeClass('disabled');
                         } else {
-                            console.log('distance is ' + distance + ' km');
-                            console.log('distance is ' + mapUtil.kmToMile(distance) + ' miles');
-                            $('#address_holder').html(guessedAddress);
-                            $('#address_holder').fadeIn();
-                            if (mapUtil.kmToMile(distance) < 5) {
-                                $('.address-message>p').html("VYNZ delivers to this area.");
-                                $buttonDone.removeAttr('disabled');
-                                $buttonDone.removeClass('disabled');
-                            } else {
-                                $('.address-message>p').html("VYNZ does NOT deliver to this area!");
-                            }
-                            $('.address-message').fadeIn();
+                            $('.address-message>p').html("VYNZ does NOT deliver to this area!");
                         }
-                    }
+                        $('.address-message').fadeIn();
+                    });
+                },
+                function() {
+                    console.error("Address error: unknown address");
+                    $('.address-message>p').html("Unknown address, please try again.");
+                    $('.address-message').fadeIn();
                 });
+                // Fails: SE3 9RQ
+                // Succeeds: W6 9HH
+                // Warehouse 1: SW65HU
+                // Warehouse 2: E62JT
             }
         });
         // $buttonDone.click(function(e){
-            // e.preventDefault();
+        //     e.preventDefault();
         // });
     });
 };

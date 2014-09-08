@@ -40,9 +40,16 @@ div {
 }
 
 .field_with_errors {
-  padding: 2px;
-  background-color: red;
-  display: table;
+  // padding: 2px;
+  input {
+  background-color: pink !important;
+    color: black;
+-webkit-input-placeholder { color: red !important; }
+         -moz-placeholder { color: red !important; } /* firefox 19+ */
+    -ms-input-placeholder { color: red !important; } /* ie */
+   input:-moz-placeholder { color: red !important; }
+  }
+  // display: table;
 }
 
 #error_explanation {

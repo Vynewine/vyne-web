@@ -6,6 +6,16 @@
 </p>
 
 <p>
+  <strong>Name:</strong>
+  <%= @user.name %>
+</p>
+
+<p>
+  <strong>Mobile:</strong>
+  <%= @user.mobile %>
+</p>
+
+<p>
   <strong>Roles:</strong>
   <%= @user.roles.map(&:name).join(" - ") %>
 </p>

@@ -17,7 +17,12 @@
   </div>
   <div class="field">
     <%= f.label :address_id %><br>
-    <%= f.number_field :address_id %>
+    <%# f.number_field :address_id %>
+    <%= f.fields_for :address  do |a| %>
+      <%= a.text_field :detail %>
+      <%= a.text_field :street %>
+      <%= a.text_field :postcode %>
+    <% end %>
   </div>
   <div class="actions">
     <%= f.submit %>

@@ -33,10 +33,12 @@ var loadJSON = function(path, success, error) {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
                 if (success)
-                    success(JSON.parse(xhr.responseText));
+                    return success(JSON.parse(xhr.responseText));
             } else {
-                if (error)
+                if (error) {
                     error(xhr);
+                    return -1;
+                }
             }
         }
     };

@@ -7,7 +7,9 @@
 
 <p>
   <strong>Address:</strong>
-  <%= @warehouse.address_id %>
+  <%= @warehouse.address.detail %>
+  <%= @warehouse.address.street %>
+  <%= @warehouse.address.postcode %>
 </p>
 
 <%= link_to 'Edit', edit_warehouse_path(@warehouse) %> |

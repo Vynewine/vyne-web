@@ -16,6 +16,14 @@
     <%= f.text_field :email %>
   </div>
   <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :mobile %><br>
+    <%= f.text_field :mobile %>
+  </div>
+  <div class="field">
     <% @roles.each do |role| %>
       <p>
         <%= check_box_tag 'user[role_ids][]', role.id, @user.roles.include?(role) %>

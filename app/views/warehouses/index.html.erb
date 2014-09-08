@@ -13,10 +13,22 @@
     <% @warehouses.each do |warehouse| %>
       <tr>
         <td><%= warehouse.title %></td>
-        <td><%= warehouse.address_id %></td>
-        <td><%= link_to 'Show', warehouse %></td>
-        <td><%= link_to 'Edit', edit_warehouse_path(warehouse) %></td>
-        <td><%= link_to 'Destroy', warehouse, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= warehouse.address.detail %> <%= warehouse.address.postcode %></td>
+        <td class="button-wrapper">
+          <%= link_to warehouse do %>
+            <i class="flaticon stroke zoom-1"></i>
+          <% end %>
+        </td>
+        <td class="button-wrapper">
+          <%= link_to edit_warehouse_path(warehouse) do %>
+            <i class="flaticon stroke pencil-2"></i>
+          <% end %>
+        </td>
+        <td class="button-wrapper">
+          <%= link_to warehouse, method: :delete, data: { confirm: 'Are you sure?' } do %>
+            <i class="flaticon stroke trash-2"></i>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>
