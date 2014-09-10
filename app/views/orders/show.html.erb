@@ -1,0 +1,36 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Client:</strong>
+  <%= @order.client.name %>
+</p>
+
+<p>
+  <strong>Address:</strong>
+  <%= @order.address.detail %>
+  <%= @order.address.street %>
+  <%= @order.address.postcode %>
+</p>
+
+<p>
+  <strong>Warehouse:</strong>
+  <%= @order.warehouse_id == 0 ? " - " : @order.warehouse.title %>
+</p>
+
+<p>
+  <strong>Advisor:</strong>
+  <%= @order.advisor_id == 0 ? " - " : @order.advisor.name %>
+</p>
+
+<p>
+  <strong>Wine:</strong>
+  <%= @order.wine_id == 0 ? " - " : @order.wine.name %>
+</p>
+
+<p>
+  <strong>Quantity:</strong>
+  <%= @order.quantity %>
+</p>
+
+<%= link_to 'Edit', edit_order_path(@order) %> |
+<%= link_to 'Back', orders_path %>

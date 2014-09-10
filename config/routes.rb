@@ -13,7 +13,12 @@ Rails.application.routes.draw do
   # Signed only:
   get 'welcome' => 'home#welcome'
 
+  # Orders:
+  get 'orders/list' => 'orders#list'
+
   # ------------
+
+  resources :orders
 
   devise_for :users
 
@@ -35,6 +40,7 @@ Rails.application.routes.draw do
     resources :users
     resources :addresses
     resources :warehouses
+    resources :orders
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

@@ -58,3 +58,19 @@ var formStepSetup = function() {
         // });
     });
 };
+
+$(document).ready(function(){
+    $('#orderAddress').change(function() {
+        var value = $(this).val();
+        var $addrFields = $('#new_address_fields');
+        if (parseInt(value) === -1) {
+            $addrFields.fadeIn();
+        } else {
+            $addrFields.fadeOut();
+        }
+    });  
+});
+
+
+
+

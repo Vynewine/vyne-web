@@ -16,6 +16,15 @@
 </p>
 
 <p>
+  <strong>Addresses:</strong>
+  <ul>
+<% @user.addresses.each do |address| %>
+    <li><%= address.postcode %></li>
+<% end %>
+  </ul>
+</p>
+
+<p>
   <strong>Roles:</strong>
   <%= @user.roles.map(&:name).join(" - ") %>
 </p>

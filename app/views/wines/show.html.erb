@@ -68,7 +68,16 @@
 <% end %>
   </ul>
 </p>
-                                    <p>food</p>
+
+<p>
+  <strong>Food</strong>
+  <ul>
+<% @wine.foods.each do |food| %>
+    <li><%= food.name %></li>
+<% end %>
+  </ul>
+</p>
+
 <p>
   <strong>Notes</strong>
   <ul>

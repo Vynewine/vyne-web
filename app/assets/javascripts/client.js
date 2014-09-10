@@ -10,7 +10,7 @@
 
 function loadCrappyCode(){
     console.log('loadCrappyCode');
-    jcf.customForms.replaceAll();
+    // jcf.customForms.replaceAll();
     // initCycleCarousel();
     initBackgroundResize();
     initPushMenu();

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140908142831) do
+ActiveRecord::Schema.define(version: 20140908164637) do
 
   create_table "addresses", force: true do |t|
     t.string   "street"
@@ -139,6 +139,23 @@ ActiveRecord::Schema.define(version: 20140908142831) do
   add_index "occasions_wines", ["occasion_id"], name: "index_occasions_wines_on_occasion_id"
   add_index "occasions_wines", ["wine_id"], name: "index_occasions_wines_on_wine_id"
 
+  create_table "orders", force: true do |t|
+    t.integer  "warehouse_id"
+    t.integer  "client_id"
+    t.integer  "advisor_id"
+    t.integer  "wine_id"
+    t.integer  "address_id"
+    t.integer  "quantity"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "orders", ["address_id"], name: "index_orders_on_address_id"
+  add_index "orders", ["advisor_id"], name: "index_orders_on_advisor_id"
+  add_index "orders", ["client_id"], name: "index_orders_on_client_id"
+  add_index "orders", ["warehouse_id"], name: "index_orders_on_warehouse_id"
+  add_index "orders", ["wine_id"], name: "index_orders_on_wine_id"
+
   create_table "producers", force: true do |t|
     t.string   "name"
     t.integer  "country_id"
@@ -202,6 +219,7 @@ ActiveRecord::Schema.define(version: 20140908142831) do
     t.datetime "updated_at"
     t.string   "name"
     t.string   "mobile"
+    t.integer  "address_id"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true

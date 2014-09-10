@@ -1,0 +1,56 @@
+<%= form_for(@order) do |f| %>
+
+<%# =============================== Errors  =============================== %>
+
+  <% if @order.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@order.errors.count, "error") %> prohibited this order from being saved:</h2>
+
+      <ul>
+      <% @order.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <h2>Delivery address</h2>
+
+<%# ================================ User ================================= %>
+  <%= f.hidden_field :client_id, :value => current_user.id, :disabled => "disabled" %>
+
+<%# =============================== Address =============================== %>
+<%# ------------------------------- Option1 ------------------------------- %>
+
+<%
+addressOptions = [['New address', -1]]
+current_user.addresses.each do |a|
+  addressOptions.push([a.full, a.id])
+end
+%>
+<%# debug options_from_collection_for_select(current_user.addresses, "id", "full", :selected => @order.address_id) %>
+  <%= select_tag "orderAddress",
+      # options_from_collection_for_select(current_user.addresses, "id", "full", :selected => @order.address_id),
+      options_for_select(addressOptions, @order.address_id),
+        :prompt => "Choose Address"
+  %>
+<%# ------------------------------- Option2 ------------------------------- %>
+<div id="new_address_fields" style="display:none;">
+  <div><input type="text" placeholder="No" /></div>
+  <div><input type="text" placeholder="Street Name" /></div>
+  <div><input type="text" placeholder="Postcode" /></div>
+</div>
+<div>
+  <a href="#" class="" id="">use address</a><!-- button -->
+</div>
+<%# =============================== Payment =============================== %>
+
+<h2>Link Payment</h2>
+
+<div><input type="text" placeholder="1234 5678 9012 3456" /></div>
+<div><input type="text" placeholder="MM/YY" /></div>
+<div><input type="text" placeholder="CVV" /></div>
+
+<%= f.submit "Submit" %>
+
+<% end %>

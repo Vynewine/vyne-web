@@ -24,6 +24,36 @@
     <%= f.text_field :mobile %>
   </div>
   <div class="field">
+    <%= f.label :address_id %><br>
+    <%= f.text_field :address_id %>
+  </div>
+
+  <div class="field">
+    <%= f.label :address %><br>
+    <%= debug @compositions %>
+    <a href="#" class="add_nested_field" data-parent-entity="user" data-nested-entity="addresses" data-field-name="detail,street,postcode" data-last-sum="<%= @user.addresses.count %>">Add address</a>
+    <% if @user.addresses %>
+    <% @user.addresses.each do |address| %>
+    <%= f.fields_for :addresses do |c| %>
+    <div class="field">
+      <%= c.label :detail %><br />
+      <%= c.text_field :detail %>
+    </div>
+    <div class="field">
+      <%= c.label :street %><br />
+      <%= c.text_field :street %>
+    </div>
+    <div class="field">
+      <%= c.label :postcode %><br />
+      <%= c.text_field :postcode %>
+    </div>
+    <% end %>
+    <% end %>
+    <% end %>
+  </div>
+
+
+  <div class="field">
     <% @roles.each do |role| %>
       <p>
         <%= check_box_tag 'user[role_ids][]', role.id, @user.roles.include?(role) %>

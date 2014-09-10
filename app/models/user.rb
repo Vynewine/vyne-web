@@ -1,5 +1,10 @@
 class User < ActiveRecord::Base
+
+  has_many :orders
+
   has_and_belongs_to_many :addresses
+  accepts_nested_attributes_for :addresses, :reject_if => :all_blank, :allow_destroy => true
+  
   after_create :assign_default_role
 
   # creatable_by?(user) can use methods like...
@@ -22,5 +27,11 @@ class User < ActiveRecord::Base
   def assign_default_role
     # puts "assigning"
     # self.add_role(:client)
+  end
+  def full_address
+    "dummy"
+    # if address
+    #   "#{address.detail} #{address.street} #{address.postcode}"
+    # end
   end
 end

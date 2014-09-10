@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  warehouse: 
+  client_id: MyString
+  advisor_id: MyString
+  wine: 
+  quantity: 1
+
+two:
+  warehouse: 
+  client_id: MyString
+  advisor_id: MyString
+  wine: 
+  quantity: 1
