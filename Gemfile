@@ -43,3 +43,6 @@ gem 'spring',        group: :development
 gem 'devise'
 gem 'authority'
 gem 'rolify'
+
+# Charging API
+gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'

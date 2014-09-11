@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  resources :payments
+
   root :to => "home#index"
 
   # Global pages
@@ -15,6 +17,7 @@ Rails.application.routes.draw do
 
   # Orders:
   get 'orders/list' => 'orders#list'
+  get 'orders/confirmed' => 'orders#confirmed'
 
   # ------------
 

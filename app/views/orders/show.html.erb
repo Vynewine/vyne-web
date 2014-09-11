@@ -14,17 +14,23 @@
 
 <p>
   <strong>Warehouse:</strong>
+  <% if @order.warehouse %>
   <%= @order.warehouse_id == 0 ? " - " : @order.warehouse.title %>
+  <% end %>
 </p>
 
 <p>
   <strong>Advisor:</strong>
+  <% if @order.advisor %>
   <%= @order.advisor_id == 0 ? " - " : @order.advisor.name %>
+  <% end %>
 </p>
 
 <p>
   <strong>Wine:</strong>
+  <% if @order.wine %>
   <%= @order.wine_id == 0 ? " - " : @order.wine.name %>
+  <% end %>
 </p>
 
 <p>
