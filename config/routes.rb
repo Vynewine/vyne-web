@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
 
+  # get 'buy/new'
+
+  # get 'buy/create'
+
   resources :payments
 
   root :to => "home#index"
@@ -25,6 +29,12 @@ Rails.application.routes.draw do
 
   devise_for :users
 
+  # Actions for customers are under "/shop"
+  scope '/shop' do
+    resources :buy
+  end
+
+  # Actions for admins are under "/admin"
   scope "/admin" do
     resources :producers
     resources :regions

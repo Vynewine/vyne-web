@@ -1,0 +1,86 @@
+<%= form_for(@order, :html => {:id => "order-form"}) do |f| %>
+<%# =============================== Errors  =============================== %>
+
+  <% if @order.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@order.errors.count, "error") %> prohibited this order from being saved:</h2>
+
+      <ul>
+      <% @order.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <h2>Delivery address</h2>
+
+<%# =============================== Address =============================== %>
+<%# ------------------------------- Option1 ------------------------------- %>
+
+<%
+addressOptions = [['New address', -1]]
+billingAddressOptions = [['Same address', -1],['Custom address', 0]]
+current_user.addresses.each do |a|
+  addressOptions.push([a.full, a.id])
+  billingAddressOptions.push([a.full, a.id])
+end
+%>
+<%= select_tag "orderAddress", options_for_select(addressOptions, @order.address_id), :prompt => "Choose Address", :name => "" %>
+<%# ------------------------------- Option2 ------------------------------- %>
+<div id="new_delivery_address" style="display:none;">
+  <div><input type="text" id="addr-no" name="address_d" placeholder="No" /></div>
+  <div><input type="text" id="addr-st" name="address_s" placeholder="Street Name" /></div>
+  <div><input type="text" id="addr-pc" name="address_p" placeholder="Postcode" /></div>
+</div>
+<input type="hidden" id="old-address" name="old_address" />
+<div>
+  <a href="#" class="" id="">use address</a><!-- button -->
+</div>
+<%# =============================== Payment =============================== %>
+
+<h2>Link Payment</h2>
+
+<%
+paymentCards = [['New payment card', -1]]
+current_user.payments.each do |a|
+  # [ :visa, :master, :american, :discover, :diners, :jcb ]
+  if a.brand == 3 # American Express
+    cardNumber = "**** ****** #{a.number}"
+  else
+    cardNumber = "**** **** **** #{a.number}"
+  end  
+  paymentCards.push([cardNumber, a.id])
+end
+%>
+
+<%= select_tag "orderCard", options_for_select(paymentCards, @order.payment_id), :prompt => "Choose Card", :name => "" %>
+<div id="new_card" style="display:none;">
+  <div><input type="text" id="pmnm" size="20" placeholder="0000 0000 0000 0000" data-stripe="number" /></div>
+  <div><input type="text" id="pmcv" size="4"  placeholder="CVC" data-stripe="cvc" /></div>
+  <div><input type="text" id="pmxp" size="5"  placeholder="MM/YY" /></div>
+</div>
+<!-- Hidden fields -->
+<input type="hidden" id="old-card" name="old_card" />
+<input type="hidden" id="new-card" name="new_card" />
+<input type="hidden" id="new-brand" name="new_brand" />
+<input type="hidden" id="expm" data-stripe="exp-month" />
+<input type="hidden" id="expy" data-stripe="exp-year" />
+<%# --------------------------- Billing address --------------------------- %>
+<%
+#<h3>Billing address</h3>
+#<div>
+# %= select_tag "billingAddress", options_for_select(billingAddressOptions, -1) %
+#</div>
+#<div id="new_billing_address" style="display:none;">
+#  <div><input type="text" placeholder="No" /></div>
+#  <div><input type="text" placeholder="Street Name" /></div>
+#  <div><input type="text" placeholder="Postcode" /></div>
+#</div>
+%>
+
+<div>
+  <%= f.submit "Submit" %>
+</div>
+
+<% end %>

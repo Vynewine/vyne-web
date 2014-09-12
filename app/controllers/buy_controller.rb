@@ -1,7 +1,6 @@
-class OrdersController < ApplicationController
-  layout "admin"
+class BuyController < ApplicationController
   before_action :authenticate_user!
-  authorize_actions_for SupplierAuthorizer # Triggers user check
+  # authorize_actions_for SupplierAuthorizer # Triggers user check
   before_action :set_order, only: [:show, :edit, :update, :destroy]
 
   # GET /orders
@@ -12,8 +11,7 @@ class OrdersController < ApplicationController
 
   # GET /orders/list
   def list
-    @orders = Order.all
-    render :layout => 'application'
+    @orders = Order.find_by(:user => current_user)
   end
 
   # GET /orders/1
@@ -166,3 +164,4 @@ class OrdersController < ApplicationController
       )
     end
 end
+
