@@ -13,7 +13,13 @@
     <% @warehouses.each do |warehouse| %>
       <tr>
         <td><%= warehouse.title %></td>
-        <td><%= warehouse.address.detail %> <%= warehouse.address.postcode %></td>
+        <td>
+          <% if warehouse.address %>
+          <%= warehouse.address.full %>
+          <% else %>
+          -
+          <% end %>
+        </td>
         <td class="button-wrapper">
           <%= link_to warehouse do %>
             <i class="flaticon stroke zoom-1"></i>

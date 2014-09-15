@@ -3,6 +3,7 @@
 <table>
   <thead>
     <tr>
+      <th>Status</th>
       <th>Client</th>
       <th>Address</th>
       <th>Warehouse</th>
@@ -16,15 +17,28 @@
   <tbody>
     <% @orders.each do |order| %>
       <tr>
+        <td><%= order.status.label %></td>
         <td><%= order.client_id %> - <%= order.client.name %></td>
         <td><%= order.address.postcode %></td>
         <td><%= order.warehouse_id %></td>
         <td><%= order.advisor_id %></td>
         <td><%= order.wine_id %></td>
         <td><%= order.quantity %></td>
-        <td><%= link_to 'Show', order %></td>
-        <td><%= link_to 'Edit', edit_order_path(order) %></td>
-        <td><%= link_to 'Destroy', order, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td class="button-wrapper">
+          <%= link_to order do %>
+            <i class="flaticon stroke zoom-1"></i>
+          <% end %>
+        </td>
+        <td class="button-wrapper">
+          <%= link_to edit_order_path(order) do %>
+            <i class="flaticon stroke pencil-2"></i>
+          <% end %>
+        </td>
+        <td class="button-wrapper">
+          <%= link_to order, method: :delete, data: { confirm: 'Are you sure?' } do %>
+            <i class="flaticon stroke trash-2"></i>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>

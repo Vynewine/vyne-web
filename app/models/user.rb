@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :addresses
   accepts_nested_attributes_for :addresses, :reject_if => :all_blank, :allow_destroy => true
   
-  after_create :assign_default_role
+  after_create :assign_code
 
   # creatable_by?(user) can use methods like...
   include Authority::Abilities
@@ -25,7 +25,10 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
   validates :name, :email, :mobile, :presence => true
   # belongs_to :roles
-  def assign_default_role
+  def assign_code
+    self.code = rand(9999).to_s.rjust(4, "0")
+    self.active = false
+    self.save
     # puts "assigning"
     # self.add_role(:client)
   end

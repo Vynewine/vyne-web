@@ -1,7 +1,11 @@
-class BuyController < ApplicationController
+class ShopController < ApplicationController
   before_action :authenticate_user!
-  # authorize_actions_for SupplierAuthorizer # Triggers user check
+  authorize_actions_for UserAuthorizer # Triggers user check
   before_action :set_order, only: [:show, :edit, :update, :destroy]
+
+  # GET /welcome
+  def welcome
+  end
 
   # GET /orders
   # GET /orders.json

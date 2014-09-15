@@ -1,15 +1,20 @@
 <p id="notice"><%= notice %></p>
 
 <p>
+  <strong>Status:</strong>
+  <%= @order.status.label %>
+</p>
+
+<p>
   <strong>Client:</strong>
   <%= @order.client.name %>
 </p>
 
 <p>
   <strong>Address:</strong>
-  <%= @order.address.detail %>
-  <%= @order.address.street %>
-  <%= @order.address.postcode %>
+  <% if @order.address %>
+  <%= @order.address.full %>
+  <% end %>
 </p>
 
 <p>

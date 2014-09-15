@@ -1,0 +1,15 @@
+
+<%= @confirmationCode %>
+
+<div class="sign-in-box">
+<%= form_tag("/signup/activate") do |f| %>
+    <div class="fieldset">
+        <h1>Register</h1>
+        <p>
+            Enter code here.
+        </p>
+        <%= text_field :code, :confirmation, autofocus: true, :placeholder => "Enter code" %>
+        <%= submit_tag "Continue" %>
+    </div>
+<% end %>
+</div>

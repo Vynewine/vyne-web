@@ -26,6 +26,10 @@ body {
     clear: both;
 }
 
+header {
+    background: black;
+}
+
 ul.top-menu,
 ul.main-menu {
     // No style
@@ -38,7 +42,7 @@ ul.main-menu {
 
     // Appearance
     background: #333;
-    height: 40px;
+    min-height: 40px;
 
     & > li {
         display: inline-block;
@@ -53,6 +57,9 @@ ul.main-menu {
         }
         & > a:hover {
             background: black;
+        }
+        &.superadmin > a {
+            color: cyan;
         }
     }
 }

@@ -18,14 +18,6 @@
 var ready = function() {
     // console.log('Doc is apparently ready');
     if (typeof(admin) !== 'undefined' && admin !== null && admin === true) {
-        var tokenFields = ["occasion", "food", "note"];
-        for (var i = 0; i < tokenFields.length; i++) {
-            $("#wine_" + tokenFields[i] + "_tokens").tokenInput("/admin/" + tokenFields[i] + "s.json", {
-                crossDomain: false,
-                prePopulate: $("#wine_" + tokenFields[i] + "_tokens").data("pre"),
-                theme: 'facebook'
-            });
-        }
     } else {
         // console.log('Executing onReady functions');
         // Transferred from client.js

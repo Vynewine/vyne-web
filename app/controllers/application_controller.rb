@@ -16,12 +16,16 @@ class ApplicationController < ActionController::Base
 
   # Devise overrides for signing in
   def after_sign_in_path_for(resource_or_scope)
-    welcome_path
+    if current_user.active?
+      welcome_path
+    else
+      entercode_path
+    end
   end
 
   # Devise overrides for signing up
   def after_sign_up_path_for(resource)
-    welcome_path
+    entercode_path
   end
 
 end

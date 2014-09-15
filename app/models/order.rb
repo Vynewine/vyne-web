@@ -1,4 +1,5 @@
 class Order < ActiveRecord::Base
+  belongs_to :status
   belongs_to :address
   belongs_to :warehouse
   belongs_to :payment

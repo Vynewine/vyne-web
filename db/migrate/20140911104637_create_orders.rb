@@ -7,6 +7,7 @@ class CreateOrders < ActiveRecord::Migration
       t.integer :wine_id
       t.integer :address_id
       t.integer :payment_id
+      t.integer :status_id
       t.integer :quantity
 
       t.timestamps
@@ -17,5 +18,6 @@ class CreateOrders < ActiveRecord::Migration
     add_index :orders, :wine_id
     add_index :orders, :address_id
     add_index :orders, :payment_id
+    add_index :orders, :status_id
   end
 end

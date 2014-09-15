@@ -18,6 +18,7 @@ class WarehousesController < ApplicationController
   # GET /warehouses/new
   def new
     @warehouse = Warehouse.new
+    @warehouse.build_address
   end
 
   # GET /warehouses/1/edit

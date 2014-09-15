@@ -3,9 +3,7 @@
 <table>
   <thead>
     <tr>
-      <th>Client</th>
       <th>Address</th>
-      <th>Warehouse</th>
       <th>Advisor</th>
       <th>Wine</th>
       <th>Quantity</th>
@@ -16,9 +14,7 @@
   <tbody>
     <% @orders.each do |order| %>
       <tr>
-        <td><%= order.client_id %> - <%= order.client.name %></td>
-        <td><%= order.address.postcode %></td>
-        <td><%= order.warehouse_id %></td>
+        <td><%= order.address.full %></td>
         <td><%= order.advisor_id %></td>
         <td><%= order.wine_id %></td>
         <td><%= order.quantity %></td>
@@ -32,4 +28,4 @@
 
 <br>
 
-<%= link_to 'New Order', new_buy_path %>
+<%= link_to 'New Order', {controller: "shop", action: "new"} %>

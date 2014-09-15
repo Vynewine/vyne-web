@@ -1,11 +1,8 @@
 Rails.application.routes.draw do
 
-  # get 'buy/new'
-
-  # get 'buy/create'
-
-  resources :payments
-
+  # ----------------------------------------------------------------------------
+  # General access
+  
   root :to => "home#index"
 
   # Global pages
@@ -17,22 +14,59 @@ Rails.application.routes.draw do
   get 'warehouses/addresses' => 'home#warehouses'
 
   # Signed only:
-  get 'welcome' => 'home#welcome'
+  # get 'welcome' => 'home#welcome'
 
   # Orders:
-  get 'orders/list' => 'orders#list'
-  get 'orders/confirmed' => 'orders#confirmed'
+  # get 'orders/list' => 'orders#list'
+  # get 'orders/confirmed' => 'orders#confirmed'
 
   # ------------
 
   resources :orders
 
+  # ----------------------------------------------------------------------------
+  # User authentication:
+
   devise_for :users
 
-  # Actions for customers are under "/shop"
-  scope '/shop' do
-    resources :buy
+  devise_scope :user do
+    get "/signup" => "devise/registrations#new"
+    get "/login" => "devise/sessions#new"
+    delete "/logout" => "devise/sessions#destroy"
   end
+
+  scope '/signup' do
+    get 'entercode' => 'home#code'
+    post 'activate' => 'home#activate'
+  end
+
+  # ----------------------------------------------------------------------------
+  # Customer access
+
+  # Actions for customers are under "/shop"
+  # resources :shop
+  scope '/shop' do
+    get 'welcome'   => 'shop#welcome'
+    get 'mywines'   => 'shop#index'
+    get 'list'      => 'shop#list'
+    get 'show'      => 'shop#show'
+    get 'order'     => 'shop#new'
+    get 'confirmed' => 'shop#confirmed'
+    get 'edit'      => 'shop#edit'
+    get 'create'    => 'shop#create'
+    get 'update'    => 'shop#update'
+    get 'destroy'   => 'shop#destroy'
+
+
+    # get 'welcome' => 'shop#welcome'
+    # get 'order' => 'shop#new'
+    # get 'mywines' => 'shop#index'
+
+    # get 'confirmed' => 'shop#confirmed'
+  end
+
+  # ----------------------------------------------------------------------------
+  # Admin access
 
   # Actions for admins are under "/admin"
   scope "/admin" do
@@ -54,6 +88,8 @@ Rails.application.routes.draw do
     resources :addresses
     resources :warehouses
     resources :orders
+    resources :payments
+    resources :statuses
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

@@ -18,7 +18,7 @@
       <header id="header">
         <div class="header-holder">
           <strong class="logo">
-<%= link_to home_index_path do %>
+<%= link_to root_path do %>
               <%= image_tag "logo-2x.png", :alt => "image description" %>
               <!-- <span data-picture data-alt="image description"> -->
                 <!-- <span data-src="/assets/logo.png" ></span> -->
@@ -39,51 +39,7 @@
       </div>
     </div>
 
-<div class="aside-bar">
-  <nav>
-    <ul class="nav">
-<% if user_signed_in? %>
-      <li class="sign-in">
-          <%= link_to "Sign out",
-          destroy_user_session_path,
-          :method => :delete
-          %>
-      </li>
-<% if current_user.has_role?(:supplier) ||
-      current_user.has_role?(:admin) ||
-      current_user.has_role?(:superadmin)
-%>
-      <li class="sign-in">
-          <%= link_to 'Admin',
-          producers_path
-          %>
-      </li>
-<% end %>
-<% else %>
-      <li class="sign-in">
-          <%= link_to "Sign in",
-          new_user_session_path
-          %>
-      </li>
-<% end %>
-      <li class="hidden"><a href="#" class="order">Track order</a></li>
-      <li class="hidden"><a href="#" class="profile">Profile</a></li>
-      <li class="hidden"><a href="#" class="payment">Payment</a></li>
-      <li class="hidden"><a href="#" class="support">Support</a></li>
-      <li><a href="#" class="promotions">Promotions</a></li>
-      <li class="hidden"><a href="#" class="history">Order History</a></li>
-      <li class="hidden"><a href="#" class="share">Share</a></li>
-    </ul>
-  </nav>
-  <nav>
-    <ul class="nav">
-      <li><%= link_to 'Home', home_index_path %></li>
-      <li><a href="#" class="about">About</a></li>
-    </ul>
-  </nav>
-  <a href="#" class="sign-out hidden">Sign out</a>
-</div>
-
+<%= render :partial => "layouts/sidemenu" %>
 
   </div>
   <%# javascript_include_tag 'data-turbolinks-track' => true %>

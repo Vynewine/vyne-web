@@ -31,6 +31,14 @@ var adminReady = function() {
     console.log('ADMIN JS');
     // console.log('Doc is apparently ready');
     if (typeof(admin) !== 'undefined' && admin !== null && admin === true) {
+        var tokenFields = ["occasion", "food", "note"];
+        for (var i = 0; i < tokenFields.length; i++) {
+            $("#wine_" + tokenFields[i] + "_tokens").tokenInput("/admin/" + tokenFields[i] + "s.json", {
+                crossDomain: false,
+                prePopulate: $("#wine_" + tokenFields[i] + "_tokens").data("pre"),
+                theme: 'facebook'
+            });
+        }
         $('.add_nested_field').click(function(e){
             e.preventDefault();
             console.log('Generating field',
