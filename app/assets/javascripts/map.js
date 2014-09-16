@@ -1,6 +1,7 @@
 function MapUtility() {
     "use strict";
     var _this = this;
+    _this.key = "AIzaSyAYpKRqaf8jYVoxl39_Y1mXnHZ9sJbBTHY";
 
     // 1 mile = 1.609344 kilometres
     _this.mileToKm = function(miles) {
@@ -14,7 +15,7 @@ function MapUtility() {
 
     _this.findCoordinatesAndExecute = function(postcode, methodParamSuccess, methodParamError) {
         var filteredCode = postcode.toUpperCase().replace(/[^A-Z0-9]/g, "");
-        var key = "AIzaSyBG_RQQigx8WsMaYH9dxe1hQVYlhbTZHro"
+        var key = _this.key;
         var address = "https://maps.googleapis.com/maps/api/geocode/json?address=London+" + filteredCode + "+UK&key=" + key;
         console.log('Postcode is ' + filteredCode);
         console.log('Request to google: ', address);
@@ -59,7 +60,7 @@ function MapUtility() {
     _this.locateAndDo = function(postcode, methodParam) {
         // postcode = "SW6-6 ha";
         var filteredCode = postcode.toUpperCase().replace(/[^A-Z0-9]/g, "");
-        var key = "AIzaSyBG_RQQigx8WsMaYH9dxe1hQVYlhbTZHro"
+        var key = _this.key;
         var address = "https://maps.googleapis.com/maps/api/geocode/json?address=London+" + filteredCode + "+UK&key=" + key;
         console.log(address);
         var errorMethod = function(xhr) {
@@ -68,37 +69,86 @@ function MapUtility() {
         loadJSON(address, methodParam, errorMethod);
     };
 
-    // Returns distance between two points in kilometres
-    _this.calculateDistancesForAllWarehouses = function(userLng, userLat, returnMethod) {
-        console.log('Calculating lng and lat for warehouses');
-        var address = "/warehouses/addresses.json";
+
+
+
+
+
+
+    _this.calculateDistanceBetween = function(origins, destinations, distances, callbackMethod) {
+
+        // DUMMY
+        destinations=['EC1N8DX', 'SE39RQ', 'SW65HU', 'E62JT'];
+        distances=[5,7,5,5];
+        // -- DUMMY
+
+        console.log('origin: ', origins);
+        console.log('destinations: ', destinations);
+        var mapUtil = new MapUtility(); // recursive! =D
+
+        var service = new google.maps.DistanceMatrixService();
+
+        service.getDistanceMatrix({
+                  origins: origins,
+             destinations: destinations,
+               travelMode: google.maps.TravelMode.DRIVING,
+               unitSystem: google.maps.UnitSystem.IMPERIAL,
+        durationInTraffic: false,
+            avoidHighways: false,
+               avoidTolls: false
+        },
+        function(response, status) {
+            console.log('status:', status);
+            console.log('response:', response);
+            var distanceKm = 0;
+            var distanceMi = 0;
+            var deliverable = false;
+            for (var i = 0; i < response.rows[0].elements.length; i++) {
+                // console.log('response:', response.rows[0].elements[i].distance.value); //in KM
+                if (response.rows[0].elements[i].status === "OK") {
+                    distanceKm = parseInt(response.rows[0].elements[i].distance.value);
+                    distanceMi = mapUtil.kmToMile(distanceKm/1000);
+                    if (distanceMi >= parseInt(distances[i]))
+                        deliverable = true;
+                }
+                // console.log(distances[i]);
+                // console.log('distance in miles:', distanceMi); //in KM
+            }
+            callbackMethod(deliverable);
+        });
+    };
+
+
+
+
+
+    _this.calculateDistanceForAllWarehouses = function(postcode, callbackMethod) {
+        var locAddress = "/warehouses/addresses.json";
+
+        // Callback for warehouse addresses:
+        var warehousesMethod = function(data) {
+            console.log('JSON success:', data);
+            var mapUtil = new MapUtility(); // recursive! =D
+            var allPostcodes = [];
+            var allDistances = [];
+            for (var i = 0; i < data.warehouses.length; i++) {
+                // var warehouseId = data.warehouses[i].id;
+                // var warehouseAddress = data.warehouses[i].address;
+                // var warehouseDistance = data.warehouses[i].distance;
+                allDistances.push(data.warehouses[i].distance);
+                allPostcodes.push(data.warehouses[i].address);
+            }
+            mapUtil.calculateDistanceBetween([postcode], allPostcodes, allDistances, callbackMethod);
+
+        };
+
         var errorMethod = function(xhr) {
             console.error("JSON acess error: ", xhr);
         };
-        var fetchMethod = function(data) {
-            console.log('JSON success');
-            var mapUtil = new MapUtility();
-            for (var i = 0; i < data.warehouses.length; i++) {
-                var warehouseId = data.warehouses[i].id;
-                var warehouseAddress = data.warehouses[i].address;
-                var warehouseDistance = data.warehouses[i].distance;
-                var deliverable = false;
-                mapUtil.locateAndDo(warehouseAddress,
-                function(data) {
-                    var distanceKm = mapUtil.calculateDistance(userLng, userLat, data.results[0].geometry.location.lng, data.results[0].geometry.location.lat);
-                    var distanceMile = mapUtil.kmToMile(distanceKm);
-                    if (distanceMile <= warehouseDistance) {
-                        deliverable = true;
-                    }
-                    console.log(distanceMile, ' miles');
-                    console.log('deliverable', deliverable);
-                    returnMethod(deliverable);
-                },
-                function() {
-                    console.log('Failed calculate distance');
-                });
-            };
-        };
-        loadJSON(address, fetchMethod, errorMethod);
+
+        // Fetching warehouse addresses:
+        loadJSON(locAddress, warehousesMethod, errorMethod);
+        // callbackMethod();
     };
+
 }

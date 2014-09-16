@@ -1,4 +1,4 @@
-<%= form_for(@order, :html => {:id => "order-form"}) do |f| %>
+<%= form_for(@order, url: create_path(@order), :html => {:id => "order-form"}) do |f| %>
 <%# =============================== Errors  =============================== %>
 
   <% if @order.errors.any? %>
@@ -29,9 +29,9 @@ end
 <%= select_tag "orderAddress", options_for_select(addressOptions, @order.address_id), :prompt => "Choose Address", :name => "" %>
 <%# ------------------------------- Option2 ------------------------------- %>
 <div id="new_delivery_address" style="display:none;">
-  <div><input type="text" id="addr-no" name="address_d" placeholder="No" /></div>
-  <div><input type="text" id="addr-st" name="address_s" placeholder="Street Name" /></div>
   <div><input type="text" id="addr-pc" name="address_p" placeholder="Postcode" /></div>
+  <div><input type="text" disabled="disabled" id="addr-st" name="address_s" placeholder="Street Name" /></div>
+  <div><input type="text" disabled="disabled" id="addr-no" name="address_d" placeholder="No" /></div>
 </div>
 <input type="hidden" id="old-address" name="old_address" />
 <div>

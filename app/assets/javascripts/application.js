@@ -22,7 +22,7 @@ var ready = function() {
         // console.log('Executing onReady functions');
         // Transferred from client.js
         loadCrappyCode();
-        formStepSetup();
+        // formStepSetup();
     }
 
 };

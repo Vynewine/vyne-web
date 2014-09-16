@@ -82,6 +82,7 @@ function stripeResponseHandler(status, response) {
  * Class that gives support for card information.
  */
 function CardUtilities() {}
+
     /**
      * Static function to validate card number.
      */
@@ -129,6 +130,91 @@ function CardUtilities() {}
     };
 
 $(document).ready(function(){
+
+    /**
+     * Check postcode delivery possibilities:
+     */
+    $('#addr-pc').keyup(function(e){
+
+        var postcode = $(this).val().toUpperCase().replace(/[^A-Z0-9]/g, "");
+
+        // Fields:
+        var $street = $('#addr-st');
+        var $detail = $('#addr-no');
+
+        if (postcode.length < 5) {
+            // Empty fields:
+            $street.val('');
+            $detail.val('');
+            // Disable fields:
+            $street.attr('disabled','disabled');
+            $detail.attr('disabled','disabled');
+        } else {
+
+            var mapUtil = new MapUtility();
+
+            mapUtil.calculateDistanceForAllWarehouses(postcode, function(deliverable) {
+                // console.log('callback 1', deliverable);
+                if (deliverable) {
+
+                    // Google API cannot find the street name based on the postcode!
+                    // This is why we must first find the damn longitude and latitude first.
+                    // So this is a 2-step process, don't be alarmed.
+
+                    /**
+                     * Callback for when the coordinates are returned from Google.
+                     * This will request a geocode lookup to fetch the address.
+                     */
+                    var successCallback = function(coordinates) {
+                        // console.log('okie', coordinates.lng, coordinates.lat);
+
+                        var geocoder = new google.maps.Geocoder();
+                        var latlng = new google.maps.LatLng(coordinates.lat, coordinates.lng);
+                        
+                        /**
+                         * Formats readable address and updates interface.
+                         */
+                        var successAddressCallback = function(results, status) {
+                            if (status == google.maps.GeocoderStatus.OK) {
+                                // console.log(results[0].formatted_address);
+                                var fullAddress = results[0].formatted_address;
+                                var simpleAddress = fullAddress.split(',')[0];
+                                var street = simpleAddress.replace(/[\d]+\s/, "");
+                                var detail = simpleAddress.match(/[\d]+/)[0];
+                                // console.log(simpleAddress);
+                                // console.log(street);
+                                // console.log(detail);
+
+                                $street.val(street);
+                                $detail.val(detail);
+                                $street.removeAttr('disabled');
+                                $detail.removeAttr('disabled');
+                            } else {
+                                console.error("Geocode was not successful for the following reason: " + status);
+                            }
+                        };
+
+                        // Address lookup:
+                        geocoder.geocode( { 'latLng': latlng}, successAddressCallback);
+                    };
+
+                    /**
+                     * Error callback method for the coordinates lookup.
+                     * The postcode is already considered to be "deliverable", so it enables the fields anyway.
+                     */
+                    var errorCallback = function() {
+                        console.error('Could not find coordinates for this postcode!');
+                        $street.removeAttr('disabled');
+                        $detail.removeAttr('disabled');
+                    };
+
+                    // Coordinates lookup:
+                    mapUtil.findCoordinatesAndExecute(postcode, successCallback, errorCallback);
+
+                }
+            });
+        }
+    });
 
     /**
      * Field masks:

@@ -43,12 +43,18 @@
 
   </div>
   <%# javascript_include_tag 'data-turbolinks-track' => true %>
-<% if params[:controller] == 'orders' %>
-  <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-  <script type="text/javascript">
+<% if params[:controller] == 'shop' %>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYpKRqaf8jYVoxl39_Y1mXnHZ9sJbBTHY"></script>
+  <script>console.log('google maps loaded');</script>
+  <script src="https://js.stripe.com/v2/"></script>
+  <script>
     Stripe.setPublishableKey('pk_test_6pRNASCoBOKtIshFeQd4XMUh');
+    console.log('stripe loaded');
   </script>
 <% end %>
   <%= javascript_include_tag 'application' %>
+
+<div style="display:none;"><%= params[:controller] %></div>
+
 </body>
 </html>

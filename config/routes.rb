@@ -53,7 +53,7 @@ Rails.application.routes.draw do
     get 'order'     => 'shop#new'
     get 'confirmed' => 'shop#confirmed'
     get 'edit'      => 'shop#edit'
-    get 'create'    => 'shop#create'
+    post 'create'    => 'shop#create'
     get 'update'    => 'shop#update'
     get 'destroy'   => 'shop#destroy'
 
