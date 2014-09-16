@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+
   # ----------------------------------------------------------------------------
   # General access
   
@@ -82,6 +83,7 @@ Rails.application.routes.draw do
     resources :foods
     resources :occasions
     resources :appellations
+    resources :categories
     resources :wines
     resources :roles
     resources :users

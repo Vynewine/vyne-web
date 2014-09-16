@@ -39,6 +39,7 @@
     <li><%= link_to 'Appellations', appellations_path %></li>
     <li><%= link_to 'Wines', wines_path %></li>
   <% if current_user.has_role?(:superadmin) %>
+    <li class="superadmin"><%= link_to 'Categories', categories_path %></li>
     <li class="superadmin"><%= link_to 'Orders', orders_path %></li>
     <li class="superadmin"><%= link_to 'Statuses', statuses_path %></li>
     <li class="superadmin"><%= link_to 'Users', users_path %></li>

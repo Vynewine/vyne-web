@@ -13,74 +13,206 @@
     </div>
   <% end %>
 
-  <h2>Delivery address</h2>
+<%# ============================ Address check ============================ %>
+  <div class="step">
+    <div>
+      <input type="text" id="filterPostcode" />
+    </div>
+    <div>
+      <span id="filterPostcodeMessage"></span>
+    </div>
+    <div>
+      <a href="grey-button">Use postcode</a>
+    </div>
+  </div>
 
-<%# =============================== Address =============================== %>
-<%# ------------------------------- Option1 ------------------------------- %>
 
+<%# ============================= Wine type 1 ============================= %>
+
+  <div class="step">
+    <h1>select your bottle</h1>
+    <ul class="bottle-list">
+<% @categories.each do |category| %>
+      <li>
+        <a href="" data-category-id="<%= category.id %>">
+          <img src="" alt="" />
+          <span class="price">£<%= category.price %></span>
+          <span class="label"><%= category.name %></span>
+        </a>
+      </li>
+<% end %>
+    </ul>
+    <div>
+      <!-- This anchor is useless, the wide-details has another one -->
+      <a href="grey-button">Select</a>
+    </div>
+  </div>
+
+<%# ============================= Wine type 2 ============================= %>
+
+<% @categories.each do |category| %>
+  <%# 'category-details' and 'category-XXX' are used in the javascript %>
+  <%# I used 'popup' to opose 'step', because they overlap %>
+  <div class="popup category-details category-<%= category.id %>">
+    <h1>select your bottle</h1>
+    <div class="icon">
+      <img src="" />
+      <span class="title">£<%= category.price %></span>
+      <span class="label"><%= category.name %></span> <!-- label, reserve, etc -->
+    </div>
+    <div class="description">
+      <%= category.description %>
+    </div>
+    <div>
+      <img src="" />
+      <span class="label">Chosen by you with our digital sommelier</span>
+    </div>
+    <div>
+      <span class="title">£<%= category.restaurant_price %></span>
+      <span class="label">What you would pay in a restaurant</span>
+    </div>
+    <div>
+      <a href="" class="red-button">Select</a><!-- Next step -->
+    </div>
+  </div>
+<% end %>
+
+<%# ============================= Preferences ============================= %>
+
+  <div class="step">
+    <h1>Write down any ideas to help us choose your wine</h1>
+    <div>What is your occasion?</div>
+    <%= text_field :preferences, :occasion, :placeholder => "e.g. date, family dinner" %>
+    <div>What is are you eating?</div>
+    <%= text_field :preferences, :food    , :placeholder => "e.g. dish, ingredients, cuisine" %>
+    <div>Already have a type of wine in mind?</div>
+    <%= text_field :preferences, :type    , :placeholder => "e.g. region, grape, style" %>
+    <div>Other aspects you like?</div>
+    <%= text_field :preferences, :other   , :placeholder => "e.g. flavours, textures" %>
+  </div>
+
+<%# =============================== Sign up =============================== %>
+<%# wtf man... %>
+
+    <div class="step">
+        <h1>Register</h1>
+        <div>
+          <%= text_field :user, :name, :placeholder => "Name" %>
+        </div>
+        <div>
+          <%= email_field :user, :email,
+          :autocomplete => "off",
+          :placeholder => "Email" %>
+        </div>
+        <div>
+          <%= text_field :user, :mobile,
+          :autocomplete => "off",
+          :placeholder => "Mobile" %>
+        </div>
 <%
-addressOptions = [['New address', -1]]
-billingAddressOptions = [['Same address', -1],['Custom address', 0]]
-current_user.addresses.each do |a|
-  addressOptions.push([a.full, a.id])
-  billingAddressOptions.push([a.full, a.id])
+passPlaceholder = "Password"
+if @validatable
+passPlaceholder += " (#{@minimum_password_length} characters minimum)"
 end
 %>
-<%= select_tag "orderAddress", options_for_select(addressOptions, @order.address_id), :prompt => "Choose Address", :name => "" %>
-<%# ------------------------------- Option2 ------------------------------- %>
-<div id="new_delivery_address" style="display:none;">
-  <div><input type="text" id="addr-pc" name="address_p" placeholder="Postcode" /></div>
-  <div><input type="text" disabled="disabled" id="addr-st" name="address_s" placeholder="Street Name" /></div>
-  <div><input type="text" disabled="disabled" id="addr-no" name="address_d" placeholder="No" /></div>
-</div>
-<input type="hidden" id="old-address" name="old_address" />
-<div>
-  <a href="#" class="" id="">use address</a><!-- button -->
-</div>
+        <div>
+            <%=
+            password_field :user,
+            :password,
+            :autocomplete => "off",
+            :placeholder => passPlaceholder
+            %>
+        </div>
+        <div>
+            <%=
+            password_field :user,
+            :password_confirmation,
+            :autocomplete => "off",
+            :placeholder => "Confirm password"
+            %>
+        </div>
+        <!-- <a href="#" class="btn-next" data-next-step="form-step-last">NEXT</a> -->
+    </div>
+
+<%# ========================== Address selection ========================== %>
+
+  <div class="step">
+    <h1>Delivery address</h1>
+
+<%# - - - - - -- - - - - - - - - -  Option1 - - - - - -- - - - - - - - - -  %>
+
+    <%
+    addressOptions = [['New address', -1]]
+    billingAddressOptions = [['Same address', -1],['Custom address', 0]]
+    if current_user
+      current_user.addresses.each do |a|
+        addressOptions.push([a.full, a.id])
+        billingAddressOptions.push([a.full, a.id])
+      end
+    end
+    %>
+    <%= select_tag "orderAddress", options_for_select(addressOptions, @order.address_id), :prompt => "Choose Address", :name => "" %>
+
+<%# - - - - - -- - - - - - - - - -  Option2 - - - - - -- - - - - - - - - -  %>
+
+    <div id="new_delivery_address" style="display:none;">
+      <div><input type="text" id="addr-pc" name="address_p" placeholder="Postcode" /></div>
+      <div><input type="text" disabled="disabled" id="addr-st" name="address_s" placeholder="Street Name" /></div>
+      <div><input type="text" disabled="disabled" id="addr-no" name="address_d" placeholder="No" /></div>
+    </div>
+    <input type="hidden" id="old-address" name="old_address" />
+    <div>
+      <!-- Next step -->
+      <a href="#" class="grey-button" id="">use address</a> <!-- Changes class to 'red-button' -->
+    </div>
+  </div>
+<%# ========================= Address confirmation ======================== %>
+<%#
+  #  <div class="step">
+  #    <h1>Delivery address confirmed</h1>
+  #    <p>Once you've booked your order we'll deliver to this address</p>
+  #    <!-- 'confirmed-address' is used by JS -->
+  #    <address class="confirmed-address"></address>
+  #    <div>
+  #        <a href="#" class="red-button" id="">choose your wine</a><!-- Next step -->
+  #    </div>
+  #  </div>
+%>
 <%# =============================== Payment =============================== %>
 
-<h2>Link Payment</h2>
+  <div class="step">
+    <h1>Link Payment</h1>
 
 <%
 paymentCards = [['New payment card', -1]]
-current_user.payments.each do |a|
-  # [ :visa, :master, :american, :discover, :diners, :jcb ]
-  if a.brand == 3 # American Express
-    cardNumber = "**** ****** #{a.number}"
-  else
-    cardNumber = "**** **** **** #{a.number}"
-  end  
-  paymentCards.push([cardNumber, a.id])
+if current_user
+  current_user.payments.each do |a|
+    # [ :visa, :master, :american, :discover, :diners, :jcb ]
+    if a.brand == 3 # American Express
+      cardNumber = "**** ****** #{a.number}"
+    else
+      cardNumber = "**** **** **** #{a.number}"
+    end  
+    paymentCards.push([cardNumber, a.id])
+  end
 end
 %>
 
-<%= select_tag "orderCard", options_for_select(paymentCards, @order.payment_id), :prompt => "Choose Card", :name => "" %>
-<div id="new_card" style="display:none;">
-  <div><input type="text" id="pmnm" size="20" placeholder="0000 0000 0000 0000" data-stripe="number" /></div>
-  <div><input type="text" id="pmcv" size="4"  placeholder="CVC" data-stripe="cvc" /></div>
-  <div><input type="text" id="pmxp" size="5"  placeholder="MM/YY" /></div>
-</div>
-<!-- Hidden fields -->
-<input type="hidden" id="old-card" name="old_card" />
-<input type="hidden" id="new-card" name="new_card" />
-<input type="hidden" id="new-brand" name="new_brand" />
-<input type="hidden" id="expm" data-stripe="exp-month" />
-<input type="hidden" id="expy" data-stripe="exp-year" />
-<%# --------------------------- Billing address --------------------------- %>
-<%
-#<h3>Billing address</h3>
-#<div>
-# %= select_tag "billingAddress", options_for_select(billingAddressOptions, -1) %
-#</div>
-#<div id="new_billing_address" style="display:none;">
-#  <div><input type="text" placeholder="No" /></div>
-#  <div><input type="text" placeholder="Street Name" /></div>
-#  <div><input type="text" placeholder="Postcode" /></div>
-#</div>
-%>
-
-<div>
-  <%= f.submit "Submit" %>
-</div>
+    <%= select_tag "orderCard", options_for_select(paymentCards, @order.payment_id), :prompt => "Choose Card", :name => "" %>
+    <div id="new_card" style="display:none;">
+      <div><input type="text" id="pmnm" size="20" placeholder="0000 0000 0000 0000" data-stripe="number" /></div>
+      <div><input type="text" id="pmcv" size="4"  placeholder="CVC" data-stripe="cvc" /></div>
+      <div><input type="text" id="pmxp" size="5"  placeholder="MM/YY" /></div>
+    </div>
+    <!-- Hidden fields -->
+    <input type="hidden" id="old-card" name="old_card" />
+    <input type="hidden" id="new-card" name="new_card" />
+    <input type="hidden" id="new-brand" name="new_brand" />
+    <input type="hidden" id="expm" data-stripe="exp-month" />
+    <input type="hidden" id="expy" data-stripe="exp-year" />
+    <div>
+      <%= f.submit "Submit", :class => 'red-button' %>
+    </div>
+  </div>
 
 <% end %>

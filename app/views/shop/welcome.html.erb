@@ -1,10 +1,5 @@
-<div class="bg-page">
-    <%= image_tag "img-2.jpg", :alt => "image description" %>
-</div>
-<div class="holder">
-    <div class="order-holder">
-        <h1>Thanks for signing up <%= current_user.name %></h1>
-        <p>Get your wines delivered for £20</p>
-    	<%= link_to 'ORDER NOW', {controller: "shop", action: "new"}, :class => "btn call" %>
-    </div>
+<div>
+    <h1>Thanks for signing up <%= current_user.name %></h1>
+    <p>Get your wines delivered for £20</p>
+    <%= link_to 'ORDER NOW', {controller: "shop", action: "new"}, :class => "btn call" %>
 </div>

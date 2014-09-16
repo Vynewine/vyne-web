@@ -9,26 +9,12 @@
 </head>
 <body>
   <div id="wrapper"<% if params[:controller] == 'home' %> class="home-page"<% end %>>
-<% if params[:controller] == 'devise/sessions' || params[:controller] == 'devise/registrations' %>
-    <div class="bg-page">
-      <%= image_tag "img-10.jpg", :alt => "image description" %>
-    </div>
-<% end %>
     <div class="w1">
       <header id="header">
         <div class="header-holder">
-          <strong class="logo">
 <%= link_to root_path do %>
               <%= image_tag "logo-2x.png", :alt => "image description" %>
-              <!-- <span data-picture data-alt="image description"> -->
-                <!-- <span data-src="/assets/logo.png" ></span> -->
-                <!-- <span data-src="/assets/logo-2x.png" data-media="(-webkit-min-device-pixel-ratio:1.5), (min-resolution:144dpi)" ></span> -->
-                <noscript>
-                  <img src="/assets/logo.png" width="75" height="13" alt="image description" >
-                </noscript>
-              </span>
 <% end %>
-          </strong>
           <a href="#" class="opener"><span></span></a>
           <!-- :class => "login-link" -->
 

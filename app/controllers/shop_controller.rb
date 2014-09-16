@@ -1,6 +1,6 @@
 class ShopController < ApplicationController
-  before_action :authenticate_user!
-  authorize_actions_for UserAuthorizer # Triggers user check
+  # before_action :authenticate_user!
+  # authorize_actions_for UserAuthorizer # Triggers user check
   before_action :set_order, only: [:show, :edit, :update, :destroy]
 
   # GET /welcome
@@ -28,6 +28,7 @@ class ShopController < ApplicationController
     puts params[:controller]
     # current_user.has_role?(:superadmin)
     @order = Order.new
+    @categories = Category.all
     logger.warn "New order"
   end
 
@@ -114,15 +115,17 @@ class ShopController < ApplicationController
 
     # @order = Order.new(order_params)
 
-    respond_to do |format|
-      if @order.save
-        format.html { redirect_to action: 'index' } #, notice: 'Order was successfully created.' }
-        format.json { render :confirmed, status: :created, location: @order }
-      else
-        format.html { render :new }
-        format.json { render json: @order.errors, status: :unprocessable_entity }
-      end
-    end
+    redirect_to action: 'new'
+
+    # respond_to do |format|
+    #   if @order.save
+    #     format.html { redirect_to action: 'index' } #, notice: 'Order was successfully created.' }
+    #     format.json { render :confirmed, status: :created, location: @order }
+    #   else
+    #     format.html { render :new }
+    #     format.json { render json: @order.errors, status: :unprocessable_entity }
+    #   end
+    # end
   end
 
   # PATCH/PUT /orders/1
