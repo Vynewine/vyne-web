@@ -296,3 +296,32 @@ defaultUser = User.find_by(id: 1)
 defaultUser.add_role(:superadmin)
 defaultUser.active = true
 defaultUser.save
+
+
+Category.create(
+              :name => "label",
+             :price => 15,
+  :restaurant_price => "20-40",
+       :description => "<p>The entry-level product from the same top wineries supplying the best restaurants</p><p>Same painstaking production - only more accesible</p>"
+)
+
+Category.create(
+              :name => "reserve",
+             :price => 20,
+  :restaurant_price => "40-55",
+       :description => "<p>Reserve wines are made by top independent producers</p><p>Their vineyards are in the best parcels of famous wine territories</p>"
+)
+
+Category.create(
+              :name => "fine",
+             :price => 30,
+  :restaurant_price => "200000",
+       :description => "<p>Yadyadya</p><p>duh duh duh</p>"
+)
+
+Category.create(
+              :name => "cellar",
+             :price => 50,
+  :restaurant_price => "500000",
+       :description => "<p>Yadyadya</p><p>duh duh duh</p>"
+)

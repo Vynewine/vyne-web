@@ -8,26 +8,17 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-  <div id="wrapper"<% if params[:controller] == 'home' %> class="home-page"<% end %>>
-    <div class="w1">
-      <header id="header">
-        <div class="header-holder">
-<%= link_to root_path do %>
-              <%= image_tag "logo-2x.png", :alt => "image description" %>
-<% end %>
-          <a href="#" class="opener"><span></span></a>
-          <!-- :class => "login-link" -->
 
-        </div>
-      </header>
-      <div id="main">
+
+  <header>
+    <%= link_to root_path do %><%= image_tag "logo-2x.png", :alt => "image description" %><% end %>
+  </header>
+  <div id="main">
 <%= yield %>
-      </div>
-    </div>
+  </div>
 
 <%= render :partial => "layouts/sidemenu" %>
 
-  </div>
   <%# javascript_include_tag 'data-turbolinks-track' => true %>
 <% if params[:controller] == 'shop' %>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYpKRqaf8jYVoxl39_Y1mXnHZ9sJbBTHY"></script>
