@@ -1,0 +1,28 @@
+<%= form_for([:admin, @maturation]) do |f| %>
+  <% if @maturation.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@maturation.errors.count, "error") %> prohibited this maturation from being saved:</h2>
+
+      <ul>
+      <% @maturation.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :bottling_id %><br>
+    <%= select_tag :bottling_id,
+        options_from_collection_for_select(@bottlings, "id", "name", :selected => @maturation.bottling_id),
+        :prompt => "Choose a maturation type"
+    %>
+  </div>
+  <div class="field">
+    <%= f.label :period %><br>
+    <%= f.number_field :period %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

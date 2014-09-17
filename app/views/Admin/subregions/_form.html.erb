@@ -1,0 +1,28 @@
+<%= form_for([:admin, @subregion]) do |f| %>
+  <% if @subregion.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@subregion.errors.count, "error") %> prohibited this subregion from being saved:</h2>
+
+      <ul>
+      <% @subregion.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :region_id %><br>
+    <%= select_tag :region_id,
+        options_from_collection_for_select(@regions, "id", "name", :selected => @subregion.region_id),
+        :prompt => "Choose a region"
+    %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

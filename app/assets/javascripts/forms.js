@@ -22,13 +22,14 @@
 //     });
 // };
 
-$('.clientPostCode').keyup(function(e){
+var updatePostcode = function(e){
     var postcode = $(this).val();
-    $buttonDone.attr('disabled','disabled');
-    $buttonDone.addClass('disabled');
+    // $buttonDone.attr('disabled','disabled');
+    // $buttonDone.addClass('disabled');
+    console.log('updating');
+    console.log($('#filterPostcodeMessage'));
     if (postcode.length < 5) {
-        $('.address-message').hide();
-        $('#address_holder').hide();
+        $('#filterPostcodeMessage').html('');
     } else {
         // console.log('postcode is ' + postcode);
         var mapUtil = new MapUtility();
@@ -37,26 +38,41 @@ $('.clientPostCode').keyup(function(e){
             mapUtil.calculateDistancesForAllWarehouses(coordinates.lng, coordinates.lat, function(deliverable) {
                 console.log('delivers here?', deliverable);
                 if (deliverable) {
-                    $('.address-message>p').html("VYNZ delivers to this area.");
-                    $buttonDone.removeAttr('disabled');
-                    $buttonDone.removeClass('disabled');
+                    $('#filterPostcodeMessage').html("VYNZ delivers to this area.");
+                    // $buttonDone.removeAttr('disabled');
+                    // $buttonDone.removeClass('disabled');
                 } else {
-                    $('.address-message>p').html("VYNZ does NOT deliver to this area!");
+                    $('#filterPostcodeMessage').html("VYNZ does NOT deliver to this area!");
                 }
-                $('.address-message').fadeIn();
+                $('#filterPostcodeMessage').fadeIn();
             });
         },
         function() {
             console.error("Address error: unknown address");
-            $('.address-message>p').html("Unknown address, please try again.");
-            $('.address-message').fadeIn();
+            $('#filterPostcodeMessage').html("Unknown address, please try again.");
+            $('#filterPostcodeMessage').fadeIn();
         });
         // Fails: SE3 9RQ
         // Succeeds: W6 9HH
         // Warehouse 1: SW65HU
         // Warehouse 2: E62JT
     }
+};
+
+$('#filterPostcode').keyup(function(e){
+    var postcode = $(this).val();
+    var $feedback = $('#filterPostcodeMessage');
+    var $addressList = $('#orderAddress');
+    var $postcodeField = $('#addr-pc');
+    var $newAddressBlock = $('#new_delivery_address');
+    $newAddressBlock.show();
+    $addressList.val(-1);
+    $postcodeField.val(postcode);
+    $postcodeField.keyup();
+    // updatePostcode();
 });
+
+$('.clientPostCode').keyup(updatePostcode);
 
 // Part 2: Order creation:
 
@@ -130,6 +146,25 @@ function CardUtilities() {}
     };
 
 $(document).ready(function(){
+    /**
+     * Bottle selection actions:
+     */
+    $('.bottle-list>li>a').click(function(e) {
+        e.preventDefault();
+        var $this = $(this);
+        var id = $this.data('categoryId');
+        console.log('clicked', id);
+        $('.category-details').hide();
+        $('.category-details.category-'+id).fadeIn();
+    });
+    $('.category-details .icon').click(function(e) {
+        e.preventDefault();
+        $(this).parent().fadeOut();
+    });
+    $('.category-details>div>a.next-step').click(function(e) {
+        e.preventDefault();
+        $(this).parent().parent().fadeOut();
+    });
 
     /**
      * Check postcode delivery possibilities:
@@ -142,6 +177,9 @@ $(document).ready(function(){
         var $street = $('#addr-st');
         var $detail = $('#addr-no');
 
+        // Feedback area:
+        var $feedback = $('#filterPostcodeMessage');
+
         if (postcode.length < 5) {
             // Empty fields:
             $street.val('');
@@ -149,6 +187,8 @@ $(document).ready(function(){
             // Disable fields:
             $street.attr('disabled','disabled');
             $detail.attr('disabled','disabled');
+            // Feedback from beginning:
+            $feedback.html('');
         } else {
 
             var mapUtil = new MapUtility();
@@ -156,6 +196,8 @@ $(document).ready(function(){
             mapUtil.calculateDistanceForAllWarehouses(postcode, function(deliverable) {
                 // console.log('callback 1', deliverable);
                 if (deliverable) {
+
+                    $feedback.html("VYNZ delivers to this area.");
 
                     // Google API cannot find the street name based on the postcode!
                     // This is why we must first find the damn longitude and latitude first.
@@ -206,11 +248,14 @@ $(document).ready(function(){
                         console.error('Could not find coordinates for this postcode!');
                         $street.removeAttr('disabled');
                         $detail.removeAttr('disabled');
+                        $feedback.html("Unknown address, please try again.");
                     };
 
                     // Coordinates lookup:
                     mapUtil.findCoordinatesAndExecute(postcode, successCallback, errorCallback);
 
+                } else {
+                    $feedback.html("VYNZ does NOT deliver to this area!");
                 }
             });
         }

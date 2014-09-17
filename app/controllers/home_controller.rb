@@ -32,4 +32,5 @@ class HomeController < ApplicationController
     @warehouses = Warehouse.all
   end
 
+
 end

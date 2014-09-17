@@ -1,6 +1,9 @@
 <div class="aside-bar">
   <nav>
     <ul class="nav">
+      <li>
+        <%# link_to 'New Order', new_shop_path %>
+      </li>
 <% if user_signed_in? %>
 <% if current_user.has_role?(:supplier) ||
       current_user.has_role?(:admin) ||

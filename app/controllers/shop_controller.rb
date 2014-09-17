@@ -1,6 +1,6 @@
 class ShopController < ApplicationController
-  # before_action :authenticate_user!
-  # authorize_actions_for UserAuthorizer # Triggers user check
+  before_action :authenticate_user!, :except => [:new, :create]
+  authorize_actions_for UserAuthorizer, :except => [:new, :create] # Triggers user check
   before_action :set_order, only: [:show, :edit, :update, :destroy]
 
   # GET /welcome
@@ -45,10 +45,36 @@ class ShopController < ApplicationController
   def create
     require 'pp'
     logger.warn "Create order"
-
-
     puts PP.pp(params,'',80)
 
+# {
+#   "utf8"=>"✓",
+#   "authenticity_token"=>"0lu9BsfjPv6SMYEXlBrkOJoFu0uSe4UXElIFjcC460s=",
+#   "preferences"=>{"occasion"=>"", "food"=>"", "type"=>"", "other"=>""},
+#   "user"=>
+#   {
+#     "name"=>"queen elizabeth",
+#     "email"=>"queen@gov.uk",
+#     "mobile"=>"01234567890",
+#     "password"=>"qwertyui",
+#     "password_confirmation"=>"qwertyui"
+#   },
+#   "address_p"=>"w69hh",
+#   "address_s"=>"Fulham Palace Road",
+#   "address_d"=>"116",
+#   "old_address"=>"",
+#   "old_card"=>"0",
+#   "new_card"=>"4242",
+#   "new_brand"=>"1",
+#   "stripeToken"=>"tok_14dfAQ2eZvKYlo2CuBYwwobZ",
+#   "action"=>"create",
+#   "controller"=>"shop"
+# }
+
+
+    newUser = User.create!(user_params)
+    sign_in(:user, newUser)
+return
     # ---- Fine to use:
 
     @order = Order.new
@@ -156,6 +182,10 @@ class ShopController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_order
       @order = Order.find(params[:id])
+    end
+
+    def user_params
+      params.require(:user).permit(:name, :email, :mobile, :password, :password_confirmation)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

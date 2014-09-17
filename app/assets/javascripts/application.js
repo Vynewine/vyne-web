@@ -21,7 +21,7 @@ var ready = function() {
     } else {
         // console.log('Executing onReady functions');
         // Transferred from client.js
-        loadCrappyCode();
+        // loadCrappyCode();
         // formStepSetup();
     }
 

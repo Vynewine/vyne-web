@@ -34,7 +34,7 @@
     <ul class="bottle-list">
 <% @categories.each do |category| %>
       <li>
-        <a href="" data-category-id="<%= category.id %>">
+        <a href="#" data-category-id="<%= category.id %>">
           <img src="" alt="" />
           <span class="price">£<%= category.price %></span>
           <span class="label"><%= category.name %></span>
@@ -44,7 +44,7 @@
     </ul>
     <div>
       <!-- This anchor is useless, the wide-details has another one -->
-      <a href="grey-button">Select</a>
+      <a href="javascript:void(0);" class="grey-button">Select</a>
     </div>
   </div>
 
@@ -53,7 +53,7 @@
 <% @categories.each do |category| %>
   <%# 'category-details' and 'category-XXX' are used in the javascript %>
   <%# I used 'popup' to opose 'step', because they overlap %>
-  <div class="popup category-details category-<%= category.id %>">
+  <div class="popup category-details category-<%= category.id %>" style="display:none;">
     <h1>select your bottle</h1>
     <div class="icon">
       <img src="" />
@@ -72,7 +72,8 @@
       <span class="label">What you would pay in a restaurant</span>
     </div>
     <div>
-      <a href="" class="red-button">Select</a><!-- Next step -->
+      <%# 'next-step' being used by JS %>
+      <a href="#" class="red-button next-step">Select</a><!-- Next step -->
     </div>
   </div>
 <% end %>
@@ -143,7 +144,7 @@ end
 
     <%
     addressOptions = [['New address', -1]]
-    billingAddressOptions = [['Same address', -1],['Custom address', 0]]
+    # billingAddressOptions = [['Same address', -1],['Custom address', 0]]
     if current_user
       current_user.addresses.each do |a|
         addressOptions.push([a.full, a.id])

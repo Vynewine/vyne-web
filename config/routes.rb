@@ -70,7 +70,7 @@ Rails.application.routes.draw do
   # Admin access
 
   # Actions for admins are under "/admin"
-  scope "/admin" do
+  namespace "admin" do
     resources :producers
     resources :regions
     resources :subregions
