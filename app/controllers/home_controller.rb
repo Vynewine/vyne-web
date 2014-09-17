@@ -3,10 +3,12 @@ class HomeController < ApplicationController
   def index
     # require 'pp'
     # puts PP.pp(request['HTTP_X_MSISDN'],'',80)
+    # redirect_to [:controller => 'home', :action => 'code']
+    redirect_to entercode_path
   end
 
   def code
-    puts "User code: " + current_user.code
+    # puts "User code: " + current_user.code
     # require 'pp'
     # puts PP.pp(current_user,'',80)
     # @confirmationCode = rand(9999).to_s.rjust(4, "0")

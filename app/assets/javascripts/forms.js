@@ -147,15 +147,17 @@ function CardUtilities() {}
 
 $(document).ready(function(){
     /**
-     * Bottle selection actions:
+     * Category (bottle) selection actions:
      */
     $('.bottle-list>li>a').click(function(e) {
         e.preventDefault();
         var $this = $(this);
+        var $category = $('#category');
         var id = $this.data('categoryId');
         console.log('clicked', id);
         $('.category-details').hide();
         $('.category-details.category-'+id).fadeIn();
+        $category.val(id);
     });
     $('.category-details .icon').click(function(e) {
         e.preventDefault();

@@ -48,6 +48,9 @@
     </div>
   </div>
 
+  <!-- Hidden fields -->
+  <input type="text" id="category" name="category" />
+
 <%# ============================= Wine type 2 ============================= %>
 
 <% @categories.each do |category| %>
@@ -148,7 +151,7 @@ end
     if current_user
       current_user.addresses.each do |a|
         addressOptions.push([a.full, a.id])
-        billingAddressOptions.push([a.full, a.id])
+        # billingAddressOptions.push([a.full, a.id])
       end
     end
     %>

@@ -71,15 +71,17 @@ class ShopController < ApplicationController
 #   "controller"=>"shop"
 # }
 
-
+    # Creates user:
     newUser = User.create!(user_params)
-    sign_in(:user, newUser)
-return
-    # ---- Fine to use:
 
+    # Signs user in:
+    sign_in(:user, newUser)
+
+    # Creates order:
     @order = Order.new
     @order.client = current_user
 
+    # Manages address:
     orderAddress = params[:old_address].to_i
     if orderAddress == 0
       address = Address.new
@@ -102,7 +104,7 @@ return
 
     @order.address = address
 
-    # ---- Testing
+    # Manages card details:
 
     cardId = params[:old_card].to_i
     puts PP.pp(cardId,'',80)
@@ -131,27 +133,19 @@ return
       payment = Payment.find_by(:id => cardId, :user => current_user)
     end
 
-    # puts PP.pp(payment,'',80)
-
     @order.payment = payment
     
-    # puts PP.pp(@order,'',80)
+    # redirect_to action: 'new'
 
-    # ---- Until here
-
-    # @order = Order.new(order_params)
-
-    redirect_to action: 'new'
-
-    # respond_to do |format|
-    #   if @order.save
-    #     format.html { redirect_to action: 'index' } #, notice: 'Order was successfully created.' }
-    #     format.json { render :confirmed, status: :created, location: @order }
-    #   else
-    #     format.html { render :new }
-    #     format.json { render json: @order.errors, status: :unprocessable_entity }
-    #   end
-    # end
+    respond_to do |format|
+      if @order.save
+        format.html { redirect_to entercode_path } #, notice: 'Order was successfully created.' }
+        format.json { render :confirmed, status: :created, location: @order }
+      else
+        format.html { render :new }
+        format.json { render json: @order.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   # PATCH/PUT /orders/1
