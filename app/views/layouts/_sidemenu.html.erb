@@ -2,7 +2,7 @@
   <nav>
     <ul class="nav">
       <li>
-        <%# link_to 'New Order', new_shop_path %>
+        <%= link_to 'New Order', neworder_path %>
       </li>
 <% if user_signed_in? %>
 <% if current_user.has_role?(:supplier) ||
@@ -10,7 +10,7 @@
       current_user.has_role?(:superadmin)
 %>
       <li class="sign-in">
-          <%= link_to 'Admin', producers_path %>
+          <%= link_to 'Admin', admin_root_path %>
       </li>
 <% end %>
 <% else %>

@@ -51,7 +51,7 @@ Rails.application.routes.draw do
     get 'mywines'   => 'shop#index'
     get 'list'      => 'shop#list'
     get 'show'      => 'shop#show'
-    get 'order'     => 'shop#new'
+    get 'neworder'     => 'shop#new'
     get 'confirmed' => 'shop#confirmed'
     get 'edit'      => 'shop#edit'
     post 'create'    => 'shop#create'
@@ -71,6 +71,7 @@ Rails.application.routes.draw do
 
   # Actions for admins are under "/admin"
   namespace "admin" do
+    root :to => "producers#index"
     resources :producers
     resources :regions
     resources :subregions
