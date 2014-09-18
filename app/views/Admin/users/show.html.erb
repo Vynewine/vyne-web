@@ -16,6 +16,15 @@
 </p>
 
 <p>
+  <strong>Active:</strong>
+  <%= @user.active %>
+</p>
+<p>
+  <strong>Activation code:</strong>
+  <%= @user.code %>
+</p>
+
+<p>
   <strong>Addresses:</strong>
   <ul>
 <% @user.addresses.each do |address| %>

@@ -21,6 +21,11 @@ class HomeController < ApplicationController
     if @user.code == params['code']['confirmation']
       @user.add_role(:client)
       @user.active = true
+      orders = current_user.orders.where(:status_id => 1)
+      orders.each do |order|
+        order.status_id = 2
+        order.save
+      end
       if @user.save
         redirect_to welcome_path
       end
