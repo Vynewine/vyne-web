@@ -13,8 +13,11 @@
     </div>
   <% end %>
 
+  <div id="order" class="swiper-container">
+    <div class="swiper-wrapper">
+
 <%# ============================ Address check ============================ %>
-  <div class="step">
+  <div class="step swiper-slide">
     <div>
       <input type="text" id="filterPostcode" />
     </div>
@@ -29,7 +32,7 @@
 
 <%# ============================= Wine type 1 ============================= %>
 
-  <div class="step">
+  <div class="step swiper-slide">
     <h1>select your bottle</h1>
     <ul class="bottle-list">
 <% @categories.each do |category| %>
@@ -46,10 +49,11 @@
       <!-- This anchor is useless, the wide-details has another one -->
       <a href="javascript:void(0);" class="grey-button">Select</a>
     </div>
+
+    <!-- Hidden fields -->
+    <input type="text" id="category" name="category" />
   </div>
 
-  <!-- Hidden fields -->
-  <input type="text" id="category" name="category" />
 
 <%# ============================= Wine type 2 ============================= %>
 
@@ -83,7 +87,7 @@
 
 <%# ============================= Preferences ============================= %>
 
-  <div class="step">
+  <div class="step swiper-slide">
     <h1>Write down any ideas to help us choose your wine</h1>
     <div>What is your occasion?</div>
     <%= text_field :preferences, :occasion, :placeholder => "e.g. date, family dinner" %>
@@ -98,7 +102,7 @@
 <%# =============================== Sign up =============================== %>
 <%# wtf man... %>
 
-    <div class="step">
+    <div class="step swiper-slide">
         <h1>Register</h1>
         <div>
           <%= text_field :user, :name, :placeholder => "Name" %>
@@ -140,7 +144,7 @@ end
 
 <%# ========================== Address selection ========================== %>
 
-  <div class="step">
+  <div class="step swiper-slide">
     <h1>Delivery address</h1>
 
 <%# - - - - - -- - - - - - - - - -  Option1 - - - - - -- - - - - - - - - -  %>
@@ -184,7 +188,7 @@ end
 %>
 <%# =============================== Payment =============================== %>
 
-  <div class="step">
+  <div class="step swiper-slide">
     <h1>Link Payment</h1>
 
 <%
@@ -220,3 +224,6 @@ end
   </div>
 
 <% end %>
+
+  </div>
+</div>
