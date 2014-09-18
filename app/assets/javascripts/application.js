@@ -27,5 +27,18 @@ var ready = function() {
 
 };
 // console.log(2);
-$(document).ready(ready);
-// $(document).on('page:load', ready);
+$(function() {
+
+	$('.menu-link').click(function(e) {
+		e.preventDefault();
+		$('.container').toggleClass('menu-visible');
+	});
+
+	var mySwiper = $('.swiper-container').swiper({
+		mode:'horizontal',
+		loop: true,
+		pagination: '.pagination',
+		paginationClickable: true
+	});
+
+});
