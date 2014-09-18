@@ -48,12 +48,8 @@ class Admin::UsersController < ApplicationController
   # PATCH/PUT /users/1
   # PATCH/PUT /users/1.json
   def update
-    @roles = Role.all
-# puts "-------------------------------"
-# puts user_params.addresses_attributes
-# puts "-------------------------------"
-
-
+    # @roles = Role.all
+    params[:user][:role_ids] ||= []
     respond_to do |format|
       if @user.update(user_params)
         format.html { redirect_to [:admin, @user], notice: 'User was successfully updated.' }
@@ -88,6 +84,8 @@ class Admin::UsersController < ApplicationController
         :mobile,
         :email,
         :address_id,
+        :active,
+        :code,
         role_ids: [],
         addresses_attributes: [:id, :detail, :street, :postcode]
       )
