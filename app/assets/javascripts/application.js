@@ -27,5 +27,12 @@ var ready = function() {
 
 };
 // console.log(2);
-$(document).ready(ready);
+$(function() {
+
+	$('.menu-link').click(function(e) {
+		e.preventDefault();
+		$('.aside-bar').toggleClass('visible');
+	});
+
+});
 // $(document).on('page:load', ready);

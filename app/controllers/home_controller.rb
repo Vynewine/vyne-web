@@ -8,7 +8,7 @@ class HomeController < ApplicationController
   end
 
   def code
-    # puts "User code: " + current_user.code
+    puts "User code: " + current_user.code
     # require 'pp'
     # puts PP.pp(current_user,'',80)
     # @confirmationCode = rand(9999).to_s.rjust(4, "0")

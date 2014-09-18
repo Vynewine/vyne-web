@@ -16,6 +16,47 @@
 
 @import 'client';
 
+html {
+    font-size: 62.5%;
+}
+
+body {
+    color: white;
+    background: #222;
+    font: 18px/1.5 'Lato', Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #A32438;
+    text-decoration: none;
+
+    &:hover {
+
+    }
+}
+
+/*
+ * COMPONENTS
+ */
+
+.wrapper {
+    width: 500px;
+    margin: auto;
+}
+
+
+
+/*
+ * FORMS
+ */
+
+input {
+    border: 0;
+    padding: 10px;
+    border-radius: 2px;
+    font: 1.6rem/1 'Lato', Helvetica, Arial, sans-serif;
+}
+
 .form-step-last {
     display: none;
 }
@@ -41,4 +82,83 @@ input {
 // Change the white to any color ;)
 input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+
+
+
+/*
+ * HEADER
+ */
+
+.main-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(0,0,0,0.95);
+
+    .logo {
+        float: left;
+        padding: 10px 0;
+        display: block;
+
+        &:hover {
+        }
+    }
+
+    .menu-link {
+        float: right;
+        padding: 10px;
+    }
+}
+
+
+
+/*
+ * SIDE MENU
+ */
+
+.aside-bar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    background: rgba(0,0,0,0.95);
+    -webkit-transform: translateX(250px);
+    -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
+
+    &.visible {
+        -webkit-transform: translateX(0px);
+        -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
+    }
+
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        li {
+
+            a {
+                width: 200px;
+                color: #777;
+                display: block;
+                padding: 10px 20px;
+
+                &:hover {
+                    color: white;
+                    background: #222;
+                }
+            }
+        }
+    }
+}
+
+
+
+/*
+ * MAIN CONTENT
+ */
+
+.main-content {
+    padding-top: 40px;
 }
