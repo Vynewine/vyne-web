@@ -1,4 +1,4 @@
-<div>
+<!--<div>
     <div>
         <h1>Your perfect wine chosen by VYNZ</h1>
     </div>
@@ -10,36 +10,32 @@
     </ul>
     <%= link_to "Sign up", signup_path, :class => "btn" %>
     <a href="#section2">down</a>
-</div>
+</div>-->
 
-<div>
-    <div>
-        <h2>Once you sign up to VYNZ</h2>
-        <span>1</span>
+<div class="swiper-container walkthrough">
+    <div class="swiper-wrapper">
+        <div id="one" class="swiper-slide walkthrough-panel">
+            <div class="walkthrough-panel-overlay"></div>
+            <div class="inner">
+                <h3>Speak to an expert who chooses for you</h3>
+                <p>Lorem ipsum ullamco laboris nisi ut aliquip commodo consequat.</p>
+            </div>
+        </div>
+        <div id="two" class="swiper-slide walkthrough-panel">
+            <div class="walkthrough-panel-overlay"></div>
+            <div class="inner">
+                <h3>Wines from only the highest quality producers</h3>
+                <p>Lorem ipsum ullamco laboris nisi ut aliquip commodo consequat.</p>
+            </div>
+        </div>
+        <div id="three" class="swiper-slide walkthrough-panel">
+            <div class="walkthrough-panel-overlay"></div>
+            <div class="inner">
+                <h3>Super fast delivery <span>Ready to drink straight away</span></h3>
+                <p>Lorem ipsum ullamco laboris nisi ut aliquip commodo consequat.</p>
+                <%= link_to "Order now", signup_path, :class => "btn" %>
+            </div>
+        </div>
     </div>
-    <div>
-        <h3>Speak to an expert who chooses for you</h3>
-        <p>Lorem ipsum ullamco laboris nisi ut aliquip commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
-    </div>
-    <a href="#section3">down</a>
-</div>
-<div>
-    <div class="heading-main">
-        <span>2</span>
-    </div>
-    <div class="quality-text">
-        <h3>Wines from only the highest quality producers</h3>
-        <p>Lorem ipsum ullamco laboris nisi ut aliquip commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
-    </div>
-    <a href="#section4">down</a>
-</div>
-<div>
-    <div>
-        <span>3</span>
-    </div>
-    <div>
-        <h3>Super fast delivery <span>Ready to drink straight away</span></h3>
-        <p>Lorem ipsum ullamco laboris nisi ut aliquip commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-        <%= link_to "Sign up", signup_path, :class => "btn" %>
-    </div>
+    <div class="pagination"></div>
 </div>

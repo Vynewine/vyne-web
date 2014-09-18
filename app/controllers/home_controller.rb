@@ -4,7 +4,6 @@ class HomeController < ApplicationController
     # require 'pp'
     # puts PP.pp(request['HTTP_X_MSISDN'],'',80)
     # redirect_to [:controller => 'home', :action => 'code']
-    redirect_to entercode_path
   end
 
   def code

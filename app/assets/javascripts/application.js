@@ -31,8 +31,14 @@ $(function() {
 
 	$('.menu-link').click(function(e) {
 		e.preventDefault();
-		$('.aside-bar').toggleClass('visible');
+		$('.container').toggleClass('menu-visible');
+	});
+
+	var mySwiper = $('.swiper-container').swiper({
+		mode:'horizontal',
+		loop: true,
+		pagination: '.pagination',
+		paginationClickable: true
 	});
 
 });
-// $(document).on('page:load', ready);

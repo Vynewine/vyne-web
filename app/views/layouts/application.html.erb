@@ -7,23 +7,31 @@
   <%= stylesheet_link_tag 'application', media: 'all' %>
   <%= csrf_meta_tags %>
   <link href='http://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, user-scalable=no">
 </head>
 <body>
 
-  <header class="main-header">
-    <div class="wrapper">
-      <%= link_to root_path do %><%= image_tag "logo-2x.png", :alt => "image description", :class => "logo" %><% end %>
-      <%= link_to "Menu", "#", :class => "menu-link" %> 
-    </div>
-  </header>
+  <div class="container">
 
-  <main class="main-content">
-    <div class="wrapper">
-    <%= yield %>
-    </div>
-  </main>
+    <header class="main-header">
+      <div class="wrapper">
+        <%= link_to root_path do %><%= image_tag "logo.png", :alt => "image description", :class => "logo" %><% end %>
+        <a href="" class="menu-link">
+          <div class="top"></div>
+          <div class="bottom"></div>
+        </a>
+      </div>
+    </header>
 
-  <%= render :partial => "layouts/sidemenu" %>
+    <main class="main-content">
+      <div class="wrapper">
+      <%= yield %>
+      </div>
+    </main>
+
+    <%= render :partial => "layouts/sidemenu" %>
+
+  </div>
 
     <%# javascript_include_tag 'data-turbolinks-track' => true %>
   <% if params[:controller] == 'shop' %>
