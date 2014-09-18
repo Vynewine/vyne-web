@@ -1,0 +1,20 @@
+<%#= debug @orders.count %>
+<%#= debug @orders %>
+<div class="advisor-area">
+    <h2>Orders</h2>
+    <div class="order-list">
+    <% @orders.each do |order| %>
+        <div class="order-row">
+            <%= link_to admin_user_path(order.client) do %>
+            <%= order.client.name %>
+            <% end %>        
+        </div>
+    <% end %>
+    </div>
+    <div class="wine-filters">
+    filters
+    </div>
+    <div class="wine-list">
+    list
+    </div>
+</div>

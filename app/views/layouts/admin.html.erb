@@ -38,6 +38,7 @@
     <li><%= link_to 'Occasions', admin_occasions_path %></li>
     <li><%= link_to 'Appellations', admin_appellations_path %></li>
     <li><%= link_to 'Wines', admin_wines_path %></li>
+    <li><%= link_to 'Advise', admin_advisors_path %></li>
   <% if current_user.has_role?(:superadmin) %>
     <li class="superadmin"><%= link_to 'Categories', admin_categories_path %></li>
     <li class="superadmin"><%= link_to 'Orders', admin_orders_path %></li>
@@ -59,11 +60,12 @@
 <%= yield %>
   </div>
 </div>
-
-<!-- <footer> -->
-  <!-- <p>user signed_in?: <%# debug user_signed_in? %></p> -->
-  <!-- <p>current_user: <%# debug current_user%></p> -->
-  <!-- <p>user_session: <%# debug user_session%></p> -->
-<!-- </footer> -->
+<% if current_user.has_role?(:superadmin) %>
+<footer>
+  <p>user signed_in?: <%= debug user_signed_in? %></p>
+  <p>current_user: <%= debug current_user%></p>
+  <p>user_session: <%= debug user_session%></p>
+</footer>
+<% end %>
 </body>
 </html>
