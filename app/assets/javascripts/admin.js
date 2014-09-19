@@ -50,6 +50,28 @@ var adminReady = function() {
             addNestedField($(this), $(this).data('parentEntity'), $(this).data('nestedEntity'), $(this).data('fieldName'));
             // $parentNode.css('background', 'red');
         });
+
+
+
+        //****************************
+        // Advisor area
+
+        String.prototype.trim    = function(){return this.replace(/^\s+|\s+$/g, '');};
+        String.prototype.ltrim   = function(){return this.replace(/^\s+/,'');};
+        String.prototype.rtrim   = function(){return this.replace(/\s+$/,'');};
+        String.prototype.fulltrim= function(){return this.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'').replace(/\s+/g,' ');};
+
+        $('.advisor-area>.wine-filters>#search').keyup(function(e){
+            $this = $(this);
+            var keywords = $this.val().split(',');
+            for (var i = keywords.length - 1; i >= 0; i--) {
+                keywords[i] = keywords[i].trim();
+            }
+            console.log('keywords: ', keywords);
+        });
+
+
+
     }
 };
 // console.log(2);
