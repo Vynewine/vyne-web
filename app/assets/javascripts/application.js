@@ -34,11 +34,15 @@ $(function() {
 		$('.container').toggleClass('menu-visible');
 	});
 
-	var mySwiper = $('.swiper-container').swiper({
-		mode:'horizontal',
+	var mySwiper = $('#walkthrough').swiper({
+		mode: 'horizontal',
 		loop: true,
 		pagination: '.pagination',
 		paginationClickable: true
+	});
+
+	var order = $('#order').swiper({
+		mode: 'horizontal'
 	});
 
 });
