@@ -1,3 +1,7 @@
+//= require jquery
+//= require library
+//= require jquery.typewatch
+
 var addNestedField = function($anchorNode, parentEntity, nestedEntity, fieldName) {
     // $parentNode
     // parentEntity
@@ -68,9 +72,40 @@ var adminReady = function() {
 
         token = $('meta[name="csrf-token"]').attr('content');
 
+
+        var renderWine = function(wine) {
+            console.log('rendering wine', wine);
+            var $container = $('#wine-list>table>tbody');
+            var types = [];
+            for (var i = 0, type; type = wine.type[i++];) {
+                types.push(type.name);
+            }
+            $container.append(
+                $('<tr>').addClass('wine').append(
+                    $('<td>').addClass('name').html(wine.name),
+                    $('<td>').addClass('vintage').html(wine.vintage),
+                    $('<td>').addClass('type').html(types.join(', '))
+                )
+            );
+        };
+
+        var renderItems = function(r) {
+            var $container = $('#wine-list');
+            $container.html('');
+            $container.append(
+                $('<table>').append(
+                    $('<tbody>')
+                )
+            );
+            for (var i = 0, wine; wine = r[i++];) {
+                renderWine(wine);
+            }            
+        };
+
         var parseResults = function(r){
             console.log('okay');
             console.log(r);
+            renderItems(r);
         };
         var errorMethod = function(e){
             console.log('not okay');
@@ -86,16 +121,17 @@ var adminReady = function() {
         };
 
         var sortKeyWords = function(e){
+            console.log('trigger');
             $this = $(this);
             var keywords = $this.val().split(',');
             for (var i = keywords.length - 1; i >= 0; i--) {
                 keywords[i] = keywords[i].trim();
             }
             // console.log('keywords: ', keywords);
-            findKeywords(keywords);
+            findKeywords(keywords.join(' '));
         };
 
-        $('.advisor-area>.wine-filters>#search').typeWatch({ 
+        $('.advisor-area>.wine-filters>#search').typeWatch({
                 highlight: true,
                      wait: 800,
             captureLength: -1,

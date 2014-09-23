@@ -403,6 +403,9 @@ for j in 1..5 do
 end
 
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Types - wines
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # 7 users
 users = ["Frodo Baggins", "Samwise Gamgee", "Peregrin Took", "Meriadoc Brandibuck", "Gandalf Greyhame", "Aragorn Elessar Telcontar", "Elrond Half-elven"]
 emails = ["frodo@bagend.sh", "mayor@hobbiton.gov", "pippin@took.tl", "merry@rohan.mil.rh", "gd_mofo_wizard@istari.vl", "strider@rangers.org", "elrond@gov.im"]

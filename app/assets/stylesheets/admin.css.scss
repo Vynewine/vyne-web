@@ -137,4 +137,20 @@ div.field {
 }
 
 .wine-filters {}
-.wine-list {}
+
+
+$border: 1px solid #D5E;
+
+#wine-list {
+    table {
+        width: 100%;
+        // border: $border;
+        // border-bottom: none;
+        tr {
+            // border-bottom: $border;
+            td {
+                border: $border;
+            }
+        }
+    }
+}

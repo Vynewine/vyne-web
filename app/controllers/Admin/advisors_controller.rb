@@ -16,10 +16,12 @@ class Admin::AdvisorsController < ApplicationController
     # puts PP.pp(request.request_parameters,'',80)
 
     # Solr:
-    # s = Wine.search { fulltext 'rand' }
-
-    puts PP.pp(s.total,'',80)
-
+    @search = Wine.search do
+      fulltext params[:keywords]
+    end
+    puts PP.pp(@search.total,'',80)
+    # puts PP.pp(@search.results,'',80)
+    @results = @search.results
 
     respond_to do |format|
       format.json

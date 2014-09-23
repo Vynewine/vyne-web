@@ -32,21 +32,26 @@ class Wine < ActiveRecord::Base
   accepts_nested_attributes_for :compositions
 
   # Solr & sunspot:
-  # searchable do
-  #   text :name, :area
-  #   text :type_names do
-  #     types.map {|type| type.name}
-  #   end
+  searchable do
+    text :name, :area
+    text :type_names do
+      types.map {|type| type.name}
+    end
 
-  #   integer :producer_id
-  #   integer :subregion_id
+    text :txt_vintage
+    # integer :producer_id
+    # integer :subregion_id
 
-  #   # integer :type_ids, :multiple => true
-  #   # string  :sort_title do
-  #   #   title.downcase.gsub(/^(an?|the)/, '')
-  #   # end
+    # integer :type_ids, :multiple => true
+    # string  :sort_title do
+    #   title.downcase.gsub(/^(an?|the)/, '')
+    # end
 
-  #   # boolean text string time double
-  # end
+    # boolean text string time double
+  end
+
+  def txt_vintage
+    vintage.to_s
+  end
 
 end
