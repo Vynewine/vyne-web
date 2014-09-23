@@ -56,21 +56,61 @@ var adminReady = function() {
         //****************************
         // Advisor area
 
+
+
+
+
+
         String.prototype.trim    = function(){return this.replace(/^\s+|\s+$/g, '');};
         String.prototype.ltrim   = function(){return this.replace(/^\s+/,'');};
         String.prototype.rtrim   = function(){return this.replace(/\s+$/,'');};
         String.prototype.fulltrim= function(){return this.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'').replace(/\s+/g,' ');};
 
-        $('.advisor-area>.wine-filters>#search').keyup(function(e){
+        token = $('meta[name="csrf-token"]').attr('content');
+
+        var parseResults = function(r){
+            console.log('okay');
+            console.log(r);
+        };
+        var errorMethod = function(e){
+            console.log('not okay');
+        };
+
+        var findKeywords = function(keywords){
+            // var token = $('meta[name="csrf-token"]').attr('content');
+            var data = {
+                'keywords':keywords
+            };
+            console.log('data', data);
+            postJSON('advise/results.json', token, data, parseResults, errorMethod);
+        };
+
+        var sortKeyWords = function(e){
             $this = $(this);
             var keywords = $this.val().split(',');
             for (var i = keywords.length - 1; i >= 0; i--) {
                 keywords[i] = keywords[i].trim();
             }
-            console.log('keywords: ', keywords);
+            // console.log('keywords: ', keywords);
+            findKeywords(keywords);
+        };
+
+        $('.advisor-area>.wine-filters>#search').typeWatch({ 
+                highlight: true,
+                     wait: 800,
+            captureLength: -1,
+                 callback: sortKeyWords
         });
 
+        
 
+
+
+
+
+
+
+// http://127.0.0.1:3000/admin/advise/results.json
 
     }
 };

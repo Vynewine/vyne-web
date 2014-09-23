@@ -13,6 +13,18 @@
 
 # Get the current DB connection:
 connection = ActiveRecord::Base.connection();
+
+# Cleaning all:
+
+# Country.delete_all
+# Role.delete_all
+# Status.delete_all
+# User.delete_all
+# Category.delete_all
+# Appellation.delete_all
+# Producer.delete_all
+# Wine.delete_all
+
 # Execute a sql statement:
 connection.execute "
   INSERT INTO countries (name, alpha_2, alpha_3) VALUES
@@ -287,7 +299,7 @@ Status.create(:label => 'cancelled')
 User.create!({
   :name => 'Gian',
   :email => "gm@rockstardev.co",
-  :mobile => "0777777777",
+  :mobile => "0111111111",
   :password => "#Wines1234",
   :password_confirmation => "#Wines1234"
 })
@@ -325,3 +337,101 @@ Category.create(
   :restaurant_price => "500000",
        :description => "<p>Yadyadya</p><p>duh duh duh</p>"
 )
+
+# ------------------------------------------------------------------------------
+# DUMMY DATA
+
+appelations = ["Abruzzo", "Matera", "Bivongi", "Cirò", "Pollino", "Cilento", "Taburno",
+  "Lambrusco di Sorbara", "Carso", "Atina", "Frascati", "Marinoorvieto", "Cinque Terre",
+  "Casteggio", "Oltrepò Pavese", "Biferno", "Fara", "Pinerolese", "Alezio", "Leverano",
+  "Girò di Cagliari", "Etna", "Orcia", "Sovana", "Montefalco", "Valle d'Aosta",
+  "Valpolicella", "Valpolicella Ripasso"]
+# 28 appellations
+
+appelations.each do |appelationName|
+  Appellation.create(:name => appelationName)
+end
+
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# 5 producers
+
+num = ["One", "Two", "Three", "Four", "Five"]
+num.each do |n|
+  Producer.create(:name => "Producer #{n}", :country_id => 110)
+end
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# 5 types
+
+types = ["red", "white", "sparkling", "sweet", "port"]
+types.each do |t|
+  Type.create(:name => t)
+end
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# 10 food types
+
+foods = ["steak", "pasta", "pizza", "fish", "chicken", "boar", "giraffe", "letuce", "chocolate", "ice cream"]
+foods.each do |f|
+  Food.create(:name => f)
+end
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# 25 wines
+
+for j in 1..5 do
+  for i in 1..5 do
+    Wine.create(
+                  :name => "Random #{j}-#{i}",
+               :vintage => 2000 + i,
+                  :area => "Random",
+         :single_estate => i%2,
+               :alcohol => i+2,
+                 :sugar => i*2,
+               :acidity => 2,
+                    :ph => 3,
+            :vegetarian => i%2,
+                 :vegan => i%2,
+               :organic => i%2,
+           :producer_id => j,
+          # :subregion_id => 0,
+        :appellation_id => j*i,
+         :maturation_id => 1
+    )
+  end
+end
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# 7 users
+users = ["Frodo Baggins", "Samwise Gamgee", "Peregrin Took", "Meriadoc Brandibuck", "Gandalf Greyhame", "Aragorn Elessar Telcontar", "Elrond Half-elven"]
+emails = ["frodo@bagend.sh", "mayor@hobbiton.gov", "pippin@took.tl", "merry@rohan.mil.rh", "gd_mofo_wizard@istari.vl", "strider@rangers.org", "elrond@gov.im"]
+
+for j in 0..6 do
+  dummyUser = User.new(
+                     :name => users[j],
+                    :email => emails[j],
+                   :mobile => "011111111#{j}",
+                 :password => "#Wines1234",
+    :password_confirmation => "#Wines1234"
+  )
+  dummyUser.add_role(:client)
+  dummyUser.active = true
+  dummyUser.save
+end
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# 8 addresses
+
+postcodes = ["W85ED", "W148TD", "W60SP", "SW151RT", "SW113JS", "SW61NL", "W113HG", "W114UA"]
+streets = ["Kensington High Street", "North End Crescent", "King St", "Putney High Street", "Battersea High Street", "North End Road", "Pembridge Road", "Holland Park Avenue"]
+numbers = ["45", "30", "284/286", "161", "155", "244", "19", "116"]
+
+for j in 0..7 do
+  Address.create(
+      :street => streets[j],
+      :detail => numbers[j],
+    :postcode => postcodes[j]
+  )
+end
+

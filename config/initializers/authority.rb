@@ -34,6 +34,7 @@ Authority.configure do |config|
     :index   => 'read',
     :show    => 'read',
     :welcome => 'read',
+    :results => 'read',
     :new     => 'create',
     :create  => 'create',
     :edit    => 'update',

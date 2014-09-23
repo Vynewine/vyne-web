@@ -102,6 +102,9 @@ Rails.application.routes.draw do
     resources :payments
     resources :statuses
     resources :advisors
+    scope '/advise' do
+      post 'results' => "advisors#results"
+    end
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

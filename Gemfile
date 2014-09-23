@@ -48,3 +48,7 @@ gem 'rolify'
 
 # Charging API
 gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
+
+# Solr and Sunspot
+# gem 'sunspot_rails'
+# gem 'sunspot_solr' # optional pre-packaged Solr distribution for use in development

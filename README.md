@@ -12,6 +12,7 @@ This system uses PostgreSQL.
 * Start 'psql'
 * Create user and database for vynz:
 > CREATE USER vynz WITH PASSWORD 'Valpolicella';
+> ALTER USER vynz CREATEDB;
 > CREATE DATABASE vynz_development;
 > GRANT ALL PRIVILEGES ON DATABASE vynz_development to vynz;
 
