@@ -82,6 +82,7 @@ var adminReady = function() {
             }
             $container.append(
                 $('<tr>').addClass('wine').append(
+                    // $('<td>').addClass('flag').html(wine.name),
                     $('<td>').addClass('name').html(wine.name),
                     $('<td>').addClass('vintage').html(wine.vintage),
                     $('<td>').addClass('type').html(types.join(', '))

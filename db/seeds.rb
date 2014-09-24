@@ -356,9 +356,18 @@ end
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # 5 producers
 
+# 15 Austria, 32 Brazil, 45 Chile, 76 France, 110 Italy, 159 New Zealand, 206 SA
+
+countries = [110,76,159,15,45,206,32]
 num = ["One", "Two", "Three", "Four", "Five"]
 num.each do |n|
-  Producer.create(:name => "Producer #{n}", :country_id => 110)
+  cCountry = rand(7)
+  if rand(3)==1 # 0 1
+    cCountry = rand(2)
+  elsif rand(5)==1 #2 3 4
+    cCountry = 2 + rand(3)
+  end
+  Producer.create(:name => "Producer #{n}", :country_id => countries[cCountry])
 end
 
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -403,7 +412,125 @@ for j in 1..5 do
 end
 
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Types - wines
+# 6 notes
+
+notes = ["oak", "plum", "earth", "caramel", "herbs", "spices"]
+notes.each do |n|
+  Note.create(:name => n)
+end
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Grapes
+grapes = [
+  # 24 Red grapes
+"Barbera",
+"Brunello",
+"Cabernet Franc",
+"Cabernet Sauvignon",
+"Carignan/Carignane",
+"Carmenere",
+"Charbono",
+"Cinsault",
+"Concord",
+"Dolcetto",
+"Gamay",
+"Grenache",
+"Malbec",
+"Merlot",
+"Mourvedre",
+"Nebbiolo",
+"Petite Sirah",
+"Pinot Noir",
+"Pinotage",
+"Sangiovese",
+"Syrah/Shiraz",
+"Tempranillo",
+"Zinfandel",
+"Zweigelt",
+  # 17 White grapes
+"Airen",
+"Aligote",
+"Chardonnay",
+"Chenin Blanc",
+"Fume Blanc",
+"Gewurztraminer",
+"Gruner Veltliner",
+"Muscat",
+"Niagara",
+"Pinot Blanc",
+"Pinot Gris/Pinot Grigio",
+"Riesling",
+"Sauvignon Blanc",
+"Semillon",
+"Seyval",
+"Trebbiano/Ugni Blanc",
+"Viognier"]
+
+grapes.each do |grape|
+  Grape.create(:name => grape)
+end
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Types  - wines
+# Notes  - wines
+# Grapes - wines
+
+reds = 24
+whites = 17
+
+allWines = Wine.all
+allWines.each do |wine|
+  
+  randomType = 1 + rand(5)
+  randomNote = 1 + rand(6)
+  grape1     = 1 + rand(41)
+  grape2     = 0
+  grape3     = 0
+  allGrapes  = 1 + rand(3)
+
+  loop do
+    if grape1 < reds
+      grape2 = 1 + rand(reds)
+      grape3 = 1 + rand(reds)
+    else
+      grape2 = 1 + rand(whites)
+      grape3 = 1 + rand(whites)
+    end
+    break if grape1 != grape2 && grape2 != grape3
+  end
+
+  if allGrapes == 1
+    Composition.create(:wine_id => wine.id, :grape_id => grape1, :quantity => 100)
+  elsif allGrapes == 2
+    Composition.create(:wine_id => wine.id, :grape_id => grape1, :quantity => 50)
+    Composition.create(:wine_id => wine.id, :grape_id => grape2, :quantity => 50)
+  else
+    Composition.create(:wine_id => wine.id, :grape_id => grape1, :quantity => 50)
+    Composition.create(:wine_id => wine.id, :grape_id => grape2, :quantity => 30)
+    Composition.create(:wine_id => wine.id, :grape_id => grape3, :quantity => 20)
+  end
+
+  # ["red", "white", "sparkling", "sweet", "port"]
+  if grape1 < reds
+    TypesWines.create(:wine_id => wine.id, :type_id => 1)
+  else
+    TypesWines.create(:wine_id => wine.id, :type_id => 2)
+  end
+  if rand(2) == 1
+    TypesWines.create(:wine_id => wine.id, :type_id => 3 + rand(3))    
+  end
+
+  note1 = 1 + rand(6)
+  note2 = 0
+  loop do
+    note2 = 1 + rand(6)
+    break if note1 != note2
+  end
+  NotesWines.create(:wine_id => wine.id, :note_id => note1)
+  if rand(2) == 1
+    NotesWines.create(:wine_id => wine.id, :note_id => note2)
+  end
+end
 
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # 7 users

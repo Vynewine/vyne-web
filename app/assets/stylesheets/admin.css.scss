@@ -89,6 +89,10 @@ footer {
     @extend .left-block;
 }
 
+footer {
+    display: none;
+}
+
 div.alerts {
     @extend .left-block;
 }

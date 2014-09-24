@@ -34,8 +34,12 @@ class Wine < ActiveRecord::Base
   # Solr & sunspot:
   searchable do
     text :name, :area
-    text :type_names do
+    text :type_names do # types are an association (many), so returns as array
       types.map {|type| type.name}
+    end
+
+    text :country_name do
+      producer.country.name
     end
 
     text :txt_vintage
