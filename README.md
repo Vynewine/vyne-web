@@ -11,15 +11,19 @@ This system uses PostgreSQL.
 * Download PostgresApp from here: (http://postgresapp.com)
 * Start 'psql'
 * Create user and database for vynz:
-> CREATE USER vynz WITH PASSWORD 'Valpolicella';
-> ALTER USER vynz CREATEDB;
+```
+CREATE USER vynz WITH PASSWORD 'Valpolicella';
+ALTER USER vynz CREATEDB;
+```
 
 ### Step 4:
 * Browse to vynz dir using the console and start it up:
-> bundle install
-> rake db:drop && rake db:create (drop if already existent)
-> rake db:migrate
-> rake db:seed
-> rake sunspot:start (only if you didn't start before)
-> rake sunspot:reindex
-> rails s
+```
+bundle install
+rake db:drop && rake db:create (drop if already existent)
+rake db:migrate
+rake db:seed
+rake sunspot:start (only if you didn't start before)
+rake sunspot:reindex
+rails s
+```
