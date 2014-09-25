@@ -2,12 +2,12 @@
 
 <p>
   <strong>Warehouse:</strong>
-  <%= @inventory.warehouse %>
+  <%= @inventory.warehouse.title %>
 </p>
 
 <p>
   <strong>Wine:</strong>
-  <%= @inventory.wine %>
+  <%= @inventory.wine.name %>
 </p>
 
 <p>
@@ -15,5 +15,5 @@
   <%= @inventory.quantity %>
 </p>
 
-<%= link_to 'Edit', edit_inventory_path(@inventory) %> |
-<%= link_to 'Back', inventories_path %>
+<%= link_to 'Edit', edit_admin_inventory_path(@inventory) %> |
+<%= link_to 'Back', admin_inventories_path %>

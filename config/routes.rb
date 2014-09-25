@@ -1,8 +1,5 @@
 Rails.application.routes.draw do
 
-
-  resources :inventories
-
   namespace :admin do
   get 'advisors/index'
   end
@@ -104,6 +101,7 @@ Rails.application.routes.draw do
     resources :payments
     resources :statuses
     resources :advisors
+    resources :inventories
     scope '/advise' do
       post 'results' => "advisors#results"
     end

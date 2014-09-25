@@ -1,4 +1,4 @@
-<%= form_for(@inventory) do |f| %>
+<%= form_for([:admin, @inventory]) do |f| %>
   <% if @inventory.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@inventory.errors.count, "error") %> prohibited this inventory from being saved:</h2>
@@ -13,11 +13,11 @@
 
   <div class="field">
     <%= f.label :warehouse %><br>
-    <%= f.text_field :warehouse %>
+    <%= f.text_field :warehouse_id %>
   </div>
   <div class="field">
     <%= f.label :wine %><br>
-    <%= f.text_field :wine %>
+    <%= f.text_field :wine_id %>
   </div>
   <div class="field">
     <%= f.label :quantity %><br>

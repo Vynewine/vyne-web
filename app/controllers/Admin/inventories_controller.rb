@@ -1,4 +1,7 @@
-class InventoriesController < ApplicationController
+class Admin::InventoriesController < ApplicationController
+  layout "admin"
+  before_action :authenticate_user!
+  authorize_actions_for SupplierAuthorizer # Triggers user check
   before_action :set_inventory, only: [:show, :edit, :update, :destroy]
 
   # GET /inventories
@@ -28,7 +31,7 @@ class InventoriesController < ApplicationController
 
     respond_to do |format|
       if @inventory.save
-        format.html { redirect_to @inventory, notice: 'Inventory was successfully created.' }
+        format.html { redirect_to [:admin, @inventory], notice: 'Inventory was successfully created.' }
         format.json { render :show, status: :created, location: @inventory }
       else
         format.html { render :new }
@@ -42,7 +45,7 @@ class InventoriesController < ApplicationController
   def update
     respond_to do |format|
       if @inventory.update(inventory_params)
-        format.html { redirect_to @inventory, notice: 'Inventory was successfully updated.' }
+        format.html { redirect_to [:admin, @inventory], notice: 'Inventory was successfully updated.' }
         format.json { render :show, status: :ok, location: @inventory }
       else
         format.html { render :edit }
@@ -56,7 +59,7 @@ class InventoriesController < ApplicationController
   def destroy
     @inventory.destroy
     respond_to do |format|
-      format.html { redirect_to inventories_url, notice: 'Inventory was successfully destroyed.' }
+      format.html { redirect_to admin_inventories_url, notice: 'Inventory was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -69,6 +72,6 @@ class InventoriesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def inventory_params
-      params.require(:inventory).permit(:warehouse, :wine, :quantity)
+      params.require(:inventory).permit(:warehouse_id, :wine_id, :quantity)
     end
 end
