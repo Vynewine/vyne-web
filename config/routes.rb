@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
 
 
+  resources :inventories
+
   namespace :admin do
   get 'advisors/index'
   end

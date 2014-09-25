@@ -278,12 +278,16 @@ connection.execute "
   ('Zambia', 'zm', 'zmb'),
   ('Zimbabwe', 'zw', 'zwe')"
 
+puts "Countries ---- OK"
+
 # Default roles:
 Role.create(:name => 'client')
 Role.create(:name => 'supplier')
 Role.create(:name => 'advisor')
 Role.create(:name => 'admin')
 Role.create(:name => 'superadmin')
+
+puts "Roles -------- OK"
 
 # Default order statuses:
 Status.create(:label => 'new')
@@ -294,6 +298,8 @@ Status.create(:label => 'paid')
 Status.create(:label => 'waiting for delivery')
 Status.create(:label => 'delivered')
 Status.create(:label => 'cancelled')
+
+puts "Statuses ----- OK"
 
 # Default user:
 User.create!({
@@ -309,6 +315,7 @@ defaultUser.add_role(:superadmin)
 defaultUser.active = true
 defaultUser.save
 
+puts "Admin -------- OK"
 
 Category.create(
               :name => "label",
@@ -338,8 +345,12 @@ Category.create(
        :description => "<p>Yadyadya</p><p>duh duh duh</p>"
 )
 
+puts "Categories --- OK"
+
 # ------------------------------------------------------------------------------
 # DUMMY DATA
+
+puts "-- Adding dummy data --"
 
 appelations = ["Abruzzo", "Matera", "Bivongi", "Cirò", "Pollino", "Cilento", "Taburno",
   "Lambrusco di Sorbara", "Carso", "Atina", "Frascati", "Marinoorvieto", "Cinque Terre",
@@ -352,6 +363,7 @@ appelations.each do |appelationName|
   Appellation.create(:name => appelationName)
 end
 
+puts "Appellations - OK"
 
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # 5 producers
@@ -370,6 +382,8 @@ num.each do |n|
   Producer.create(:name => "Producer #{n}", :country_id => countries[cCountry])
 end
 
+puts "Producers ---- OK"
+
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # 5 types
 
@@ -378,6 +392,8 @@ types.each do |t|
   Type.create(:name => t)
 end
 
+puts "Types -------- OK"
+
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # 10 food types
 
@@ -385,6 +401,8 @@ foods = ["steak", "pasta", "pizza", "fish", "chicken", "boar", "giraffe", "letuc
 foods.each do |f|
   Food.create(:name => f)
 end
+
+puts "Foods -------- OK"
 
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # 25 wines
@@ -411,6 +429,8 @@ for j in 1..5 do
   end
 end
 
+puts "Wines -------- OK"
+
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # 6 notes
 
@@ -418,6 +438,8 @@ notes = ["oak", "plum", "earth", "caramel", "herbs", "spices"]
 notes.each do |n|
   Note.create(:name => n)
 end
+
+puts "Notes -------- OK"
 
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Grapes
@@ -469,6 +491,8 @@ grapes = [
 grapes.each do |grape|
   Grape.create(:name => grape)
 end
+
+puts "Grapes ------- OK"
 
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Types  - wines
@@ -532,8 +556,11 @@ allWines.each do |wine|
   end
 end
 
+puts "Wines (2) ---- OK"
+
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # 7 users
+
 users = ["Frodo Baggins", "Samwise Gamgee", "Peregrin Took", "Meriadoc Brandibuck", "Gandalf Greyhame", "Aragorn Elessar Telcontar", "Elrond Half-elven"]
 emails = ["frodo@bagend.sh", "mayor@hobbiton.gov", "pippin@took.tl", "merry@rohan.mil.rh", "gd_mofo_wizard@istari.vl", "strider@rangers.org", "elrond@gov.im"]
 
@@ -550,14 +577,16 @@ for j in 0..6 do
   dummyUser.save
 end
 
+puts "Users -------- OK"
+
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# 8 addresses
+# 10 addresses
 
-postcodes = ["W85ED", "W148TD", "W60SP", "SW151RT", "SW113JS", "SW61NL", "W113HG", "W114UA"]
-streets = ["Kensington High Street", "North End Crescent", "King St", "Putney High Street", "Battersea High Street", "North End Road", "Pembridge Road", "Holland Park Avenue"]
-numbers = ["45", "30", "284/286", "161", "155", "244", "19", "116"]
+postcodes = ["EC1N8DL","SE11DN","W85ED", "W148TD", "W60SP", "SW151RT", "SW113JS", "SW61NL", "W113HG", "W114UA"]
+streets = ["Hatton Garden","Elephant Rd","Kensington High Street", "North End Crescent", "King St", "Putney High Street", "Battersea High Street", "North End Road", "Pembridge Road", "Holland Park Avenue"]
+numbers = ["33-34","Castle Industrial Estate","45", "30", "284/286", "161", "155", "244", "19", "116"]
 
-for j in 0..7 do
+for j in 0..9 do
   Address.create(
       :street => streets[j],
       :detail => numbers[j],
@@ -565,3 +594,32 @@ for j in 0..7 do
   )
 end
 
+puts "Addresses ---- OK"
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# 2 warehouses
+
+wareName = ["RockstarDev Warehouse", "Another Warehouse"]
+
+j=1
+wareName.each do |ware|
+  Warehouse.create(
+         :title => ware,
+    :address_id => j
+  )
+  j += 1
+end
+
+allUsers = User.all
+j=3
+allUsers.each do |user|
+  unless user.id == 1
+    AddressesUsers.create(
+      :address_id => j,
+         :user_id => user.id
+    )
+    j += 1
+  end
+end
+
+puts "Warehouses --- OK"

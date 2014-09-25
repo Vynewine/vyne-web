@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140916155115) do
+ActiveRecord::Schema.define(version: 20140925091503) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,9 +24,12 @@ ActiveRecord::Schema.define(version: 20140916155115) do
     t.datetime "updated_at"
   end
 
+  add_index "addresses", ["detail"], name: "index_addresses_on_detail", using: :btree
+  add_index "addresses", ["postcode"], name: "index_addresses_on_postcode", using: :btree
+
   create_table "addresses_users", id: false, force: true do |t|
-    t.integer  "address_id", null: false
-    t.integer  "user_id",    null: false
+    t.integer  "address_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -112,12 +115,25 @@ ActiveRecord::Schema.define(version: 20140916155115) do
     t.datetime "updated_at"
   end
 
+  create_table "inventories", force: true do |t|
+    t.integer  "warehouse_id"
+    t.integer  "wine_id"
+    t.integer  "quantity"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "inventories", ["warehouse_id"], name: "index_inventories_on_warehouse_id", using: :btree
+  add_index "inventories", ["wine_id"], name: "index_inventories_on_wine_id", using: :btree
+
   create_table "maturations", force: true do |t|
     t.integer  "bottling_id"
     t.integer  "period"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "maturations", ["bottling_id"], name: "index_maturations_on_bottling_id", using: :btree
 
   create_table "notes", force: true do |t|
     t.string   "name"
@@ -168,6 +184,7 @@ ActiveRecord::Schema.define(version: 20140916155115) do
   add_index "orders", ["advisor_id"], name: "index_orders_on_advisor_id", using: :btree
   add_index "orders", ["client_id"], name: "index_orders_on_client_id", using: :btree
   add_index "orders", ["payment_id"], name: "index_orders_on_payment_id", using: :btree
+  add_index "orders", ["quantity"], name: "index_orders_on_quantity", using: :btree
   add_index "orders", ["status_id"], name: "index_orders_on_status_id", using: :btree
   add_index "orders", ["warehouse_id"], name: "index_orders_on_warehouse_id", using: :btree
   add_index "orders", ["wine_id"], name: "index_orders_on_wine_id", using: :btree
@@ -181,6 +198,9 @@ ActiveRecord::Schema.define(version: 20140916155115) do
     t.datetime "updated_at"
   end
 
+  add_index "payments", ["number"], name: "index_payments_on_number", using: :btree
+  add_index "payments", ["user_id"], name: "index_payments_on_user_id", using: :btree
+
   create_table "producers", force: true do |t|
     t.string   "name"
     t.integer  "country_id"
@@ -188,12 +208,16 @@ ActiveRecord::Schema.define(version: 20140916155115) do
     t.datetime "updated_at"
   end
 
+  add_index "producers", ["country_id"], name: "index_producers_on_country_id", using: :btree
+
   create_table "regions", force: true do |t|
     t.string   "name"
     t.integer  "country_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "regions", ["country_id"], name: "index_regions_on_country_id", using: :btree
 
   create_table "roles", force: true do |t|
     t.string   "name"
@@ -218,6 +242,8 @@ ActiveRecord::Schema.define(version: 20140916155115) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "subregions", ["region_id"], name: "index_subregions_on_region_id", using: :btree
 
   create_table "types", force: true do |t|
     t.string   "name"
@@ -255,6 +281,7 @@ ActiveRecord::Schema.define(version: 20140916155115) do
     t.string   "code"
   end
 
+  add_index "users", ["address_id"], name: "index_users_on_address_id", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
@@ -271,6 +298,8 @@ ActiveRecord::Schema.define(version: 20140916155115) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "warehouses", ["address_id"], name: "index_warehouses_on_address_id", using: :btree
 
   create_table "wines", force: true do |t|
     t.string   "name"
@@ -291,5 +320,12 @@ ActiveRecord::Schema.define(version: 20140916155115) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "wines", ["appellation_id"], name: "index_wines_on_appellation_id", using: :btree
+  add_index "wines", ["maturation_id"], name: "index_wines_on_maturation_id", using: :btree
+  add_index "wines", ["name"], name: "index_wines_on_name", using: :btree
+  add_index "wines", ["producer_id"], name: "index_wines_on_producer_id", using: :btree
+  add_index "wines", ["subregion_id"], name: "index_wines_on_subregion_id", using: :btree
+  add_index "wines", ["vintage"], name: "index_wines_on_vintage", using: :btree
 
 end

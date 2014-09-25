@@ -12,12 +12,15 @@ class CreateWines < ActiveRecord::Migration
       t.boolean :vegetarian
       t.boolean :vegan
       t.boolean :organic
-      t.integer :producer_id
-      t.integer :subregion_id
-      t.integer :appellation_id
-      t.integer :maturation_id
+
+      t.references :producer, index: true
+      t.references :subregion, index: true
+      t.references :appellation, index: true
+      t.references :maturation, index: true
 
       t.timestamps
     end
+    add_index :wines, :name
+    add_index :wines, :vintage
   end
 end
