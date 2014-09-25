@@ -20,7 +20,7 @@ class Admin::AdvisorsController < ApplicationController
       fulltext params[:keywords]
 
       # facet(:warehouse_id) do
-      with(:warehouse_ids, 1)
+      with(:warehouse_ids, params[:warehouse])
       # end
       # warehouse_filter = with(:warehouse_id, 1)
       # facet :warehouse_id, exclude: [warehouse_filter]

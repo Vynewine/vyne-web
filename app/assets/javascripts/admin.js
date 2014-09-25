@@ -82,7 +82,7 @@ var adminReady = function() {
             // }
             var compositionArray = [];
             for (var i = 0, composition; composition = wine.compositions[i++];) {
-                compositionArray.push(composition.name + ': ' + composition.quantity);
+                compositionArray.push(composition.name + ': ' + composition.quantity + '%');
             }
 
 
@@ -112,6 +112,7 @@ var adminReady = function() {
 
         var renderItems = function(r) {
             var $container = $('#wine-list');
+            $container.slideUp(200);
             $container.html('');
             $container.append(
                 $('<table>').attr('border','1').append(
@@ -120,7 +121,8 @@ var adminReady = function() {
             );
             for (var i = 0, wine; wine = r[i++];) {
                 renderWine(wine);
-            }            
+            }
+            $container.slideDown(200);                        
         };
 
         var parseResults = function(r){
@@ -135,7 +137,8 @@ var adminReady = function() {
         var findKeywords = function(keywords){
             // var token = $('meta[name="csrf-token"]').attr('content');
             var data = {
-                'keywords':keywords
+                'keywords':keywords,
+                'warehouse':$('#warehouse_id').val()
             };
             console.log('data', data);
             postJSON('advise/results.json', token, data, parseResults, errorMethod);
@@ -164,7 +167,7 @@ var adminReady = function() {
 
         var renderOrder = function(order) {
             var $container = $('#order-list>table>tbody');
-            // console.log($container);
+            console.log(order);
 
             var $adviseAnchor = $('<a>').attr('href', '#').html('Advise');
             var $orderRecoverAnchor = $('<a>').attr('href', '#').html('Return');
@@ -174,13 +177,17 @@ var adminReady = function() {
                 var $td = $(this).closest("td");
                 var $tr = $td.closest("tr");
                 var $siblings = $tr.siblings();
+                var warehouse = $tr.data('warehouse');
                 $siblings.removeClass('selected');
-                $siblings.fadeOut();
+                $siblings.hide();
                 $tr.addClass('selected');
                 $td.html('');
                 $td.append($orderRecoverAnchor);
                 // Show search field
-                $('#wine-filters').fadeIn();
+                $('#wine-filters').slideDown();
+                $('#wine-list').html('').show();
+                $('#wine-filters>#search').focus();
+                $('#warehouse_id').val(warehouse);
             });
 
             $orderRecoverAnchor.click(function(e){
@@ -188,24 +195,30 @@ var adminReady = function() {
                 var $td = $(this).closest("td");
                 var $tr = $td.closest("tr");
                 var $siblings = $tr.siblings();
-                $siblings.fadeIn();
+                $('#warehouse_id').val('');
                 $tr.removeClass('selected');
                 $td.html('');
                 $td.append($adviseAnchor);
+                $('#wine-list').hide();
+                $('#wine-filters').hide();
+                $siblings.slideDown();
             });
 
             $container.append(
-                $('<tr>').addClass('order').append(
-                    $('<td>').addClass('client').html(
-                        order.client.name
-                    ),
-                    $('<td>').addClass('postcode').html(
-                        order.address.postcode
-                    ),
-                    $('<td>').addClass('warehouse').html(
-                        order.warehouse.title
-                    ),
-                    $('<td>').addClass('actions').append($adviseAnchor)
+                $('<tr>')
+                  .addClass('order')
+                  .attr("data-warehouse", order.warehouse.id)
+                  .append(
+                      $('<td>').addClass('client').html(
+                          order.client.name
+                      ),
+                      $('<td>').addClass('postcode').html(
+                          order.address.postcode
+                      ),
+                      $('<td>').addClass('warehouse').html(
+                          order.warehouse.title
+                      ),
+                      $('<td>').addClass('actions').append($adviseAnchor)
                 )
             );
         };

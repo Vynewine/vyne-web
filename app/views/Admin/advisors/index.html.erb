@@ -3,11 +3,12 @@
 <div class="advisor-area">
     <h2>Orders</h2>
     <a href="#" id="reload-orders">Reload orders</a>
+    <input type="text" id="warehouse_id" />
     <div id="order-list"></div>
     <div id="wine-filters" style="display:none;">
-        <input type="text" id="search" />
+        <input type="text" id="search" autocomplete="off" placeholder="Search wines..." />
     </div>
-    <div id="wine-list"></div>
+    <div id="wine-list" style="display:none;"></div>
 </div>
 
     <%# @orders.each do |order| %>

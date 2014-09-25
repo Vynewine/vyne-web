@@ -45,6 +45,7 @@ class Admin::InventoriesController < ApplicationController
   def update
     respond_to do |format|
       if @inventory.update(inventory_params)
+        Wine.reindex
         format.html { redirect_to [:admin, @inventory], notice: 'Inventory was successfully updated.' }
         format.json { render :show, status: :ok, location: @inventory }
       else

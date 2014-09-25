@@ -46,6 +46,14 @@ class Wine < ActiveRecord::Base
       producer.country.name
     end
 
+    text :country_alpha do
+      producer.country.alpha_2
+    end
+
+    text :grapes do
+      grapes.map {|g| g.name}
+    end
+
     text :txt_vintage
 
     integer :warehouse_ids, :multiple => true
