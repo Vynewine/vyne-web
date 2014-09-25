@@ -68,5 +68,10 @@
   <p>user_session: <%= debug user_session%></p>
 </footer>
 <% end %>
+<% if params[:controller] == 'admin/advisors' %>
+<script>
+  var advisor = true;
+</script>
+<% end %>
 </body>
 </html>

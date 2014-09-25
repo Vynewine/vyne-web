@@ -1,7 +1,7 @@
 //= require jquery
 //= require library
 //= require jquery.typewatch
-
+var advisor = advisor || null;
 var addNestedField = function($anchorNode, parentEntity, nestedEntity, fieldName) {
     // $parentNode
     // parentEntity
@@ -76,16 +76,36 @@ var adminReady = function() {
         var renderWine = function(wine) {
             console.log('rendering wine', wine);
             var $container = $('#wine-list>table>tbody');
-            var types = [];
-            for (var i = 0, type; type = wine.type[i++];) {
-                types.push(type.name);
+            // var types = [];
+            // for (var i = 0, type; type = wine.type[i++];) {
+            //     types.push(type.name);
+            // }
+            var compositionArray = [];
+            for (var i = 0, composition; composition = wine.compositions[i++];) {
+                compositionArray.push(composition.name + ': ' + composition.quantity);
             }
+
+
             $container.append(
                 $('<tr>').addClass('wine').append(
-                    // $('<td>').addClass('flag').html(wine.name),
-                    $('<td>').addClass('name').html(wine.name),
-                    $('<td>').addClass('vintage').html(wine.vintage),
-                    $('<td>').addClass('type').html(types.join(', '))
+                    $('<td>').addClass('flag').append(
+                        $('<img>')
+                            .attr('alt', wine.countryName)
+                            .attr('src', "/assets/flags/"+wine.countryCode+".png")
+                    ),
+                    $('<td>').addClass('name').html(
+                        wine.name + (wine.appellation ? " ("+wine.appellation+")" : '') +
+                        ' ' + wine.vintage
+                    ),
+                    $('<td>').addClass('type').html(
+                        wine.types.join(', ')
+                    ),
+                    $('<td>').addClass('composition').html(
+                        compositionArray.join(', ')
+                    ),
+                    $('<td>').addClass('actions').append(
+                        $('<a>').attr('href', '#').html('Choose')
+                    )
                 )
             );
         };
@@ -94,7 +114,7 @@ var adminReady = function() {
             var $container = $('#wine-list');
             $container.html('');
             $container.append(
-                $('<table>').append(
+                $('<table>').attr('border','1').append(
                     $('<tbody>')
                 )
             );
@@ -104,8 +124,8 @@ var adminReady = function() {
         };
 
         var parseResults = function(r){
-            console.log('okay');
-            console.log(r);
+            // console.log('okay');
+            // console.log(r);
             renderItems(r);
         };
         var errorMethod = function(e){
@@ -132,18 +152,91 @@ var adminReady = function() {
             findKeywords(keywords.join(' '));
         };
 
-        $('.advisor-area>.wine-filters>#search').typeWatch({
+        /**
+         * Search field:
+         */
+        $('.advisor-area>#wine-filters>#search').typeWatch({
                 highlight: true,
                      wait: 800,
             captureLength: -1,
                  callback: sortKeyWords
         });
 
-        
+        var renderOrder = function(order) {
+            var $container = $('#order-list>table>tbody');
+            // console.log($container);
 
+            var $adviseAnchor = $('<a>').attr('href', '#').html('Advise');
+            var $orderRecoverAnchor = $('<a>').attr('href', '#').html('Return');
+            
+            $adviseAnchor.click(function(e){
+                e.preventDefault();
+                var $td = $(this).closest("td");
+                var $tr = $td.closest("tr");
+                var $siblings = $tr.siblings();
+                $siblings.removeClass('selected');
+                $siblings.fadeOut();
+                $tr.addClass('selected');
+                $td.html('');
+                $td.append($orderRecoverAnchor);
+                // Show search field
+                $('#wine-filters').fadeIn();
+            });
 
+            $orderRecoverAnchor.click(function(e){
+                e.preventDefault();
+                var $td = $(this).closest("td");
+                var $tr = $td.closest("tr");
+                var $siblings = $tr.siblings();
+                $siblings.fadeIn();
+                $tr.removeClass('selected');
+                $td.html('');
+                $td.append($adviseAnchor);
+            });
 
+            $container.append(
+                $('<tr>').addClass('order').append(
+                    $('<td>').addClass('client').html(
+                        order.client.name
+                    ),
+                    $('<td>').addClass('postcode').html(
+                        order.address.postcode
+                    ),
+                    $('<td>').addClass('warehouse').html(
+                        order.warehouse.title
+                    ),
+                    $('<td>').addClass('actions').append($adviseAnchor)
+                )
+            );
+        };
 
+        var renderOrders = function(r) {
+            // console.log('ro');
+            var $container = $('#order-list');
+            $container.append(
+                $('<table>').attr('border','1').append(
+                    $('<tbody>')
+                )
+            );
+            for (var i = 0, order; order = r[i++];) {
+                renderOrder(order);
+            } 
+        };
+
+        var parseOrders = function(r) {
+            // console.log(r);
+            renderOrders(r);
+        };
+
+        if (advisor) {
+            postJSON('orders/list.json', token, {'status':[2]}, parseOrders, errorMethod);
+        }
+
+        $('#reload-orders').click(function(e){
+            e.preventDefault();
+            $('#order-list').html('');
+            postJSON('orders/list.json', token, {'status':[2]}, parseOrders, errorMethod);
+        });
 
 
 
@@ -151,6 +244,9 @@ var adminReady = function() {
 
     }
 };
+
+
+
 // console.log(2);
 $(document).ready(adminReady);
 $(document).on('page:load', adminReady);

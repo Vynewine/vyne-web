@@ -623,3 +623,54 @@ allUsers.each do |user|
 end
 
 puts "Warehouses --- OK"
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Inventory
+
+for j in 1..2 do
+  for i in 1..10 do
+    Inventory.create(
+      :warehouse_id => j,
+           :wine_id => i*j,
+          :quantity => rand(80)
+    )
+  end
+end
+
+puts "Inventory ---- OK"
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Orders!!!
+
+totalOrders = 5 + rand(50)
+
+for i in 0..totalOrders do
+  # 1 new
+  # 2 waiting for call
+  # 3 waiting for message
+  # 4 paying
+  # 5 paid
+  # 6 waiting for delivery
+  # 7 delivered
+  # 8 cancelled
+  status = 1+rand(8)
+  case status
+  when 1
+    status = 2
+  when 3
+    status = 2
+  when 4
+    status = 5
+  end
+
+  Order.create(
+    :warehouse_id => 1+rand(2),
+    :client_id => 2+rand(7),
+    :address_id => 4+rand(4),
+    :status_id => status
+  )
+
+end
+
+puts "Orders ------- OK"
+

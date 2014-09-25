@@ -102,6 +102,9 @@ Rails.application.routes.draw do
     resources :statuses
     resources :advisors
     resources :inventories
+    scope '/orders' do
+      post 'list' => "orders#list"
+    end
     scope '/advise' do
       post 'results' => "advisors#results"
     end

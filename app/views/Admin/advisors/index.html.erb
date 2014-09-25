@@ -2,17 +2,18 @@
 <%#= debug @orders %>
 <div class="advisor-area">
     <h2>Orders</h2>
-    <div class="order-list">
-    <% @orders.each do |order| %>
-        <div class="order-row">
-            <%= link_to admin_user_path(order.client) do %>
-            <%= order.client.name %>
-            <% end %>        
-        </div>
-    <% end %>
-    </div>
-    <div class="wine-filters">
+    <a href="#" id="reload-orders">Reload orders</a>
+    <div id="order-list"></div>
+    <div id="wine-filters" style="display:none;">
         <input type="text" id="search" />
     </div>
     <div id="wine-list"></div>
 </div>
+
+    <%# @orders.each do |order| %>
+    <%#    <div class="order-row">
+    <%#        <%= link_to admin_user_path(order.client) do %>
+    <%#        <%= order.client.name %>
+    <%#        <% end %>
+    <%#    </div>
+    <%# end %>

@@ -128,32 +128,83 @@ div.field {
 }
 
 
+//----------------------------------------------------
 // Advisor area:
+
+.bb {
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+  box-sizing: border-box;         /* Opera/IE 8+ */
+}
+
+* {
+    @extend .bb;
+}
 
 .advisor-area {
     // background: red;
 }
 
-.order-list {
-    .order-row {
-        border: 1px solid grey;
+#order-list {
+    float: left;
+    width: 100%;
+    // background: cyan;
+    table {
+        width: 100%;
+        border-width: 1px;
+        border-color: #AAF;
+        border-collapse: collapse;
+        & > tbody > tr {
+            &.selected {
+                background-color: #DDF;
+            }
+            &:hover {
+                background-color: #DDD;
+            }
+            & > td {
+                padding: 5px;
+            }
+        }
     }
 }
 
-.wine-filters {}
+#wine-filters {
+    float: left;
+    width: 100%;
+    // background: red;
+    padding: 10px;
+    & > input[type=text] {
+        float: left;
+        font-size: 1.5em;
+        width: 100%;
+        padding: 10px;
+        outline: none;
+    }
+}
 
 
 $border: 1px solid #D5E;
 
 #wine-list {
+    float: left;
+    width: 100%;
     table {
         width: 100%;
-        // border: $border;
-        // border-bottom: none;
-        tr {
-            // border-bottom: $border;
-            td {
-                border: $border;
+        border-width: 1px;
+        border-color: #AAF;
+        border-collapse: collapse;
+        & > tbody > tr {
+            &.selected {
+                background-color: #DDF;
+            }
+            &:hover {
+                background-color: #DDD;
+            }
+            & > td {
+                padding: 5px;
+                &.flag {
+                    text-align: center;
+                }
             }
         }
     }

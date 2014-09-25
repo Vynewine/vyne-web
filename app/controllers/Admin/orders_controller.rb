@@ -10,10 +10,19 @@ class Admin::OrdersController < ApplicationController
     @orders = Order.all
   end
 
-  # GET /orders/list
+  # GET /orders/list.json
   def list
-    @orders = Order.all
-    render :layout => 'application'
+    require 'pp'
+    puts '--------------------------'
+    logger.warn "Orders request"
+
+    puts PP.pp(params[:status],'',80)
+
+    @orders = Order.where(:status => params[:status])
+
+    respond_to do |format|
+      format.json
+    end
   end
 
   # GET /orders/1

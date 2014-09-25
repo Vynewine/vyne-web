@@ -31,6 +31,10 @@ class Wine < ActiveRecord::Base
   has_many :grapes, through: :compositions
   accepts_nested_attributes_for :compositions
 
+  has_many :inventories
+  has_many :warehouses, through: :inventories
+
+
   # Solr & sunspot:
   searchable do
     text :name, :area
@@ -43,6 +47,13 @@ class Wine < ActiveRecord::Base
     end
 
     text :txt_vintage
+
+    integer :warehouse_ids, :multiple => true
+
+    # integer :warehouse_id do
+    #   warehouses.id #map {|i| i.warehouse_id}
+    # end
+
     # integer :producer_id
     # integer :subregion_id
 
@@ -56,6 +67,14 @@ class Wine < ActiveRecord::Base
 
   def txt_vintage
     vintage.to_s
+  end
+
+  def compositions_array
+    comp = []
+    compositions.each do |c|
+      comp.push( { :name => c.grape.name, :quantity => c.quantity} )
+    end
+    return comp
   end
 
 end
