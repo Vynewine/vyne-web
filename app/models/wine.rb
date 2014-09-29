@@ -34,14 +34,28 @@ class Wine < ActiveRecord::Base
   has_many :inventories
   has_many :warehouses, through: :inventories
 
+  validates :name, :vintage, :producer_id, :presence => true
+
+  # validates :compulsory_fields
+
+  # def compulsory_fields
+  #   if self.name.nil? || self.name.empty?
+  #     self.errors.add(:name, "needs a name" )
+  #   end
+  #   if self.vintage.nil? || self.vintage.empty?
+  #     self.errors.add(:vintage, "needs a vintage" )
+  #   end
+  #   if self.producer.nil? || self.producer_id.empty?
+  #     self.errors.add(:producer_id, "needs a producer" )
+  #   end
+  # end
+
 
   # Solr & sunspot:
   searchable do
     text :name, :area
-    text :type_names do # types are an association (many), so returns as array
-      types.map {|type| type.name}
-    end
 
+    # Single relationships
     text :country_name do
       producer.country.name
     end
@@ -50,11 +64,25 @@ class Wine < ActiveRecord::Base
       producer.country.alpha_2
     end
 
+    text :subregion do
+      subregion.name
+    end
+
+    # Many relationships
+    text :type_names do # types are an association (many), so returns as array
+      types.map {|type| type.name}
+    end
+
     text :grapes do
       grapes.map {|g| g.name}
     end
 
     text :txt_vintage
+
+    boolean :single_estate
+    boolean :vegetarian
+    boolean :vegan
+    boolean :organic
 
     integer :warehouse_ids, :multiple => true
 

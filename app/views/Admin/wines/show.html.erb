@@ -27,13 +27,28 @@
   <strong>Appellation:</strong>
   <%= if @wine.appellation.nil? then 'Unknown' else @wine.appellation.name end %>
 </p>
+
+<% if @wine.types %>
 <p>
   <strong>Type:</strong>
+  <ul>
   <% @wine.types.each do |type| %>
-    <span><%= type.name %></span>
+    <li><%= type.name %></li>
   <% end %>
+  </ul>
 </p>
-                                    <p>grape</p>
+<% end %>
+
+<% if @wine.compositions %>
+<p>
+  <strong>Composition:</strong>
+  <ul>
+  <% @wine.compositions.each do |composition| %>
+    <li><%= composition.grape.name %> - <%= composition.quantity %>%</li>
+  <% end %>
+  </ul>
+</p>
+<% end %>
 
 <p>
   <strong>Single estate:</strong>
@@ -87,7 +102,12 @@
   </ul>
 </p>
                                     <p>allergies</p>
-                                    <p>maturation</p>
+<% if @wine.maturation %>
+<p>
+  <strong>Maturation:</strong>
+  <%= @wine.maturation.bottling.name %> - <%= @wine.maturation.period %> months
+</p>
+<% end %>
 
 <p>
   <strong>Vegetarian:</strong>

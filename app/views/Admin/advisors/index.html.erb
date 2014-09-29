@@ -1,20 +1,14 @@
-<%#= debug @orders.count %>
-<%#= debug @orders %>
 <div class="advisor-area">
     <h2>Orders</h2>
     <a href="#" id="reload-orders">Reload orders</a>
-    <input type="text" id="warehouse_id" />
+    <input type="hidden" id="warehouse_id" />
     <div id="order-list"></div>
     <div id="wine-filters" style="display:none;">
         <input type="text" id="search" autocomplete="off" placeholder="Search wines..." />
+        <input type="checkbox" id="tick-sing" name="single"     /><label for="single"    > Single estate</label>
+        <input type="checkbox" id="tick-vegt" name="vegetarian" /><label for="vegetarian">Vegetarian</label>
+        <input type="checkbox" id="tick-vegn" name="vegan"      /><label for="vegan"     >Vegan</label>
+        <input type="checkbox" id="tick-orgc" name="organic"    /><label for="organic"   >Organic</label>
     </div>
     <div id="wine-list" style="display:none;"></div>
 </div>
-
-    <%# @orders.each do |order| %>
-    <%#    <div class="order-row">
-    <%#        <%= link_to admin_user_path(order.client) do %>
-    <%#        <%= order.client.name %>
-    <%#        <% end %>
-    <%#    </div>
-    <%# end %>

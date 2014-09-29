@@ -1,4 +1,6 @@
 //= require jquery
+//= require jquery_ujs
+//= require turbolinks
 //= require library
 //= require jquery.typewatch
 var advisor = advisor || null;
@@ -85,6 +87,17 @@ var adminReady = function() {
                 compositionArray.push(composition.name + ': ' + composition.quantity + '%');
             }
 
+            var $se, $vg, $vn, $og;
+
+            if (wine.single_estate)
+                $se = $('<span>').addClass('single flaticon solid house-2');
+            if (wine.vegetarian)
+                $vg = $('<span>').addClass('vegetarian').html('Vt');
+            if (wine.vegan)
+                $vn = $('<span>').addClass('vegan').html('Vn');
+            if (wine.organic)
+                $og = $('<span>').addClass('organic').html('Og');
+
 
             $container.append(
                 $('<tr>').addClass('wine').append(
@@ -93,6 +106,7 @@ var adminReady = function() {
                             .attr('alt', wine.countryName)
                             .attr('src', "/assets/flags/"+wine.countryCode+".png")
                     ),
+                    $('<td>').addClass('subregion').html(wine.subregion),
                     $('<td>').addClass('name').html(
                         wine.name + (wine.appellation ? " ("+wine.appellation+")" : '') +
                         ' ' + wine.vintage
@@ -103,6 +117,9 @@ var adminReady = function() {
                     $('<td>').addClass('composition').html(
                         compositionArray.join(', ')
                     ),
+                    $('<td>').addClass('flags').append(
+                        $se, $vg, $vn, $og
+                    ),
                     $('<td>').addClass('actions').append(
                         $('<a>').attr('href', '#').html('Choose')
                     )
@@ -112,7 +129,6 @@ var adminReady = function() {
 
         var renderItems = function(r) {
             var $container = $('#wine-list');
-            $container.slideUp(200);
             $container.html('');
             $container.append(
                 $('<table>').attr('border','1').append(
@@ -137,21 +153,23 @@ var adminReady = function() {
         var findKeywords = function(keywords){
             // var token = $('meta[name="csrf-token"]').attr('content');
             var data = {
-                'keywords':keywords,
-                'warehouse':$('#warehouse_id').val()
+                  'keywords': keywords,
+                 'warehouse': $('#warehouse_id').val(),
+                    'single': $('#tick-sing').is(':checked'),
+                'vegetarian': $('#tick-vegt').is(':checked'),
+                     'vegan': $('#tick-vegn').is(':checked'),
+                   'organic': $('#tick-orgc').is(':checked')
             };
             console.log('data', data);
             postJSON('advise/results.json', token, data, parseResults, errorMethod);
         };
 
         var sortKeyWords = function(e){
-            console.log('trigger');
-            $this = $(this);
-            var keywords = $this.val().split(',');
+            $('#wine-list').slideUp(100);
+            var keywords = $(this).val().split(',');
             for (var i = keywords.length - 1; i >= 0; i--) {
                 keywords[i] = keywords[i].trim();
             }
-            // console.log('keywords: ', keywords);
             findKeywords(keywords.join(' '));
         };
 

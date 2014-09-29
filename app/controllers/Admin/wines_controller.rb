@@ -47,17 +47,111 @@ class Admin::WinesController < ApplicationController
   # POST /wines
   # POST /wines.json
   def create
-    @wine = Wine.new(wine_params)
-    params[:wine][:type_ids] ||= []
-    respond_to do |format|
-      if @wine.save
-        format.html { redirect_to [:admin, @wine], notice: 'Wine was successfully created.' }
-        format.json { render :show, status: :created, location: @wine }
-      else
-        format.html { render :new }
-        format.json { render json: @wine.errors, status: :unprocessable_entity }
+    require 'pp'
+    puts '--------------------------'
+    logger.warn "Save request"
+    puts PP.pp(params,'',80)
+    puts '--------------------------'
+    # puts PP.pp(wine_params,'',80)
+    
+
+      # format.json { render json: @wine.errors, status: :unprocessable_entity }
+
+    # else
+
+      producer = Producer.find_by(:id => params[:wine][:producer_id].to_i)
+
+      @wine = Wine.new
+
+      @wine.name           = params[:wine][:name]
+      @wine.vintage        = params[:wine][:vintage]
+      @wine.area           = params[:wine][:area]
+      @wine.single_estate  = params[:wine][:single_estate]
+      @wine.alcohol        = params[:wine][:alcohol]
+      @wine.sugar          = params[:wine][:sugar]
+      @wine.acidity        = params[:wine][:acidity]
+      @wine.ph             = params[:wine][:ph]
+      @wine.vegetarian     = params[:wine][:vegetarian]
+      @wine.vegan          = params[:wine][:vegan]
+      @wine.organic        = params[:wine][:organic]
+      @wine.producer       = producer
+      @wine.subregion_id   = params[:wine][:subregion_id]
+      @wine.appellation_id = params[:wine][:appellation_id]
+
+      puts PP.pp(@wine,'',80)
+
+      # Maturation
+      maturation = params[:wine][:maturations_attributes]
+      unless maturation.nil? || maturation[:bottling][:name].empty?
+        currentBottling = Bottling.find_by(:name => maturation[:bottling][:name])
+        if currentBottling.nil?
+          puts "must add bottling to DB"
+          currentBottling = Bottling.create(:name => maturation[:bottling][:name])
+        else
+          puts "Bottling's id is #{currentBottling.id}"
+        end
+        currentMaturation = Maturation.find_by(:bottling_id => currentBottling.id, :period => maturation[:period])
+        if currentMaturation.nil?
+          currentMaturation = Maturation.create(:bottling_id => currentBottling.id, :period => maturation[:period])
+        end
+        @wine.maturation = currentMaturation
       end
-    end
+
+      # Validating
+      if params[:wine][:name].empty? || params[:wine][:vintage].empty? || params[:wine][:producer_id].empty?
+        @producers = Producer.all
+        @subregions = Subregion.all
+        @appellations = Appellation.all
+        @types = Type.all
+        @wine.compositions.build
+        flash.now[:notice] = "Wine cannot be saved, please fill all the fields"
+        render :new
+      else
+        if @wine.save
+          # Composition
+          composition = params[:wine][:compositions_attributes]
+          unless composition.nil?
+            composition.each do |c|
+              currentGrape = Grape.find_by(:name => c[1][:grape])
+              if currentGrape.nil?
+                puts "must add grape to DB"
+                currentGrape = Grape.create(:name => c[1][:grape])
+              else
+                puts "Grape's id is #{currentGrape.id}"
+              end
+              currentComposition = Composition.create(:grape_id => currentGrape.id, :quantity => c[1][:quantity], :wine_id => @wine.id)
+              # currentComposition = Composition.where(:grape_id = currentGrape.id, :quantity => c[1][:quantity], :wine_id => @wine.id)
+              # if currentComposition.nil?
+              #   puts "adding composition"
+              # else
+              #   puts "composition's fine"
+              # end
+              # c[1][:quantity]
+            end
+          end
+
+          # Types
+          types = params[:wine][:type_ids]
+          unless types.nil?
+            types.each do |t|
+              currentType = Type.find(t.to_i)
+              TypesWines.create(:type => currentType, :wine => @wine)
+            end
+          end
+        end
+        redirect_to [:admin, @wine]
+      end
+    # @wine = Wine.new(wine_params)
+    # params[:wine][:type_ids] ||= []
+    # respond_to do |format|
+    #   if @wine.save
+    #     format.html { redirect_to [:admin, @wine], notice: 'Wine was successfully created.' }
+    #     format.json { render :show, status: :created, location: @wine }
+    #   else
+    #     format.html { render :new }
+    #     format.json { render json: @wine.errors, status: :unprocessable_entity }
+    #   end
+    # end
   end
 
   # PATCH/PUT /wines/1

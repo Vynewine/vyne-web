@@ -385,6 +385,22 @@ end
 puts "Producers ---- OK"
 
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# 7 Regions
+# 7 Sub-regions
+for j in 1..7 do
+  Region.create(
+    :country_id => countries[j-1],
+    :name => "Region #{j}"
+  )
+  Subregion.create(
+    :region_id => j,
+    :name => "Subregion #{j}"
+  )
+end
+puts "Regions ------ OK"
+puts "Sub-regions -- OK"
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # 5 types
 
 types = ["red", "white", "sparkling", "sweet", "port"]
@@ -409,6 +425,8 @@ puts "Foods -------- OK"
 
 for j in 1..5 do
   for i in 1..5 do
+    vg = rand(2)
+    vn = vg & rand(2)
     Wine.create(
                   :name => "Random #{j}-#{i}",
                :vintage => 2000 + i,
@@ -418,11 +436,11 @@ for j in 1..5 do
                  :sugar => i*2,
                :acidity => 2,
                     :ph => 3,
-            :vegetarian => i%2,
-                 :vegan => i%2,
-               :organic => i%2,
+            :vegetarian => vg,
+                 :vegan => vn,
+               :organic => rand(2),
            :producer_id => j,
-          # :subregion_id => 0,
+          :subregion_id => 1 + rand(7),
         :appellation_id => j*i,
          :maturation_id => 1
     )

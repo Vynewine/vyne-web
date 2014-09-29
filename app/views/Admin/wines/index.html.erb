@@ -1,5 +1,5 @@
 <h1>Listing wines</h1>
-<table>
+<table border="1" class="list-table">
   <thead>
     <tr>
       <th>Origin</th>
@@ -12,18 +12,18 @@
       <th>Types</th>
       <th>Grapes</th>
       <th>Single estate</th>
-      <th>Alcohol</th>
-      <th>Sugar</th>
-      <th>Acidity</th>
-      <th>Ph</th>
-      <th>Occasions</th>
-      <th>Foods</th>
-      <th>Notes</th>
-      <th>Allergies</th>
-      <th>Maturation</th>
-      <th>Vegetarian</th>
-      <th>Vegan</th>
-      <th>Organic</th>
+      <!-- <th>Alcohol</th> -->
+      <!-- <th>Sugar</th> -->
+      <!-- <th>Acidity</th> -->
+      <!-- <th>Ph</th> -->
+      <!-- <th>Occasions</th> -->
+      <!-- <th>Foods</th> -->
+      <!-- <th>Notes</th> -->
+      <!-- <th>Allergies</th> -->
+      <!-- <th>Maturation</th> -->
+      <!-- <th>Vegetarian</th> -->
+      <!-- <th>Vegan</th> -->
+      <!-- <th>Organic</th> -->
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -43,18 +43,18 @@
         <td><%= wine.types.map(&:name).join(",") %></td>
         <td><%= wine.grapes.map(&:name).join(",") %></td>
         <td><%= wine.single_estate %></td>
-        <td><%= wine.alcohol %></td>
-        <td><%= wine.sugar %></td>
-        <td><%= wine.acidity %></td>
-        <td><%= wine.ph %></td>
-        <td><%= wine.occasions.map(&:name).join(",") %></td>
-        <td><%= wine.foods.map(&:name).join(",") %></td>
-        <td><%= wine.notes.map(&:name).join(",") %></td>
-        <td><%= wine.allergies.map(&:name).join(",") %></td>
-        <td><%= wine.maturation %></td>
-        <td><%= wine.vegetarian %></td>
-        <td><%= wine.vegan %></td>
-        <td><%= wine.organic %></td>
+        <!-- <td><%= wine.alcohol %></td> -->
+        <!-- <td><%= wine.sugar %></td> -->
+        <!-- <td><%= wine.acidity %></td> -->
+        <!-- <td><%= wine.ph %></td> -->
+        <!-- <td><%= wine.occasions.map(&:name).join(",") %></td> -->
+        <!-- <td><%= wine.foods.map(&:name).join(",") %></td> -->
+        <!-- <td><%= wine.notes.map(&:name).join(",") %></td> -->
+        <!-- <td><%= wine.allergies.map(&:name).join(",") %></td> -->
+        <!-- <td><%= wine.maturation %></td> -->
+        <!-- <td><%= wine.vegetarian %></td> -->
+        <!-- <td><%= wine.vegan %></td> -->
+        <!-- <td><%= wine.organic %></td> -->
         <td class="button-wrapper">
           <%= link_to admin_wine_path(wine) do %>
             <i class="flaticon stroke zoom-1"></i>
