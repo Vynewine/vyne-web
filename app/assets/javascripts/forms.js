@@ -199,6 +199,11 @@ $(document).ready(function(){
                 // console.log('callback 1', deliverable);
                 if (deliverable) {
 
+                    $('#filterPostcode').blur();
+
+                    $feedback.css({ 'display': 'block '});
+                    $('#use-postcode').css({ 'display': 'inline-block '});
+
                     $feedback.html("VYNZ delivers to this area.");
 
                     // Google API cannot find the street name based on the postcode!

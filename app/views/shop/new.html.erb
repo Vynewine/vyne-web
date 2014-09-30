@@ -17,41 +17,130 @@
     <div class="swiper-wrapper">
 
 <%# ============================ Address check ============================ %>
-  <div class="step swiper-slide">
-    <div>
-      <input type="text" id="filterPostcode" />
-    </div>
-    <div>
-      <span id="filterPostcodeMessage"></span>
-    </div>
-    <div>
-      <a href="grey-button">Use postcode</a>
+  <div id="postcode-panel" class="order-panel swiper-slide noSwipingClass">
+    <div class="order-panel-overlay"></div>
+    <div class="order-panel-content postcode">
+      <h2>Availability</h2>
+      <p>We need to check if the wine is available to deliver in your area</p>
+      <input type="text" id="filterPostcode" placeholder="Enter postcode"/>
+      <span id="filterPostcodeMessage" class="message"></span>
+      <a href="" id="use-postcode" class="btn next-slide">Choose wine</a>
     </div>
   </div>
 
 
 <%# ============================= Wine type 1 ============================= %>
 
-  <div class="step swiper-slide">
-    <h1>select your bottle</h1>
-    <ul class="bottle-list">
-<% @categories.each do |category| %>
-      <li>
-        <a href="#" data-category-id="<%= category.id %>">
-          <img src="" alt="" />
-          <span class="price">£<%= category.price %></span>
-          <span class="label"><%= category.name %></span>
-        </a>
-      </li>
-<% end %>
-    </ul>
-    <div>
-      <!-- This anchor is useless, the wide-details has another one -->
-      <a href="javascript:void(0);" class="grey-button">Select</a>
-    </div>
+  <div id="bottles-panel" class="order-panel swiper-slide noSwipingClass">
+    <div class="order-panel-content bottles">
+      <h2>Select your bottle</h2>
+      <ul class="bottle-list cf">
+  <% @categories.each do |category| %>
+        <li>
+          <a href="#" data-category-id="<%= category.id %>">
+            <span class="price">£<%= category.price %></span>
+            <span class="label"><%= category.name %></span>
+          </a>
+        </li>
+  <% end %>
+        <li class="bottle">
+          <a href="#" class="bottle-link">
+            <%= image_tag "wine.png", :alt => "wine bottle" %>
+            <span class="label">Label</span>
+            <span class="description">Entry-level to best wine regions.</span>
+          </a>
+          <div class="bottle-info">
+            <div class="close">
+              <div class="line"></div>
+              <div class="line"></div>
+            </div>
+            <%= image_tag "wine.png", :alt => "wine bottle" %>
+            <span class="label">Label</span>
+            <span class="price">£15</span>
+            <span class="description">Entry-level to best wine regions.</span>
+            <div class="full-description">
+              <p>Your entry point to wine’s best growing locales.</p>
+              <p>Top producer’s basic versions are much better quality than you’ll find in supermarkets or chain wine shops.</p>
+            </div>
+            <a href="" id="choose-bottle" class="btn next-slide">Choose bottle</a>
+          </div>
+        </li>
+        <li class="bottle">
+          <a href="#" class="bottle-link">
+            <%= image_tag "wine.png", :alt => "wine bottle" %>
+            <span class="label">Fine</span>
+            <span class="description">Top producers from acclaimed locales.</span>
+          </a>
+          <div class="bottle-info">
+            <div class="close">
+              <div class="line"></div>
+              <div class="line"></div>
+            </div>
+            <%= image_tag "wine.png", :alt => "wine bottle" %>
+            <span class="label">Fine</span>
+            <span class="price">£30</span>
+            <span class="description">Top producers from acclaimed locales.</span>
+            <div class="full-description">
+              <p>From the most sought after vineyards in the world. Parcels of land producing critically acclaimed wine, by the best producers.</p>
+              <p>Discover clarity of flavours unique only to the finest wines.</p>
+            </div>
+            <a href="" id="choose-bottle" class="btn next-slide">Choose bottle</a>
+          </div>
+        </li>
+        <li class="bottle">
+          <a href="#" class="bottle-link">
+            <%= image_tag "wine.png", :alt => "wine bottle" %>
+            <span class="label">Reserve</span>
+            <span class="description">Premium production. Best vineyards.</span>
+          </a>
+          <div class="bottle-info">
+            <div class="close">
+              <div class="line"></div>
+              <div class="line"></div>
+            </div>
+            <%= image_tag "wine.png", :alt => "wine bottle" %>
+            <span class="label">Reserve</span>
+            <span class="price">£20</span>
+            <span class="description">Premium production. Best vineyards.</span>
+            <div class="full-description">
+              <p>Reserve wines offer an entry point to top producers’ most painstaking production & the most sought after parcels of the worlds best wine regions.</p>
+            </div>
+            <a href="" id="choose-bottle" class="btn next-slide">Choose bottle</a>
+          </div>
+        </li>
+        <li class="bottle">
+          <a href="#" class="bottle-link">
+            <%= image_tag "wine.png", :alt => "wine bottle" %>
+            <span class="label">Cellar</span>
+            <span class="description">Top producers' great vintage bottles.</span>
+          </a>
+          <div class="bottle-info">
+            <div class="close">
+              <div class="line"></div>
+              <div class="line"></div>
+            </div>
+            <%= image_tag "wine.png", :alt => "wine bottle" %>
+            <span class="label">Cellar</span>
+            <span class="price">£50</span>
+            <span class="description">Top producers' great vintage bottles.</span>
+            <div class="full-description">
+              <p>The very best producers from wine’s most sacred vineyards.</p>
+              <p>We choose Cellar wines of the perfect age to fully experience greatness in winemaking.</p>
+            </div>
+            <a href="" id="choose-bottle" class="btn next-slide">Choose bottle</a>
+          </div>
+        </li>
+      </ul>
 
-    <!-- Hidden fields -->
-    <input type="text" id="category" name="category" />
+      <!--<div>
+        This anchor is useless, the wide-details has another one
+        <a href="javascript:void(0);" class="grey-button">Select</a>
+      </div>-->
+
+      <!-- Hidden fields -->
+      <input type="text" id="category" name="category" class="hidden" />
+
+    </div>
   </div>
 
 
@@ -61,7 +150,7 @@
   <%# 'category-details' and 'category-XXX' are used in the javascript %>
   <%# I used 'popup' to opose 'step', because they overlap %>
   <div class="popup category-details category-<%= category.id %>" style="display:none;">
-    <h1>select your bottle</h1>
+    <h2>select your bottle</h2>
     <div class="icon">
       <img src="" />
       <span class="title">£<%= category.price %></span>
@@ -87,23 +176,220 @@
 
 <%# ============================= Preferences ============================= %>
 
-  <div class="step swiper-slide">
-    <h1>Write down any ideas to help us choose your wine</h1>
-    <div>What is your occasion?</div>
-    <%= text_field :preferences, :occasion, :placeholder => "e.g. date, family dinner" %>
-    <div>What is are you eating?</div>
-    <%= text_field :preferences, :food    , :placeholder => "e.g. dish, ingredients, cuisine" %>
-    <div>Already have a type of wine in mind?</div>
-    <%= text_field :preferences, :type    , :placeholder => "e.g. region, grape, style" %>
-    <div>Other aspects you like?</div>
-    <%= text_field :preferences, :other   , :placeholder => "e.g. flavours, textures" %>
+  <div class="step order-panel swiper-slide noSwipingClass">
+    <div class="order-panel-content preferences">
+
+      <h2>Would you like us to match a wine with food?</h2>
+
+      <ul class="tab-list">
+        <li><a href="#with-food">Yes</a></li><li><a href="#without-food">No</a></li>
+      </ul>
+
+      <div id="with-food" class="tab">
+
+        <h3>Select a category</h3>
+        <div class="prefs-list-container">
+          <ul id="food-list" class="prefs-list prefs-list-top">
+            <li>
+              <a href="#meat">
+                <%= image_tag "icons/food/beef.png", :alt => "image description", :class => "logo" %>
+                <span>Meat</span>
+              </a>
+            </li>
+            <li>
+              <a href="#fish">
+                <%= image_tag "icons/food/fish.png", :alt => "image description", :class => "logo" %>
+                <span>Fish</span>
+              </a>
+            </li>
+            <li>
+              <a href="#dairy">
+                <%= image_tag "icons/food/hard_cheese.png", :alt => "image description", :class => "logo" %>
+                <span>Dairy</span>
+              </a>
+            </li>
+            <li>
+              <a href="">
+                <%= image_tag "icons/food/fried_sauteed.png", :alt => "image description", :class => "logo" %>
+                <span>Prep</span>
+              </a>
+            </li>
+            <li>
+              <a href="">
+                <%= image_tag "icons/food/green_vegetable.png", :alt => "image description", :class => "logo" %>
+                <span>Veg</span>
+              </a>
+            </li>
+            <li>
+              <a href="">
+                <%= image_tag "icons/food/herb_spice.png", :alt => "image description", :class => "logo" %>
+                <span>Herb & Spice</span>
+              </a>
+            </li>
+            <li>
+              <a href="">
+                <%= image_tag "icons/food/grain.png", :alt => "image description", :class => "logo" %>
+                <span>Grain</span>
+              </a>
+            </li>
+            <li>
+              <a href="">
+                <%= image_tag "icons/food/white_potato.png", :alt => "image description", :class => "logo" %>
+                <span>Potato</span>
+              </a>
+            </li>
+            <li>
+              <a href="">
+                <%= image_tag "icons/food/sweet.png", :alt => "image description", :class => "logo" %>
+                <span>Sweet</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div id="meat" class="prefs-box">
+          <h3>What type of Meat?</h3>
+          <div class="prefs-list-container">
+            <ul id="meat-list" class="prefs-list prefs-list-bottom">
+              <li>
+                <a href="">
+                  <%= image_tag "icons/food/beef.png", :alt => "image description", :class => "logo" %>
+                  <span>Beef</span>
+                </a>
+              </li>
+              <li>
+                <a href="">
+                  <%= image_tag "icons/food/chicken.png", :alt => "image description", :class => "logo" %>
+                  <span>Chicken</span>
+                </a>
+              </li>
+              <li>
+                <a href="">
+                  <%= image_tag "icons/food/cured_meat.png", :alt => "image description", :class => "logo" %>
+                  <span>Cured Meat</span>
+                </a>
+              </li>
+              <li>
+                <a href="">
+                  <%= image_tag "icons/food/pork.png", :alt => "image description", :class => "logo" %>
+                  <span>Pork</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="fish" class="prefs-box">
+          <h3>What type of Fish?</h3>
+          <div class="prefs-list-container">
+            <ul id="fish-list" class="prefs-list prefs-list-bottom">
+              <li>
+                <a href="">
+                  <%= image_tag "icons/food/lobster_shellfish.png", :alt => "image description", :class => "logo" %>
+                  <span>Lobster & Shellfish</span>
+                </a>
+              </li>
+              <li>
+                <a href="">
+                  <%= image_tag "icons/food/fish.png", :alt => "image description", :class => "logo" %>
+                  <span>Fish (inc. raw)</span>
+                </a>
+              </li>
+              <li>
+                <a href="">
+                  <%= image_tag "icons/food/mussels_oysters.png", :alt => "image description", :class => "logo" %>
+                  <span>Mussels & Oysters</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="dairy" class="prefs-box">
+          <h3>What type of Dairy?</h3>
+          <div class="prefs-list-container">
+            <ul id="dairy-list" class="prefs-list prefs-list-bottom">
+              <li>
+                <a href="">
+                  <%= image_tag "icons/food/soft_cheese.png", :alt => "image description", :class => "logo" %>
+                  <span>Soft cheese & cream</span>
+                </a>
+              </li>
+              <li>
+                <a href="">
+                  <%= image_tag "icons/food/smelly_cheese.png", :alt => "image description", :class => "logo" %>
+                  <span>Pungent cheese</span>
+                </a>
+              </li>
+              <li>
+                <a href="">
+                  <%= image_tag "icons/food/hard_cheese.png", :alt => "image description", :class => "logo" %>
+                  <span>Hard Cheese</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      <div id="without-food" class="tab">
+
+        <h3>Whats the occasion?</h3>
+        <div class="prefs-list-container">
+          <ul id="occasion-list" class="prefs-list prefs-list-bottom">
+            <li>
+              <a href="">
+                <%= image_tag "icons/food/solo.png", :alt => "image description", :class => "logo" %>
+                <span>Solo</span>
+              </a>
+            </li>
+            <li>
+              <a href="">
+                <%= image_tag "icons/food/party.png", :alt => "image description", :class => "logo" %>
+                <span>Party</span>
+              </a>
+            </li>
+            <li>
+              <a href="">
+                <%= image_tag "icons/food/date.png", :alt => "image description", :class => "logo" %>
+                <span>Date</span>
+              </a>
+            </li>
+            <li>
+              <a href="">
+                <%= image_tag "icons/food/dining.png", :alt => "image description", :class => "logo" %>
+                <span>Dining</span>
+              </a>
+            </li>
+            <li>
+              <a href="">
+                <%= image_tag "icons/food/outdoors.png", :alt => "image description", :class => "logo" %>
+                <span>Outdoors</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="prefs-overview cf">
+        <div class="prefs-overview-list-container">
+          <ul class="prefs-overview-list">
+          </ul>
+        </div>
+        <a href="" class="next-slide btn-order">Checkout</a>
+      </div>
+
+    </div>
   </div>
 
 <%# =============================== Sign up =============================== %>
 <%# wtf man... %>
 
-    <div class="step swiper-slide">
-        <h1>Register</h1>
+    <div class="step order-panel swiper-slide noSwipingClass">
+      <div class="order-panel-content register">
+        <h2>Register</h2>
         <div>
           <%= text_field :user, :name, :placeholder => "Name" %>
         </div>
@@ -117,12 +403,12 @@
           :autocomplete => "off",
           :placeholder => "Mobile" %>
         </div>
-<%
-passPlaceholder = "Password"
-if @validatable
-passPlaceholder += " (#{@minimum_password_length} characters minimum)"
-end
-%>
+        <%
+        passPlaceholder = "Password"
+        if @validatable
+        passPlaceholder += " (#{@minimum_password_length} characters minimum)"
+        end
+        %>
         <div>
             <%=
             password_field :user,
@@ -139,39 +425,43 @@ end
             :placeholder => "Confirm password"
             %>
         </div>
-        <!-- <a href="#" class="btn-next" data-next-step="form-step-last">NEXT</a> -->
+        <a href="" class="next-slide btn">Delivery details</a>
+      </div>  
+      <!-- <a href="#" class="btn-next" data-next-step="form-step-last">NEXT</a> -->
     </div>
 
 <%# ========================== Address selection ========================== %>
 
-  <div class="step swiper-slide">
-    <h1>Delivery address</h1>
+  <div class="step order-panel swiper-slide noSwipingClass">
+    <div class="order-panel-content delivery">
+      <h2>Delivery address</h2>
 
-<%# - - - - - -- - - - - - - - - -  Option1 - - - - - -- - - - - - - - - -  %>
+  <%# - - - - - -- - - - - - - - - -  Option1 - - - - - -- - - - - - - - - -  %>
 
-    <%
-    addressOptions = [['New address', -1]]
-    # billingAddressOptions = [['Same address', -1],['Custom address', 0]]
-    if current_user
-      current_user.addresses.each do |a|
-        addressOptions.push([a.full, a.id])
-        # billingAddressOptions.push([a.full, a.id])
+      <%
+      addressOptions = [['New address', -1]]
+      # billingAddressOptions = [['Same address', -1],['Custom address', 0]]
+      if current_user
+        current_user.addresses.each do |a|
+          addressOptions.push([a.full, a.id])
+          # billingAddressOptions.push([a.full, a.id])
+        end
       end
-    end
-    %>
-    <%= select_tag "orderAddress", options_for_select(addressOptions, @order.address_id), :prompt => "Choose Address", :name => "" %>
+      %>
+      <%= select_tag "orderAddress", options_for_select(addressOptions, @order.address_id), :prompt => "Choose Address", :name => "" %>
 
-<%# - - - - - -- - - - - - - - - -  Option2 - - - - - -- - - - - - - - - -  %>
+  <%# - - - - - -- - - - - - - - - -  Option2 - - - - - -- - - - - - - - - -  %>
 
-    <div id="new_delivery_address" style="display:none;">
-      <div><input type="text" id="addr-pc" name="address_p" placeholder="Postcode" /></div>
-      <div><input type="text" disabled="disabled" id="addr-st" name="address_s" placeholder="Street Name" /></div>
-      <div><input type="text" disabled="disabled" id="addr-no" name="address_d" placeholder="No" /></div>
-    </div>
-    <input type="hidden" id="old-address" name="old_address" />
-    <div>
-      <!-- Next step -->
-      <a href="#" class="grey-button" id="">use address</a> <!-- Changes class to 'red-button' -->
+      <div id="new_delivery_address" style="display:none;">
+        <div><input type="text" id="addr-pc" name="address_p" placeholder="Postcode" /></div>
+        <div><input type="text" disabled="disabled" id="addr-st" name="address_s" placeholder="Street Name" /></div>
+        <div><input type="text" disabled="disabled" id="addr-no" name="address_d" placeholder="No" /></div>
+      </div>
+      <input type="hidden" id="old-address" name="old_address" />
+      <div>
+        <!-- Next step -->
+        <a href="#" class="next-slide btn" id="">use address</a> <!-- Changes class to 'red-button' -->
+      </div>
     </div>
   </div>
 <%# ========================= Address confirmation ======================== %>
@@ -188,42 +478,43 @@ end
 %>
 <%# =============================== Payment =============================== %>
 
-  <div class="step swiper-slide">
-    <h1>Link Payment</h1>
+  <div class="step order-panel swiper-slide noSwipingClass">
+    <div class="order-panel-content payment">
+      <h2>Link Payment</h2>
+        <%
+        paymentCards = [['New payment card', -1]]
+        if current_user
+          current_user.payments.each do |a|
+            # [ :visa, :master, :american, :discover, :diners, :jcb ]
+            if a.brand == 3 # American Express
+              cardNumber = "**** ****** #{a.number}"
+            else
+              cardNumber = "**** **** **** #{a.number}"
+            end  
+            paymentCards.push([cardNumber, a.id])
+          end
+        end
+        %>
 
-<%
-paymentCards = [['New payment card', -1]]
-if current_user
-  current_user.payments.each do |a|
-    # [ :visa, :master, :american, :discover, :diners, :jcb ]
-    if a.brand == 3 # American Express
-      cardNumber = "**** ****** #{a.number}"
-    else
-      cardNumber = "**** **** **** #{a.number}"
-    end  
-    paymentCards.push([cardNumber, a.id])
-  end
-end
-%>
-
-    <%= select_tag "orderCard", options_for_select(paymentCards, @order.payment_id), :prompt => "Choose Card", :name => "" %>
-    <div id="new_card" style="display:none;">
-      <div><input type="text" id="pmnm" size="20" placeholder="0000 0000 0000 0000" data-stripe="number" /></div>
-      <div><input type="text" id="pmcv" size="4"  placeholder="CVC" data-stripe="cvc" /></div>
-      <div><input type="text" id="pmxp" size="5"  placeholder="MM/YY" /></div>
-    </div>
-    <!-- Hidden fields -->
-    <input type="hidden" id="old-card" name="old_card" />
-    <input type="hidden" id="new-card" name="new_card" />
-    <input type="hidden" id="new-brand" name="new_brand" />
-    <input type="hidden" id="expm" data-stripe="exp-month" />
-    <input type="hidden" id="expy" data-stripe="exp-year" />
-    <div>
-      <%= f.submit "Submit", :class => 'red-button' %>
+      <%= select_tag "orderCard", options_for_select(paymentCards, @order.payment_id), :prompt => "Choose Card", :name => "" %>
+      <div id="new_card" style="display:none;">
+        <div><input type="text" id="pmnm" size="20" placeholder="0000 0000 0000 0000" data-stripe="number" /></div>
+        <div><input type="text" id="pmcv" size="4"  placeholder="CVC" data-stripe="cvc" /></div>
+        <div><input type="text" id="pmxp" size="5"  placeholder="MM/YY" /></div>
+      </div>
+      <!-- Hidden fields -->
+      <input type="hidden" id="old-card" name="old_card" />
+      <input type="hidden" id="new-card" name="new_card" />
+      <input type="hidden" id="new-brand" name="new_brand" />
+      <input type="hidden" id="expm" data-stripe="exp-month" />
+      <input type="hidden" id="expy" data-stripe="exp-year" />
+      <div>
+        <%= f.submit "Submit Order", :class => 'red-button' %>
+      </div>
     </div>
   </div>
 
-<% end %>
+  <% end %>
 
   </div>
 </div>

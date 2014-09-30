@@ -90,7 +90,7 @@ sizes, pagination, etc.
 .swiper-container {
 	/* Specify Swiper's Size: */
 	width: 100%;
-	height: 470px;
+	height: 450px;
 }
 .swiper-slide {
 	/* Specify Slides's Size: */
@@ -118,16 +118,16 @@ Pagination Styles
 	position: absolute;
 	left: 0;
 	text-align: center;
-	bottom: 20px;
+	bottom: 75px;
 	width: 100%;
 }
 
 .swiper-pagination-switch {
 	display: inline-block;
-	width: 14px;
-	height: 14px;
-	margin: 0 5px;
-	border: 2px rgba(255,255,255,0.2) solid;
+	width: 10px;
+	height: 10px;
+	margin: 0 10px;
+	background: rgba(255,255,255,0.2);
 	border-radius: 100%;
 	cursor: pointer;
 }

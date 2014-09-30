@@ -1,46 +1,54 @@
 <div class="aside-bar hidden">
   <nav>
     <ul class="nav">
-      <li>
+      <!--<li>
         <%= link_to 'New Order', neworder_path %>
-      </li>
-<% if user_signed_in? %>
-<% if current_user.has_role?(:supplier) ||
-      current_user.has_role?(:admin) ||
-      current_user.has_role?(:superadmin)
-%>
-      <li class="sign-in">
-          <%= link_to 'Admin', admin_root_path %>
-      </li>
-<% end %>
-<% else %>
-      <li class="sign-in">
-          <%= link_to "Sign in", login_path %>
-      </li>
-<% end %>
+      </li>-->
+
+      <% if user_signed_in? %>
+
       <li class="hidden"><a href="#" class="order">Track order</a></li>
       <li class="hidden"><a href="#" class="profile">Profile</a></li>
       <li class="hidden"><a href="#" class="payment">Payment</a></li>
       <li class="hidden"><a href="#" class="support">Support</a></li>
+
+        <% if current_user.has_role?(:supplier) ||
+              current_user.has_role?(:admin) ||
+              current_user.has_role?(:superadmin)
+        %>
+        <li class="sign-in">
+            <%= link_to 'Admin', admin_root_path %>
+        </li>
+        <% end %>
+
+      <% else %>
+      <li class="sign-in">
+          <%= link_to "Sign in", login_path %>
+      </li>
+      <% end %>
+
       <li><a href="#" class="promotions">Promotions</a></li>
-<% if user_signed_in? %>
-<% if current_user.has_role?(:client) %>
+
+      <% if user_signed_in? %>
+      <% if current_user.has_role?(:client) %>
       <li>
         <%= link_to 'My wines', mywines_path, :class => 'history' %>
       </li>
-<% else %>
+      <% else %>
       <li>
         <%= link_to 'Confirm account', entercode_path, :class => 'profile' %>
       </li>
-<% end %>
-<% end %>
-      <li class="hidden"><a href="#" class="share">Share</a></li>
+      <% end %>
+      <% end %>
+
+      <!--<li class="hidden"><a href="#" class="share">Share</a></li>-->
     </ul>
   </nav>
   <nav>
     <ul class="nav">
       <li><%= link_to 'Home', root_path %></li>
       <li><a href="#" class="about">About</a></li>
+      <li><a href="#" class="help">Help</a></li>
     </ul>
   </nav>
   <% if user_signed_in? %>

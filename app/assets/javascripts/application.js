@@ -31,18 +31,92 @@ $(function() {
 
 	$('.menu-link').click(function(e) {
 		e.preventDefault();
+		$('.menu-link').toggleClass('slide');
 		$('.container').toggleClass('menu-visible');
+		$('.aside-bar').toggleClass('visible');
 	});
 
 	var mySwiper = $('#walkthrough').swiper({
 		mode: 'horizontal',
-		loop: true,
 		pagination: '.pagination',
 		paginationClickable: true
 	});
 
 	var order = $('#order').swiper({
-		mode: 'horizontal'
+		mode: 'horizontal',
+		noSwiping: true,
+		simulateTouch: false,
+		onlyExternal: true
+	});
+
+	$('.next-slide').click(function(e) {
+		e.preventDefault();
+		order.swipeNext();
+	});
+
+	$('.bottle-link').click(function(e) {
+		if(!$('.close').hasClass('hover')) {
+			$('.bottle-info').removeClass('active');
+			$(this).parent().find('.bottle-info').addClass('active');
+		}
+	});
+
+	$('.order-panel-overlay').css({
+		'height': $(this).parent().height()+'px'
+	});
+
+	$('.close').hover(function() {
+		$(this).addClass('hover');
+	}, function() {
+		$(this).removeClass('hover');
+	});
+
+	$('.close').click(function(e) {
+		$('.bottle-info').removeClass('active');
+	});
+
+	$('.tab').hide();
+	$('.tab-list li a').click(function(e) {
+		e.preventDefault();
+		$('.preferences').addClass('first-level');
+		$('.tab-list li').removeClass('active');
+		$(this).parent().addClass('active');
+
+		$('.tab').hide();
+
+		$($(this).attr('href')).show();
+		$($(this).attr('href')).find('.prefs-list-container').addClass('visible');
+	});
+
+	$('.prefs-list li a').click(function(e) {
+		e.preventDefault();
+		$('.preferences').addClass('second-level');
+		$(this).closest('.prefs-list-container').addClass('visible');
+		$('.prefs-list li').removeClass('active');
+		$(this).parent().addClass('active');
+	});
+
+	$('.prefs-box').hide();
+	$('.prefs-list-top li a').click(function(e) {
+		e.preventDefault();
+		$('.prefs-box').hide();
+		$($(this).attr('href')).show();
+	});
+
+	$('.prefs-list-bottom li a').click(function(e) {
+		e.preventDefault();
+		if($(this).parent().hasClass('selected')) {
+			
+		} else {
+			$(this).parent().addClass('selected');
+			$('.prefs-overview').addClass('visible');
+			$('.prefs-overview-list').prepend('<li><a href="">'+$(this).text()+'</a></li>');
+		}
+	});
+
+	$(document).on('click', '.prefs-overview-list li a', function(e) {
+		e.preventDefault();
+		$(this).parent().remove();
 	});
 
 });
