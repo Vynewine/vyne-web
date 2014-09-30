@@ -118,11 +118,13 @@ ActiveRecord::Schema.define(version: 20140925091503) do
   create_table "inventories", force: true do |t|
     t.integer  "warehouse_id"
     t.integer  "wine_id"
+    t.integer  "category_id"
     t.integer  "quantity"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_index "inventories", ["category_id"], name: "index_inventories_on_category_id", using: :btree
   add_index "inventories", ["warehouse_id"], name: "index_inventories_on_warehouse_id", using: :btree
   add_index "inventories", ["wine_id"], name: "index_inventories_on_wine_id", using: :btree
 

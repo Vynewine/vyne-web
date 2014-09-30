@@ -650,7 +650,8 @@ for j in 1..2 do
     Inventory.create(
       :warehouse_id => j,
            :wine_id => i*j,
-          :quantity => rand(80)
+          :quantity => rand(80),
+       :category_id => 1 + rand(4)
     )
   end
 end

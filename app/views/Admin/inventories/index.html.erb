@@ -6,6 +6,7 @@
       <th>Warehouse</th>
       <th>Wine</th>
       <th>Quantity</th>
+      <th>Category</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -16,6 +17,7 @@
         <td><%= inventory.warehouse.title %></td>
         <td><%= inventory.wine.name %></td>
         <td><%= inventory.quantity %></td>
+        <td><%= inventory.category.name %> (£<%= inventory.category.price %>)</td>
         <td><%= link_to 'Show', admin_inventory_path(inventory) %></td>
         <td><%= link_to 'Edit', edit_admin_inventory_path(inventory) %></td>
         <td><%= link_to 'Destroy', admin_inventory_path(inventory), method: :delete, data: { confirm: 'Are you sure?' } %></td>

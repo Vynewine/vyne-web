@@ -75,6 +75,20 @@ var adminReady = function() {
         token = $('meta[name="csrf-token"]').attr('content');
 
 
+        var chooseWine = function(e) {
+            e.preventDefault();
+            var wine = parseInt($(this).closest('tr').data('id'));
+            var order = parseInt($('#order_id').val());
+            var warehouse = parseInt($('#warehouse_id').val());
+            var data = {
+                'wine':wine,
+                'order':order,
+                'warehouse':warehouse
+            };
+            console.log('chosen! ',data);
+            alert('Line 89');
+        };
+
         var renderWine = function(wine) {
             console.log('rendering wine', wine);
             var $container = $('#wine-list>table>tbody');
@@ -82,6 +96,23 @@ var adminReady = function() {
             // for (var i = 0, type; type = wine.type[i++];) {
             //     types.push(type.name);
             // }
+
+            var basePrice = 0;
+            var basePriceWarehouse = 0;
+            var basePriceQuantity = 0;
+            var multiplePrices = wine.availability.length > 1 ? '+' : ''
+            for (var i = 0, availability; availability = wine.availability[i++];) {
+                if (availability.quantity > 0) {
+                    if (availability.price < basePrice || basePrice === 0) {
+                        basePrice = availability.price;
+                        basePriceQuantity = availability.quantity;
+                        basePriceWarehouse = availability.warehouse;
+                    }
+                }
+            }
+
+            if (basePrice === 0) return;
+
             var compositionArray = [];
             for (var i = 0, composition; composition = wine.compositions[i++];) {
                 compositionArray.push(composition.name + ': ' + composition.quantity + '%');
@@ -100,7 +131,10 @@ var adminReady = function() {
 
 
             $container.append(
-                $('<tr>').addClass('wine').append(
+                $('<tr>')
+                .attr('data-id', wine.id)
+                .attr('data-warehouse', basePriceWarehouse)
+                .addClass('wine').append(
                     $('<td>').addClass('flag').append(
                         $('<img>')
                             .attr('alt', wine.countryName)
@@ -114,6 +148,9 @@ var adminReady = function() {
                     $('<td>').addClass('type').html(
                         wine.types.join(', ')
                     ),
+                    $('<td>').addClass('price').html(
+                        '&pound;' + basePrice + multiplePrices
+                    ),
                     $('<td>').addClass('composition').html(
                         compositionArray.join(', ')
                     ),
@@ -121,7 +158,7 @@ var adminReady = function() {
                         $se, $vg, $vn, $og
                     ),
                     $('<td>').addClass('actions').append(
-                        $('<a>').attr('href', '#').html('Choose')
+                        $('<a>').attr('href', '#').html('Choose').click(chooseWine)
                     )
                 )
             );
@@ -152,13 +189,21 @@ var adminReady = function() {
 
         var findKeywords = function(keywords){
             // var token = $('meta[name="csrf-token"]').attr('content');
+
+            var categories = [];
+            $.each($('.tick-category'), function() {
+                if (this.checked)
+                    categories.push(parseInt(this.name.split('-')[2]));
+            });
+
             var data = {
                   'keywords': keywords,
                  'warehouse': $('#warehouse_id').val(),
                     'single': $('#tick-sing').is(':checked'),
                 'vegetarian': $('#tick-vegt').is(':checked'),
                      'vegan': $('#tick-vegn').is(':checked'),
-                   'organic': $('#tick-orgc').is(':checked')
+                   'organic': $('#tick-orgc').is(':checked'),
+                'categories': categories
             };
             console.log('data', data);
             postJSON('advise/results.json', token, data, parseResults, errorMethod);
@@ -196,8 +241,10 @@ var adminReady = function() {
                 var $tr = $td.closest("tr");
                 var $siblings = $tr.siblings();
                 var warehouse = $tr.data('warehouse');
+                var id = $tr.data('id');
                 $siblings.removeClass('selected');
                 $siblings.hide();
+                $('#orders-header').hide();
                 $tr.addClass('selected');
                 $td.html('');
                 $td.append($orderRecoverAnchor);
@@ -205,6 +252,7 @@ var adminReady = function() {
                 $('#wine-filters').slideDown();
                 $('#wine-list').html('').show();
                 $('#wine-filters>#search').focus();
+                $('#order_id').val(id);
                 $('#warehouse_id').val(warehouse);
             });
 
@@ -213,12 +261,14 @@ var adminReady = function() {
                 var $td = $(this).closest("td");
                 var $tr = $td.closest("tr");
                 var $siblings = $tr.siblings();
+                $('#order_id').val('');
                 $('#warehouse_id').val('');
                 $tr.removeClass('selected');
                 $td.html('');
                 $td.append($adviseAnchor);
                 $('#wine-list').hide();
                 $('#wine-filters').hide();
+                $('#orders-header').slideDown();
                 $siblings.slideDown();
             });
 
@@ -226,6 +276,7 @@ var adminReady = function() {
                 $('<tr>')
                   .addClass('order')
                   .attr("data-warehouse", order.warehouse.id)
+                  .attr("data-id", order.id)
                   .append(
                       $('<td>').addClass('client').html(
                           order.client.name

@@ -22,6 +22,7 @@ class Admin::InventoriesController < ApplicationController
 
   # GET /inventories/1/edit
   def edit
+    @categories = Category.all
   end
 
   # POST /inventories
@@ -73,6 +74,6 @@ class Admin::InventoriesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def inventory_params
-      params.require(:inventory).permit(:warehouse_id, :wine_id, :quantity)
+      params.require(:inventory).permit(:warehouse_id, :wine_id, :quantity, :category_id)
     end
 end

@@ -86,6 +86,14 @@ class Wine < ActiveRecord::Base
 
     integer :warehouse_ids, :multiple => true
 
+    integer :price_categories, :multiple => true do
+      inventories.all.map do |i|
+        unless i.category.nil?
+          i.category.id
+        end
+      end
+    end
+
     # integer :warehouse_id do
     #   warehouses.id #map {|i| i.warehouse_id}
     # end

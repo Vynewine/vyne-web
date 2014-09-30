@@ -1,6 +1,9 @@
 <div class="advisor-area">
-    <h2>Orders</h2>
-    <a href="#" id="reload-orders">Reload orders</a>
+    <div id="orders-header">
+        <h2>Orders</h2>
+        <a href="#" id="reload-orders">Reload orders</a>
+    </div>
+    <input type="hidden" id="order_id" />
     <input type="hidden" id="warehouse_id" />
     <div id="order-list"></div>
     <div id="wine-filters" style="display:none;">
@@ -9,6 +12,15 @@
         <input type="checkbox" id="tick-vegt" name="vegetarian" /><label for="vegetarian">Vegetarian</label>
         <input type="checkbox" id="tick-vegn" name="vegan"      /><label for="vegan"     >Vegan</label>
         <input type="checkbox" id="tick-orgc" name="organic"    /><label for="organic"   >Organic</label>
+        <div style="float:right">
+<% @categories.each do |category| %>
+        <input type="checkbox" class="tick-category" name="tick-cat-<%= category.id %>" />
+        <label for="tick-cat-<%= category.name %>">
+            &pound;<%= category.price %>
+            (<%= category.name.capitalize %>) 
+        </label>
+<% end %>
+        </div>
     </div>
     <div id="wine-list" style="display:none;"></div>
 </div>
