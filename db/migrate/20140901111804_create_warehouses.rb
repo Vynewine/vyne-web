@@ -2,7 +2,7 @@ class CreateWarehouses < ActiveRecord::Migration
   def change
     create_table :warehouses do |t|
       t.string :title
-      t.integer :address_id
+      t.references :address, index: true
 
       t.timestamps
     end

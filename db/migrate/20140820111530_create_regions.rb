@@ -2,7 +2,7 @@ class CreateRegions < ActiveRecord::Migration
   def change
     create_table :regions do |t|
       t.string :name
-      t.integer :country_id
+      t.references :country, index: true
 
       t.timestamps
     end

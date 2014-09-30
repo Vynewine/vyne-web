@@ -56,6 +56,14 @@ end
 
 
 <% @roles.each do |role| %>
+<%
+if role == "superadmin"
+  unless current_user.has_role?(:superadmin)
+    next
+  end
+end
+%>
+
   <h2><%= role.name.capitalize %> users</h2>
 <% if role.users.count > 0 %>
   <table>

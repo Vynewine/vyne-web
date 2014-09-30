@@ -58,8 +58,46 @@ ul.main-menu {
         & > a:hover {
             background: black;
         }
+        &.supplier > a {
+            color: lightblue;
+        }
+        &.advisor > a {
+            color: lightgreen;
+        }
+        &.admin > a {
+            color: pink;
+        }
         &.superadmin > a {
-            color: cyan;
+            color: orange;
+        }
+    }
+}
+
+ul.submenu {
+    // No style
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    // Position
+    @extend .left-block;
+    width: 100%;
+    margin-bottom: 20px;
+
+    // Appearance
+    background: #333;
+    min-height: 40px;
+
+    & > li {
+        display: inline-block;
+        float: left;
+        // border: 1px solid cyan;
+        & > span,
+        & > a {
+            display: inline-block;
+            padding: 10px;
+            color: white;
+            text-decoration: none;
         }
     }
 }
@@ -87,6 +125,10 @@ header,
 footer {
     width: 100%;
     @extend .left-block;
+}
+
+footer {
+    display: none;
 }
 
 div.alerts {
@@ -121,4 +163,131 @@ div.main {
 div.field {
     border: 1px solid #CCC;
     padding: 10px;
+}
+
+table.list-table {
+    width: 100%;
+    border-color: #AAF;
+    border-collapse: collapse;
+    & > tbody > tr {
+        & > td {
+            padding: 5px;
+        }
+    }
+}
+
+//----------------------------------------------------
+// Advisor area:
+
+.bb {
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+  box-sizing: border-box;         /* Opera/IE 8+ */
+}
+
+* {
+    @extend .bb;
+}
+
+.advisor-area {
+    // background: red;
+}
+
+#order-list {
+    float: left;
+    width: 100%;
+    // background: cyan;
+    table {
+        width: 100%;
+        border-width: 1px;
+        border-color: #AAF;
+        border-collapse: collapse;
+        & > tbody > tr {
+            &.selected {
+                background-color: #DDF;
+            }
+            &:hover {
+                background-color: #DDD;
+            }
+            & > td {
+                padding: 5px;
+            }
+        }
+    }
+}
+
+#wine-filters {
+    float: left;
+    width: 100%;
+    // background: red;
+    padding: 10px;
+    & > input[type=text] {
+        float: left;
+        font-size: 1.5em;
+        width: 100%;
+        padding: 10px;
+        outline: none;
+    }
+}
+
+
+$border: 1px solid #D5E;
+
+#wine-list {
+    float: left;
+    width: 100%;
+    table {
+        width: 100%;
+        border-width: 1px;
+        border-color: #AAF;
+        border-collapse: collapse;
+        & > tbody > tr {
+            &.selected {
+                background-color: #DDF;
+            }
+            &:hover {
+                background-color: #DDD;
+            }
+            & > td {
+                padding: 5px;
+                &.flag {
+                    text-align: center;
+                }
+                &.type {
+                    font-size: 0.8em;
+                    text-transform: uppercase;
+                    font-weight: bold;
+                }
+                &.composition {
+                    // font-size: 0.8em;                    
+                }
+                &.flags {
+                    & > span {
+                        font-size: 0.8em;
+                        font-weight: bold;
+                        border: 1px solid black;
+                        background: white;
+                        padding: 3px;
+                        &.single {
+                            padding: 3px 4px;
+                        }
+                        &.vegetarian {
+                            color: darkgreen;
+                            border-color: darkgreen;
+                            background: lightgreen;
+                        }
+                        &.vegan {
+                            color: darkgreen;
+                            border-color: darkgreen;
+                        }
+                        &.organic {
+                            color: darkred;
+                            border-color: darkred;
+                            background: beige;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

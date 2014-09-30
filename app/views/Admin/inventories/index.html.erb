@@ -1,0 +1,31 @@
+<h1>Listing inventories</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Warehouse</th>
+      <th>Wine</th>
+      <th>Quantity</th>
+      <th>Category</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @inventories.each do |inventory| %>
+      <tr>
+        <td><%= inventory.warehouse.title %></td>
+        <td><%= inventory.wine.name %></td>
+        <td><%= inventory.quantity %></td>
+        <td><%= inventory.category.name %> (£<%= inventory.category.price %>)</td>
+        <td><%= link_to 'Show', admin_inventory_path(inventory) %></td>
+        <td><%= link_to 'Edit', edit_admin_inventory_path(inventory) %></td>
+        <td><%= link_to 'Destroy', admin_inventory_path(inventory), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Inventory', new_admin_inventory_path %>

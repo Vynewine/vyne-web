@@ -26,6 +26,35 @@ function Maths() {
 
 /**
  * Little handy JSON function.
+ * Re-factor!
+ */
+var postJSON = function(path, token, data, success, error) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                if (success)
+                    return success(JSON.parse(xhr.responseText));
+            } else {
+                if (error) {
+                    error(xhr);
+                    return -1;
+                }
+            }
+        }
+    };
+    xhr.open("POST", path, true);
+    xhr.setRequestHeader('X-CSRF-Token', token);
+    xhr.setRequestHeader('Accept', 'application/json');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    // xhr.setRequestHeader('Content-Length', data.length);
+    xhr.send(JSON.stringify(data));
+    // xhr.send(data);
+};
+
+/**
+ * Little handy JSON function.
+ * Re-factor!
  */
 var loadJSON = function(path, success, error) {
     var xhr = new XMLHttpRequest();

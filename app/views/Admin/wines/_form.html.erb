@@ -56,17 +56,29 @@
   </div>
   <div class="field">
     <%= f.label :composition %><br>
-    <%= debug @compositions %>
-    <a href="#" class="add_nested_field" data-parent-entity="wine" data-nested-entity="compositions" data-field-name="grape,quantity" data-last-sum="1">Add composition</a>
-    <%= f.fields_for :compositions do |c| %>
-    <div class="field">
-      <%= c.label :grape %><br />
-      <%= c.text_field :grape %>
-    </div>
-    <div class="field">
-        <%= c.label :quantity %><br />
-        <%= c.text_field :quantity %>
-    </div>
+    <a href="#" class="add_nested_field" data-parent-entity="wine" data-nested-entity="compositions" data-field-name="grape,quantity" data-last-sum="<%= (@compositions.nil? ? '0' : @compositions.count) %>">Add composition</a>
+    <% if @compositions %>
+    <% compositionCounter = 0 %>
+    <% @compositions.each do |c| %>
+      <div class="field">
+        <label for="wine[compositions_attributes][<%=compositionCounter%>][grape]">Grape</label><br />
+        <input
+        type="text" id="wine_compositions_attributes_<%=compositionCounter%>_grape"
+        name="wine[compositions_attributes][<%=compositionCounter%>][grape][name]"
+        value="<%=c.grape.name%>"
+        />
+        <!-- input id="wine_compositions_attributes_0_grape" name="wine[compositions_attributes][0][grape]" type="text" value="#<Grape:0x007f8844545910>" -->
+      </div>
+      <div class="field">
+        <label for="wine[compositions_attributes][<%=compositionCounter%>][quantity]">Quantity</label><br />
+        <input
+        type="text" id="wine_compositions_attributes_<%=compositionCounter%>_quantity"
+        name="wine[compositions_attributes][<%=compositionCounter%>][quantity]"
+        value="<%=c.quantity%>"
+        />
+      </div>
+      <% compositionCounter += 1 %>
+    <% end %>
     <% end %>
   </div>
   <div class="field">
@@ -105,10 +117,30 @@
     <%= f.label :allergies %><br>
     <%= @allergies %>
   </div>
-  <div class="field red">
+
+  <div class="field">
     <%= f.label :maturation %><br>
-    <%= @maturations %>
+
+    <div class="field">
+      <label for="wine[maturations_attributes][bottling]">Bottling</label><br />
+      <input
+      type="text" id="wine_maturations_attributes_bottling"
+      name="wine[maturations_attributes][bottling][name]"
+      value="<%= @wine.maturation.nil? ? '' : @wine.maturation.bottling.name%>"
+      />
+    </div>
+    <div class="field">
+      <label for="wine[maturations_attributes][period]">Period</label><br />
+      <input
+      type="text" id="wine_maturations_attributes_period"
+      name="wine[maturations_attributes][period]"
+      value="<%= @wine.maturation.nil? ? '' : @wine.maturation.period%>"
+      />
+    </div>
+
   </div>
+
+
   <div class="field">
     <%= f.label :vegetarian %><br>
     <%= f.check_box :vegetarian %>

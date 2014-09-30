@@ -10,10 +10,19 @@ class Admin::OrdersController < ApplicationController
     @orders = Order.all
   end
 
-  # GET /orders/list
+  # GET /orders/list.json
   def list
-    @orders = Order.all
-    render :layout => 'application'
+    require 'pp'
+    puts '--------------------------'
+    logger.warn "Orders request"
+
+    puts PP.pp(params[:status],'',80)
+
+    @orders = Order.where(:status => params[:status])
+
+    respond_to do |format|
+      format.json
+    end
   end
 
   # GET /orders/1
@@ -27,6 +36,7 @@ class Admin::OrdersController < ApplicationController
     # current_user.has_role?(:superadmin)
     @order = Order.new
     logger.warn "New order"
+    @statuses = Status.all
   end
 
   # GET /orders/confirmed
@@ -35,6 +45,7 @@ class Admin::OrdersController < ApplicationController
 
   # GET /orders/1/edit
   def edit
+    @statuses = Status.all
   end
 
   # POST /orders

@@ -13,7 +13,8 @@
 
   <div class="field">
     <%= f.label :status_id %><br>
-    <%= f.text_field :status_id %>
+    <%= f.select :status_id, options_from_collection_for_select(@statuses, "id", "label", :selected => @order.status_id),
+        :prompt => "Choose a status" %>
   </div>
   <div class="field">
     <%= f.label :client_id %><br>

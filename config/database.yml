@@ -5,9 +5,15 @@
 #   gem 'sqlite3'
 #
 default: &default
-  adapter: sqlite3
+  adapter: postgresql
+  encoding: unicode
+  username: vynz
+  password: 'Valpolicella'
+  database: vynz_development
   pool: 5
-  timeout: 5000
+  # adapter: sqlite3
+  # pool: 5
+  # timeout: 5000
 
 # development:
 #   <<: *default
@@ -30,8 +36,8 @@ development: &pg
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: db/test.sqlite3
+  # database: db/test.sqlite3
 
 production:
   <<: *default
-  database: db/production.sqlite3
+  # database: db/production.sqlite3

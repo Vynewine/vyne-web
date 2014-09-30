@@ -1,5 +1,12 @@
 Rails.application.routes.draw do
 
+  namespace :admin do
+  get 'advisors/index'
+  end
+
+  namespace :admin do
+  get 'advisor/index'
+  end
 
   # ----------------------------------------------------------------------------
   # General access
@@ -93,6 +100,14 @@ Rails.application.routes.draw do
     resources :orders
     resources :payments
     resources :statuses
+    resources :advisors
+    resources :inventories
+    scope '/orders' do
+      post 'list' => "orders#list"
+    end
+    scope '/advise' do
+      post 'results' => "advisors#results"
+    end
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

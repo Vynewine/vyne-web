@@ -13,6 +13,18 @@
 
 # Get the current DB connection:
 connection = ActiveRecord::Base.connection();
+
+# Cleaning all:
+
+# Country.delete_all
+# Role.delete_all
+# Status.delete_all
+# User.delete_all
+# Category.delete_all
+# Appellation.delete_all
+# Producer.delete_all
+# Wine.delete_all
+
 # Execute a sql statement:
 connection.execute "
   INSERT INTO countries (name, alpha_2, alpha_3) VALUES
@@ -266,12 +278,16 @@ connection.execute "
   ('Zambia', 'zm', 'zmb'),
   ('Zimbabwe', 'zw', 'zwe')"
 
+puts "Countries ---- OK"
+
 # Default roles:
 Role.create(:name => 'client')
 Role.create(:name => 'supplier')
 Role.create(:name => 'advisor')
 Role.create(:name => 'admin')
 Role.create(:name => 'superadmin')
+
+puts "Roles -------- OK"
 
 # Default order statuses:
 Status.create(:label => 'new')
@@ -283,11 +299,13 @@ Status.create(:label => 'waiting for delivery')
 Status.create(:label => 'delivered')
 Status.create(:label => 'cancelled')
 
+puts "Statuses ----- OK"
+
 # Default user:
 User.create!({
   :name => 'Gian',
   :email => "gm@rockstardev.co",
-  :mobile => "0777777777",
+  :mobile => "0111111111",
   :password => "#Wines1234",
   :password_confirmation => "#Wines1234"
 })
@@ -297,6 +315,7 @@ defaultUser.add_role(:superadmin)
 defaultUser.active = true
 defaultUser.save
 
+puts "Admin -------- OK"
 
 Category.create(
               :name => "label",
@@ -325,3 +344,352 @@ Category.create(
   :restaurant_price => "500000",
        :description => "<p>Yadyadya</p><p>duh duh duh</p>"
 )
+
+puts "Categories --- OK"
+
+# ------------------------------------------------------------------------------
+# DUMMY DATA
+
+puts "-- Adding dummy data --"
+
+appelations = ["Abruzzo", "Matera", "Bivongi", "Cirò", "Pollino", "Cilento", "Taburno",
+  "Lambrusco di Sorbara", "Carso", "Atina", "Frascati", "Marinoorvieto", "Cinque Terre",
+  "Casteggio", "Oltrepò Pavese", "Biferno", "Fara", "Pinerolese", "Alezio", "Leverano",
+  "Girò di Cagliari", "Etna", "Orcia", "Sovana", "Montefalco", "Valle d'Aosta",
+  "Valpolicella", "Valpolicella Ripasso"]
+# 28 appellations
+
+appelations.each do |appelationName|
+  Appellation.create(:name => appelationName)
+end
+
+puts "Appellations - OK"
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# 5 producers
+
+# 15 Austria, 32 Brazil, 45 Chile, 76 France, 110 Italy, 159 New Zealand, 206 SA
+
+countries = [110,76,159,15,45,206,32]
+num = ["One", "Two", "Three", "Four", "Five"]
+num.each do |n|
+  cCountry = rand(7)
+  if rand(3)==1 # 0 1
+    cCountry = rand(2)
+  elsif rand(5)==1 #2 3 4
+    cCountry = 2 + rand(3)
+  end
+  Producer.create(:name => "Producer #{n}", :country_id => countries[cCountry])
+end
+
+puts "Producers ---- OK"
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# 7 Regions
+# 7 Sub-regions
+for j in 1..7 do
+  Region.create(
+    :country_id => countries[j-1],
+    :name => "Region #{j}"
+  )
+  Subregion.create(
+    :region_id => j,
+    :name => "Subregion #{j}"
+  )
+end
+puts "Regions ------ OK"
+puts "Sub-regions -- OK"
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# 5 types
+
+types = ["red", "white", "sparkling", "sweet", "port"]
+types.each do |t|
+  Type.create(:name => t)
+end
+
+puts "Types -------- OK"
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# 10 food types
+
+foods = ["steak", "pasta", "pizza", "fish", "chicken", "boar", "giraffe", "letuce", "chocolate", "ice cream"]
+foods.each do |f|
+  Food.create(:name => f)
+end
+
+puts "Foods -------- OK"
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# 25 wines
+
+for j in 1..5 do
+  for i in 1..5 do
+    vg = rand(2)
+    vn = vg & rand(2)
+    Wine.create(
+                  :name => "Random #{j}-#{i}",
+               :vintage => 2000 + i,
+                  :area => "Random",
+         :single_estate => i%2,
+               :alcohol => i+2,
+                 :sugar => i*2,
+               :acidity => 2,
+                    :ph => 3,
+            :vegetarian => vg,
+                 :vegan => vn,
+               :organic => rand(2),
+           :producer_id => j,
+          :subregion_id => 1 + rand(7),
+        :appellation_id => j*i,
+         :maturation_id => 1
+    )
+  end
+end
+
+puts "Wines -------- OK"
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# 6 notes
+
+notes = ["oak", "plum", "earth", "caramel", "herbs", "spices"]
+notes.each do |n|
+  Note.create(:name => n)
+end
+
+puts "Notes -------- OK"
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Grapes
+grapes = [
+  # 24 Red grapes
+"Barbera",
+"Brunello",
+"Cabernet Franc",
+"Cabernet Sauvignon",
+"Carignan/Carignane",
+"Carmenere",
+"Charbono",
+"Cinsault",
+"Concord",
+"Dolcetto",
+"Gamay",
+"Grenache",
+"Malbec",
+"Merlot",
+"Mourvedre",
+"Nebbiolo",
+"Petite Sirah",
+"Pinot Noir",
+"Pinotage",
+"Sangiovese",
+"Syrah/Shiraz",
+"Tempranillo",
+"Zinfandel",
+"Zweigelt",
+  # 17 White grapes
+"Airen",
+"Aligote",
+"Chardonnay",
+"Chenin Blanc",
+"Fume Blanc",
+"Gewurztraminer",
+"Gruner Veltliner",
+"Muscat",
+"Niagara",
+"Pinot Blanc",
+"Pinot Gris/Pinot Grigio",
+"Riesling",
+"Sauvignon Blanc",
+"Semillon",
+"Seyval",
+"Trebbiano/Ugni Blanc",
+"Viognier"]
+
+grapes.each do |grape|
+  Grape.create(:name => grape)
+end
+
+puts "Grapes ------- OK"
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Types  - wines
+# Notes  - wines
+# Grapes - wines
+
+reds = 24
+whites = 17
+
+allWines = Wine.all
+allWines.each do |wine|
+  
+  randomType = 1 + rand(5)
+  randomNote = 1 + rand(6)
+  grape1     = 1 + rand(41)
+  grape2     = 0
+  grape3     = 0
+  allGrapes  = 1 + rand(3)
+
+  loop do
+    if grape1 < reds
+      grape2 = 1 + rand(reds)
+      grape3 = 1 + rand(reds)
+    else
+      grape2 = 1 + rand(whites)
+      grape3 = 1 + rand(whites)
+    end
+    break if grape1 != grape2 && grape2 != grape3
+  end
+
+  if allGrapes == 1
+    Composition.create(:wine_id => wine.id, :grape_id => grape1, :quantity => 100)
+  elsif allGrapes == 2
+    Composition.create(:wine_id => wine.id, :grape_id => grape1, :quantity => 50)
+    Composition.create(:wine_id => wine.id, :grape_id => grape2, :quantity => 50)
+  else
+    Composition.create(:wine_id => wine.id, :grape_id => grape1, :quantity => 50)
+    Composition.create(:wine_id => wine.id, :grape_id => grape2, :quantity => 30)
+    Composition.create(:wine_id => wine.id, :grape_id => grape3, :quantity => 20)
+  end
+
+  # ["red", "white", "sparkling", "sweet", "port"]
+  if grape1 < reds
+    TypesWines.create(:wine_id => wine.id, :type_id => 1)
+  else
+    TypesWines.create(:wine_id => wine.id, :type_id => 2)
+  end
+  if rand(2) == 1
+    TypesWines.create(:wine_id => wine.id, :type_id => 3 + rand(3))    
+  end
+
+  note1 = 1 + rand(6)
+  note2 = 0
+  loop do
+    note2 = 1 + rand(6)
+    break if note1 != note2
+  end
+  NotesWines.create(:wine_id => wine.id, :note_id => note1)
+  if rand(2) == 1
+    NotesWines.create(:wine_id => wine.id, :note_id => note2)
+  end
+end
+
+puts "Wines (2) ---- OK"
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# 7 users
+
+users = ["Frodo Baggins", "Samwise Gamgee", "Peregrin Took", "Meriadoc Brandibuck", "Gandalf Greyhame", "Aragorn Elessar Telcontar", "Elrond Half-elven"]
+emails = ["frodo@bagend.sh", "mayor@hobbiton.gov", "pippin@took.tl", "merry@rohan.mil.rh", "gd_mofo_wizard@istari.vl", "strider@rangers.org", "elrond@gov.im"]
+
+for j in 0..6 do
+  dummyUser = User.new(
+                     :name => users[j],
+                    :email => emails[j],
+                   :mobile => "011111111#{j}",
+                 :password => "#Wines1234",
+    :password_confirmation => "#Wines1234"
+  )
+  dummyUser.add_role(:client)
+  dummyUser.active = true
+  dummyUser.save
+end
+
+puts "Users -------- OK"
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# 10 addresses
+
+postcodes = ["EC1N8DL","SE11DN","W85ED", "W148TD", "W60SP", "SW151RT", "SW113JS", "SW61NL", "W113HG", "W114UA"]
+streets = ["Hatton Garden","Elephant Rd","Kensington High Street", "North End Crescent", "King St", "Putney High Street", "Battersea High Street", "North End Road", "Pembridge Road", "Holland Park Avenue"]
+numbers = ["33-34","Castle Industrial Estate","45", "30", "284/286", "161", "155", "244", "19", "116"]
+
+for j in 0..9 do
+  Address.create(
+      :street => streets[j],
+      :detail => numbers[j],
+    :postcode => postcodes[j]
+  )
+end
+
+puts "Addresses ---- OK"
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# 2 warehouses
+
+wareName = ["RockstarDev Warehouse", "Another Warehouse"]
+
+j=1
+wareName.each do |ware|
+  Warehouse.create(
+         :title => ware,
+    :address_id => j
+  )
+  j += 1
+end
+
+allUsers = User.all
+j=3
+allUsers.each do |user|
+  unless user.id == 1
+    AddressesUsers.create(
+      :address_id => j,
+         :user_id => user.id
+    )
+    j += 1
+  end
+end
+
+puts "Warehouses --- OK"
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Inventory
+
+for j in 1..2 do
+  for i in 1..10 do
+    Inventory.create(
+      :warehouse_id => j,
+           :wine_id => i*j,
+          :quantity => rand(80),
+       :category_id => 1 + rand(4)
+    )
+  end
+end
+
+puts "Inventory ---- OK"
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Orders!!!
+
+totalOrders = 5 + rand(50)
+
+for i in 0..totalOrders do
+  # 1 new
+  # 2 waiting for call
+  # 3 waiting for message
+  # 4 paying
+  # 5 paid
+  # 6 waiting for delivery
+  # 7 delivered
+  # 8 cancelled
+  status = 1+rand(8)
+  case status
+  when 1
+    status = 2
+  when 3
+    status = 2
+  when 4
+    status = 5
+  end
+
+  Order.create(
+    :warehouse_id => 1+rand(2),
+    :client_id => 2+rand(7),
+    :address_id => 4+rand(4),
+    :status_id => status
+  )
+
+end
+
+puts "Orders ------- OK"
+
