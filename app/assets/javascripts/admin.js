@@ -87,6 +87,12 @@ var adminReady = function() {
             };
             console.log('chosen! ',data);
             alert('Line 89');
+            postJSON('choose.json', token, data, function(){
+                alert('Okay');
+            }, function() {
+                alert('not okay');
+            });
+
         };
 
         var renderWine = function(wine) {
@@ -206,7 +212,7 @@ var adminReady = function() {
                 'categories': categories
             };
             console.log('data', data);
-            postJSON('advise/results.json', token, data, parseResults, errorMethod);
+            postJSON('results.json', token, data, parseResults, errorMethod);
         };
 
         var sortKeyWords = function(e){
@@ -311,13 +317,13 @@ var adminReady = function() {
         };
 
         if (advisor) {
-            postJSON('orders/list.json', token, {'status':[2]}, parseOrders, errorMethod);
+            postJSON('../orders/list.json', token, {'status':[2]}, parseOrders, errorMethod);
         }
 
         $('#reload-orders').click(function(e){
             e.preventDefault();
             $('#order-list').html('');
-            postJSON('orders/list.json', token, {'status':[2]}, parseOrders, errorMethod);
+            postJSON('../orders/list.json', token, {'status':[2]}, parseOrders, errorMethod);
         });
 
 

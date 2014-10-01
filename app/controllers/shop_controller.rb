@@ -29,6 +29,7 @@ class ShopController < ApplicationController
     # current_user.has_role?(:superadmin)
     @order = Order.new
     @categories = Category.all
+    @foods = Food.all
     logger.warn "New order"
   end
 

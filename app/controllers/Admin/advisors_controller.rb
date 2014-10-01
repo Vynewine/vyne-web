@@ -9,6 +9,10 @@ class Admin::AdvisorsController < ApplicationController
     @categories = Category.all
   end
 
+  def choose
+
+  end
+
   def results
     require 'pp'
     puts '--------------------------'

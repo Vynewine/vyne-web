@@ -100,14 +100,13 @@ Rails.application.routes.draw do
     resources :orders
     resources :payments
     resources :statuses
-    resources :advisors
+    # resources :advisors
     resources :inventories
-    scope '/orders' do
-      post 'list' => "orders#list"
-    end
-    scope '/advise' do
-      post 'results' => "advisors#results"
-    end
+    post '/orders/list' => "orders#list"
+    get 'advise/index' => "advisors#index"
+    get 'advise/choose'  => "advisors#choose"
+    post 'advise/choose'  => "advisors#choose"
+    post 'advise/results' => "advisors#results"
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

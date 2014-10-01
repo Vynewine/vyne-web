@@ -347,6 +347,192 @@ Category.create(
 
 puts "Categories --- OK"
 
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# 45 food types
+
+Food.create(
+    :name => "meat",
+  :parent => 0
+)
+Food.create(
+    :name => "fish",
+  :parent => 0
+)
+Food.create(
+    :name => "dairy",
+  :parent => 0
+)
+Food.create(
+    :name => "preparation",
+  :parent => 0
+)
+Food.create(
+    :name => "vegetables & fungi",
+  :parent => 0
+)
+Food.create(
+    :name => "herb & spice",
+  :parent => 0
+)
+Food.create(
+    :name => "grain",
+  :parent => 0
+)
+Food.create(
+    :name => "potato",
+  :parent => 0
+)
+Food.create(
+    :name => "sweet",
+  :parent => 0
+)
+Food.create(
+    :name => "beef",
+  :parent => 1
+)
+Food.create(
+    :name => "cured meat",
+  :parent => 1
+)
+Food.create(
+    :name => "pork",
+  :parent => 1
+)
+Food.create(
+    :name => "chicken",
+  :parent => 1
+)
+Food.create(
+    :name => "lobster & shellfish",
+  :parent => 2
+)
+Food.create(
+    :name => "fish",
+  :parent => 2
+)
+Food.create(
+    :name => "mussels & oysters",
+  :parent => 2
+)
+Food.create(
+    :name => "soft cheese & cream",
+  :parent => 3
+)
+Food.create(
+    :name => "pungent cheese",
+  :parent => 3
+)
+Food.create(
+    :name => "hard cheese",
+  :parent => 3
+)
+Food.create(
+    :name => "grill & BBQ",
+  :parent => 4
+)
+Food.create(
+    :name => "roasted",
+  :parent => 4
+)
+Food.create(
+    :name => "fried & sautéed",
+  :parent => 4
+)
+Food.create(
+    :name => "smoke",
+  :parent => 4
+)
+Food.create(
+    :name => "poached & steamed",
+  :parent => 4
+)
+Food.create(
+    :name => "onion & garlic",
+  :parent => 5
+)
+Food.create(
+    :name => "green vegetables",
+  :parent => 5
+)
+Food.create(
+    :name => "root vegetables",
+  :parent => 5
+)
+Food.create(
+    :name => "tomato & pepper",
+  :parent => 5
+)
+Food.create(
+    :name => "mushroom",
+  :parent => 5
+)
+Food.create(
+    :name => "nuts & seeds",
+  :parent => 5
+)
+Food.create(
+    :name => "beans & peas",
+  :parent => 5
+)
+Food.create(
+    :name => "red pepper & chilli",
+  :parent => 6
+)
+Food.create(
+    :name => "pepper",
+  :parent => 6
+)
+Food.create(
+    :name => "baking spices",
+  :parent => 6
+)
+Food.create(
+    :name => "curry & hot sauce",
+  :parent => 6
+)
+Food.create(
+    :name => "herbs",
+  :parent => 6
+)
+Food.create(
+    :name => "exotic & aromatic",
+  :parent => 6
+)
+Food.create(
+    :name => "white bread",
+  :parent => 7
+)
+Food.create(
+    :name => "pasta",
+  :parent => 7
+)
+Food.create(
+    :name => "rice",
+  :parent => 7
+)
+Food.create(
+    :name => "white potato",
+  :parent => 8
+)
+Food.create(
+    :name => "sweet potato",
+  :parent => 8
+)
+Food.create(
+    :name => "fruit & berries",
+  :parent => 9
+)
+Food.create(
+    :name => "chocolate & coffee",
+  :parent => 9
+)
+Food.create(
+    :name => "vanilla & caramel",
+  :parent => 9
+)
+
+puts "Foods -------- OK"
+
 # ------------------------------------------------------------------------------
 # DUMMY DATA
 
@@ -409,16 +595,6 @@ types.each do |t|
 end
 
 puts "Types -------- OK"
-
-#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# 10 food types
-
-foods = ["steak", "pasta", "pizza", "fish", "chicken", "boar", "giraffe", "letuce", "chocolate", "ice cream"]
-foods.each do |f|
-  Food.create(:name => f)
-end
-
-puts "Foods -------- OK"
 
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # 25 wines
