@@ -170,6 +170,26 @@ table.list-table {
     border-color: #AAF;
     border-collapse: collapse;
     & > tbody > tr {
+
+        &.order {
+            &.waiting_for_call {
+                background: pink;
+            }
+            &.paying {
+                background: #DFD;
+            }
+            &.paid {
+                background: #BFB;
+            }
+            &.waiting_for_delivery {
+                background: #6F6;
+            }
+            &.cancelled,
+            &.delivered {
+                background: #CCC;
+            }
+        }
+
         & > td {
             padding: 5px;
         }

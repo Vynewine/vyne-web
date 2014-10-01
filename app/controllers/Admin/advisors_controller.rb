@@ -10,7 +10,28 @@ class Admin::AdvisorsController < ApplicationController
   end
 
   def choose
-
+    require 'pp'
+    puts '--------------------------'
+    logger.warn "Choice request"
+    puts PP.pp(params,'',80)
+    order = Order.find(params[:order])
+    warehouse = Warehouse.find(params[:warehouse])
+    wine = Wine.find(params[:wine])
+    inventory = Inventory.find_by(:wine_id => params[:wine], :warehouse_id => params[:warehouse])
+    order.wine = wine
+    order.quantity = 1
+    order.status_id = 4 # paying
+    order.advisor_id = current_user.id
+    inventory.quantity = inventory.quantity - 1
+    if inventory.save
+      if order.save
+        @message = 'success'
+      else
+        @message = "error:Couldn't save order"
+      end
+    else
+      @message = "error:Couldn't update inventory"
+    end
   end
 
   def results

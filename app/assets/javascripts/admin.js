@@ -74,6 +74,28 @@ var adminReady = function() {
 
         token = $('meta[name="csrf-token"]').attr('content');
 
+        var reloadInterface = function() {
+            console.log('reloadInterface');
+
+                $('#order_id').val('');
+                $('#warehouse_id').val('');
+
+                $('#wine-list').hide();
+                $('#wine-filters').hide();
+                $('#orders-header').slideDown();
+            $('#order-list').html('');
+
+            postJSON('../orders/list.json', token, {'status':[2]}, parseOrders, errorMethod);
+        };
+
+        var wineChosen = function(d) {
+            console.log(d.message);
+            if (d.message==='success') {
+                reloadInterface();
+            } else {
+                alert('Error: ' + d.message.split(':')[1]);
+            }
+        };
 
         var chooseWine = function(e) {
             e.preventDefault();
@@ -86,10 +108,8 @@ var adminReady = function() {
                 'warehouse':warehouse
             };
             console.log('chosen! ',data);
-            alert('Line 89');
-            postJSON('choose.json', token, data, function(){
-                alert('Okay');
-            }, function() {
+            // alert('Line 89');
+            postJSON('choose.json', token, data, wineChosen, function() {
                 alert('not okay');
             });
 

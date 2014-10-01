@@ -1,6 +1,6 @@
 <h1>Listing orders</h1>
 
-<table>
+<table border="1" class="list-table">
   <thead>
     <tr>
       <th>Status</th>
@@ -16,13 +16,13 @@
 
   <tbody>
     <% @orders.each do |order| %>
-      <tr>
+      <tr class="order <%= order.status.label.gsub( " ", "_" ) %>">
         <td><%= order.status.label %></td>
         <td><%= order.client_id %> - <%= order.client.name %></td>
         <td><%= order.address.postcode %></td>
-        <td><%= order.warehouse_id %></td>
-        <td><%= order.advisor_id %></td>
-        <td><%= order.wine_id %></td>
+        <td><%= order.warehouse.title %></td>
+        <td><%= order.advisor ? order.advisor.name : '' %></td>
+        <td><%= order.wine ? order.wine.name : '' %></td>
         <td><%= order.quantity %></td>
         <td class="button-wrapper">
           <%= link_to admin_order_path(order) do %>
