@@ -391,7 +391,10 @@
       <div class="order-panel-content register">
         <h2>Register</h2>
         <div>
-          <%= text_field :user, :name, :placeholder => "Name" %>
+          <%= text_field :user, :first_name, :placeholder => "First Name" %>
+        </div>
+        <div>
+          <%= text_field :user, :last_name, :placeholder => "Last Name" %>
         </div>
         <div>
           <%= email_field :user, :email,
