@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
 
   # Solr & sunspot:
   searchable do
-    text :first_name, :last_name
+    text :first_name, :last_name, :email
   end
 
 end

@@ -13,12 +13,12 @@
 //= require jquery
 //= require jquery_ujs
 //# require turbolinks
-//= require_tree .
+//# require_tree .
 
-//# require library
-//# require map
-//# require maskedinput
-//# require forms
+//= require library
+//= require map
+//= require maskedinput
+//= require forms
 
 var ready = function() {
     // console.log('Doc is apparently ready');
