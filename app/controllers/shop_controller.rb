@@ -135,7 +135,7 @@ class ShopController < ApplicationController
     end
 
     @order.payment = payment
-    @order.status = 1
+    @order.status_id = 1
     
     # redirect_to action: 'new'
 

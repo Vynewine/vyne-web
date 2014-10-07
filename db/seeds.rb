@@ -303,7 +303,8 @@ puts "Statuses ----- OK"
 
 # Default user:
 User.create!({
-  :name => 'Gian',
+  :first_name => 'Gian',
+  :last_name => 'M',
   :email => "gm@rockstardev.co",
   :mobile => "0111111111",
   :password => "#Wines1234",
@@ -755,12 +756,14 @@ puts "Wines (2) ---- OK"
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # 7 users
 
-users = ["Frodo Baggins", "Samwise Gamgee", "Peregrin Took", "Meriadoc Brandibuck", "Gandalf Greyhame", "Aragorn Elessar Telcontar", "Elrond Half-elven"]
+names = ["Frodo", "Samwise", "Peregrin", "Meriadoc", "Gandalf", "Aragorn Elessar", "Elrond"]
+surnames = ["Baggins", "Gamgee", "Took", "Brandibuck", "Greyhame", "Telcontar", "Half-elven"]
 emails = ["frodo@bagend.sh", "mayor@hobbiton.gov", "pippin@took.tl", "merry@rohan.mil.rh", "gd_mofo_wizard@istari.vl", "strider@rangers.org", "elrond@gov.im"]
 
 for j in 0..6 do
   dummyUser = User.new(
-                     :name => users[j],
+               :first_name => names[j],
+                :last_name => surnames[j],
                     :email => emails[j],
                    :mobile => "011111111#{j}",
                  :password => "#Wines1234",
@@ -858,11 +861,22 @@ for i in 0..totalOrders do
     status = 5
   end
 
+  warehouseRand = rand(3)
+
+  if warehouseRand == 0
+    warehouses = "1"
+  elsif warehouseRand == 1
+    warehouses = "2"
+  else
+    warehouses = "1,2"
+  end
+
   Order.create(
     :warehouse_id => 1+rand(2),
     :client_id => 2+rand(7),
     :address_id => 4+rand(4),
-    :status_id => status
+    :status_id => status,
+    :info => "{\"warehouses\":[#{warehouses}]}"
   )
 
 end

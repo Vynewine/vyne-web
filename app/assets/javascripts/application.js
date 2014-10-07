@@ -15,6 +15,11 @@
 //# require turbolinks
 //= require_tree .
 
+//# require library
+//# require map
+//# require maskedinput
+//# require forms
+
 var ready = function() {
     // console.log('Doc is apparently ready');
     if (typeof(admin) !== 'undefined' && admin !== null && admin === true) {

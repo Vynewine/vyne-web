@@ -43,5 +43,10 @@
   <%= @order.quantity %>
 </p>
 
+<p>
+  <strong>Information provided by user:</strong>
+  <%= @order.info %>
+</p>
+
 <%= link_to 'Edit', edit_admin_order_path(@order) %> |
 <%= link_to 'Back', admin_orders_path %>
