@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
   # belongs_to :roles
   def assign_code
     self.code = rand(9999).to_s.rjust(4, "0")
-    self.active = false
+    self.active = true #at this point we want users to be active by default
     self.save
     # puts "assigning"
     # self.add_role(:client)

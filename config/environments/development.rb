@@ -43,4 +43,7 @@ Rails.application.configure do
   # Rails.logger = Log4r::Logger.new("Application Log")
   config.log_level = :warn
 
+  #Mandrill API
+  config.mandrill = 'ipcLBLgQRHya2q3jvpPQsw'
+
 end

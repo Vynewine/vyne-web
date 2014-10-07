@@ -17,3 +17,5 @@
 
 solr/development/data/index/*
 solr/development/data/tlog/*
+sunspot-solr.pid
+.idea
