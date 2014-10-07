@@ -23,7 +23,12 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
-  validates :name, :email, :mobile, :presence => true
+  validates :first_name, :last_name, :email, :mobile, :presence => true
+
+  def name
+    "#{first_name} #{last_name}"
+  end
+
   # belongs_to :roles
   def assign_code
     self.code = rand(9999).to_s.rjust(4, "0")
@@ -32,4 +37,10 @@ class User < ActiveRecord::Base
     # puts "assigning"
     # self.add_role(:client)
   end
+
+  # Solr & sunspot:
+  searchable do
+    text :first_name, :last_name
+  end
+
 end

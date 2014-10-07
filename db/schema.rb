@@ -179,6 +179,7 @@ ActiveRecord::Schema.define(version: 20140925091503) do
     t.integer  "payment_id"
     t.integer  "status_id"
     t.integer  "quantity"
+    t.string   "info"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -277,7 +278,8 @@ ActiveRecord::Schema.define(version: 20140925091503) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "name"
+    t.string   "first_name"
+    t.string   "last_name"
     t.string   "mobile"
     t.integer  "address_id"
     t.boolean  "active"

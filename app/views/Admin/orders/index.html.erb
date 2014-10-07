@@ -20,7 +20,7 @@
         <td><%= order.status.label %></td>
         <td><%= order.client_id %> - <%= order.client.name %></td>
         <td><%= order.address.postcode %></td>
-        <td><%= order.warehouse.title %></td>
+        <td><%= order.warehouse ? order.warehouse.title : '' %></td>
         <td><%= order.advisor ? order.advisor.name : '' %></td>
         <td><%= order.wine ? order.wine.name : '' %></td>
         <td><%= order.quantity %></td>

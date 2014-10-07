@@ -3,19 +3,10 @@
 //= require turbolinks
 //= require library
 //= require jquery.typewatch
-var advisor = advisor || null;
-var addNestedField = function($anchorNode, parentEntity, nestedEntity, fieldName) {
-    // $parentNode
-    // parentEntity
-    // nestedEntity
-    // fieldName
-    // id="wine_compositions_attributes_1_grape"
-    // name="wine[compositions_attributes][1][grape]"
 
-    // .before() – Inserts content outside and before.
-    // .prepend() - Inserts content inside and before.
-    // .after() – Inserts content outside and after.
-    // .append() – Inserts content inside and after.
+var advisor = advisor || null;
+
+var addNestedField = function($anchorNode, parentEntity, nestedEntity, fieldName) {
     var newId, newNm;
     var lastSum = parseInt($anchorNode.data('lastSum')) || 0;
     var fields = fieldName.split(",");
@@ -63,8 +54,8 @@ var adminReady = function() {
         // Advisor area
 
 
-
-
+        var foods = {};
+        var $searchField = $('.advisor-area>#wine-filters>#search');
 
 
         String.prototype.trim    = function(){return this.replace(/^\s+|\s+$/g, '');};
@@ -78,7 +69,7 @@ var adminReady = function() {
             console.log('reloadInterface');
 
                 $('#order_id').val('');
-                $('#warehouse_id').val('');
+                $('#warehouses_ids').val('');
 
                 $('#wine-list').hide();
                 $('#wine-filters').hide();
@@ -99,16 +90,16 @@ var adminReady = function() {
 
         var chooseWine = function(e) {
             e.preventDefault();
-            var wine = parseInt($(this).closest('tr').data('id'));
+            var $tr = $(this).closest('tr');
+            var wine = parseInt($tr.data('id'));
             var order = parseInt($('#order_id').val());
-            var warehouse = parseInt($('#warehouse_id').val());
+            var warehouse = parseInt($tr.data('warehouse'));
             var data = {
                 'wine':wine,
                 'order':order,
                 'warehouse':warehouse
             };
             console.log('chosen! ',data);
-            // alert('Line 89');
             postJSON('choose.json', token, data, wineChosen, function() {
                 alert('not okay');
             });
@@ -214,17 +205,14 @@ var adminReady = function() {
         };
 
         var findKeywords = function(keywords){
-            // var token = $('meta[name="csrf-token"]').attr('content');
-
             var categories = [];
             $.each($('.tick-category'), function() {
                 if (this.checked)
                     categories.push(parseInt(this.name.split('-')[2]));
             });
-
             var data = {
                   'keywords': keywords,
-                 'warehouse': $('#warehouse_id').val(),
+                'warehouses': $('#warehouses_ids').val(),
                     'single': $('#tick-sing').is(':checked'),
                 'vegetarian': $('#tick-vegt').is(':checked'),
                      'vegan': $('#tick-vegn').is(':checked'),
@@ -237,72 +225,149 @@ var adminReady = function() {
 
         var sortKeyWords = function(e){
             $('#wine-list').slideUp(100);
-            var keywords = $(this).val().split(',');
+            var keywords = $searchField.val().split(',');
             for (var i = keywords.length - 1; i >= 0; i--) {
                 keywords[i] = keywords[i].trim();
             }
             findKeywords(keywords.join(' '));
         };
 
-        /**
-         * Search field:
-         */
-        $('.advisor-area>#wine-filters>#search').typeWatch({
-                highlight: true,
-                     wait: 800,
-            captureLength: -1,
-                 callback: sortKeyWords
-        });
 
+
+        /**
+         * Copies the information from the order data into the search field
+         */
+        var copyInfo = function(e) {
+            e.preventDefault();
+            var val = $searchField.val();
+            var newVal = $('#order-info-value').text();
+            val = val.length > 0 ? val + ' ' : '';
+            val += newVal;
+            $searchField.focus();
+            $searchField.val(val);
+            sortKeyWords();
+        };
+
+        /**
+         * Advise action.
+         */
+        var adviseActions = function($this, $orderRecoverAnchor) {
+            console.log('advise');
+            var $td = $this.closest("td");
+            var $tr = $td.closest("tr");
+            var $table = $tr.closest("table");
+            var $siblings = $tr.siblings();
+            var warehouses = $tr.data('warehouses');
+            var id = $tr.data('id');
+            var info = $tr.data('info');
+            $siblings.removeClass('selected');
+            $siblings.hide();
+            $('#orders-header').hide();
+            $tr.addClass('selected');
+            $td.html('');
+            $td.append(
+                $orderRecoverAnchor.unbind().click(function(e){
+                    e.preventDefault();
+                    recoverActions($orderRecoverAnchor, $this);
+                })
+            );
+            // Show search field
+            $('#wine-filters').slideDown();
+            $('#wine-list').html('').show();
+            $searchField.focus();
+            $('#order_id').val(id);
+            $('#warehouses_ids').val(warehouses);
+
+            var suggestedFood = [];
+            if (typeof(info) !== 'undefined' && info !== null) {
+                if (typeof(info.foods) !== 'undefined' && info.foods !== null) {
+                    for (var i = 0, orderFood; orderFood = info.foods[i++];) {
+                        for (var j = 0, food; food = foods[j++];) {
+                            if (orderFood === food.id) {
+                                suggestedFood.push(food.name);
+                            }
+                        }
+                    }
+                    $table.after(
+                        $('<div>')
+                            .attr('id', 'order-info')
+                            .append(
+                                $('<span>')
+                                    .attr('id', 'order-info-value')
+                                    .text(suggestedFood.join(' ')),
+                                $('<a>')
+                                    .attr('href', '#')
+                                    .text('copy')
+                                    .css('float', 'right')
+                                    .click(copyInfo)
+                            )
+                    );
+                }
+            }
+
+
+        };
+
+        /**
+         * Return action
+         */
+        var recoverActions = function($this, $adviseAnchor) {
+            var $td = $this.closest("td");
+            var $tr = $td.closest("tr");
+            var $siblings = $tr.siblings();
+            $('#order_id').val('');
+            $('#warehouses_ids').val('');
+            $tr.removeClass('selected');
+            $td.html('');
+            $('#order-info').remove();
+            $td.append(
+                $adviseAnchor.unbind().click(function(e){
+                    e.preventDefault();
+                    adviseActions($adviseAnchor, $this);
+                })
+            );            
+            $('#wine-list').hide();
+            $('#wine-filters').hide();
+            $('#orders-header').slideDown();
+            $siblings.slideDown();
+        };
+
+
+        /**
+         * Draws single orders
+         */
         var renderOrder = function(order) {
             var $container = $('#order-list>table>tbody');
-            console.log(order);
+            var $adviseAnchor = $('<a>').attr('href', '#').text('Advise');
+            var $orderRecoverAnchor = $('<a>').attr('href', '#').text('Return');
+            var info = JSON.parse(order.info);
+            var warehousesIds = [];
 
-            var $adviseAnchor = $('<a>').attr('href', '#').html('Advise');
-            var $orderRecoverAnchor = $('<a>').attr('href', '#').html('Return');
-            
+            if (info == null)
+                info = {};
+
+            if (info.warehouses !== undefined) {
+                for (var i = 0, warehouse; warehouse = info.warehouses[i++];) {
+                    warehousesIds.push(warehouse.id);
+                }
+            }
+
             $adviseAnchor.click(function(e){
                 e.preventDefault();
-                var $td = $(this).closest("td");
-                var $tr = $td.closest("tr");
-                var $siblings = $tr.siblings();
-                var warehouse = $tr.data('warehouse');
-                var id = $tr.data('id');
-                $siblings.removeClass('selected');
-                $siblings.hide();
-                $('#orders-header').hide();
-                $tr.addClass('selected');
-                $td.html('');
-                $td.append($orderRecoverAnchor);
-                // Show search field
-                $('#wine-filters').slideDown();
-                $('#wine-list').html('').show();
-                $('#wine-filters>#search').focus();
-                $('#order_id').val(id);
-                $('#warehouse_id').val(warehouse);
+                adviseActions($(this), $orderRecoverAnchor);
             });
 
             $orderRecoverAnchor.click(function(e){
                 e.preventDefault();
-                var $td = $(this).closest("td");
-                var $tr = $td.closest("tr");
-                var $siblings = $tr.siblings();
-                $('#order_id').val('');
-                $('#warehouse_id').val('');
-                $tr.removeClass('selected');
-                $td.html('');
-                $td.append($adviseAnchor);
-                $('#wine-list').hide();
-                $('#wine-filters').hide();
-                $('#orders-header').slideDown();
-                $siblings.slideDown();
+                recoverActions($(this), $adviseAnchor);
             });
 
             $container.append(
                 $('<tr>')
                   .addClass('order')
-                  .attr("data-warehouse", order.warehouse.id)
+                  .attr("data-warehouses", info.warehouses.join(','))
                   .attr("data-id", order.id)
+                  .attr("data-info", order.info)
                   .append(
                       $('<td>').addClass('client').html(
                           order.client.name
@@ -310,16 +375,15 @@ var adminReady = function() {
                       $('<td>').addClass('postcode').html(
                           order.address.postcode
                       ),
-                      $('<td>').addClass('warehouse').html(
-                          order.warehouse.title
-                      ),
                       $('<td>').addClass('actions').append($adviseAnchor)
                 )
             );
         };
 
+        /**
+         * Creates table of orders and draws all items
+         */
         var renderOrders = function(r) {
-            // console.log('ro');
             var $container = $('#order-list');
             $container.append(
                 $('<table>').attr('border','1').append(
@@ -331,24 +395,34 @@ var adminReady = function() {
             } 
         };
 
-        var parseOrders = function(r) {
-            // console.log(r);
-            renderOrders(r);
-        };
+        /**
+         * Search field:
+         */
+        $searchField.typeWatch({
+                highlight: true,
+                     wait: 800,
+            captureLength: -1,
+                 callback: sortKeyWords
+        });
 
+        /**
+         * Load data
+         */
         if (advisor) {
-            postJSON('../orders/list.json', token, {'status':[2]}, parseOrders, errorMethod);
+            loadJSON('../foods.json', function(d) {
+                foods = d;
+                postJSON('../orders/list.json', token, {'status':[2]}, renderOrders, errorMethod);
+            }, errorMethod);
         }
 
+        /**
+         * Reload data
+         */
         $('#reload-orders').click(function(e){
             e.preventDefault();
             $('#order-list').html('');
             postJSON('../orders/list.json', token, {'status':[2]}, parseOrders, errorMethod);
         });
-
-
-
-// http://127.0.0.1:3000/admin/advise/results.json
 
     }
 };

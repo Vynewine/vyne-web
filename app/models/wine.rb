@@ -77,6 +77,10 @@ class Wine < ActiveRecord::Base
       grapes.map {|g| g.name}
     end
 
+    text :foods do
+      foods.map {|f| f.name}
+    end
+
     text :txt_vintage
 
     boolean :single_estate

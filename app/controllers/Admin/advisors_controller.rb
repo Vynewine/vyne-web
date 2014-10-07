@@ -22,10 +22,38 @@ class Admin::AdvisorsController < ApplicationController
     order.quantity = 1
     order.status_id = 4 # paying
     order.advisor_id = current_user.id
+    order.warehouse_id = params[:warehouse]
     inventory.quantity = inventory.quantity - 1
     if inventory.save
       if order.save
-        @message = 'success'
+        # @message = 'success'
+
+        paymentData = order.payment
+
+        stripeToken = paymentData.stripe # cus_4uQiP8ZhPAKXoa
+        # Later...
+        # customer_id = get_stripe_customer_id(stripeToken)
+
+        chargeDetails = Stripe::Charge.create(
+          :amount   => 1500, # $15.00 this time
+          :currency => "gbp",
+          :customer => stripeToken
+        )
+        # puts '--------------------------'
+        # puts '=========================='
+        # puts PP.pp(chargeDetails,'',80)
+        # puts '=========================='
+        # puts '--------------------------'
+        if chargeDetails.paid == true
+          order.status_id = 5 # paid
+          if order.save
+            # shutl request
+            # mail request
+            @message = 'success'
+          end
+        else
+          @message = "error:The payment was not processed. #{chargeDetails.description}"
+        end
       else
         @message = "error:Couldn't save order"
       end
@@ -48,7 +76,8 @@ class Admin::AdvisorsController < ApplicationController
       fulltext params[:keywords]
 
       # facet(:warehouse_id) do
-      with(:warehouse_ids, params[:warehouse])
+
+      with(:warehouse_ids, params[:warehouses].split(","))
 
       unless params[:categories].nil?
         with(:price_categories, params[:categories])
