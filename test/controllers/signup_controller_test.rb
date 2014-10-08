@@ -1,5 +1,6 @@
 require 'test_helper'
 require 'sunspot/rails'
+require 'json'
 
 class SignupControllerTest < ActionController::TestCase
   include Devise::TestHelpers
@@ -13,7 +14,6 @@ class SignupControllerTest < ActionController::TestCase
   end
 
   test 'should create user' do
-
     post :create, :user => {
         :first_name => 'John',
         :last_name => 'Doe',
@@ -23,6 +23,20 @@ class SignupControllerTest < ActionController::TestCase
         :password_confirmation => 'password'
     }
     assert_response :success
+  end
+
+  test 'should not create user with not matching passwords' do
+    post :create, :user => {
+        :first_name => 'John',
+        :last_name => 'Doe',
+        :email => 'test@vinz.com',
+        :mobile => '099999999999',
+        :password => 'password',
+        :password_confirmation => 'password_not_match'
+    }
+    assert_response 422
+    body = JSON.parse(@response.body)
+    assert_equal("Password confirmation doesn't match Password", body["errors"][0], 'Password validation should fail')
   end
 
   test 'should create address' do
