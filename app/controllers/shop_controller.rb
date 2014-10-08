@@ -42,8 +42,8 @@ class ShopController < ApplicationController
   def edit
   end
 
-  # POST /orders
-  # POST /orders.json
+  # POST /shop/create
+  # POST /shop/create.json
   def create
     require 'pp'
     logger.warn "Create order"

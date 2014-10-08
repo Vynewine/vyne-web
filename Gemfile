@@ -13,8 +13,6 @@ group :test do
   gem 'sqlite3', '1.3.9'
 end
 
-
-
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.3'
 # Use Uglifier as compressor for JavaScript assets
