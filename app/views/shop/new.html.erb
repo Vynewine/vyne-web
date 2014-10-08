@@ -51,7 +51,7 @@
               <div class="line"></div>
             </div>
             <%= image_tag "wine.png", :alt => "wine bottle" %>
-            <span class="label">Label</span>
+            <span class="label"><%= category.name %></span>
             <span class="price">£<%= category.price %></span>
             <span class="description">Entry-level to best wine regions.</span>
             <div class="full-description">
@@ -71,36 +71,6 @@
     </div>
   </div>
 
-
-<%# ============================= Wine type 2 ============================= %>
-
-<% @categories.each do |category| %>
-  <%# 'category-details' and 'category-XXX' are used in the javascript %>
-  <%# I used 'popup' to opose 'step', because they overlap %>
-  <div class="popup category-details category-<%= category.id %>" style="display:none;">
-    <h2>select your bottle</h2>
-    <div class="icon">
-      <img src="" />
-      <span class="title">£<%= category.price %></span>
-      <span class="label"><%= category.name %></span> <!-- label, reserve, etc -->
-    </div>
-    <div class="description">
-      <%= category.description %>
-    </div>
-    <div>
-      <img src="" />
-      <span class="label">Chosen by you with our digital sommelier</span>
-    </div>
-    <div>
-      <span class="title">£<%= category.restaurant_price %></span>
-      <span class="label">What you would pay in a restaurant</span>
-    </div>
-    <div>
-      <%# 'next-step' being used by JS %>
-      <a href="#" class="red-button next-step">Select</a><!-- Next step -->
-    </div>
-  </div>
-<% end %>
 
 <%# ============================= Preferences ============================= %>
 
