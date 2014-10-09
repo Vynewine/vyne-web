@@ -9,7 +9,6 @@ class CreateWines < ActiveRecord::Migration
       t.integer :sugar
       t.integer :acidity
       t.integer :ph
-      t.boolean :vegetarian
       t.boolean :vegan
       t.boolean :organic
 

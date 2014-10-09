@@ -370,7 +370,7 @@ var adminReady = function() {
                   .attr("data-info", order.info)
                   .append(
                       $('<td>').addClass('client').html(
-                          order.client.name
+                          order.client.first_name + ' ' + order.client.last_name
                       ),
                       $('<td>').addClass('postcode').html(
                           order.address.postcode
@@ -421,7 +421,7 @@ var adminReady = function() {
         $('#reload-orders').click(function(e){
             e.preventDefault();
             $('#order-list').html('');
-            postJSON('../orders/list.json', token, {'status':[2]}, parseOrders, errorMethod);
+            postJSON('../orders/list.json', token, {'status':[2]}, renderOrders, errorMethod);
         });
 
     }

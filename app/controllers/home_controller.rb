@@ -6,6 +6,8 @@ class HomeController < ApplicationController
     # redirect_to [:controller => 'home', :action => 'code']
   end
 
+
+
   def code
     puts "User code: " + current_user.code
     # require 'pp'

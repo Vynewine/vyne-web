@@ -10,6 +10,11 @@ class Admin::AdvisorsController < ApplicationController
   end
 
   def choose
+
+    # shutlId = "UOuPfVIAvP4BJWDmXdCiSw=="
+    # shutlSecret = "DAiXY/UzTM14g6PAqAHDrm/ILwkJ3fT5mnh7aT15JiPI6YLz5GYN7qLtx4Yac60PFN+rZRuZuFyi0FExri3F6w=="
+    # shutlUrl = "https://sandbox-v2.shutl.co.uk"
+
     require 'pp'
     puts '--------------------------'
     logger.warn "Choice request"
@@ -49,6 +54,86 @@ class Admin::AdvisorsController < ApplicationController
           if order.save
             # shutl request
             # mail request
+
+            # Shutl
+# require 'net/http'
+# require 'json'
+# shutlId = "UOuPfVIAvP4BJWDmXdCiSw=="
+# shutlSecret = "DAiXY/UzTM14g6PAqAHDrm/ILwkJ3fT5mnh7aT15JiPI6YLz5GYN7qLtx4Yac60PFN+rZRuZuFyi0FExri3F6w=="
+#**************************
+# shutlId = "HnnFB2UbMlBXdD9h4UzKVQ=="
+# shutlSecret = "pKNKPPCejzviiPunGNhnJ95G1JdeAbOYbyAygqIXyfIe4lb73iIDKRqmeZmZWT+ORxTqwMP9PhscJAW7GFmz6A=="
+# url = URI('https://sandbox-v2.shutl.co.uk/token')
+
+# body = {
+#   'client_id' => shutlId,
+#   'client_secret' => shutlSecret,
+#   'grant_type' => 'client_credentials'
+# }
+
+# headers = {
+#   'Content-Type' => 'application/x-www-form-urlencoded'
+# }
+
+# params = body
+# req = Net::HTTP::Post.new(url, headers)
+# req.form_data = params
+# connection = Net::HTTP::start(url.hostname, url.port, :use_ssl => true ) {|http|
+#   http.request(req)
+# }
+# response = JSON.parse(connection.read_body)
+# token = response['access_token']
+# puts token
+#**************************
+
+# Dummy response:
+# { 
+#   "access_token": "DUMMY_TOKEN",
+#   "token_type": "bearer",
+#   "expires_in": 999
+# }
+
+# Quote:
+
+# channel: “ecommerce”, “desktop”, “tablet”, “mobile”
+
+# {
+#   "quote_collection": { 
+#               "channel": "pos",
+#                  "page": "product",
+#            "session_id": "example123",
+#          "basket_value": 1999,
+#       "pickup_store_id": "448",
+#     "delivery_location": {                         
+#       "address": {                                               
+#         "postcode":      "EC2A 3LT"              
+#       }
+#     },
+#     "vehicle":           "parcel_car"
+#   }
+# }
+
+# Booking:
+# {
+#   "booking": {
+#     "quote_id": "1a2b3c-asap", 
+#     "merchant_booking_reference": "YOUR_REF"
+#   }
+# }
+
+
+# resp, data = http.post(path, data, headers)
+# puts PP.pp(resp,'',80)
+
+# params = {
+#   :client_id => shutlId,
+#   :client_secret => shutlSecret,
+#   :grant_type => 'client_credentials'
+# }
+# resp = Net::HTTP.post_form(url, headers)
+# resp_text = resp.body
+# puts PP.pp(resp_text,'',80)
+
             @message = 'success'
           end
         else

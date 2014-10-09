@@ -181,7 +181,7 @@ class ShopController < ApplicationController
     end
 
     def user_params
-      params.require(:user).permit(:name, :email, :mobile, :password, :password_confirmation)
+      params.require(:user).permit(:first_name, :last_name, :email, :mobile, :password, :password_confirmation)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

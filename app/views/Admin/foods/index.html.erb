@@ -5,6 +5,8 @@
 <table>
   <thead>
     <tr>
+      <th>Parent</th>
+      <th>Id</th>
       <th>Name</th>
       <th colspan="3"></th>
     </tr>
@@ -13,6 +15,8 @@
   <tbody>
     <% @foods.each do |food| %>
       <tr>
+        <td><%= food.parent %></td>
+        <td><%= food.id %></td>
         <td><%= food.name %></td>
         <td class="button-wrapper">
           <%= link_to admin_food_path(food) do %>
