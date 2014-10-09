@@ -35,7 +35,7 @@
     <div class="order-panel-content bottles">
 
       <h2>Select your bottle</h2>
-      
+
       <ul class="bottle-list cf">
     
       <% @categories.each do |category| %>
@@ -77,204 +77,111 @@
   <div class="step order-panel swiper-slide noSwipingClass">
     <div class="order-panel-content preferences">
 
-      <h2>Would you like us to match a wine with food?</h2>
+      <div class="slideable">
 
-      <ul class="tab-list">
-        <li><a href="#with-food">Yes</a></li><li><a href="#without-food">No</a></li>
-      </ul>
+        <h2>Would you like us to match a wine with food?</h2>
 
-      <div id="with-food" class="tab">
+        <ul class="tab-list">
+          <li><a href="#with-food">Yes</a></li><li><a href="#without-food">No</a></li>
+        </ul>
 
-        <h3>Select a category</h3>
-        <div class="prefs-list-container">
-          <ul id="food-list" class="prefs-list prefs-list-top">
-            <li>
-              <a href="#meat">
-                <%= image_tag "icons/food/beef.png", :alt => "image description", :class => "logo" %>
-                <span>Meat</span>
-              </a>
-            </li>
-            <li>
-              <a href="#fish">
-                <%= image_tag "icons/food/fish.png", :alt => "image description", :class => "logo" %>
-                <span>Fish</span>
-              </a>
-            </li>
-            <li>
-              <a href="#dairy">
-                <%= image_tag "icons/food/hard_cheese.png", :alt => "image description", :class => "logo" %>
-                <span>Dairy</span>
-              </a>
-            </li>
-            <li>
-              <a href="">
-                <%= image_tag "icons/food/fried_sauteed.png", :alt => "image description", :class => "logo" %>
-                <span>Prep</span>
-              </a>
-            </li>
-            <li>
-              <a href="">
-                <%= image_tag "icons/food/green_vegetable.png", :alt => "image description", :class => "logo" %>
-                <span>Veg</span>
-              </a>
-            </li>
-            <li>
-              <a href="">
-                <%= image_tag "icons/food/herb_spice.png", :alt => "image description", :class => "logo" %>
-                <span>Herb & Spice</span>
-              </a>
-            </li>
-            <li>
-              <a href="">
-                <%= image_tag "icons/food/grain.png", :alt => "image description", :class => "logo" %>
-                <span>Grain</span>
-              </a>
-            </li>
-            <li>
-              <a href="">
-                <%= image_tag "icons/food/white_potato.png", :alt => "image description", :class => "logo" %>
-                <span>Potato</span>
-              </a>
-            </li>
-            <li>
-              <a href="">
-                <%= image_tag "icons/food/sweet.png", :alt => "image description", :class => "logo" %>
-                <span>Sweet</span>
-              </a>
-            </li>
-          </ul>
+        <div id="with-food" class="tab">
+        <a href="#" class="slideable-back first">Back</a>
+          <h3 class="select-category">Select a category</h3>
+          <div class="prefs-list-container">
+            <ul id="food-list" class="prefs-list prefs-list-top">
+            <% allFood = @foods.clone.to_a %>
+            <% allFood.keep_if {|f| f.parent==0} %>
+            <% allFood.each do |parentFood| %>
+              <li id="<%= parentFood.id %>">
+                <a href="#<%= parentFood.name.gsub(/(((\s)&?)\s?)/, "_")%>">
+                  <%= image_tag "icons/food/"+parentFood.name.gsub(" & ", "_")+".png", :alt => "image description", :class => "logo" %>
+                  <span><%= parentFood.name %></span>
+                </a>
+              </li>
+            <% end %>
+            </ul>
+          </div>
+
+          <% nallFood = @foods.clone.to_a %>
+          <% nallFood.keep_if {|f| f.parent==0} %>
+          <% nallFood.each do |parentFood| %>
+
+          <div id="<%= parentFood.name.gsub(/(((\s)&?)\s?)/, "_") %>" class="prefs-box">
+            <a href="#" class="slideable-back second">Back</a>
+            <h3>What type of <%= parentFood.name %>?</h3>
+            <div class="prefs-list-container">
+              <ul id="meat-list" class="prefs-list prefs-list-bottom">
+                <% subFood = @foods.clone.to_a %>
+                <% subFood.keep_if {|f| f.parent==parentFood.id} %>
+                <% subFood.each do |food| %>
+                <li id="<%= food.id %>">
+                  <a href="">
+                    <%= image_tag "icons/food/"+food.name.gsub(/(((\s)&?)\s?)/, "_")+".png", :alt => "image description" %>
+                    <span><%= food.name %></span>
+                  </a>
+                </li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+
+          <% end %>
+
         </div>
 
-        <div id="meat" class="prefs-box">
-          <h3>What type of Meat?</h3>
+        <div id="without-food" class="tab">
+          <a href="#" class="slideable-back first">Back</a>
+          <h3>Whats the occasion?</h3>
           <div class="prefs-list-container">
-            <ul id="meat-list" class="prefs-list prefs-list-bottom">
+            <ul id="occasion-list" class="prefs-list prefs-list-bottom">
               <li>
                 <a href="">
-                  <%= image_tag "icons/food/beef.png", :alt => "image description", :class => "logo" %>
-                  <span>Beef</span>
+                  <%= image_tag "icons/food/solo.png", :alt => "image description" %>
+                  <span>Solo</span>
                 </a>
               </li>
               <li>
                 <a href="">
-                  <%= image_tag "icons/food/chicken.png", :alt => "image description", :class => "logo" %>
-                  <span>Chicken</span>
+                  <%= image_tag "icons/food/party.png", :alt => "image description" %>
+                  <span>Party</span>
                 </a>
               </li>
               <li>
                 <a href="">
-                  <%= image_tag "icons/food/cured_meat.png", :alt => "image description", :class => "logo" %>
-                  <span>Cured Meat</span>
+                  <%= image_tag "icons/food/date.png", :alt => "image description" %>
+                  <span>Date</span>
                 </a>
               </li>
               <li>
                 <a href="">
-                  <%= image_tag "icons/food/pork.png", :alt => "image description", :class => "logo" %>
-                  <span>Pork</span>
+                  <%= image_tag "icons/food/dining.png", :alt => "image description" %>
+                  <span>Dining</span>
+                </a>
+              </li>
+              <li>
+                <a href="">
+                  <%= image_tag "icons/food/outdoors.png", :alt => "image description" %>
+                  <span>Outdoors</span>
                 </a>
               </li>
             </ul>
           </div>
-        </div>
 
-        <div id="fish" class="prefs-box">
-          <h3>What type of Fish?</h3>
-          <div class="prefs-list-container">
-            <ul id="fish-list" class="prefs-list prefs-list-bottom">
-              <li>
-                <a href="">
-                  <%= image_tag "icons/food/lobster_shellfish.png", :alt => "image description", :class => "logo" %>
-                  <span>Lobster & Shellfish</span>
-                </a>
-              </li>
-              <li>
-                <a href="">
-                  <%= image_tag "icons/food/fish.png", :alt => "image description", :class => "logo" %>
-                  <span>Fish (inc. raw)</span>
-                </a>
-              </li>
-              <li>
-                <a href="">
-                  <%= image_tag "icons/food/mussels_oysters.png", :alt => "image description", :class => "logo" %>
-                  <span>Mussels & Oysters</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div id="dairy" class="prefs-box">
-          <h3>What type of Dairy?</h3>
-          <div class="prefs-list-container">
-            <ul id="dairy-list" class="prefs-list prefs-list-bottom">
-              <li>
-                <a href="">
-                  <%= image_tag "icons/food/soft_cheese.png", :alt => "image description", :class => "logo" %>
-                  <span>Soft cheese & cream</span>
-                </a>
-              </li>
-              <li>
-                <a href="">
-                  <%= image_tag "icons/food/smelly_cheese.png", :alt => "image description", :class => "logo" %>
-                  <span>Pungent cheese</span>
-                </a>
-              </li>
-              <li>
-                <a href="">
-                  <%= image_tag "icons/food/hard_cheese.png", :alt => "image description", :class => "logo" %>
-                  <span>Hard Cheese</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-      </div>
-
-      <div id="without-food" class="tab">
-
-        <h3>Whats the occasion?</h3>
-        <div class="prefs-list-container">
-          <ul id="occasion-list" class="prefs-list prefs-list-bottom">
-            <li>
-              <a href="">
-                <%= image_tag "icons/food/solo.png", :alt => "image description", :class => "logo" %>
-                <span>Solo</span>
-              </a>
-            </li>
-            <li>
-              <a href="">
-                <%= image_tag "icons/food/party.png", :alt => "image description", :class => "logo" %>
-                <span>Party</span>
-              </a>
-            </li>
-            <li>
-              <a href="">
-                <%= image_tag "icons/food/date.png", :alt => "image description", :class => "logo" %>
-                <span>Date</span>
-              </a>
-            </li>
-            <li>
-              <a href="">
-                <%= image_tag "icons/food/dining.png", :alt => "image description", :class => "logo" %>
-                <span>Dining</span>
-              </a>
-            </li>
-            <li>
-              <a href="">
-                <%= image_tag "icons/food/outdoors.png", :alt => "image description", :class => "logo" %>
-                <span>Outdoors</span>
-              </a>
-            </li>
-          </ul>
         </div>
 
       </div>
 
       <div class="prefs-overview cf">
         <div class="prefs-overview-list-container">
-          <ul class="prefs-overview-list">
-          </ul>
+          <a href="#" class="prefs-overview-popup-link">
+          <%= image_tag "icons/list@2x.png", :alt => "list" %>
+          <span class="ingredient-count">0</span>
+          </a>
+          <div class="prefs-overview-popup">
+            <ul class="prefs-overview-list">
+            </ul>
+          </div>
         </div>
         <a href="" class="next-slide btn-order">Checkout</a>
       </div>
@@ -284,6 +191,8 @@
 
 <%# =============================== Sign up =============================== %>
 <%# wtf man... %>
+
+    <% unless user_signed_in? %>
 
     <div class="step order-panel swiper-slide noSwipingClass">
       <div class="order-panel-content register">
@@ -326,10 +235,12 @@
             :placeholder => "Confirm password"
             %>
         </div>
-        <a href="" class="next-slide btn">Delivery details</a>
+        <a href="" id="delivery-details" class="next-slide btn">Delivery details</a>
       </div>  
       <!-- <a href="#" class="btn-next" data-next-step="form-step-last">NEXT</a> -->
     </div>
+
+    <% end %>
 
 <%# ========================== Address selection ========================== %>
 

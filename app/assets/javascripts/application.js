@@ -16,7 +16,7 @@
 //= require map
 //= require maskedinput
 //= require forms
-//= require vendor/retina.min
+//# require vendor/retina.min
 //= require vendor/swiper_min
 
 var ready = function() {
@@ -82,7 +82,7 @@ $(function() {
 	$('.tab').hide();
 	$('.tab-list li a').click(function(e) {
 		e.preventDefault();
-		$('.preferences').addClass('first-level');
+		$('.preferences .slideable').addClass('first-level');
 		$('.tab-list li').removeClass('active');
 		$(this).parent().addClass('active');
 
@@ -94,10 +94,19 @@ $(function() {
 
 	$('.prefs-list li a').click(function(e) {
 		e.preventDefault();
-		$('.preferences').addClass('second-level');
+		$('.preferences .slideable').addClass('second-level');
 		$(this).closest('.prefs-list-container').addClass('visible');
 		$('.prefs-list li').removeClass('active');
 		$(this).parent().addClass('active');
+	});
+
+	$('.slideable-back').click(function(e) {
+		e.preventDefault();
+		if($(this).hasClass('first')) {
+			$('.preferences .slideable').removeClass('first-level');
+		} else {
+			$('.preferences .slideable').removeClass('second-level');
+		}
 	});
 
 	$('.prefs-box').hide();
@@ -109,18 +118,58 @@ $(function() {
 
 	$('.prefs-list-bottom li a').click(function(e) {
 		e.preventDefault();
+
+		var ingredientCount = parseInt($('.ingredient-count').text());
+
 		if($(this).parent().hasClass('selected')) {
 			
 		} else {
-			$(this).parent().addClass('selected');
-			$('.prefs-overview').addClass('visible');
-			$('.prefs-overview-list').prepend('<li><a href="">'+$(this).text()+'</a></li>');
+			if(ingredientCount < 3) {
+				$('.ingredient-count').text(parseInt($('.ingredient-count').text()) + 1);
+				$('.select-category').text('Add another ingredient?');
+				$('.preferences .slideable').removeClass('second-level');
+				$(this).parent().addClass('selected');
+				$('.prefs-overview').addClass('visible');
+				$('.prefs-overview-list').prepend('<li><a href="">'+$(this).text()+'</a></li>');
+			}
 		}
 	});
+
+	$('.prefs-overview-popup-link').click(function(e) {
+		e.preventDefault();
+		$(this).parent().find('.prefs-overview-popup').toggle().toggleClass('open');
+	})
 
 	$(document).on('click', '.prefs-overview-list li a', function(e) {
 		e.preventDefault();
 		$(this).parent().remove();
+	});
+
+	$('#delivery-details').click(function(e) {
+
+		//Needs Validation
+		var first_name = $('user[first_name]').val(),
+			last_name = $('user[last_name]').val(),
+			email = $('user[email]').val(),
+			mobile = $('user[first_name]').val(),
+			password = $('user[password]').val(),
+			password_confirmation = $('user[password_confirmation]').val();
+
+		var data = "user[first_name]="+first_name+"&user[last_name]="+last_name+"&user[email]="+email+"&user[mobile]="+mobile+"&user[password]="+password+"&user[password_confirmation]="+password_confirmation;
+
+		console.log(data);
+
+		$.ajax({
+			type: "POST",
+			beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').last().attr('content'))},
+			url: '/signup/create',
+			data: data,
+			success: function(data) {
+				//Response
+				console.log(data);
+			}
+	    });
+
 	});
 
 });
