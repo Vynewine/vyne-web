@@ -136,7 +136,14 @@ class ShopController < ApplicationController
     end
 
     @order.payment = payment
-    @order.status_id = 1
+    @order.status_id = 2 #Waiting for call
+
+    warehouses = ''
+    if params.has_key?(:warehouses)
+      warehouses = params[:warehouses]
+    end
+
+    @order.info = "{\"warehouses\":[#{warehouses}]}"
     
     # redirect_to action: 'new'
 
