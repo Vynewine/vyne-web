@@ -9,7 +9,6 @@ one:
   sugar: 1
   acidity: 1
   ph: 1
-  vegetarian: false
   vegan: false
   organic: false
 
@@ -22,6 +21,5 @@ two:
   sugar: 1
   acidity: 1
   ph: 1
-  vegetarian: false
   vegan: false
   organic: false

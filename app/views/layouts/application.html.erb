@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Vynz</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0 " />
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0 " /> -->
   <meta charset="utf-8">
   <%= stylesheet_link_tag 'application', media: 'all' %>
   <%= csrf_meta_tags %>
@@ -34,7 +34,7 @@
 
   </div>
 
-    <%# javascript_include_tag 'data-turbolinks-track' => true %>
+  <% # jav ascript_include_tag 'data-turbolinks-track' => true %>
   <% if params[:controller] == 'shop' %>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYpKRqaf8jYVoxl39_Y1mXnHZ9sJbBTHY"></script>
     <script>console.log('google maps loaded');</script>

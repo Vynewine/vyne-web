@@ -139,8 +139,6 @@ var adminReady = function() {
 
             if (wine.single_estate)
                 $se = $('<span>').addClass('single flaticon solid house-2');
-            if (wine.vegetarian)
-                $vg = $('<span>').addClass('vegetarian').html('Vt');
             if (wine.vegan)
                 $vn = $('<span>').addClass('vegan').html('Vn');
             if (wine.organic)
@@ -214,7 +212,6 @@ var adminReady = function() {
                   'keywords': keywords,
                 'warehouses': $('#warehouses_ids').val(),
                     'single': $('#tick-sing').is(':checked'),
-                'vegetarian': $('#tick-vegt').is(':checked'),
                      'vegan': $('#tick-vegn').is(':checked'),
                    'organic': $('#tick-orgc').is(':checked'),
                 'categories': categories
@@ -340,7 +337,10 @@ var adminReady = function() {
             var $container = $('#order-list>table>tbody');
             var $adviseAnchor = $('<a>').attr('href', '#').text('Advise');
             var $orderRecoverAnchor = $('<a>').attr('href', '#').text('Return');
-            var info = JSON.parse(order.info);
+            var info;
+            if(order.info) {
+                info = JSON.parse(order.info);
+            }
             var warehousesIds = [];
 
             if (info == null)
@@ -365,12 +365,12 @@ var adminReady = function() {
             $container.append(
                 $('<tr>')
                   .addClass('order')
-                  .attr("data-warehouses", info.warehouses.join(','))
+                  .attr("data-warehouses", info.warehouses ? info.warehouses.join(',') : '')
                   .attr("data-id", order.id)
                   .attr("data-info", order.info)
                   .append(
                       $('<td>').addClass('client').html(
-                          order.client.name
+                          order.client.first_name + ' ' + order.client.last_name
                       ),
                       $('<td>').addClass('postcode').html(
                           order.address.postcode
@@ -421,7 +421,7 @@ var adminReady = function() {
         $('#reload-orders').click(function(e){
             e.preventDefault();
             $('#order-list').html('');
-            postJSON('../orders/list.json', token, {'status':[2]}, parseOrders, errorMethod);
+            postJSON('../orders/list.json', token, {'status':[2]}, renderOrders, errorMethod);
         });
 
     }

@@ -10,7 +10,7 @@ module UserMailer
           :to => [
               {
                   :email => user.email,
-                  :name => "Recipient1"
+                  :name => user.name
               }
           ],
           :merge_vars => [

@@ -34,13 +34,13 @@ class User < ActiveRecord::Base
     self.code = rand(9999).to_s.rjust(4, "0")
     self.active = true #at this point we want users to be active by default
     self.save
+    self.add_role(:client)
     # puts "assigning"
-    # self.add_role(:client)
   end
 
   # Solr & sunspot:
   searchable do
-    text :first_name, :last_name
+    text :first_name, :last_name, :email
   end
 
 end

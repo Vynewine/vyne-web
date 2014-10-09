@@ -84,7 +84,6 @@ class Wine < ActiveRecord::Base
     text :txt_vintage
 
     boolean :single_estate
-    boolean :vegetarian
     boolean :vegan
     boolean :organic
 

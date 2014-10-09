@@ -8,9 +8,15 @@ class Admin::UsersController < ApplicationController
   # GET /users.json
   def index
     @roles = Role.all
+    if params[:s]
+      @search = User.search do
+        fulltext "*#{params[:s]}*"
+      end
+      @users = @search.results
+    else
     # @admUsers = User.all.includes(:roles).where(id: [1,2])
-    @users = User.all
-  # render layout: "admin"
+      @users = User.all
+    end
   end
 
   # GET /users/1

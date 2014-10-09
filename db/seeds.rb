@@ -602,8 +602,7 @@ puts "Types -------- OK"
 
 for j in 1..5 do
   for i in 1..5 do
-    vg = rand(2)
-    vn = vg & rand(2)
+    vn = rand(2)
     Wine.create(
                   :name => "Random #{j}-#{i}",
                :vintage => 2000 + i,
@@ -613,7 +612,6 @@ for j in 1..5 do
                  :sugar => i*2,
                :acidity => 2,
                     :ph => 3,
-            :vegetarian => vg,
                  :vegan => vn,
                :organic => rand(2),
            :producer_id => j,

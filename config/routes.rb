@@ -1,16 +1,16 @@
 Rails.application.routes.draw do
 
   namespace :admin do
-  get 'advisors/index'
+    get 'advisors/index'
   end
 
   namespace :admin do
-  get 'advisor/index'
+    get 'advisor/index'
   end
 
   # ----------------------------------------------------------------------------
   # General access
-  
+
   root :to => "home#index"
 
   # Global pages
@@ -20,6 +20,8 @@ Rails.application.routes.draw do
 
   # Sign up:
   get 'warehouses/addresses' => 'home#warehouses'
+  post 'signup/create' => 'signup#create'
+  post 'signup/address' => 'signup#address'
 
   # Signed only:
   # get 'welcome' => 'home#welcome'
@@ -54,16 +56,16 @@ Rails.application.routes.draw do
   # Actions for customers are under "/shop"
   # resources :shop
   scope '/shop' do
-    get 'welcome'   => 'shop#welcome'
-    get 'mywines'   => 'shop#index'
-    get 'list'      => 'shop#list'
-    get 'show'      => 'shop#show'
-    get 'neworder'     => 'shop#new'
+    get 'welcome' => 'shop#welcome'
+    get 'mywines' => 'shop#index'
+    get 'list' => 'shop#list'
+    get 'show' => 'shop#show'
+    get 'neworder' => 'shop#new'
     get 'confirmed' => 'shop#confirmed'
-    get 'edit'      => 'shop#edit'
-    post 'create'    => 'shop#create'
-    get 'update'    => 'shop#update'
-    get 'destroy'   => 'shop#destroy'
+    get 'edit' => 'shop#edit'
+    post 'create' => 'shop#create'
+    get 'update' => 'shop#update'
+    get 'destroy' => 'shop#destroy'
 
 
     # get 'welcome' => 'shop#welcome'
@@ -72,6 +74,7 @@ Rails.application.routes.draw do
 
     # get 'confirmed' => 'shop#confirmed'
   end
+
 
   # ----------------------------------------------------------------------------
   # Admin access
@@ -104,8 +107,8 @@ Rails.application.routes.draw do
     resources :inventories
     post '/orders/list' => "orders#list"
     get 'advise/index' => "advisors#index"
-    get 'advise/choose'  => "advisors#choose"
-    post 'advise/choose'  => "advisors#choose"
+    get 'advise/choose' => "advisors#choose"
+    post 'advise/choose' => "advisors#choose"
     post 'advise/results' => "advisors#results"
   end
 
