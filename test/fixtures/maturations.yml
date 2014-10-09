@@ -1,9 +1,2 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  maturation_type_id: 1
-  period: 1
-
-two:
-  maturation_type_id: 1
-  period: 1

@@ -5,7 +5,13 @@ source 'https://rubygems.org'
 gem 'rails', '4.1.4'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
-gem 'pg'
+group :development do
+  gem 'pg'
+end
+
+group :test do
+  gem 'sqlite3', '1.3.9'
+end
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.3'
@@ -53,3 +59,6 @@ gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
 gem 'progress_bar'
 gem 'sunspot_rails'
 gem 'sunspot_solr' # optional pre-packaged Solr distribution for use in development
+
+# Mandrill API
+gem 'mandrill-api'

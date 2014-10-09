@@ -4,4 +4,7 @@ class Address < ActiveRecord::Base
   def full
   	"#{detail} #{street} #{postcode}"
   end
+  validates :postcode, length: { maximum: 250, too_long: '%{count} characters is the maximum allowed'}
+  validates :street, length: { maximum: 250, too_long: '%{count} characters is the maximum allowed'}
+  validates :detail, length: { maximum: 250, too_long: '%{count} characters is the maximum allowed'}
 end

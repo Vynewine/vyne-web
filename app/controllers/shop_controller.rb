@@ -1,4 +1,5 @@
 class ShopController < ApplicationController
+  include UserMailer
   before_action :authenticate_user!, :except => [:new, :create]
   authorize_actions_for UserAuthorizer, :except => [:new, :create] # Triggers user check
   before_action :set_order, only: [:show, :edit, :update, :destroy]
@@ -23,7 +24,7 @@ class ShopController < ApplicationController
   def show
   end
 
-  # GET /orders/new
+  # GET /shop/neworder
   def new
     puts params[:controller]
     # current_user.has_role?(:superadmin)
@@ -41,8 +42,8 @@ class ShopController < ApplicationController
   def edit
   end
 
-  # POST /orders
-  # POST /orders.json
+  # POST /shop/create
+  # POST /shop/create.json
   def create
     require 'pp'
     logger.warn "Create order"
@@ -141,6 +142,7 @@ class ShopController < ApplicationController
 
     respond_to do |format|
       if @order.save
+        first_time_ordered newUser
         format.html { redirect_to entercode_path } #, notice: 'Order was successfully created.' }
         format.json { render :confirmed, status: :created, location: @order }
       else
