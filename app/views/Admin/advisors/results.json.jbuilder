@@ -10,7 +10,6 @@ json.array!(@results) do |wine|
   json.name wine.name
   json.vintage wine.vintage
   json.single_estate wine.single_estate
-  json.vegetarian wine.vegetarian
   json.vegan wine.vegan
   json.organic wine.organic
 

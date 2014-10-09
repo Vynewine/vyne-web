@@ -71,7 +71,6 @@ class Admin::WinesController < ApplicationController
       @wine.sugar          = params[:wine][:sugar]
       @wine.acidity        = params[:wine][:acidity]
       @wine.ph             = params[:wine][:ph]
-      @wine.vegetarian     = params[:wine][:vegetarian]
       @wine.vegan          = params[:wine][:vegan]
       @wine.organic        = params[:wine][:organic]
       @wine.producer       = producer
@@ -199,7 +198,6 @@ puts "-------------------------------"
         :sugar,
         :acidity,
         :ph,
-        :vegetarian,
         :vegan,
         :organic,
         :producer_id,
