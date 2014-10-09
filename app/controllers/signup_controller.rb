@@ -1,5 +1,5 @@
 class SignupController < ApplicationController
-  skip_before_filter :verify_authenticity_token, :only => [:create, :address]
+  before_action :authenticate_user!, :except => [:create]
 
   # POST /signup/create
   def create
