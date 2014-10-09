@@ -295,14 +295,10 @@ $border: 1px solid #D5E;
                         &.single {
                             padding: 3px 4px;
                         }
-                        &.vegetarian {
-                            color: darkgreen;
-                            border-color: darkgreen;
-                            background: lightgreen;
-                        }
                         &.vegan {
                             color: darkgreen;
                             border-color: darkgreen;
+                            background: lightgreen;
                         }
                         &.organic {
                             color: darkred;

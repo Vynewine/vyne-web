@@ -18,7 +18,7 @@ class WinesControllerTest < ActionController::TestCase
 
   test "should create wine" do
     assert_difference('Wine.count') do
-      post :create, wine: { acidity: @wine.acidity, alcohol: @wine.alcohol, area: @wine.area, name: @wine.name, organic: @wine.organic, ph: @wine.ph, single_estate: @wine.single_estate, sugar: @wine.sugar, vegan: @wine.vegan, vegetarian: @wine.vegetarian, vintage: @wine.vintage }
+      post :create, wine: { acidity: @wine.acidity, alcohol: @wine.alcohol, area: @wine.area, name: @wine.name, organic: @wine.organic, ph: @wine.ph, single_estate: @wine.single_estate, sugar: @wine.sugar, vegan: @wine.vegan, vintage: @wine.vintage }
     end
 
     assert_redirected_to wine_path(assigns(:wine))
@@ -35,7 +35,7 @@ class WinesControllerTest < ActionController::TestCase
   end
 
   test "should update wine" do
-    patch :update, id: @wine, wine: { acidity: @wine.acidity, alcohol: @wine.alcohol, area: @wine.area, name: @wine.name, organic: @wine.organic, ph: @wine.ph, single_estate: @wine.single_estate, sugar: @wine.sugar, vegan: @wine.vegan, vegetarian: @wine.vegetarian, vintage: @wine.vintage }
+    patch :update, id: @wine, wine: { acidity: @wine.acidity, alcohol: @wine.alcohol, area: @wine.area, name: @wine.name, organic: @wine.organic, ph: @wine.ph, single_estate: @wine.single_estate, sugar: @wine.sugar, vegan: @wine.vegan, vintage: @wine.vintage }
     assert_redirected_to wine_path(assigns(:wine))
   end
 

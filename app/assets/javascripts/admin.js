@@ -139,8 +139,6 @@ var adminReady = function() {
 
             if (wine.single_estate)
                 $se = $('<span>').addClass('single flaticon solid house-2');
-            if (wine.vegetarian)
-                $vg = $('<span>').addClass('vegetarian').html('Vt');
             if (wine.vegan)
                 $vn = $('<span>').addClass('vegan').html('Vn');
             if (wine.organic)
@@ -214,7 +212,6 @@ var adminReady = function() {
                   'keywords': keywords,
                 'warehouses': $('#warehouses_ids').val(),
                     'single': $('#tick-sing').is(':checked'),
-                'vegetarian': $('#tick-vegt').is(':checked'),
                      'vegan': $('#tick-vegn').is(':checked'),
                    'organic': $('#tick-orgc').is(':checked'),
                 'categories': categories
