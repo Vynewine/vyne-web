@@ -14,7 +14,7 @@
   <div class="container">
 
     <header class="main-header">
-      <div class="wrapper">
+      <div class="wrapper wrapper-fluid">
         <%= link_to root_path do %><%= image_tag "logo.png", :alt => "image description", :class => "logo" %><% end %>
         <a href="" class="menu-link">
           <div class="top"></div>
@@ -25,9 +25,7 @@
     </header>
 
     <main class="main-content">
-      <div class="wrapper">
       <%= yield %>
-      </div>
     </main>
 
     <%= render :partial => "layouts/sidemenu" %>
