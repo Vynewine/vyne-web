@@ -145,30 +145,113 @@ $(function() {
 		$(this).parent().remove();
 	});
 
+	$(document).on('click', '#account-link', function(e) {
+		e.preventDefault();
+		if($('#account-form').hasClass('register-form')) {
+			$('#account-form').removeClass().addClass('signin-form');
+			$('.account-heading').text('Sign In');
+			$('.account-message').html('Don\'t have an account? <a href="" id="account-link" class="register-link">Register</a>');
+			$('input[name="user[first_name]"], input[name="user[last_name]"], input[name="user[mobile]"], input[name="user[password_confirmation]"]').hide();
+		} else {
+			$('#account-form').removeClass().addClass('register-form');
+			$('.account-heading').text('Register');
+			$('.account-message').html('Have an account? <a href="" id="account-link" class="signin-link">Sign In</a>');
+			$('input[name="user[first_name]"], input[name="user[last_name]"], input[name="user[mobile]"], input[name="user[password_confirmation]"]').show();
+		}
+	});
+
 	$('#delivery-details').click(function(e) {
 
+		e.preventDefault();
+
+		if($('#account-form').hasClass('register-form')) {
+
+			//Needs Validation
+			var first_name = $('input[name="user[first_name]"]').val(),
+				last_name = $('input[name="user[last_name]"]').val(),
+				email = $('input[name="user[email]"]').val(),
+				mobile = $('input[name="user[mobile]"]').val(),
+				password = $('input[name="user[password]"]').val(),
+				password_confirmation = $('input[name="user[password_confirmation]"]').val();
+
+			var data = "user[first_name]="+first_name+"&user[last_name]="+last_name+"&user[email]="+email+"&user[mobile]="+mobile+"&user[password]="+password+"&user[password_confirmation]="+password_confirmation;
+
+			console.log(data);
+
+			$.ajax({
+				type: "POST",
+				beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').last().attr('content'))},
+				url: '/signup/create',
+				data: data,
+				error: function(data) {
+					//Response
+					console.log(data);
+					var errors = data.responseJSON.errors;
+					if(errors) {
+						var $errorList = $('.order-panel-content.register .errors');
+						$errorList.empty().show();
+						errors.forEach(function(error) {
+							$errorList.append('<li>'+error+'</li>');
+						});
+					}
+				},
+				success: function(data) {
+					order.swipeNext();
+				}
+		    });
+
+		} else if($('#account-form').hasClass('signup-form')) {
+			//Needs Validation
+			var	email = $('input[name="user[email]"]').val()
+				password = $('input[name="user[password]"]').val();
+
+			var data = "&user[email]="+email+"&user[password]="+password;
+
+			console.log(data);
+
+			$.ajax({
+				type: "POST",
+				beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').last().attr('content'))},
+				url: '/signup/create',
+				data: data,
+				error: function(data) {
+					//Response
+					console.log(data);
+				},
+				success: function(data) {
+					order.swipeNext();
+				}
+		    });
+		}
+
+	});
+
+	$('#address-details').click(function(e) {
+
+		e.preventDefault();
+
 		//Needs Validation
-		var first_name = $('user[first_name]').val(),
-			last_name = $('user[last_name]').val(),
-			email = $('user[email]').val(),
-			mobile = $('user[first_name]').val(),
-			password = $('user[password]').val(),
-			password_confirmation = $('user[password_confirmation]').val();
+		var address_d = $('input[name="user[address_d]"]').val(),
+			address_s = $('input[name="user[address_s]"]').val(),
+			address_p = $('input[name="user[address_p]"]').val();
 
-		var data = "user[first_name]="+first_name+"&user[last_name]="+last_name+"&user[email]="+email+"&user[mobile]="+mobile+"&user[password]="+password+"&user[password_confirmation]="+password_confirmation;
-
-		console.log(data);
+		var data = "address_d="+address_d+"&address_s="+address_s+"&address_p="+address_p;
 
 		$.ajax({
-			type: "POST",
-			beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').last().attr('content'))},
-			url: '/signup/create',
-			data: data,
-			success: function(data) {
+		    type: "POST",
+		    beforeSend: function(xhr) {
+		        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').last().attr('content'))
+		    },
+		    url: '/signup/address',
+		    data: data,
+		    error: function(data) {
 				//Response
 				console.log(data);
+			},
+			success: function(data) {
+				order.swipeNext();
 			}
-	    });
+		});
 
 	});
 
