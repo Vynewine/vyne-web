@@ -22,7 +22,7 @@
     <div class="order-panel-content postcode wrapper">
       <h2>Availability</h2>
       <p>We need to check if the wine is available to deliver in your area</p>
-      <input type="text" id="filterPostcode" placeholder="Enter postcode"/>
+      <input type="text" id="filterPostcode" placeholder="Enter postcode" autocomplete="off"/>
       <span id="filterPostcodeMessage" class="message"></span>
       <a href="" id="use-postcode" class="btn next-slide">Choose wine</a>
     </div>
@@ -200,48 +200,51 @@
 
     <div class="step order-panel swiper-slide noSwipingClass">
       <div class="order-panel-content register wrapper">
-        <h2>Register</h2>
-        <div>
-          <%= text_field :user, :first_name, :placeholder => "First Name" %>
-        </div>
-        <div>
-          <%= text_field :user, :last_name, :placeholder => "Last Name" %>
-        </div>
-        <div>
-          <%= email_field :user, :email,
-          :autocomplete => "off",
-          :placeholder => "Email" %>
-        </div>
-        <div>
-          <%= text_field :user, :mobile,
-          :autocomplete => "off",
-          :placeholder => "Mobile" %>
-        </div>
-        <%
-        passPlaceholder = "Password"
-        if @validatable
-        passPlaceholder += " (#{@minimum_password_length} characters minimum)"
-        end
-        %>
-        <div>
-            <%=
-            password_field :user,
-            :password,
+        <div id="account-form" class="register-form">
+          <h2 class="account-heading">Register</h2>
+          <span class="account-message">Have an account? <a href="" id="account-link" class="signin-link">Sign in</a></span>
+          <ul class="errors"></ul>
+          <div>
+            <%= text_field :user, :first_name, :placeholder => "First Name" %>
+          </div>
+          <div>
+            <%= text_field :user, :last_name, :placeholder => "Last Name" %>
+          </div>
+          <div>
+            <%= email_field :user, :email,
             :autocomplete => "off",
-            :placeholder => passPlaceholder
-            %>
-        </div>
-        <div>
-            <%=
-            password_field :user,
-            :password_confirmation,
+            :placeholder => "Email" %>
+          </div>
+          <div>
+            <%= text_field :user, :mobile,
             :autocomplete => "off",
-            :placeholder => "Confirm password"
-            %>
+            :placeholder => "Mobile" %>
+          </div>
+          <%
+          passPlaceholder = "Password"
+          if @validatable
+          passPlaceholder += " (#{@minimum_password_length} characters minimum)"
+          end
+          %>
+          <div>
+              <%=
+              password_field :user,
+              :password,
+              :autocomplete => "off",
+              :placeholder => passPlaceholder
+              %>
+          </div>
+          <div>
+              <%=
+              password_field :user,
+              :password_confirmation,
+              :autocomplete => "off",
+              :placeholder => "Confirm password"
+              %>
+          </div>
+          <a href="#" id="delivery-details" class="btn">Delivery details</a>
         </div>
-        <a href="" id="delivery-details" class="next-slide btn">Delivery details</a>
-      </div>  
-      <!-- <a href="#" class="btn-next" data-next-step="form-step-last">NEXT</a> -->
+      </div>
     </div>
 
     <% end %>
@@ -276,7 +279,7 @@
       <input type="hidden" id="old-address" name="old_address" />
       <div>
         <!-- Next step -->
-        <a href="#" class="next-slide btn" id="">use address</a> <!-- Changes class to 'red-button' -->
+        <a href="#" class="btn" id="address-details">use address</a> <!-- Changes class to 'red-button' -->
       </div>
     </div>
   </div>
