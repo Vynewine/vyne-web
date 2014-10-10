@@ -11,6 +11,7 @@ end
 
 group :test do
   gem 'sqlite3', '1.3.9'
+  gem 'stripe-ruby-mock', '~> 1.10.1.7'
 end
 
 # Use SCSS for stylesheets
