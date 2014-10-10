@@ -65,6 +65,9 @@ var adminReady = function() {
 
         token = $('meta[name="csrf-token"]').attr('content');
 
+        //-------------------------------------------------------------------
+        // Basic interface
+
         var reloadInterface = function() {
             console.log('reloadInterface');
 
@@ -79,6 +82,25 @@ var adminReady = function() {
             postJSON('../orders/list.json', token, {'status':[2]}, parseOrders, errorMethod);
         };
 
+        var showConfirmationWindow = function() {
+            // console.log('show!!');
+            var order     = $('#order_id').val();
+            var wine      = $('#wine_id').val();
+            var warehouse = $('#warehouses_ids').val();
+            var $orderTr  = $("#order-" + order);
+            var $wineTr   = $("#wine-" + wine);
+            $('#confirm-name'   ).html($orderTr.data('customer'));
+            $('#confirm-address').html($orderTr.data('address'));
+            $('#confirm-wine'   ).html( $wineTr.data('name'));
+            $('#confirm-price'  ).html( "&pound;" + $wineTr.data('price') + ".00");
+            $('#confirmation-area').fadeIn();
+        };
+
+        $('#cancel-confirmation').click(function(e) {
+            e.preventDefault();
+            $('#confirmation-area').fadeOut();
+        });
+
         var wineChosen = function(d) {
             console.log(d.message);
             if (d.message==='success') {
@@ -91,14 +113,19 @@ var adminReady = function() {
         var chooseWine = function(e) {
             e.preventDefault();
 
-            var result = confirm("Are you sure?");
-            if (result === false) {
-                return;
-            }
+            // return;
+
+            // var result = confirm("Are you sure?");
+            // if (result === false) {
+            //     return;
+            // }
             var $tr = $(this).closest('tr');
-            var wine = parseInt($tr.data('id'));
-            var order = parseInt($('#order_id').val());
-            var warehouse = parseInt($tr.data('warehouse'));
+            var wine = $tr.data('id');
+            $('#wine_id').val(wine);
+            
+            showConfirmationWindow(wine);
+/*
+
             var data = {
                 'wine':wine,
                 'order':order,
@@ -108,7 +135,7 @@ var adminReady = function() {
             postJSON('choose.json', token, data, wineChosen, function() {
                 alert('not okay');
             });
-
+*/
         };
 
         var renderWine = function(wine) {
@@ -152,7 +179,10 @@ var adminReady = function() {
 
             $container.append(
                 $('<tr>')
+                .attr('id', "wine-" + wine.id)
                 .attr('data-id', wine.id)
+                .attr('data-name', wine.name + ' ' + wine.vintage)
+                .attr('data-price', basePrice)
                 .attr('data-warehouse', basePriceWarehouse)
                 .addClass('wine').append(
                     $('<td>').addClass('flag').append(
@@ -339,9 +369,12 @@ var adminReady = function() {
          * Draws single orders
          */
         var renderOrder = function(order) {
+            console.log(order);
             var $container = $('#order-list>table>tbody');
             var $adviseAnchor = $('<a>').attr('href', '#').text('Advise');
             var $orderRecoverAnchor = $('<a>').attr('href', '#').text('Return');
+            var customerName = order.client.first_name + ' ' + order.client.last_name;
+            var fullAddress = order.address.detail + ', ' + order.address.street + ', ' + order.address.postcode;
             var info;
             if(order.info) {
                 info = JSON.parse(order.info);
@@ -371,13 +404,19 @@ var adminReady = function() {
                 $('<tr>')
                   .addClass('order')
                   .attr("data-warehouses", info.warehouses ? info.warehouses.join(',') : '')
+                  .attr("id", "order-" + order.id)
                   .attr("data-id", order.id)
                   .attr("data-info", order.info)
+                  .attr("data-customer", customerName)
+                  .attr("data-address", fullAddress)
                   .append(
-                      $('<td>').addClass('client').html(
+                      $('<td>').addClass('client').text(
                           order.client.first_name + ' ' + order.client.last_name
                       ),
-                      $('<td>').addClass('postcode').html(
+                      $('<td>').addClass('phone').text(
+                          order.client.mobile
+                      ),
+                      $('<td>').addClass('postcode').text(
                           order.address.postcode
                       ),
                       $('<td>').addClass('actions').append($adviseAnchor)
@@ -414,6 +453,7 @@ var adminReady = function() {
          * Load data
          */
         if (advisor) {
+            console.log("Advisor area!");
             loadJSON('../foods.json', function(d) {
                 foods = d;
                 postJSON('../orders/list.json', token, {'status':[2]}, renderOrders, errorMethod);

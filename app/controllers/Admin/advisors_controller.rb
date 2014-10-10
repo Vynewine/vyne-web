@@ -184,7 +184,7 @@ class Admin::AdvisorsController < ApplicationController
         :page => "product",
         :session_id => "example123",
         :basket_value => 1999,
-        :pickup_store_id => "448",
+        :pickup_store_id => "southwark",
         :delivery_location => {
           :address => {
             :postcode => "EC2A 3LT"
@@ -216,7 +216,8 @@ class Admin::AdvisorsController < ApplicationController
     }
 
     req = Net::HTTP::Post.new(url, headers)
-    req.form_data = params
+    # req.form_data = params
+    req.body = params.to_json
     connection = Net::HTTP::start(url.hostname, url.port, :use_ssl => true ) {|http|
       http.request(req)
     }

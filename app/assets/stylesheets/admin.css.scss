@@ -231,6 +231,9 @@ table.list-table {
             }
             & > td {
                 padding: 5px;
+                &.phone {
+                    font-weight: bold;
+                }
             }
         }
     }
@@ -326,3 +329,52 @@ $border: 1px solid #D5E;
         }
     }
 }
+
+.shadow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.7);
+}
+#confirmation-screen {
+    background: white;
+    border: 1px solid black;
+    width: 800px;
+    height: 600px;
+    position: relative;
+    margin: 20px auto;
+    padding: 20px;
+    & ul > li > a {
+        &:hover {
+            color: red;
+        }
+    }
+    .shadow-footer {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        padding: 15px;
+        & > a {
+            float: left;
+            background: #CCC;
+            color: black;
+            padding: 5px 8px;
+            text-decoration: none;
+            font-size: 1.2em;
+            margin-left: 10px;
+            &:hover {
+                background: #BBB;
+            }
+            &.green {
+                background: #0A0;
+                color: white;
+                &:hover {
+                    background: #090;
+                }
+            }
+        }
+    }
+}
+
