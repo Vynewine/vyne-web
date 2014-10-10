@@ -9,6 +9,7 @@ class CreateOrders < ActiveRecord::Migration
       t.references :payment, index: true
       t.references :status, index: true
       t.integer :quantity
+      t.string :delivery
       t.string :info
 
       t.timestamps

@@ -90,6 +90,11 @@ var adminReady = function() {
 
         var chooseWine = function(e) {
             e.preventDefault();
+
+            var result = confirm("Are you sure?");
+            if (result === false) {
+                return;
+            }
             var $tr = $(this).closest('tr');
             var wine = parseInt($tr.data('id'));
             var order = parseInt($('#order_id').val());

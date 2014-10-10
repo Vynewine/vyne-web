@@ -236,6 +236,7 @@ table.list-table {
     }
 }
 
+.search-area,
 #wine-filters {
     float: left;
     width: 100%;
@@ -247,6 +248,20 @@ table.list-table {
         width: 100%;
         padding: 10px;
         outline: none;
+    }
+    &.with-button {
+        position: relative;
+        padding-right: 100px;
+        & > input[type=submit] {
+            display: inline-block;
+            position: absolute;
+            right: 0;
+            float: left;
+            font-size: 1.5em;
+            width: 80px;
+            padding: 10px;
+            outline: none;
+        }
     }
 }
 
