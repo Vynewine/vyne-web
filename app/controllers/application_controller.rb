@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
   # Devise overrides for signing in
   def after_sign_in_path_for(resource_or_scope)
     if current_user.active?
-      welcome_path
+      neworder_path
     else
       entercode_path
     end
