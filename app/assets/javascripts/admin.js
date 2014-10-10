@@ -342,7 +342,10 @@ var adminReady = function() {
             var $container = $('#order-list>table>tbody');
             var $adviseAnchor = $('<a>').attr('href', '#').text('Advise');
             var $orderRecoverAnchor = $('<a>').attr('href', '#').text('Return');
-            var info = JSON.parse(order.info);
+            var info;
+            if(order.info) {
+                info = JSON.parse(order.info);
+            }
             var warehousesIds = [];
 
             if (info == null)
@@ -367,7 +370,7 @@ var adminReady = function() {
             $container.append(
                 $('<tr>')
                   .addClass('order')
-                  .attr("data-warehouses", info.warehouses.join(','))
+                  .attr("data-warehouses", info.warehouses ? info.warehouses.join(',') : '')
                   .attr("data-id", order.id)
                   .attr("data-info", order.info)
                   .append(

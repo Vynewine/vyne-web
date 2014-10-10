@@ -44,72 +44,135 @@ class ShopController < ApplicationController
 
   # POST /shop/create
   # POST /shop/create.json
+#   def create
+#     require 'pp'
+#     logger.warn "Create order"
+#     puts PP.pp(params,'',80)
+#
+# # {
+# #   "utf8"=>"✓",
+# #   "authenticity_token"=>"0lu9BsfjPv6SMYEXlBrkOJoFu0uSe4UXElIFjcC460s=",
+# #   "preferences"=>{"occasion"=>"", "food"=>"", "type"=>"", "other"=>""},
+# #   "user"=>
+# #   {
+# #     "name"=>"queen elizabeth",
+# #     "email"=>"queen@gov.uk",
+# #     "mobile"=>"01234567890",
+# #     "password"=>"qwertyui",
+# #     "password_confirmation"=>"qwertyui"
+# #   },
+# #   "address_p"=>"w69hh",
+# #   "address_s"=>"Fulham Palace Road",
+# #   "address_d"=>"116",
+# #   "old_address"=>"",
+# #   "old_card"=>"0",
+# #   "new_card"=>"4242",
+# #   "new_brand"=>"1",
+# #   "stripeToken"=>"tok_14dfAQ2eZvKYlo2CuBYwwobZ",
+# #   "action"=>"create",
+# #   "controller"=>"shop"
+# # }
+#
+#     # Creates user:
+#     newUser = User.create!(user_params)
+#
+#     # Signs user in:
+#     sign_in(:user, newUser)
+#
+#     # Creates order:
+#     @order = Order.new
+#     @order.client = current_user
+#
+#     # Manages address:
+#     orderAddress = params[:old_address].to_i
+#     if orderAddress == 0
+#       address = Address.new
+#       address.detail   = params[:address_d]
+#       address.street   = params[:address_s]
+#       address.postcode = params[:address_p].gsub(/[\s|-]/, "").upcase
+#       if address.save
+#         addressAssociation = AddressesUsers.new
+#         addressAssociation.user = current_user
+#         addressAssociation.address = address
+#         unless addressAssociation.save
+#           logger.error "Couldn't save address association"
+#         end
+#       else
+#         logger.error "Couldn't save address"
+#       end
+#     else
+#       address = Address.find(orderAddress)
+#     end
+#
+#     @order.address = address
+#
+#     # Manages card details:
+#
+#     cardId = params[:old_card].to_i
+#     puts PP.pp(cardId,'',80)
+#     if cardId == 0 # New card
+#       # Set your secret key: remember to change this to your live secret key in production
+#       # See your keys here https://dashboard.stripe.com/account
+#       Stripe.api_key = "sk_test_BQokikJOvBiI2HlWgH4olfQ2"
+#
+#       # Get the credit card details submitted by the form
+#       token = params[:stripeToken]
+#
+#       # Create a Customer
+#       customer = Stripe::Customer.create(
+#         :card => token,
+#         :description => current_user.email
+#       )
+#       payment        = Payment.new
+#       payment.user   = current_user
+#       payment.brand  = params[:new_brand]
+#       payment.number = params[:new_card]
+#       payment.stripe = customer.id
+#       unless addressAssociation.save
+#         logger.error "Couldn't save payment"
+#       end
+#     else
+#       payment = Payment.find_by(:id => cardId, :user => current_user)
+#     end
+#
+#     @order.payment = payment
+#     @order.status_id = 2 #Waiting for call
+#
+#     warehouses = ''
+#     if params.has_key?(:warehouses)
+#       warehouses = params[:warehouses]
+#     end
+#
+#     @order.info = "{\"warehouses\":[#{warehouses}]}"
+#
+#     # redirect_to action: 'new'
+#
+#     respond_to do |format|
+#       if @order.save
+#         first_time_ordered newUser
+#         format.html { redirect_to entercode_path } #, notice: 'Order was successfully created.' }
+#         format.json { render :confirmed, status: :created, location: @order }
+#       else
+#         format.html { render :new }
+#         format.json { render json: @order.errors, status: :unprocessable_entity }
+#       end
+#     end
+#   end
+
   def create
-    require 'pp'
     logger.warn "Create order"
-    puts PP.pp(params,'',80)
-
-# {
-#   "utf8"=>"✓",
-#   "authenticity_token"=>"0lu9BsfjPv6SMYEXlBrkOJoFu0uSe4UXElIFjcC460s=",
-#   "preferences"=>{"occasion"=>"", "food"=>"", "type"=>"", "other"=>""},
-#   "user"=>
-#   {
-#     "name"=>"queen elizabeth",
-#     "email"=>"queen@gov.uk",
-#     "mobile"=>"01234567890",
-#     "password"=>"qwertyui",
-#     "password_confirmation"=>"qwertyui"
-#   },
-#   "address_p"=>"w69hh",
-#   "address_s"=>"Fulham Palace Road",
-#   "address_d"=>"116",
-#   "old_address"=>"",
-#   "old_card"=>"0",
-#   "new_card"=>"4242",
-#   "new_brand"=>"1",
-#   "stripeToken"=>"tok_14dfAQ2eZvKYlo2CuBYwwobZ",
-#   "action"=>"create",
-#   "controller"=>"shop"
-# }
-
-    # Creates user:
-    newUser = User.create!(user_params)
-
-    # Signs user in:
-    sign_in(:user, newUser)
 
     # Creates order:
     @order = Order.new
     @order.client = current_user
 
     # Manages address:
-    orderAddress = params[:old_address].to_i
-    if orderAddress == 0
-      address = Address.new
-      address.detail   = params[:address_d]
-      address.street   = params[:address_s]
-      address.postcode = params[:address_p].gsub(/[\s|-]/, "").upcase
-      if address.save
-        addressAssociation = AddressesUsers.new
-        addressAssociation.user = current_user
-        addressAssociation.address = address
-        unless addressAssociation.save
-          logger.error "Couldn't save address association"
-        end
-      else
-        logger.error "Couldn't save address"
-      end
-    else
-      address = Address.find(orderAddress)
-    end
-
+    order_address = params[:address].to_i
+    address = Address.find(order_address)
     @order.address = address
 
     # Manages card details:
-
     cardId = params[:old_card].to_i
-    puts PP.pp(cardId,'',80)
     if cardId == 0 # New card
       # Set your secret key: remember to change this to your live secret key in production
       # See your keys here https://dashboard.stripe.com/account
@@ -120,29 +183,33 @@ class ShopController < ApplicationController
 
       # Create a Customer
       customer = Stripe::Customer.create(
-        :card => token,
-        :description => current_user.email
+          :card => token,
+          :description => current_user.email
       )
       payment        = Payment.new
       payment.user   = current_user
       payment.brand  = params[:new_brand]
       payment.number = params[:new_card]
       payment.stripe = customer.id
-      unless addressAssociation.save
-        logger.error "Couldn't save payment"
-      end
     else
       payment = Payment.find_by(:id => cardId, :user => current_user)
     end
 
     @order.payment = payment
-    @order.status_id = 1
-    
+    @order.status_id = 2 #Waiting for call
+
+    warehouses = ''
+    if params.has_key?(:warehouses)
+      warehouses = params[:warehouses]
+    end
+
+    @order.info = "{\"warehouses\":[#{warehouses}]}"
+
     # redirect_to action: 'new'
 
     respond_to do |format|
       if @order.save
-        first_time_ordered newUser
+        first_time_ordered current_user
         format.html { redirect_to entercode_path } #, notice: 'Order was successfully created.' }
         format.json { render :confirmed, status: :created, location: @order }
       else

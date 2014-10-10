@@ -195,9 +195,9 @@ $(document).ready(function(){
 
             var mapUtil = new MapUtility();
 
-            mapUtil.calculateDistanceForAllWarehouses(postcode, function(deliverable) {
+            mapUtil.calculateDistanceForAllWarehouses(postcode, function(delivery) {
                 // console.log('callback 1', deliverable);
-                if (deliverable) {
+                if (delivery.available) {
 
                     $('#filterPostcode').blur();
 
@@ -205,6 +205,8 @@ $(document).ready(function(){
                     $('#use-postcode').css({ 'display': 'inline-block '});
 
                     $feedback.html("VYNZ delivers to this area.");
+
+                    $('#warehouses').val(delivery.warehouses);
 
                     // Google API cannot find the street name based on the postcode!
                     // This is why we must first find the damn longitude and latitude first.

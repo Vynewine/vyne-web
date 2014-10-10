@@ -75,7 +75,7 @@ function MapUtility() {
 
 
 
-    _this.calculateDistanceBetween = function(origins, destinations, distances, callbackMethod) {
+    _this.calculateDistanceBetween = function(origins, destinations, distances, warehouses, callbackMethod) {
 
         // DUMMY
         destinations=['EC1N8DX', 'SE39RQ', 'SW65HU', 'E62JT'];
@@ -102,19 +102,23 @@ function MapUtility() {
             console.log('response:', response);
             var distanceKm = 0;
             var distanceMi = 0;
-            var deliverable = false;
+            var delivery = {available: false, warehouses: []};
+
             for (var i = 0; i < response.rows[0].elements.length; i++) {
                 // console.log('response:', response.rows[0].elements[i].distance.value); //in KM
                 if (response.rows[0].elements[i].status === "OK") {
                     distanceKm = parseInt(response.rows[0].elements[i].distance.value);
                     distanceMi = mapUtil.kmToMile(distanceKm/1000);
-                    if (distanceMi >= parseInt(distances[i]))
-                        deliverable = true;
+                    if (distanceMi >= parseInt(distances[i])) {
+                        delivery.available = true;
+                        delivery.warehouses = warehouses;
+                    }
+
                 }
                 // console.log(distances[i]);
                 // console.log('distance in miles:', distanceMi); //in KM
             }
-            callbackMethod(deliverable);
+            callbackMethod(delivery);
         });
     };
 
@@ -131,14 +135,16 @@ function MapUtility() {
             var mapUtil = new MapUtility(); // recursive! =D
             var allPostcodes = [];
             var allDistances = [];
+            var warehouses = [];
             for (var i = 0; i < data.warehouses.length; i++) {
                 // var warehouseId = data.warehouses[i].id;
                 // var warehouseAddress = data.warehouses[i].address;
                 // var warehouseDistance = data.warehouses[i].distance;
+                warehouses.push(data.warehouses[i].id);
                 allDistances.push(data.warehouses[i].distance);
                 allPostcodes.push(data.warehouses[i].address);
             }
-            mapUtil.calculateDistanceBetween([postcode], allPostcodes, allDistances, callbackMethod);
+            mapUtil.calculateDistanceBetween([postcode], allPostcodes, allDistances, warehouses, callbackMethod);
 
         };
 
