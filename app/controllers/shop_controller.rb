@@ -173,7 +173,6 @@ class ShopController < ApplicationController
 
     # Manages card details:
     cardId = params[:old_card].to_i
-    puts PP.pp(cardId,'',80)
     if cardId == 0 # New card
       # Set your secret key: remember to change this to your live secret key in production
       # See your keys here https://dashboard.stripe.com/account
