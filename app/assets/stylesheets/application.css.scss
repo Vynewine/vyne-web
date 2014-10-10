@@ -221,7 +221,7 @@ input:-webkit-autofill {
 }
 
 #order .swiper-wrapper {
-    background-image: url(../assets/two@2x.jpg);
+    background-image: url(../assets/order@2x.jpg);
     background-size: 100% auto;
     background-position: top left;
 }
@@ -745,7 +745,8 @@ input:-webkit-autofill {
                 -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
             }
 
-            .tab-list {
+            .tab-list,
+            .prefs-box {
                 opacity: 0;
                 -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
             }
@@ -756,6 +757,11 @@ input:-webkit-autofill {
 
             .prefs-list-top {
                 opacity: 0;
+                -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
+            }
+
+            .prefs-box {
+                opacity: 1;
                 -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
             }
         }
@@ -1030,8 +1036,34 @@ input:-webkit-autofill {
  * REGISTER
  */
 
+.errors {
+    display: none;
+    margin: 0 0 20px 0;
+    padding: 0;
+    list-style: none;
+    border-radius: 5px;
+    background:rgba(0,0,0,0.2);
+    border: 1px rgba(255,255,255,0.2) solid;
+
+    li {
+        color: #a32438;
+        padding: 8px;
+        border-bottom: 1px rgba(255,255,255,0.1) solid;
+
+        &:last-child {
+            border: 0;
+        }
+    }
+}
+
 .register {
     padding: 70px 20px;
+
+    .account-message {
+        display: block;
+        text-align: center;
+        margin-bottom: 15px;
+    }
 
     h2 {
         margin-bottom: 2rem;
