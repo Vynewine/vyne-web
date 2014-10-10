@@ -23,4 +23,3 @@ test:
     log_level: WARNING
     path: /solr/test
     solr_home: solr
-    
