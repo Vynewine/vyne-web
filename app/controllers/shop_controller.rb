@@ -167,7 +167,7 @@ class ShopController < ApplicationController
     @order.client = current_user
 
     # Manages address:
-    order_address = params[:address].to_i
+    order_address = params[:address_id].to_i
     address = Address.find(order_address)
     @order.address = address
 

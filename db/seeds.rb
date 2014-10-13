@@ -800,7 +800,7 @@ j=1
 wareName.each do |ware|
   Warehouse.create(
          :title => ware,
-         :email => "ware#{j+1}@warehouse.co.uk",
+         :email => ware.delete(' ') + '@vynz.co',
          :phone => "012312312#{j+1}",
     :address_id => j
   )

@@ -83,15 +83,23 @@
 
       <div class="slideable">
 
-        <h2>Would you like us to match a wine with food?</h2>
+        <h2>How would you like us to match your wine?</h2>
 
         <ul class="tab-list">
-          <li><a href="#with-food">Yes</a></li><li><a href="#without-food">No</a></li>
+          <li><a href="#with-food">With food</a></li><li><a href="#without-food">By occasion</a></li>
         </ul>
+
+        <span class="or">or</span>
+
+        <div class="specific">
+          <label for="specifc-wine">Have a specific wine type in mind?</label>
+          <input type="" name="specific-wine" placeholder="e.g Chateauneuf-du-Pape" />
+        </div>
 
         <div id="with-food" class="tab">
         <a href="#" class="slideable-back first">Back</a>
-          <h3 class="select-category">Select a category</h3>
+          <span class="subttitle-select">(select up to three ingredients)</span>
+          <h3 class="select-category">1. Select a category</h3>
           <div class="prefs-list-container">
             <ul id="food-list" class="prefs-list prefs-list-top">
             <% allFood = @foods.clone.to_a %>
@@ -113,7 +121,7 @@
 
           <div id="<%= parentFood.name.gsub(/(((\s)&?)\s?)/, "_") %>" class="prefs-box">
             <a href="#" class="slideable-back second">Back</a>
-            <h3>What type of <%= parentFood.name %>?</h3>
+            <h3>2. What type of <%= parentFood.name %>?</h3>
             <div class="prefs-list-container">
               <ul id="meat-list" class="prefs-list prefs-list-bottom">
                 <% subFood = @foods.clone.to_a %>
@@ -203,7 +211,7 @@
         <div id="account-form" class="register-form">
           <h2 class="account-heading">Register</h2>
           <span class="account-message">Have an account? <a href="" id="account-link" class="signin-link">Sign in</a></span>
-          <ul class="errors"></ul>
+          <ul class="errors" id="sing-in-errors"></ul>
           <div>
             <%= text_field :user, :first_name, :placeholder => "First Name" %>
           </div>
@@ -267,7 +275,7 @@
         end
       end
       %>
-      <%= select_tag "orderAddress", options_for_select(addressOptions, @order.address_id), :prompt => "Choose Address", :name => "" %>
+      <%= select_tag "order-address", options_for_select(addressOptions, @order.address_id), :prompt => "Choose Address", :name => "" %>
 
   <%# - - - - - -- - - - - - - - - -  Option2 - - - - - -- - - - - - - - - -  %>
 
@@ -276,7 +284,7 @@
         <div><input type="text" disabled="disabled" id="addr-st" name="address_s" placeholder="Street Name" /></div>
         <div><input type="text" disabled="disabled" id="addr-no" name="address_d" placeholder="No" /></div>
       </div>
-      <input type="hidden" id="old-address" name="old_address" />
+      <input type="hidden" id="address-id" name="address_id" />
       <div>
         <!-- Next step -->
         <a href="#" class="btn" id="address-details">use address</a> <!-- Changes class to 'red-button' -->
