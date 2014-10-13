@@ -27,3 +27,21 @@ rake sunspot:solr:start (only if you didn't start before)
 rake sunspot:reindex
 rails s
 ```
+
+### Testing
+To run tests 
+```
+rake test
+```
+
+To run specific test file
+```
+rake test test/controllers/signup_controller_test.rb
+```
+
+To run specific test method 
+```
+ruby -I test test/controllers/signup_controller_test.rb -n /.*method name.*/
+```
+
+

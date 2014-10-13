@@ -231,9 +231,9 @@ $(function() {
 		e.preventDefault();
 
 		//Needs Validation
-		var address_d = $('input[name="user[address_d]"]').val(),
-			address_s = $('input[name="user[address_s]"]').val(),
-			address_p = $('input[name="user[address_p]"]').val();
+		var address_d = $('#addr-no').val(),
+			address_s = $('#addr-st').val(),
+			address_p = $('#addr-pc').val();
 
 		var data = "address_d="+address_d+"&address_s="+address_s+"&address_p="+address_p;
 
@@ -247,9 +247,12 @@ $(function() {
 		    error: function(data) {
 				//Response
 				console.log(data);
+                //TODO: Log error to Sentry.
+                //TODO: Display user friendly error.
 			},
 			success: function(data) {
 				console.log(data);
+                $('#address-id').val(data.id);
 				order.swipeNext();
 			}
 		});

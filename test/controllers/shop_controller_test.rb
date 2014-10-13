@@ -42,7 +42,7 @@ class ShopControllerTest < ActionController::TestCase
 
   test 'should create order' do
     post :create, {
-        :address => @address.id,
+        :address_id => @address.id,
         :stripeToken => 'tok_14m18t2eZvKYlo2CHKjAcAVY',
         :new_brand => '1',
         :new_card => '1111'
