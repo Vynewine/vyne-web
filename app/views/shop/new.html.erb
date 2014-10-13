@@ -269,7 +269,7 @@
       addressOptions = [['New address', -1]]
       # billingAddressOptions = [['Same address', -1],['Custom address', 0]]
       if current_user
-        current_user.addresses.each do |a|
+        current_user.addresses.order(updated_at: :desc).each do |a|
           addressOptions.push([a.full, a.id])
           # billingAddressOptions.push([a.full, a.id])
         end

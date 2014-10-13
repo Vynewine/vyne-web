@@ -226,13 +226,27 @@ $(function() {
                 },
                 success: function (data) {
                     if(data.success) {
+                        var initialPostCode = $('#filterPostcode').val().toUpperCase().replace(/[^A-Z0-9]/g, "");
+                        var foundSavedAddress = false;
                         var $select = $('#order-address');
-                        var addresses = JSON.parse(data.addresses);
-                        for (var i=0; i < addresses.length; i++){
-                            var address = addresses[i];
-                            var fullAddress = address.detail + ' ' + address.street + ' ' + address.postcode;
-                            $select.append('<option value=' + address.id + '>' + fullAddress + '</option>');
+                        if(data.addresses && data.addresses.length > 0) {
+                            var addresses = JSON.parse(data.addresses);
+                            for (var i=0; i < addresses.length; i++){
+                                var address = addresses[i];
+                                var fullAddress = address.detail + ' ' + address.street + ' ' + address.postcode;
+
+                                if(address.postcode.match(initialPostCode) && address.postcode.match(initialPostCode).length > 0 && !foundSavedAddress) {
+                                    $select.append('<option value=' + address.id + ' selected="selected">' + fullAddress + '</option>');
+                                    foundSavedAddress = true;
+                                } else {
+                                    $select.append('<option value=' + address.id + '>' + fullAddress + '</option>');
+                                }
+                            }
+                            if(foundSavedAddress) {
+                                $('#new_delivery_address').fadeOut();
+                            }
                         }
+
                         order.swipeNext();
                     } else {
                         var errors = data.errors;

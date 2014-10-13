@@ -208,6 +208,21 @@ $(document).ready(function(){
 
                     $('#warehouses').val(delivery.warehouses);
 
+                    //Preselect existing address for logged-in users
+                    var existingAddresses = $('#order-address').find('option');
+                    if(existingAddresses.length > 2) {
+                        var initialPostCode = $('#filterPostcode').val().toUpperCase().replace(/[^A-Z0-9]/g, "");
+                        var foundSavedAddress = false;
+                        existingAddresses.filter(function () {
+                            if ($(this).text().match(initialPostCode) && !foundSavedAddress) {
+                                foundSavedAddress = true;
+                                $('#new_delivery_address').fadeOut();
+                                return true;
+                            }
+
+                        }).prop('selected', true);
+                    }
+
                     // Google API cannot find the street name based on the postcode!
                     // This is why we must first find the damn longitude and latitude first.
                     // So this is a 2-step process, don't be alarmed.
