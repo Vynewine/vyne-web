@@ -131,6 +131,21 @@ input[type="submit"],
     }
 }
 
+.order-now {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    width: 200px;
+    padding: 2rem;
+    border-radius: 0;
+    margin-left: -100px;
+    text-align: center;
+
+    h4 {
+        margin: 0;
+    }
+}
+
 /*
  * FORMS
  */
@@ -253,7 +268,7 @@ input:-webkit-autofill {
     }
 
     h2 {
-        margin: 0;
+        margin: 0 0 20px 0;
         font-size: 2.2rem;
     }
 
@@ -262,6 +277,25 @@ input:-webkit-autofill {
         width: 75%;
         margin: 0 auto 30px;
         color: rgba(255,255,255,0.5);
+    }
+
+    .title {
+        margin: 0;
+    }
+
+    .subttitle {
+        color: rgba(255,255,255,0.7);
+        margin-bottom: 30px;
+        display: block;
+        text-align: center;
+    }
+
+    .subttitle-select {
+        margin: 0;
+        font-size: 14px;
+        color: rgba(255,255,255,0.7);
+        display: block;
+        text-align: center;
     }
 
     .postcode {
@@ -299,10 +333,6 @@ input:-webkit-autofill {
     .bottles {
         text-align: center;
         padding: 70px 10px 30px;
-
-        h2 {
-            margin-bottom: 20px;
-        }
 
         .bottle-list {
             margin: 0;
@@ -667,6 +697,10 @@ input:-webkit-autofill {
             background-image: url(../assets/two@2x.jpg);
             background-size: cover;
             background-position: center center;
+
+            h3 {
+                text-align: left;
+            }
         }
 
         &#three {
@@ -678,16 +712,33 @@ input:-webkit-autofill {
         .inner {
             position: relative;
             z-index: 2;
-            padding: 200px 30px 30px;
+            padding: 200px 10px 30px;
 
             h3 {
                 margin: 0 0 0.5rem;
                 font-size: 2rem;
             }
 
+            h4 {
+                margin: 10px 0;
+                color: rgba(255,255,255,0.85);
+            }
+
+            ul {
+                margin: 0;
+                padding: 0;
+                list-style: none;
+                text-align: left;
+
+                li {
+                    margin-bottom: 10px;
+                    color: rgba(255,255,255,0.7);
+                }
+            }
+
             p {
                 margin: 0 0 2rem;
-                color: rgba(255,255,255,0.5);
+                color: rgba(255,255,255,0.7);
             }
         }
 
@@ -729,31 +780,38 @@ input:-webkit-autofill {
 
         .slideable-back,
         .select-category,
-        .prefs-list-top {
+        .prefs-list-top, {
             opacity: 0;
             -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
         }
 
+        .specific {
+            opacity: 1;
+            -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
+        }
+
         &.first-level {
-            -webkit-transform: translateY(-185px);
+            -webkit-transform: translateY(-350px);
             -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
 
             .select-category,
             .prefs-list-top,
-            .slideable-back {
+            .slideable-back,
+            .specific {
                 opacity: 1;
                 -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
             }
 
             .tab-list,
-            .prefs-box {
+            .prefs-box,
+            .specific {
                 opacity: 0;
                 -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
             }
         }
 
         &.second-level {
-            -webkit-transform: translateY(-610px);
+            -webkit-transform: translateY(-805px);
 
             .prefs-list-top {
                 opacity: 0;
@@ -832,6 +890,24 @@ input:-webkit-autofill {
                 display: block;
                 color: rgba(255,255,255,0.7);
             }
+        }
+    }
+
+    .or {
+        display: block;
+        width: 46px;
+        margin: 0 auto 30px;
+        padding: 10px 0;
+        text-align: center;
+        border-radius: 100px;
+        background: rgba(0,0,0,0.6);
+        border: 1px rgba(255,255,255,0.2) solid;
+    }
+
+    .specific {
+        label {
+            display: block;
+            margin-bottom: 10px;
         }
     }
 
