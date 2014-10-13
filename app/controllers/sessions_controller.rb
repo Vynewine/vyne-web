@@ -14,11 +14,10 @@ class SessionsController < Devise::SessionsController
     respond_to do |format|
       format.html { redirect_to home_index_path }
       format.json {
-        puts json: current_user.payments
         render :json => {
             :success => true,
-            :addresses => current_user.addresses.to_json,
-            :payment => current_user.payments.to_json
+            :addresses => current_user.addresses.order(updated_at: :desc).to_json,
+            :payment => current_user.payments.order(updated_at: :desc).to_json
         }
       }
     end
