@@ -31,35 +31,19 @@ class Admin::AdvisorsController < ApplicationController
     inventory.quantity = inventory.quantity - 1
     if inventory.save
       if order.save
-        # @message = 'success'
-
+        # Stripe
         paymentData = order.payment
-
-        stripeToken = paymentData.stripe # cus_4uQiP8ZhPAKXoa
-        # Later...
-        # customer_id = get_stripe_customer_id(stripeToken)
-
-        chargeDetails = Stripe::Charge.create(
-          :amount   => 1500, # $15.00 this time
-          :currency => "gbp",
-          :customer => stripeToken
-        )
-        # puts '--------------------------'
-        # puts '=========================='
-        # puts PP.pp(chargeDetails,'',80)
-        # puts '=========================='
-        # puts '--------------------------'
+        stripeToken = 'cus_4uQiP8ZhPAKXoa' # paymentData.stripe
+        value = 1500 # $15.00 this time
+        chargeDetails = charge_card(value, stripeToken)
         if chargeDetails.paid == true
           order.status_id = 5 # paid
           if order.save
-            # shutl request
-            # mail request
-
             # Shutl
-            request_delivery
-
-
-            @message = 'success'
+            deliverySent = request_delivery
+            if deliverySent == true
+              @message = 'success'
+            end
           end
         else
           @message = "error:The payment was not processed. #{chargeDetails.description}"
@@ -135,64 +119,137 @@ class Admin::AdvisorsController < ApplicationController
 
   private
 
+  def charge_card(value, stripeToken)
+    puts "Charging card"
+    Stripe.api_key = "sk_test_BQokikJOvBiI2HlWgH4olfQ2"
+    Stripe::Charge.create(
+      :amount   => value, 
+      :currency => "gbp",
+      :customer => stripeToken
+    )
+  end
+
   def request_delivery
-    puts "requesting delivery"
-# require 'net/http'
-# require 'json'
-# shutlId = "UOuPfVIAvP4BJWDmXdCiSw=="
-# shutlSecret = "DAiXY/UzTM14g6PAqAHDrm/ILwkJ3fT5mnh7aT15JiPI6YLz5GYN7qLtx4Yac60PFN+rZRuZuFyi0FExri3F6w=="
-#**************************
-# shutlId = "HnnFB2UbMlBXdD9h4UzKVQ=="
-# shutlSecret = "pKNKPPCejzviiPunGNhnJ95G1JdeAbOYbyAygqIXyfIe4lb73iIDKRqmeZmZWT+ORxTqwMP9PhscJAW7GFmz6A=="
-# url = URI('https://sandbox-v2.shutl.co.uk/token')
+    puts "Requesting delivery"
+    require 'net/http'
+    require 'json'
+    # shutlId = "UOuPfVIAvP4BJWDmXdCiSw=="
+    # shutlSecret = "DAiXY/UzTM14g6PAqAHDrm/ILwkJ3fT5mnh7aT15JiPI6YLz5GYN7qLtx4Yac60PFN+rZRuZuFyi0FExri3F6w=="
+    #**************************
+    domain = "https://sandbox-v2.shutl.co.uk"
+    #**************************
+    shutlId = "HnnFB2UbMlBXdD9h4UzKVQ=="
+    shutlSecret = "pKNKPPCejzviiPunGNhnJ95G1JdeAbOYbyAygqIXyfIe4lb73iIDKRqmeZmZWT+ORxTqwMP9PhscJAW7GFmz6A=="
+    url = URI("#{domain}/token")
 
-# body = {
-#   'client_id' => shutlId,
-#   'client_secret' => shutlSecret,
-#   'grant_type' => 'client_credentials'
-# }
+    params = {
+      'client_id' => shutlId,
+      'client_secret' => shutlSecret,
+      'grant_type' => 'client_credentials'
+    }
 
-# headers = {
-#   'Content-Type' => 'application/x-www-form-urlencoded'
-# }
+    headers = {
+      'Content-Type' => 'application/x-www-form-urlencoded'
+    }
 
-# params = body
-# req = Net::HTTP::Post.new(url, headers)
-# req.form_data = params
-# connection = Net::HTTP::start(url.hostname, url.port, :use_ssl => true ) {|http|
-#   http.request(req)
-# }
-# response = JSON.parse(connection.read_body)
-# token = response['access_token']
-# puts token
-#**************************
+    #**************************
+    # Requests token:
 
-# Dummy response:
-# { 
-#   "access_token": "DUMMY_TOKEN",
-#   "token_type": "bearer",
-#   "expires_in": 999
-# }
+    reqToken = Net::HTTP::Post.new(url, headers)
+    reqToken.form_data = params
+    connection = Net::HTTP::start(url.hostname, url.port, :use_ssl => true ) {|http|
+      http.request(reqToken)
+    }
 
-# Quote:
+    # Dummy response:
+    # { 
+    #   "access_token": "DUMMY_TOKEN",
+    #   "token_type": "bearer",
+    #   "expires_in": 999
+    # }
 
-# channel: “ecommerce”, “desktop”, “tablet”, “mobile”
+    response = JSON.parse(connection.read_body)
+    token = response['access_token']
+    puts response
+    # puts token
 
-# {
-#   "quote_collection": { 
-#               "channel": "pos",
-#                  "page": "product",
-#            "session_id": "example123",
-#          "basket_value": 1999,
-#       "pickup_store_id": "448",
-#     "delivery_location": {                         
-#       "address": {                                               
-#         "postcode":      "EC2A 3LT"              
-#       }
-#     },
-#     "vehicle":           "parcel_car"
-#   }
-# }
+    #**************************
+    # Requests quote:
+
+    url = URI("#{domain}/quote_collections")
+
+    params = {
+      :quote_collection => {
+        :channel => "pos",
+        :page => "product",
+        :session_id => "example123",
+        :basket_value => 1999,
+        :pickup_store_id => "southwark",
+        :delivery_location => {
+          :address => {
+            :postcode => "EC2A 3LT"
+          }
+        },
+        :products => [
+          {
+            :id => "item1",
+            :name => "Item One",
+            :description => "Large Box",
+            :url => "http://shop.com/item1",
+            :length => 20,
+            :width => 15,
+            :height => 10,
+            :weight => 1,
+            :quantity => 1,
+            :price => 1500
+          }
+        ]
+      }
+    }
+    # require 'json'
+
+    # puts params.to_json
+
+    headers = {
+      # 'Content-Type' => 'application/x-www-form-urlencoded',
+      'Authorization' => "Bearer #{token}"
+    }
+
+    req = Net::HTTP::Post.new(url, headers)
+    # req.form_data = params
+    req.body = params.to_json
+    connection = Net::HTTP::start(url.hostname, url.port, :use_ssl => true ) {|http|
+      http.request(req)
+    }
+    
+    response = JSON.parse(connection.read_body)
+    puts connection
+    puts connection.read_body
+    puts response
+
+
+
+    # channel: “ecommerce”, “desktop”, “tablet”, “mobile”
+
+    # {
+    #   "quote_collection": { 
+    #               "channel": "pos",
+    #                  "page": "product",
+    #            "session_id": "example123",
+    #          "basket_value": 1999,
+    #       "pickup_store_id": "448",
+    #     "delivery_location": {                         
+    #       "address": {                                               
+    #         "postcode":      "EC2A 3LT"              
+    #       }
+    #     },
+    #     "vehicle":           "parcel_car"
+    #   }
+    # }
+
+
+
+
 
 # Booking:
 # {

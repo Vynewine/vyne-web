@@ -326,10 +326,10 @@ Category.create(
 )
 
 Category.create(
-              :name => "reserve",
+              :name => "house",
              :price => 20,
   :restaurant_price => "40-55",
-       :description => "<p>Reserve wines are made by top independent producers</p><p>Their vineyards are in the best parcels of famous wine territories</p>"
+       :description => "<p>House wines are made by top independent producers</p><p>Their vineyards are in the best parcels of famous wine territories</p>"
 )
 
 Category.create(
@@ -851,6 +851,7 @@ for i in 0..totalOrders do
   # 7 delivered
   # 8 cancelled
   status = 1+rand(8)
+  warehouse = nil
   case status
   when 1
     status = 2
@@ -858,6 +859,10 @@ for i in 0..totalOrders do
     status = 2
   when 4
     status = 5
+  end
+
+  if status > 3
+    warehouse = 1+rand(2)
   end
 
   warehouseRand = rand(3)
@@ -871,7 +876,7 @@ for i in 0..totalOrders do
   end
 
   Order.create(
-    :warehouse_id => 1+rand(2),
+    :warehouse_id => warehouse,
     :client_id => 2+rand(7),
     :address_id => 4+rand(4),
     :status_id => status,

@@ -21,5 +21,5 @@ solr/development/data/index/*
 solr/development/data/tlog/*
 solr/test
 solr/pids
-sunspot-solr.pid
+sunspot-solr-*.pid
 .idea

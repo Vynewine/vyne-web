@@ -3,26 +3,33 @@
         <div id="one" class="swiper-slide walkthrough-panel">
             <div class="walkthrough-panel-overlay"></div>
             <div class="inner wrapper">
-                <h3>Great wine <br/>Superfast delivery</h3>
+                <h3>Matching great wines to your occasion. Superfast delivery.</h3>
                 <p>Get the same wines as top restaurants delivered on-demand</p>
             </div>
         </div>
         <div id="two" class="swiper-slide walkthrough-panel">
             <div class="walkthrough-panel-overlay"></div>
             <div class="inner wrapper">
-                <h3>London’s best wines at your fingertip</h3>
-                <p>Our wines come from the cellars from top restaurants. Never settle for supermarket wine again
-.</p>
+                <h3>London’s best wines</h3>
+                <ul>
+                    <li>Our wines come from the same cellars used by the top restaurants.</li>
+                    <li>From producers with the best vineyards in the world.</li>
+                    <li>Never settle for supermarket wine again!</li>
+                </ul>
             </div>
         </div>
         <div id="three" class="swiper-slide walkthrough-panel">
             <div class="walkthrough-panel-overlay"></div>
             <div class="inner wrapper">
                 <h3>Your digital sommelier</h3>
-                <p>Select occasion or food you’re having with your wine. We’ll find a match for you.</p>
+                <p>Select the occasion or meal you’re having with your wine. We’ll find a match for you.</p>
             </div>
         </div>
     </div>
-    <%= link_to "Order now", neworder_path, :class => "btn order-now" %>
+    <% #link_to "Order now", neworder_path, :class => "btn order-now" %>
+    <div class="order-now">
+        <h4>Check Availibilty</h4>
+        <input type="text" id="filterPostcode" placeholder="Enter postcode" autocomplete="off"/>
+    </div>
     <div class="pagination"></div>
 </div>

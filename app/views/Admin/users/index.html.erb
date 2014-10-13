@@ -1,7 +1,9 @@
 <%= form_tag("/admin/users/", method: "get") do %>
   <%= label_tag(:s, "Search for:") %>
-  <%= text_field_tag(:s) %>
-  <%= submit_tag("Search", name: nil) %>
+  <div class="search-area with-button">
+	  <%= text_field_tag(:s) %>
+	  <%= submit_tag("Search", name: nil) %>
+  </div>
 <% end %>
 
 <% unless @search %>

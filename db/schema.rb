@@ -179,6 +179,7 @@ ActiveRecord::Schema.define(version: 20140925091503) do
     t.integer  "payment_id"
     t.integer  "status_id"
     t.integer  "quantity"
+    t.string   "delivery"
     t.string   "info"
     t.datetime "created_at"
     t.datetime "updated_at"

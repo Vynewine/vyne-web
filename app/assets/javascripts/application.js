@@ -249,6 +249,7 @@ $(function() {
 				console.log(data);
 			},
 			success: function(data) {
+				console.log(data);
 				order.swipeNext();
 			}
 		});
