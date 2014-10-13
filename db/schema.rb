@@ -299,6 +299,7 @@ ActiveRecord::Schema.define(version: 20140925091503) do
 
   create_table "warehouses", force: true do |t|
     t.string   "title"
+    t.string   "email",      default: "", null: false
     t.integer  "address_id"
     t.datetime "created_at"
     t.datetime "updated_at"

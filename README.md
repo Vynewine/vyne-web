@@ -23,7 +23,7 @@ bundle install
 rake db:drop && rake db:create (drop if already existent)
 rake db:migrate
 rake db:seed
-rake sunspot:start (only if you didn't start before)
+rake sunspot:solr:start (only if you didn't start before)
 rake sunspot:reindex
 rails s
 ```

@@ -799,8 +799,9 @@ wareName = ["RockstarDev Warehouse", "Another Warehouse"]
 j=1
 wareName.each do |ware|
   Warehouse.create(
-         :title => ware,
-    :address_id => j
+      :title => ware,
+      :email => ware.delete(' ') + '@vynz.co',
+      :address_id => j
   )
   j += 1
 end
