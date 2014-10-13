@@ -3,8 +3,11 @@
         <h2>Orders</h2>
         <a href="#" id="reload-orders">Reload orders</a>
     </div>
-    <input type="text" id="order_id" />
-    <input type="text" id="warehouses_ids" />
+    
+    order <input type="text" id="order_id" />
+    wine <input type="text" id="wine_id" />
+    warehouse <input type="text" id="warehouses_ids" />
+
     <div id="order-list"></div>
     <div id="wine-filters" style="display:none;">
         <input type="text" id="search" autocomplete="off" placeholder="Search wines..." />
@@ -22,4 +25,39 @@
         </div>
     </div>
     <div id="wine-list" style="display:none;"></div>
+</div>
+<div id="confirmation-area" class="shadow" style="display:none;">
+    <div id="confirmation-screen">
+        <dl class="">
+          <dt>Customer</dt>
+          <dd id="confirm-name"></dd>
+          <dt>Address</dt>
+          <dd id="confirm-address"></dd>
+          <dt>Wine</dt>
+          <dd id="confirm-wine"></dd>
+          <dt>Price</dt>
+          <dd id="confirm-price"></dd>
+        </dl>
+        <p>Delivery options (estimations)</p>
+        <ul>
+            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
+            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
+            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
+            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
+            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
+            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
+            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
+            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
+            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
+            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
+            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
+            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
+            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
+            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
+        </ul>
+        <div class="shadow-footer">
+            <a href="#" id="cancel-confirmation">Cancel</a>
+            <a href="#" class="green">Confirm</a>
+        </div>
+    </div>
 </div>
