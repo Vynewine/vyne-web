@@ -344,13 +344,8 @@ $border: 1px solid #D5E;
     width: 800px;
     height: 600px;
     position: relative;
-    margin: 20px auto;
+    margin: 150px auto;
     padding: 20px;
-    & ul > li > a {
-        &:hover {
-            color: red;
-        }
-    }
     .shadow-footer {
         position: absolute;
         bottom: 0;
@@ -374,7 +369,39 @@ $border: 1px solid #D5E;
                     background: #090;
                 }
             }
+            &.disabled {
+                color: #999;
+                &:hover {
+                    background: #CCC;
+                }
+            }
         }
     }
 }
 
+#loading {
+    text-align: center;
+    padding: 30px 0;
+    & div {
+        text-align: center;
+    }
+}
+#loading,
+#delivery_quotes {
+    border: 1px solid grey;
+    height: 318px;
+}
+#delivery_quotes {
+    overflow-y: scroll;
+    & > li {
+        &.disabled > a {
+            color: #DDD;
+        }
+        & > a {
+            color: blue;
+            &:hover {
+                color: red;
+            }
+        }
+    }
+}

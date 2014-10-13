@@ -31,17 +31,18 @@ Authority.configure do |config|
   # }
 
   config.controller_action_map = {
-    :index   => 'read',
-    :show    => 'read',
-    :welcome => 'read',
-    :results => 'read',
-    :list    => 'read',
-    :choose  => 'read',
-    :new     => 'create',
-    :create  => 'create',
-    :edit    => 'update',
-    :update  => 'update',
-    :destroy => 'delete'
+    :index    => 'read',
+    :show     => 'read',
+    :welcome  => 'read',
+    :results  => 'read',
+    :list     => 'read',
+    :choose   => 'read',
+    :complete => 'update',
+    :new      => 'create',
+    :create   => 'create',
+    :edit     => 'update',
+    :update   => 'update',
+    :destroy  => 'delete'
   }
 
   # ABILITIES

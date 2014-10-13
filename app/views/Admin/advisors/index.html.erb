@@ -6,7 +6,9 @@
     
     order <input type="text" id="order_id" />
     wine <input type="text" id="wine_id" />
-    warehouse <input type="text" id="warehouses_ids" />
+    warehouses <input type="text" id="warehouses_ids" />
+    warehouse <input type="text" id="warehouse_id" />
+    quote <input type="text" id="quote_id" />
 
     <div id="order-list"></div>
     <div id="wine-filters" style="display:none;">
@@ -39,25 +41,19 @@
           <dd id="confirm-price"></dd>
         </dl>
         <p>Delivery options (estimations)</p>
-        <ul>
-            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
-            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
-            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
-            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
-            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
-            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
-            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
-            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
-            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
-            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
-            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
-            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
-            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
-            <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li>
+        <div id="loading">
+            <div style="height:19px"><%= image_tag "placeholders/top.gif", :alt => "Loading data..." %></div>
+            <div style="height:44px"><%= image_tag "placeholders/middle.gif", :alt => "Loading data..." %></div>
+            <div style="height:73px"><%= image_tag "placeholders/bottom.gif", :alt => "Loading data..." %></div>
+            <br />
+            <small>Loading delivery options...</small>
+        </div>
+        <ul id="delivery_quotes">
+            <!-- <li><a href="#">10/02/2014 - 10:32 - £6.45</a></li> -->
         </ul>
         <div class="shadow-footer">
             <a href="#" id="cancel-confirmation">Cancel</a>
-            <a href="#" class="green">Confirm</a>
+            <a href="#" id="confirm" class="disabled">Confirm</a>
         </div>
     </div>
 </div>

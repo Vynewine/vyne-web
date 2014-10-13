@@ -10,19 +10,37 @@ class Admin::AdvisorsController < ApplicationController
   end
 
   def choose
-
-    # shutlId = "UOuPfVIAvP4BJWDmXdCiSw=="
-    # shutlSecret = "DAiXY/UzTM14g6PAqAHDrm/ILwkJ3fT5mnh7aT15JiPI6YLz5GYN7qLtx4Yac60PFN+rZRuZuFyi0FExri3F6w=="
-    # shutlUrl = "https://sandbox-v2.shutl.co.uk"
-
     require 'pp'
-    puts '--------------------------'
+    logger.warn '--------------------------'
     logger.warn "Choice request"
-    puts PP.pp(params,'',80)
+
+    # We pass order and warehouse. Warehouse must have a keyword inside shutl's application.
+    puts PP.pp("Warehouse:",'',80)
+    puts PP.pp(params[:warehouse],'',80)
     order = Order.find(params[:order])
     warehouse = Warehouse.find(params[:warehouse])
     wine = Wine.find(params[:wine])
+    quotes = shutl_quotes(order, warehouse, wine)
+    @quotes = JSON.parse(quotes) # Hash obj
+
+    puts PP.pp(@quotes,'',80)
+    logger.warn '--------------------------'
+
+  end
+
+  def complete
+    require 'pp'
+    logger.warn '--------------------------'
+    logger.warn "Complete order request"
+    puts PP.pp(params,'',80)
+
+    # return;
+    warehouse = Warehouse.find(params[:warehouse])
+    wine = Wine.find(params[:wine])
     inventory = Inventory.find_by(:wine_id => params[:wine], :warehouse_id => params[:warehouse])
+    puts PP.pp("Warehouse:",'',80)
+    puts PP.pp(params[:warehouse],'',80)
+    order = Order.find(params[:order])
     order.wine = wine
     order.quantity = 1
     order.status_id = 4 # paying
@@ -40,9 +58,16 @@ class Admin::AdvisorsController < ApplicationController
           order.status_id = 5 # paid
           if order.save
             # Shutl
-            deliverySent = request_delivery
-            if deliverySent == true
-              @message = 'success'
+            booking_ref = shutl_book(params[:quote], order)
+            unless booking_ref.nil? == true
+              order.delivery = booking_ref
+              if order.save
+                @message = 'success'
+              else
+                @message = "error:Couldn't save order after booking"                
+              end
+            else
+              @message = "error:Couldn't do the booking."
             end
           end
         else
@@ -129,17 +154,28 @@ class Admin::AdvisorsController < ApplicationController
     )
   end
 
-  def request_delivery
-    puts "Requesting delivery"
+  def shutl_url
+    "https://sandbox-v2.shutl.co.uk"
+    # shutlId = "UOuPfVIAvP4BJWDmXdCiSw=="
+  end
+
+  def shutl_id
+    "HnnFB2UbMlBXdD9h4UzKVQ=="
+  end
+
+  def shutl_secret
+    "pKNKPPCejzviiPunGNhnJ95G1JdeAbOYbyAygqIXyfIe4lb73iIDKRqmeZmZWT+ORxTqwMP9PhscJAW7GFmz6A=="
+    # shutlSecret = "DAiXY/UzTM14g6PAqAHDrm/ILwkJ3fT5mnh7aT15JiPI6YLz5GYN7qLtx4Yac60PFN+rZRuZuFyi0FExri3F6w=="
+  end
+
+  def shutl_token
+    puts "Requesting delivery token"
     require 'net/http'
     require 'json'
-    # shutlId = "UOuPfVIAvP4BJWDmXdCiSw=="
-    # shutlSecret = "DAiXY/UzTM14g6PAqAHDrm/ILwkJ3fT5mnh7aT15JiPI6YLz5GYN7qLtx4Yac60PFN+rZRuZuFyi0FExri3F6w=="
-    #**************************
-    domain = "https://sandbox-v2.shutl.co.uk"
-    #**************************
-    shutlId = "HnnFB2UbMlBXdD9h4UzKVQ=="
-    shutlSecret = "pKNKPPCejzviiPunGNhnJ95G1JdeAbOYbyAygqIXyfIe4lb73iIDKRqmeZmZWT+ORxTqwMP9PhscJAW7GFmz6A=="
+
+    domain = shutl_url
+    shutlId = shutl_id
+    shutlSecret = shutl_secret
     url = URI("#{domain}/token")
 
     params = {
@@ -169,14 +205,22 @@ class Admin::AdvisorsController < ApplicationController
     # }
 
     response = JSON.parse(connection.read_body)
-    token = response['access_token']
-    puts response
+    response['access_token']
+    # puts response
     # puts token
+  end
+
+  def shutl_quotes(order, warehouse, wine)
+
+    token = shutl_token
 
     #**************************
     # Requests quote:
 
+    domain = shutl_url
     url = URI("#{domain}/quote_collections")
+    inventory_entry = Inventory.find_by(:warehouse_id => warehouse.id, :wine_id => wine.id)
+    price = inventory_entry.category.price
 
     params = {
       :quote_collection => {
@@ -184,34 +228,38 @@ class Admin::AdvisorsController < ApplicationController
         :page => "product",
         :session_id => "example123",
         :basket_value => 1999,
-        :pickup_store_id => "southwark",
+        # :pickup_store_id => warehouse,
+        :pickup_location => {
+          :address => {
+            :postcode => warehouse.address.postcode
+          }
+        },
         :delivery_location => {
           :address => {
-            :postcode => "EC2A 3LT"
+            :postcode => order.address.postcode
           }
         },
         :products => [
           {
-            :id => "item1",
-            :name => "Item One",
-            :description => "Large Box",
-            :url => "http://shop.com/item1",
+            :id => "wine_#{wine.id}",
+            :name => "Bottle of wine",
+            :description => "Bottle of wine",
+            :url => "http://127.0.0.1/admin/wines/#{wine.id}",
             :length => 20,
             :width => 15,
             :height => 10,
             :weight => 1,
             :quantity => 1,
-            :price => 1500
+            :price => price*100
           }
         ]
       }
     }
-    # require 'json'
+    require 'json'
 
-    # puts params.to_json
+    puts params.to_json
 
     headers = {
-      # 'Content-Type' => 'application/x-www-form-urlencoded',
       'Authorization' => "Bearer #{token}"
     }
 
@@ -223,11 +271,9 @@ class Admin::AdvisorsController < ApplicationController
     }
     
     response = JSON.parse(connection.read_body)
-    puts connection
-    puts connection.read_body
-    puts response
-
-
+    # puts connection
+    connection.read_body
+    # puts response
 
     # channel: “ecommerce”, “desktop”, “tablet”, “mobile”
 
@@ -247,10 +293,73 @@ class Admin::AdvisorsController < ApplicationController
     #   }
     # }
 
+  end
 
+  def shutl_book(quote, order)
 
+    token = shutl_token
 
+    #**************************
+    # Requests quote:
 
+    domain = shutl_url
+    url = URI("#{domain}/bookings")
+
+    params = {
+      :booking => {
+        :quote_id => quote, 
+        :merchant_booking_reference => "order_#{order.id}",
+        :pickup_location => {
+          :address => {
+            :name         => order.warehouse.title,
+            :line_1       => order.warehouse.address.line,
+            :postcode     => order.warehouse.address.postcode,
+            :city         => "London",
+            :country      => "GB"
+          },
+          :contact => {
+            :name =>  order.warehouse.title,
+            :email => order.warehouse.email,
+            :phone => order.warehouse.phone
+          }
+        },
+        :delivery_location => {
+          :address => {
+            :name         => order.client.name,
+            :line_1       => order.address.line,
+            :postcode     => order.address.postcode,
+            :city         => "London",
+            :country      => "GB"
+          },
+          :contact => {
+            :name =>  order.client.name,
+            :email => order.client.email,
+            :phone => order.client.mobile
+          }
+        }
+      }
+    }
+
+    headers = {
+      'Authorization' => "Bearer #{token}"
+    }
+
+    req = Net::HTTP::Post.new(url, headers)
+    # req.form_data = params
+    req.body = params.to_json
+    connection = Net::HTTP::start(url.hostname, url.port, :use_ssl => true ) {|http|
+      http.request(req)
+    }
+    
+    response = JSON.parse(connection.read_body)
+    # puts connection
+    # connection.read_body
+    puts response
+    unless response.nil?
+      return response['booking']['reference']
+    else
+      return nil
+    end
 # Booking:
 # {
 #   "booking": {
@@ -258,19 +367,7 @@ class Admin::AdvisorsController < ApplicationController
 #     "merchant_booking_reference": "YOUR_REF"
 #   }
 # }
-
-
-# resp, data = http.post(path, data, headers)
-# puts PP.pp(resp,'',80)
-
-# params = {
-#   :client_id => shutlId,
-#   :client_secret => shutlSecret,
-#   :grant_type => 'client_credentials'
-# }
-# resp = Net::HTTP.post_form(url, headers)
-# resp_text = resp.body
-# puts PP.pp(resp_text,'',80)
+# {"booking"=>{"reference"=>"V4A2MRR", "delivery_window_start"=>"2014-10-13T20:00+01:00", "delivery_window_finish"=>"2014-10-13T21:00+01:00"}}
   end
 
 end

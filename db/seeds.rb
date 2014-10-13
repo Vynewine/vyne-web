@@ -617,7 +617,7 @@ for j in 1..5 do
            :producer_id => j,
           :subregion_id => 1 + rand(7),
         :appellation_id => j*i,
-         :maturation_id => 1
+         :maturation_id => 1,
     )
   end
 end
@@ -800,6 +800,8 @@ j=1
 wareName.each do |ware|
   Warehouse.create(
          :title => ware,
+         :email => "ware#{j+1}@warehouse.co.uk",
+         :phone => "012312312#{j+1}",
     :address_id => j
   )
   j += 1

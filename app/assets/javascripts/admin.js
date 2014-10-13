@@ -49,37 +49,126 @@ var adminReady = function() {
         });
 
 
-
-        //****************************
+        //**********************************************************************
         // Advisor area
 
+        // Extra functionality for strings:
+        String.prototype.trim     = function(){return this.replace(/^\s+|\s+$/g, '');};
+        String.prototype.ltrim    = function(){return this.replace(/^\s+/,'');};
+        String.prototype.rtrim    = function(){return this.replace(/\s+$/,'');};
+        String.prototype.fulltrim = function(){return this.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'').replace(/\s+/g,' ');};
 
+        // "Global" vars:
         var foods = {};
         var $searchField = $('.advisor-area>#wine-filters>#search');
-
-
-        String.prototype.trim    = function(){return this.replace(/^\s+|\s+$/g, '');};
-        String.prototype.ltrim   = function(){return this.replace(/^\s+/,'');};
-        String.prototype.rtrim   = function(){return this.replace(/\s+$/,'');};
-        String.prototype.fulltrim= function(){return this.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'').replace(/\s+/g,' ');};
-
         token = $('meta[name="csrf-token"]').attr('content');
 
-        //-------------------------------------------------------------------
-        // Basic interface
+        //----------------------------------------------------------------------
+        // Interface
 
+        /**
+         * Removes all data from fields and deletes order list.
+         * Then reloads orders.
+         */
         var reloadInterface = function() {
             console.log('reloadInterface');
-
-                $('#order_id').val('');
-                $('#warehouses_ids').val('');
-
-                $('#wine-list').hide();
-                $('#wine-filters').hide();
-                $('#orders-header').slideDown();
+            // Empty fields:
+            $('#warehouses_ids').val('');
+            $('#order_id').val('');
+            $('#wine_id').val('');
+            $('#warehouse_id').val('');
+            $('#quote_id').val('');
+            // Hide stuff:
+            $('#wine-list').hide();
+            $('#wine-filters').hide();
+            $('#confirmation-area').fadeOut();
+            $('#orders-header').slideDown();
             $('#order-list').html('');
+            postJSON('../orders/list.json', token, {'status':[2]}, renderOrders, errorMethod);
+        };
 
-            postJSON('../orders/list.json', token, {'status':[2]}, parseOrders, errorMethod);
+        /**
+         * Triggered when a wine and delivery are chosen and saved.
+         * Reloads interface.
+         */
+        var wineChosen = function(d) {
+            console.log(d.message);
+            if (d.message==='success') {
+                reloadInterface();
+            } else {
+                alert('Error: ' + d.message.split(':')[1]);
+            }
+        };
+
+        /**
+         * Confirm button's action.
+         */
+        var confirm = function(e) {
+            e.preventDefault();
+            var $a = $(event.target);
+            if ($a.hasClass('disabled')) {
+                console.log('Not ready');
+                return;
+            }
+            var order     = $('#order_id').val();
+            var wine      = $('#wine_id').val();
+            var warehouse = $('#warehouse_id').val();
+            var quote     = $('#quote_id').val();
+            var data = {
+                     'wine': wine,
+                    'order': order,
+                'warehouse': warehouse,
+                    'quote': quote
+            };
+            postJSON('complete.json', token, data, wineChosen, function() {
+                alert('not okay');
+            });
+        };
+
+        /**
+         * Enables confirm button.
+         */
+        var enableConfirm = function() {
+            $('#confirm').removeClass('disabled').addClass('green');
+        };
+
+        /**
+         * Disables confirm button.
+         */
+        var disableConfirm = function() {
+            $('#confirm').removeClass('green').addClass('disabled');
+        };
+
+        /**
+         * Checks if all information is available for confirmation.
+         */
+        var parseOrderComplete = function() {
+            var order = $('#order_id').val();
+            var wine = $('#wine_id').val();
+            var warehouse = $('#warehouse_id').val();
+            var quote = $('#quote_id').val();
+            if (order && wine && warehouse && quote) {
+                enableConfirm();
+            } else {
+                disableConfirm();
+            }
+        };
+
+        /**
+         * Triggered when delivery quote is chosen.
+         * 
+         */
+        var chooseDelivery = function(e) {
+            e.preventDefault();
+            var $a = $(event.target);
+            var $li = $a.parent();
+            // var $ul = $li.parent();
+            var quote = $li.data('id');
+            console.log($li);
+            $('#quote_id').val(quote);
+            $('#delivery_quotes>li').removeClass('disabled');
+            $li.siblings().addClass('disabled');
+            parseOrderComplete();
         };
 
         var showConfirmationWindow = function() {
@@ -89,26 +178,65 @@ var adminReady = function() {
             var warehouse = $('#warehouses_ids').val();
             var $orderTr  = $("#order-" + order);
             var $wineTr   = $("#wine-" + wine);
+            disableConfirm();
+            $('#delivery_quotes').hide();
+            $('#delivery_quotes').html('');
+            $('#loading').show();
             $('#confirm-name'   ).html($orderTr.data('customer'));
             $('#confirm-address').html($orderTr.data('address'));
             $('#confirm-wine'   ).html( $wineTr.data('name'));
             $('#confirm-price'  ).html( "&pound;" + $wineTr.data('price') + ".00");
             $('#confirmation-area').fadeIn();
+
+            var data = {
+                'wine':wine,
+                'order':order,
+                'warehouse':warehouse
+            };
+            console.log('chosen! ',data);
+            postJSON('choose.json', token, data, function(r){
+                console.log('response');
+                console.log(r);
+                var details = '';
+                var quote_id = '';
+                for (var i = 0, quote; quote = r[i++];) {
+                    details = quote.valid_until + ' - &pound;' + quote.price + ' - ' + quote.vehicle;
+                    // 10/02/2014 - 10:32 - £6.45 - bicycle
+                    quote_id = quote.id;
+                    $('#delivery_quotes').append(
+                        $('<li>')
+                            .attr('id', 'quote_'+i)
+                            .attr('data-id', quote_id)
+                            .append(
+                                $('<a>')
+                                    .attr('href', '#')
+                                    .html(details)
+                                    .click(chooseDelivery)
+                                    //     function(e) {
+                                    //         chooseDelivery(e, quote_id, i);
+                                    //     }
+                                    // )
+                            )
+                    );
+
+                }
+                $('#loading').hide();
+                $('#delivery_quotes').show();
+            }, function(e) {
+                // alert('not okay');
+                console.error('not okay: ', e);
+            });
+
         };
 
         $('#cancel-confirmation').click(function(e) {
             e.preventDefault();
+            disableConfirm();
             $('#confirmation-area').fadeOut();
+            $('#quote_id').val('');
+            $('#warehouse_id').val('');
+            $('#wine_id').val('');
         });
-
-        var wineChosen = function(d) {
-            console.log(d.message);
-            if (d.message==='success') {
-                reloadInterface();
-            } else {
-                alert('Error: ' + d.message.split(':')[1]);
-            }
-        };
 
         var chooseWine = function(e) {
             e.preventDefault();
@@ -121,21 +249,11 @@ var adminReady = function() {
             // }
             var $tr = $(this).closest('tr');
             var wine = $tr.data('id');
+            var warehouse = $tr.data('warehouse');
             $('#wine_id').val(wine);
+            $('#warehouse_id').val(warehouse);
             
             showConfirmationWindow(wine);
-/*
-
-            var data = {
-                'wine':wine,
-                'order':order,
-                'warehouse':warehouse
-            };
-            console.log('chosen! ',data);
-            postJSON('choose.json', token, data, wineChosen, function() {
-                alert('not okay');
-            });
-*/
         };
 
         var renderWine = function(wine) {
@@ -150,9 +268,24 @@ var adminReady = function() {
             var basePriceWarehouse = 0;
             var basePriceQuantity = 0;
             var multiplePrices = wine.availability.length > 1 ? '+' : ''
-            for (var i = 0, availability; availability = wine.availability[i++];) {
-                if (availability.quantity > 0) {
-                    if (availability.price < basePrice || basePrice === 0) {
+            var warehouses = $('#warehouses_ids').val().split(',');
+            if (warehouses.length > 1) {
+                // console.log('several warehouses');
+                for (var i = 0, availability; availability = wine.availability[i++];) {
+                    if (availability.quantity > 0) {
+                        if (availability.price < basePrice || basePrice === 0) {
+                            basePrice = availability.price;
+                            basePriceQuantity = availability.quantity;
+                            basePriceWarehouse = availability.warehouse;
+                        }
+                    }
+                }
+            } else {
+                // console.log('one warehouse', warehouses);
+                // One warehouse!
+                for (var i = 0, availability; availability = wine.availability[i++];) {
+                    // console.log(availability.warehouse, parseInt(warehouses[0]), availability.warehouse === parseInt(warehouses[0]));
+                    if (availability.warehouse === parseInt(warehouses[0])) {
                         basePrice = availability.price;
                         basePriceQuantity = availability.quantity;
                         basePriceWarehouse = availability.warehouse;
@@ -349,6 +482,8 @@ var adminReady = function() {
             var $siblings = $tr.siblings();
             $('#order_id').val('');
             $('#warehouses_ids').val('');
+            $('#quote_id').val('');
+            $('#warehouse_id').val('');
             $tr.removeClass('selected');
             $td.html('');
             $('#order-info').remove();
@@ -468,6 +603,8 @@ var adminReady = function() {
             $('#order-list').html('');
             postJSON('../orders/list.json', token, {'status':[2]}, renderOrders, errorMethod);
         });
+
+        $('#confirm').click(confirm);
 
     }
 };
