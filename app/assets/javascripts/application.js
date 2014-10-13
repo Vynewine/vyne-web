@@ -188,7 +188,7 @@ $(function() {
 					console.log(data);
 					var errors = data.responseJSON.errors;
 					if(errors) {
-						var $errorList = $('.order-panel-content.register .errors');
+						var $errorList = $('#sing-in-errors');
 						$errorList.empty().show();
 						errors.forEach(function(error) {
 							$errorList.append('<li>'+error+'</li>');
@@ -200,28 +200,53 @@ $(function() {
 				}
 		    });
 
-		} else if($('#account-form').hasClass('signup-form')) {
+		} else if($('#account-form').hasClass('signin-form')) {
 			//Needs Validation
-			var	email = $('input[name="user[email]"]').val()
+			var	email = $('input[name="user[email]"]').val();
 				password = $('input[name="user[password]"]').val();
 
 			var data = "&user[email]="+email+"&user[password]="+password;
 
 			console.log(data);
 
-			$.ajax({
-				type: "POST",
-				beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').last().attr('content'))},
-				url: '/signup/create',
-				data: data,
-				error: function(data) {
-					//Response
-					console.log(data);
-				},
-				success: function(data) {
-					order.swipeNext();
-				}
-		    });
+            $.ajax({
+                type: "POST",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').last().attr('content'))
+                },
+                url: '/users/sign_in.json',
+                data: data,
+                error: function (data) {
+                    //TODO: Log this
+
+                    var $errorList = $('#sing-in-errors');
+                    $errorList.empty().show();
+                    $errorList.append('<li>There was an error communicating with the server. Please try again.</li>');
+                    console.log(data);
+                },
+                success: function (data) {
+                    if(data.success) {
+                        var $select = $('#order-address');
+                        var addresses = JSON.parse(data.addresses);
+                        for (var i=0; i < addresses.length; i++){
+                            var address = addresses[i];
+                            var fullAddress = address.detail + ' ' + address.street + ' ' + address.postcode;
+                            $select.append('<option value=' + address.id + '>' + fullAddress + '</option>');
+                        }
+                        order.swipeNext();
+                    } else {
+                        var errors = data.errors;
+                        if(errors) {
+                            var $errorList = $('#sing-in-errors');
+                            $errorList.empty().show();
+                            errors.forEach(function(error) {
+                                $errorList.append('<li>'+error+'</li>');
+                            });
+                        }
+                    }
+
+                }
+            });
 		}
 
 	});
@@ -230,7 +255,13 @@ $(function() {
 
 		e.preventDefault();
 
-		//Needs Validation
+        if($('#address-id').val() !== '' && $('#address-id').val() !== '0') {
+            order.swipeNext();
+            return;
+        }
+
+
+        //Needs Validation
 		var address_d = $('#addr-no').val(),
 			address_s = $('#addr-st').val(),
 			address_p = $('#addr-pc').val();

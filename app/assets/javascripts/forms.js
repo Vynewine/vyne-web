@@ -62,7 +62,7 @@ var updatePostcode = function(e){
 $('#filterPostcode').keyup(function(e){
     var postcode = $(this).val();
     var $feedback = $('#filterPostcodeMessage');
-    var $addressList = $('#orderAddress');
+    var $addressList = $('#order-address');
     var $postcodeField = $('#addr-pc');
     var $newAddressBlock = $('#new_delivery_address');
     $newAddressBlock.show();
@@ -279,14 +279,14 @@ $(document).ready(function(){
     /**
      * Hides or updates relevant field according to list selection.
      */
-    $('#orderAddress').change(function() {
+    $('#order-address').change(function() {
         var value = $(this).val();
         var $addrFields = $('#new_delivery_address');
         if (parseInt(value) === -1) {
-            $('#old-address').val(0);
+            $('#address-id').val(0);
             $addrFields.fadeIn();
         } else {
-            $('#old-address').val(value);
+            $('#address-id').val(value);
             $addrFields.fadeOut();
         }
     });

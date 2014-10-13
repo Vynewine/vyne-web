@@ -211,7 +211,7 @@
         <div id="account-form" class="register-form">
           <h2 class="account-heading">Register</h2>
           <span class="account-message">Have an account? <a href="" id="account-link" class="signin-link">Sign in</a></span>
-          <ul class="errors"></ul>
+          <ul class="errors" id="sing-in-errors"></ul>
           <div>
             <%= text_field :user, :first_name, :placeholder => "First Name" %>
           </div>
@@ -275,7 +275,7 @@
         end
       end
       %>
-      <%= select_tag "orderAddress", options_for_select(addressOptions, @order.address_id), :prompt => "Choose Address", :name => "" %>
+      <%= select_tag "order-address", options_for_select(addressOptions, @order.address_id), :prompt => "Choose Address", :name => "" %>
 
   <%# - - - - - -- - - - - - - - - -  Option2 - - - - - -- - - - - - - - - -  %>
 
@@ -284,7 +284,6 @@
         <div><input type="text" disabled="disabled" id="addr-st" name="address_s" placeholder="Street Name" /></div>
         <div><input type="text" disabled="disabled" id="addr-no" name="address_d" placeholder="No" /></div>
       </div>
-      <input type="hidden" id="old-address" name="old_address" />
       <input type="hidden" id="address-id" name="address_id" />
       <div>
         <!-- Next step -->
