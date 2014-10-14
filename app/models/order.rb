@@ -16,4 +16,7 @@ class Order < ActiveRecord::Base
   # def new_address_postcode
   # end
 
+  scope :valid, -> { where.not(:wine_id => nil) }
+  scope :user_id, ->(id) { where("client_id = ?", id) }
+
 end

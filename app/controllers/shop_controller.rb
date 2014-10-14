@@ -16,7 +16,7 @@ class ShopController < ApplicationController
 
   # GET /orders/list
   def list
-    @orders = Order.find_by(:client => current_user)
+    @orders = Order.valid.user_id(current_user.id)
   end
 
   # GET /orders/1
