@@ -84,7 +84,7 @@ var adminReady = function() {
             $('#confirmation-area').fadeOut();
             $('#orders-header').slideDown();
             $('#order-list').html('');
-            postJSON('../orders/list.json', token, {'status':[2]}, renderOrders, errorMethod);
+            postJSON('../orders/list.json', token, {'status':[1]}, renderOrders, errorMethod);
         };
 
         /**
@@ -591,7 +591,7 @@ var adminReady = function() {
             console.log("Advisor area!");
             loadJSON('../foods.json', function(d) {
                 foods = d;
-                postJSON('../orders/list.json', token, {'status':[2]}, renderOrders, errorMethod);
+                postJSON('../orders/list.json', token, {'status':[1]}, renderOrders, errorMethod);
             }, errorMethod);
         }
 
@@ -601,7 +601,7 @@ var adminReady = function() {
         $('#reload-orders').click(function(e){
             e.preventDefault();
             $('#order-list').html('');
-            postJSON('../orders/list.json', token, {'status':[2]}, renderOrders, errorMethod);
+            postJSON('../orders/list.json', token, {'status':[1]}, renderOrders, errorMethod);
         });
 
         $('#confirm').click(confirm);

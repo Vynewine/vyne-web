@@ -2,25 +2,22 @@
 
 one:
   id: 1
-  label: 'new'
+  label: 'pending'
 two:
   id: 2
-  label: 'waiting for call'
+  label: 'paid'
 three:
   id: 3
-  label: 'waiting for message'
+  label: 'payment failed'
 four:
   id: 4
-  label: 'paying'
+  label: 'pickup'
 five:
   id: 5
-  label: 'paid'
+  label: 'delivery'
 six:
   id: 6
-  label: 'waiting for delivery'
+  label: 'delivered'
 seven:
   id: 7
-  label: 'delivered'
-eight:
-  id: 8
   label: 'cancelled'

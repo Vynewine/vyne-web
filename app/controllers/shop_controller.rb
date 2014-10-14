@@ -81,7 +81,7 @@ class ShopController < ApplicationController
     end
 
     @order.payment = payment
-    @order.status_id = 2 #Waiting for call
+    @order.status_id = 1 #pending
 
     warehouses = ''
     if params.has_key?(:warehouses)
