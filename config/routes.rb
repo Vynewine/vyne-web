@@ -57,8 +57,8 @@ Rails.application.routes.draw do
   # resources :shop
   scope '/shop' do
     get 'welcome' => 'shop#welcome'
-    get 'mywines' => 'shop#index'
-    get 'list' => 'shop#list'
+    get 'mywines' => 'shop#list'
+    # get 'list' => 'shop#list'
     get 'show' => 'shop#show'
     get 'neworder' => 'shop#new'
     get 'confirmed' => 'shop#confirmed'
