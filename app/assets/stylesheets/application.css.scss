@@ -133,16 +133,23 @@ input[type="submit"],
 
 .order-now {
     position: absolute;
-    bottom: 50px;
-    left: 50%;
-    width: 200px;
+    bottom: 0px;
+    width: 100%;
     padding: 2rem;
     border-radius: 0;
-    margin-left: -100px;
     text-align: center;
 
     h4 {
-        margin: 0;
+        margin: 0 0 15px 0;
+    }
+
+    input[type="text"] {
+        text-align: center;
+        border-radius: 5px 5px 0 0;
+    }
+
+    input[type="submit"] {
+        border-radius: 0 0 5px 5px;
     }
 }
 
@@ -712,7 +719,7 @@ input:-webkit-autofill {
         .inner {
             position: relative;
             z-index: 2;
-            padding: 200px 10px 30px;
+            padding: 25% 50px 30px;
 
             h3 {
                 margin: 0 0 0.5rem;
@@ -775,7 +782,7 @@ input:-webkit-autofill {
     padding: 70px 20px 50px;
 
     .slideable {
-        -webkit-transform: translateY(110px);
+        -webkit-transform: translateY(30px);
         -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
 
         .slideable-back,
@@ -835,7 +842,7 @@ input:-webkit-autofill {
             width: 80px;
             border-radius: 0 0 10px 10px;
             text-align: center;
-            background: rgba(0,0,0,0.1);
+            background: rgba(0,0,0,0.4);
         }
     }
 
@@ -930,26 +937,6 @@ input:-webkit-autofill {
             //width: 1000px;
             list-style: none;
 
-            /*&#food-list {
-                width: 334px; //1054
-            }
-
-            &#meat-list {
-                width: 468px;
-            }
-
-            &#fish-list {
-                width: 518px;
-            }
-
-            &#dairy-list {
-                width: 508px;
-            }
-
-            &#occasion-list {
-                width: 560px;
-            }*/
-
             li {
                 width: 31%;
                 float: left;
@@ -985,6 +972,10 @@ input:-webkit-autofill {
             }
         }
 
+    }
+
+    .prefs-box {
+        clear: both;
     }
 
     .prefs-overview {

@@ -33,6 +33,8 @@ var ready = function() {
 // console.log(2);
 $(function() {
 
+	/* Header */
+
 	$('.menu-link').click(function(e) {
 		e.preventDefault();
 		$('.menu-link').toggleClass('slide');
@@ -40,11 +42,17 @@ $(function() {
 		$('.aside-bar').toggleClass('visible');
 	});
 
+
+	/* Walkthrough */
+
 	var mySwiper = $('#walkthrough').swiper({
 		mode: 'horizontal',
 		pagination: '.pagination',
 		paginationClickable: true
 	});
+
+
+	/* Order */
 
 	var order = $('#order').swiper({
 		mode: 'horizontal',
@@ -57,6 +65,13 @@ $(function() {
 		e.preventDefault();
 		order.swipeNext();
 	});
+
+
+	/* Availabilty */
+	$('#filterPostcode').val(getUrlVars()["postcode"].replace('+', ' '));
+
+
+	/* Select a Bottle */
 
 	$('.bottle-link').click(function(e) {
 		if(!$('.close').hasClass('hover')) {
@@ -78,6 +93,9 @@ $(function() {
 	$('.close').click(function(e) {
 		$('.bottle-info').removeClass('active');
 	});
+
+
+	/* Preferences */
 
 	$('.tab').hide();
 	$('.tab-list li a').click(function(e) {
@@ -159,6 +177,9 @@ $(function() {
 			$('input[name="user[first_name]"], input[name="user[last_name]"], input[name="user[mobile]"], input[name="user[password_confirmation]"]').show();
 		}
 	});
+
+
+	/* Delivery Details */
 
 	$('#delivery-details').click(function(e) {
 
@@ -265,6 +286,9 @@ $(function() {
 
 	});
 
+
+	/* Address Details */
+
 	$('#address-details').click(function(e) {
 
 		e.preventDefault();
@@ -273,7 +297,6 @@ $(function() {
             order.swipeNext();
             return;
         }
-
 
         //Needs Validation
 		var address_d = $('#addr-no').val(),
@@ -305,3 +328,16 @@ $(function() {
 	});
 
 });
+
+
+// Read a page's GET URL variables and return them as an associative array.
+function getUrlVars() {
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++) {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}

@@ -365,9 +365,11 @@ $(document).ready(function(){
         }
     });
 
-
 });
 
+$(window).load(function(e) {
+    $('#filterPostcode').keyup();
+});
 
 
 
