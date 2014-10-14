@@ -1,9 +1,12 @@
 <p id="notice"><%= notice %></p>
+<div style="padding: 120px 0 0 0 ; text-align: center">
+  <p>
+    <strong>Your Order:</strong>
+    <%= @order.id %>
+  </p>
+  <p>
+    <strong>Is currently in Status:</strong>
+    <%= @order.status.label %>
+  </p>
 
-<p>
-  <strong>Order Id:</strong>
-  <%= @order.id %>
-
-  <strong>Order Status:</strong>
-  <%= @order.status.label %>
-</p>
+</div>
