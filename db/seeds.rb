@@ -290,12 +290,11 @@ Role.create(:name => 'superadmin')
 puts "Roles -------- OK"
 
 # Default order statuses:
-Status.create(:label => 'new')
-Status.create(:label => 'waiting for call')
-Status.create(:label => 'waiting for message')
-Status.create(:label => 'paying')
+Status.create(:label => 'pending')
 Status.create(:label => 'paid')
-Status.create(:label => 'waiting for delivery')
+Status.create(:label => 'payment failed')
+Status.create(:label => 'pickup')
+Status.create(:label => 'delivery')
 Status.create(:label => 'delivered')
 Status.create(:label => 'cancelled')
 
@@ -843,23 +842,18 @@ puts "Inventory ---- OK"
 totalOrders = 5 + rand(50)
 
 for i in 0..totalOrders do
-  # 1 new
-  # 2 waiting for call
-  # 3 waiting for message
-  # 4 paying
-  # 5 paid
-  # 6 waiting for delivery
-  # 7 delivered
-  # 8 cancelled
-  status = 1+rand(8)
+  # 1 pending
+  # 2 paid
+  # 3 payment failed
+  # 4 pickup
+  # 5 delivery
+  # 6 delivered
+  # 7 cancelled
+  status = 1+rand(7)
   warehouse = nil
   case status
-  when 1
-    status = 2
-  when 3
-    status = 2
-  when 4
-    status = 5
+    when 3
+      status = 1
   end
 
   if status > 3

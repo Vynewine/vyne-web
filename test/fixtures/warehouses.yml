@@ -1,9 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  title: MyString
+  title: RockstarDev Warehouse
   address_id: 1
 
 two:
-  title: MyString
+  title: Vynz Warehouse
   address_id: 1
