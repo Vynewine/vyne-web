@@ -822,6 +822,27 @@ end
 puts "Warehouses --- OK"
 
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Agendas
+for i in 1..7 do
+  Agenda.create(
+    :warehouse_id => 1,
+             :day => i,
+         :opening =>  800,
+         :closing => 1900
+  )
+end
+for i in 1..7 do
+  Agenda.create(
+    :warehouse_id => 2,
+             :day => i,
+         :opening =>  900,
+         :closing => 2030
+  )
+end
+
+puts "Agendas ------ OK"
+
+#  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Inventory
 
 for j in 1..2 do

@@ -23,6 +23,7 @@ class Admin::WarehousesController < ApplicationController
 
   # GET /warehouses/1/edit
   def edit
+    @agendas = @warehouse.agendas
   end
 
   # POST /warehouses
@@ -75,7 +76,8 @@ class Admin::WarehousesController < ApplicationController
     def warehouse_params
       params.require(:warehouse).permit(
         :title,
-        address_attributes: [:id, :detail, :street, :postcode]
+        address_attributes: [:id, :detail, :street, :postcode],
+        agenda_attributes: [:day, :opening, :closing]
         )
     end
 end

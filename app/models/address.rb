@@ -1,6 +1,6 @@
 class Address < ActiveRecord::Base
   has_and_belongs_to_many :users
-  has_and_belongs_to_many :warehouses
+  has_many :warehouses
   def line
     "#{detail} #{street} #{postcode}"
   end

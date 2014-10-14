@@ -38,6 +38,80 @@
       </div>
     <% end %>
   </div>
+
+  
+
+
+
+
+
+
+  <div class="field">
+    <%= f.label :agenda %><br>
+<% if @agendas %>
+<% agendaCounter = 0 %>
+
+
+    <% @agendas.each do |a| %>
+      <h4><%=a.day_name%></h4>
+      <div class="field">
+        <label for="warehouse[agendas_attributes][<%=agendaCounter%>][opening]">Opening</label><br />
+        <input
+        type="text" id="wine_compositions_attributes_<%=agendaCounter%>_quantity"
+        name="warehouse[agendas_attributes][<%=agendaCounter%>][opening]"
+        value="<%=a.opening%>"
+        />
+      </div>
+      <div class="field">
+        <label for="warehouse[agendas_attributes][<%=agendaCounter%>][closing]">Closing</label><br />
+        <input
+        type="text" id="wine_compositions_attributes_<%=agendaCounter%>_quantity"
+        name="warehouse[agendas_attributes][<%=agendaCounter%>][closing]"
+        value="<%=a.closing%>"
+        />
+      </div>
+      <% agendaCounter += 1 %>
+    <% end %>
+
+
+
+<% else %>
+
+wine[type_ids][]
+
+<% for i in 1..7 do %>
+      <h4><%= Date::DAYNAMES[i-1] %></h4>
+      <div class="field">
+        <label for="warehouse[agendas_attributes][<%=i-1%>][opening]">Opening</label><br />
+        <input
+        type="text" id="wine_compositions_attributes_<%=i-1%>_quantity"
+        name="warehouse[agendas_attributes][<%=i-1%>][opening]"
+        value="900"
+        />
+      </div>
+      <div class="field">
+        <label for="warehouse[agendas_attributes][<%=i-1%>][closing]">Closing</label><br />
+        <input
+        type="text" id="wine_compositions_attributes_<%=i-1%>_quantity"
+        name="warehouse[agendas_attributes][<%=i-1%>][closing]"
+        value="1800"
+        />
+      </div>
+<% end %>
+
+
+
+
+<% end %>
+
+  </div>
+
+
+
+
+
+
+
   <div class="actions">
     <%= f.submit %>
   </div>
