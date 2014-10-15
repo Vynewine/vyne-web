@@ -17,6 +17,8 @@ end
 
 group :production do
   gem 'pg'
+  # Recommended by Heroku
+  gem 'rails_12factor'
 end
 
 # Use SCSS for stylesheets
@@ -68,6 +70,3 @@ gem 'sunspot_solr' # optional pre-packaged Solr distribution for use in developm
 
 # Mandrill API
 gem 'mandrill-api'
-
-# Recommended by Heroku
-gem 'rails_12factor'
