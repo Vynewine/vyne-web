@@ -164,7 +164,8 @@ fieldset {
 }
 
 input,
-select {
+select,
+textarea {
     color: #333;
     border: 0;
     outline: 0;
@@ -1158,7 +1159,7 @@ input:-webkit-autofill {
         margin-bottom: 2rem;
     }
 
-    input, select {
+    input, select, textarea {
         margin-bottom: 1rem;
     }
 
