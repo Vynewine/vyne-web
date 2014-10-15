@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+ruby '2.1.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.4'
@@ -67,3 +68,6 @@ gem 'sunspot_solr' # optional pre-packaged Solr distribution for use in developm
 
 # Mandrill API
 gem 'mandrill-api'
+
+# Recommended by Heroku
+gem 'rails_12factor'
