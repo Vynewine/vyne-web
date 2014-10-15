@@ -68,12 +68,17 @@ $(function() {
 
 
 	/* Availabilty */
-	$('#filterPostcode').val(getUrlVars()["postcode"].replace('+', ' '));
+	try {
+		$('#filterPostcode').val(getUrlVars()["postcode"].replace('+', ' '));
+	} catch(err) {
+		console.log(err);
+	}
 
 
 	/* Select a Bottle */
 
 	$('.bottle-link').click(function(e) {
+		console.log('hello');
 		if(!$('.close').hasClass('hover')) {
 			$('.bottle-info').removeClass('active');
 			$(this).parent().find('.bottle-info').addClass('active');
@@ -96,6 +101,22 @@ $(function() {
 
 
 	/* Preferences */
+
+	var $windowTag = $('.order-panel');
+	var $fixedElement = $('.prefs-overview');
+	var fixedElementOffSet = $fixedElement.offset().top;
+
+	$windowTag.scroll(function() {
+
+	    var scrollTop = $windowTag.scrollTop();
+	    console.log(scrollTop);
+
+	    if (fixedElementOffSet < scrollTop) {
+	        $fixedElement.css('top', scrollTop);
+	    } else {
+	        $fixedElement.css('top', 0);
+	    }
+	});
 
 	$('.tab').hide();
 	$('.tab-list li a').click(function(e) {
