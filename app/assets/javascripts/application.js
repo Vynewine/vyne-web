@@ -33,6 +33,8 @@ var ready = function() {
 // console.log(2);
 $(function() {
 
+	/* Header */
+
 	$('.menu-link').click(function(e) {
 		e.preventDefault();
 		$('.menu-link').toggleClass('slide');
@@ -40,11 +42,17 @@ $(function() {
 		$('.aside-bar').toggleClass('visible');
 	});
 
+
+	/* Walkthrough */
+
 	var mySwiper = $('#walkthrough').swiper({
 		mode: 'horizontal',
 		pagination: '.pagination',
 		paginationClickable: true
 	});
+
+
+	/* Order */
 
 	var order = $('#order').swiper({
 		mode: 'horizontal',
@@ -58,7 +66,19 @@ $(function() {
 		order.swipeNext();
 	});
 
+
+	/* Availabilty */
+	try {
+		$('#filterPostcode').val(getUrlVars()["postcode"].replace('+', ' '));
+	} catch(err) {
+		console.log(err);
+	}
+
+
+	/* Select a Bottle */
+
 	$('.bottle-link').click(function(e) {
+		console.log('hello');
 		if(!$('.close').hasClass('hover')) {
 			$('.bottle-info').removeClass('active');
 			$(this).parent().find('.bottle-info').addClass('active');
@@ -77,6 +97,25 @@ $(function() {
 
 	$('.close').click(function(e) {
 		$('.bottle-info').removeClass('active');
+	});
+
+
+	/* Preferences */
+
+	var $windowTag = $('.order-panel');
+	var $fixedElement = $('.prefs-overview');
+	var fixedElementOffSet = $fixedElement.offset().top;
+
+	$windowTag.scroll(function() {
+
+	    var scrollTop = $windowTag.scrollTop();
+	    console.log(scrollTop);
+
+	    if (fixedElementOffSet < scrollTop) {
+	        $fixedElement.css('top', scrollTop);
+	    } else {
+	        $fixedElement.css('top', 0);
+	    }
 	});
 
 	$('.tab').hide();
@@ -159,6 +198,9 @@ $(function() {
 			$('input[name="user[first_name]"], input[name="user[last_name]"], input[name="user[mobile]"], input[name="user[password_confirmation]"]').show();
 		}
 	});
+
+
+	/* Delivery Details */
 
 	$('#delivery-details').click(function(e) {
 
@@ -265,6 +307,9 @@ $(function() {
 
 	});
 
+
+	/* Address Details */
+
 	$('#address-details').click(function(e) {
 
 		e.preventDefault();
@@ -273,7 +318,6 @@ $(function() {
             order.swipeNext();
             return;
         }
-
 
         //Needs Validation
 		var address_d = $('#addr-no').val(),
@@ -305,3 +349,16 @@ $(function() {
 	});
 
 });
+
+
+// Read a page's GET URL variables and return them as an associative array.
+function getUrlVars() {
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++) {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}

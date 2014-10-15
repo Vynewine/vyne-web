@@ -20,7 +20,7 @@
   <div id="postcode-panel" class="order-panel swiper-slide noSwipingClass">
     <div class="order-panel-overlay"></div>
     <div class="order-panel-content postcode wrapper">
-      <h2>Availability</h2>
+      <h2 class="title">Availability</h2>
       <p>We need to check if the wine is available to deliver in your area</p>
       <input type="text" id="filterPostcode" placeholder="Enter postcode" autocomplete="off"/>
       <span id="filterPostcodeMessage" class="message"></span>
@@ -146,38 +146,114 @@
           <a href="#" class="slideable-back first">Back</a>
           <h3>Whats the occasion?</h3>
           <div class="prefs-list-container">
-            <ul id="occasion-list" class="prefs-list prefs-list-bottom">
+            <ul id="occasion-list" class="prefs-list prefs-list-top">
               <li>
-                <a href="">
+                <a href="#wine-type">
                   <%= image_tag "icons/food/solo.png", :alt => "image description" %>
                   <span>Solo</span>
                 </a>
               </li>
               <li>
-                <a href="">
+                <a href="#wine-type">
+                  <%= image_tag "icons/food/with_friends.png", :alt => "image description" %>
+                  <span>With friends</span>
+                </a>
+              </li>
+              <li>
+                <a href="#wine-type">
                   <%= image_tag "icons/food/party.png", :alt => "image description" %>
                   <span>Party</span>
                 </a>
               </li>
               <li>
-                <a href="">
+                <a href="#wine-type">
                   <%= image_tag "icons/food/date.png", :alt => "image description" %>
                   <span>Date</span>
                 </a>
               </li>
               <li>
-                <a href="">
+                <a href="#wine-type">
                   <%= image_tag "icons/food/dining.png", :alt => "image description" %>
                   <span>Dining</span>
                 </a>
               </li>
               <li>
-                <a href="">
+                <a href="#wine-type">
                   <%= image_tag "icons/food/outdoors.png", :alt => "image description" %>
                   <span>Outdoors</span>
                 </a>
               </li>
+              <li>
+                <a href="#wine-type">
+                  <%= image_tag "icons/food/gift.png", :alt => "image description" %>
+                  <span>Gift</span>
+                </a>
+              </li>
             </ul>
+
+            <div id="wine-type" class="prefs-box">
+              <a href="#" class="slideable-back second">Back</a>
+              <h3>2. What type of Wine would you like?</h3>
+              <div class="prefs-list-container">
+                <ul id="wine-list" class="prefs-list prefs-list-bottom">
+                  <li>
+                    <a href="">
+                      <%= image_tag "icons/wine/bold_red.png", :alt => "image description" %>
+                      <span>Bold red</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="">
+                      <%= image_tag "icons/wine/medium_red.png", :alt => "image description" %>
+                      <span>Medium red</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="">
+                      <%= image_tag "icons/wine/light_red.png", :alt => "image description" %>
+                      <span>Light red</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="">
+                      <%= image_tag "icons/wine/rosé.png", :alt => "image description" %>
+                      <span>Rosé</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="">
+                      <%= image_tag "icons/wine/rich_white.png", :alt => "image description" %>
+                      <span>Rich white</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="">
+                      <%= image_tag "icons/wine/dry_white.png", :alt => "image description" %>
+                      <span>Dry white</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="">
+                      <%= image_tag "icons/wine/sparkling.png", :alt => "image description" %>
+                      <span>Sparkling</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="">
+                      <%= image_tag "icons/wine/sweet_white.png", :alt => "image description" %>
+                      <span>Sweet white</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="">
+                      <%= image_tag "icons/wine/fortified.png", :alt => "image description" %>
+                      <span>Fortified</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
           </div>
 
         </div>

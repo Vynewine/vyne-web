@@ -28,8 +28,11 @@
     </div>
     <% #link_to "Order now", neworder_path, :class => "btn order-now" %>
     <div class="order-now">
-        <h4>Check Availibilty</h4>
-        <input type="text" id="filterPostcode" placeholder="Enter postcode" autocomplete="off"/>
+        <h4>Check Availability</h4>
+        <form action="/shop/neworder" method="GET">
+        <input type="text" id="filterPostcode" placeholder="Enter postcode" name="postcode" autocomplete="off"/>
+        <input type="submit" value="Go" />
+        </form>
     </div>
     <div class="pagination"></div>
 </div>
