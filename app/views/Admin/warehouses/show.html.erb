@@ -19,7 +19,7 @@
 
 <p>
   <strong>Agenda:</strong>
-  <% @warehouse.agendas.each do |agenda| %>
+  <% @agendas.each do |agenda| %>
     <dl>
         <dt><%= agenda.day_name %></dt>
         <dd><%= agenda.opening_time %> - <%= agenda.closing_time %></dd>

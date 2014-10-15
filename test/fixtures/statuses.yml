@@ -1,7 +1,23 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  label: MyString
-
+  id: 1
+  label: 'pending'
 two:
-  label: MyString
+  id: 2
+  label: 'paid'
+three:
+  id: 3
+  label: 'payment failed'
+four:
+  id: 4
+  label: 'pickup'
+five:
+  id: 5
+  label: 'delivery'
+six:
+  id: 6
+  label: 'delivered'
+seven:
+  id: 7
+  label: 'cancelled'

@@ -5,7 +5,7 @@ class Admin::AdvisorsController < ApplicationController
   respond_to :html, :js
 
   def index
-    @orders = Order.where.not(status_id: [1,7,8]) # Ignores the new, delivered and cancelled
+    @orders = Order.where.not(status_id: [5,6]) # Ignores delivered and cancelled
     @categories = Category.all
   end
 
@@ -43,7 +43,6 @@ class Admin::AdvisorsController < ApplicationController
     order = Order.find(params[:order])
     order.wine = wine
     order.quantity = 1
-    order.status_id = 4 # paying
     order.advisor_id = current_user.id
     order.warehouse_id = params[:warehouse]
     inventory.quantity = inventory.quantity - 1
@@ -55,12 +54,13 @@ class Admin::AdvisorsController < ApplicationController
         value = 1500 # $15.00 this time
         chargeDetails = charge_card(value, stripeToken)
         if chargeDetails.paid == true
-          order.status_id = 5 # paid
+          order.status_id = 2 # paid
           if order.save
             # Shutl
             booking_ref = shutl_book(params[:quote], order)
             unless booking_ref.nil? == true
               order.delivery = booking_ref
+              order.status_id = 4 #pickup
               if order.save
                 @message = 'success'
               else
@@ -72,6 +72,7 @@ class Admin::AdvisorsController < ApplicationController
           end
         else
           @message = "error:The payment was not processed. #{chargeDetails.description}"
+          order.status_id = 3 #payment failed
         end
       else
         @message = "error:Couldn't save order"

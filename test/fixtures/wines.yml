@@ -1,11 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
-  vintage: 1
-  area: MyString
+  name: Cálem 20yr Tawny
+  vintage: 1994
+  area: Cima Corgo
   single_estate: false
-  alcohol: 1
+  alcohol: 20
   sugar: 1
   acidity: 1
   ph: 1
@@ -13,11 +13,11 @@ one:
   organic: false
 
 two:
-  name: MyString
-  vintage: 1
-  area: MyString
+  name: Cálem White & Dry
+  vintage: 2007
+  area: Cima Corgo
   single_estate: false
-  alcohol: 1
+  alcohol: 19.5
   sugar: 1
   acidity: 1
   ph: 1

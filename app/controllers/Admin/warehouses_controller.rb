@@ -13,6 +13,7 @@ class Admin::WarehousesController < ApplicationController
   # GET /warehouses/1
   # GET /warehouses/1.json
   def show
+    @agendas = @warehouse.agendas.order('day ASC')
   end
 
   # GET /warehouses/new
@@ -23,14 +24,13 @@ class Admin::WarehousesController < ApplicationController
 
   # GET /warehouses/1/edit
   def edit
-    @agendas = @warehouse.agendas
+    @agendas = @warehouse.agendas.order('day ASC')
   end
 
   # POST /warehouses
   # POST /warehouses.json
   def create
     @warehouse = Warehouse.new(warehouse_params)
-
     respond_to do |format|
       if @warehouse.save
         format.html { redirect_to [:admin, @warehouse], notice: 'Warehouse was successfully created.' }
@@ -45,6 +45,13 @@ class Admin::WarehousesController < ApplicationController
   # PATCH/PUT /warehouses/1
   # PATCH/PUT /warehouses/1.json
   def update
+
+
+# require 'pp'
+# puts PP.pp(params[:warehouse][:agendas_attributes],'',80)
+
+
+
     respond_to do |format|
       if @warehouse.update(warehouse_params)
         format.html { redirect_to [:admin, @warehouse], notice: 'Warehouse was successfully updated.' }
@@ -77,7 +84,7 @@ class Admin::WarehousesController < ApplicationController
       params.require(:warehouse).permit(
         :title,
         address_attributes: [:id, :detail, :street, :postcode],
-        agenda_attributes: [:day, :opening, :closing]
+        agendas_attributes: [:id, :day, :opening, :closing]
         )
     end
 end

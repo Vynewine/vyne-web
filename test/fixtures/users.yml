@@ -4,6 +4,7 @@ one:
   email: "test@test.test"
   encrypted_password: "test"
 
+
 two:
   email: "test2@test.test"
   encrypted_password: "test"

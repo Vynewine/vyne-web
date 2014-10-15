@@ -10,7 +10,7 @@ class ShopControllerTest < ActionController::TestCase
     Sunspot.session = Sunspot::Rails::StubSessionProxy.new(Sunspot.session)
     StripeMock.start
 
-    @new_user = User.create!({
+    @userOne = User.create!({
                                  :first_name => 'John',
                                  :last_name => 'Doe',
                                  :email => 'john@doe.vn',
@@ -19,7 +19,7 @@ class ShopControllerTest < ActionController::TestCase
                                  :password_confirmation => 'password'
                              })
 
-    sign_in(:user, @new_user)
+    sign_in(:user, @userOne)
 
     @address = Address.create!({
                                    :detail => '8A',
@@ -29,7 +29,7 @@ class ShopControllerTest < ActionController::TestCase
 
 
     AddressesUsers.create!({
-                               :user => @new_user,
+                               :user => @userOne,
                                :address => @address
                            })
 
@@ -47,14 +47,15 @@ class ShopControllerTest < ActionController::TestCase
         :new_brand => '1',
         :new_card => '1111'
     }
+
+    payment = Payment.find_by user: @userOne
+    order = Order.find_by client: @userOne
+
+    assert_redirected_to order
     assert_response(:redirect, message = nil)
-
-    payment = Payment.find_by user: @new_user
-    order = Order.find_by client: @new_user
-
     assert_equal(order.payment, payment)
-    assert_equal(order.client, @new_user)
-    assert_equal(payment.user, @new_user)
+    assert_equal(order.client, @userOne)
+    assert_equal(payment.user, @userOne)
 
   end
 
