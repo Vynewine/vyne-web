@@ -36,7 +36,10 @@ class Admin::WarehousesController < ApplicationController
         format.html { redirect_to [:admin, @warehouse], notice: 'Warehouse was successfully created.' }
         format.json { render :show, status: :created, location: @warehouse }
       else
-        format.html { render :new }
+        format.html {
+          @warehouse.build_address
+          render :new
+        }
         format.json { render json: @warehouse.errors, status: :unprocessable_entity }
       end
     end
@@ -45,13 +48,6 @@ class Admin::WarehousesController < ApplicationController
   # PATCH/PUT /warehouses/1
   # PATCH/PUT /warehouses/1.json
   def update
-
-
-# require 'pp'
-# puts PP.pp(params[:warehouse][:agendas_attributes],'',80)
-
-
-
     respond_to do |format|
       if @warehouse.update(warehouse_params)
         format.html { redirect_to [:admin, @warehouse], notice: 'Warehouse was successfully updated.' }
@@ -83,6 +79,7 @@ class Admin::WarehousesController < ApplicationController
     def warehouse_params
       params.require(:warehouse).permit(
         :title,
+        :email,
         address_attributes: [:id, :detail, :street, :postcode],
         agendas_attributes: [:id, :day, :opening, :closing]
         )

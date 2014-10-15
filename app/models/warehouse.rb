@@ -1,7 +1,7 @@
 class Warehouse < ActiveRecord::Base
-  has_many :agendas
+  has_many :agendas, :dependent => :destroy
   belongs_to :address
-  validates :address, :presence => true
+  validates :title, :email, :address, :presence => true
   accepts_nested_attributes_for :address, :reject_if => :all_blank, :allow_destroy => true
   accepts_nested_attributes_for :agendas, :reject_if => :all_blank, :allow_destroy => true
   after_create :set_default_agenda
@@ -22,9 +22,11 @@ class Warehouse < ActiveRecord::Base
   def agendas_attributes=(agendas_attributes)
     agendas_attributes.values.each do |agenda_attributes|
       agenda_to_update = Agenda.find_by_id(agenda_attributes[:id]) || self.agendas.build
-      u = agenda_to_update.update_attributes(agenda_attributes)
+      if self.id || self.title && self.email && self.address
+        u = agenda_to_update.update_attributes(agenda_attributes)
+      end
+      puts u
     end
   end
-
 
 end

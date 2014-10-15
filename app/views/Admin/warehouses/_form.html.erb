@@ -12,28 +12,31 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :title %><br>
+    <%= f.label :title %><br />
     <%= f.text_field :title %>
   </div>
-    <div class="field">
-      <%= f.label :email %><br>
-      <%= f.text_field :email %>
-    </div>
   <div class="field">
-    <%= f.label :address_id %><br>
-    <%# f.number_field :address_id %>
-    <%= f.fields_for :address  do |a| %>
+    <%= f.label :email %><br />
+    <%= f.text_field :email %>
+  </div>
 
+
+
+
+  <div class="field">
+    <%= f.label :address_id %><br />
+    <%# f.number_field :address_id %>
+    <%= f.fields_for :address do |a| %>
       <div class="field">
-        <%= a.label :detail %><br>
+        <%= a.label :detail %><br />
         <%= a.text_field :detail %>
       </div>
       <div class="field">
-        <%= a.label :street %><br>
+        <%= a.label :street %><br />
         <%= a.text_field :street %>
       </div>
       <div class="field">
-        <%= a.label :postcode %><br>
+        <%= a.label :postcode %><br />
         <%= a.text_field :postcode %>
       </div>
     <% end %>
@@ -47,7 +50,7 @@
 
 
   <div class="field">
-    <%= f.label :agenda %><br>
+    <%= f.label :agenda %><br />
 <% if @agendas %>
 <% agendaCounter = 0 %>
 
@@ -73,7 +76,7 @@
 
 <% for i in 0..6 do %>
       <h4><%= Date::DAYNAMES[i] %></h4>
-      <input type="text" name="warehouse[agendas_attributes][<%=i%>][day]" value="<%=i%>" />
+      <input type="hidden" name="warehouse[agendas_attributes][<%=i%>][day]" value="<%=i%>" />
       <div class="field">
         <label for="warehouse[agendas_attributes][<%=i%>][opening]">Opening</label><br />
         <input type="text" name="warehouse[agendas_attributes][<%=i%>][opening]" value="900" />
