@@ -102,21 +102,11 @@ $(function() {
 
 	/* Preferences */
 
-	var $windowTag = $('.order-panel');
-	var $fixedElement = $('.prefs-overview');
-	var fixedElementOffSet = $fixedElement.offset().top;
+	if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
+	    
+	    $('.prefs-overview').addClass('ios');
 
-	$windowTag.scroll(function() {
-
-	    var scrollTop = $windowTag.scrollTop();
-	    console.log(scrollTop);
-
-	    if (fixedElementOffSet < scrollTop) {
-	        $fixedElement.css('top', scrollTop);
-	    } else {
-	        $fixedElement.css('top', 0);
-	    }
-	});
+	}
 
 	$('.tab').hide();
 	$('.tab-list li a').click(function(e) {

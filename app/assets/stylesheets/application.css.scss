@@ -272,6 +272,7 @@ input:-webkit-autofill {
     .order-panel-content {
         position: relative;
         z-index: 2;
+        max-height: 100%;
     }
 
     h2 {
@@ -977,7 +978,7 @@ input:-webkit-autofill {
     }
 
     .prefs-overview {
-        position: absolute;
+        position: fixed;
         bottom: 0;
         opacity: 0;
         z-index: 99;
@@ -993,6 +994,10 @@ input:-webkit-autofill {
             opacity: 1;
             -webkit-transform: translateY(0px);
             -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
+        }
+
+        &.ios {
+            position: absolute;
         }
 
         .prefs-overview-list-container {
