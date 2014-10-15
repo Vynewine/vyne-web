@@ -37,6 +37,20 @@ ActiveRecord::Schema.define(version: 20140925091503) do
   add_index "addresses_users", ["address_id"], name: "index_addresses_users_on_address_id", using: :btree
   add_index "addresses_users", ["user_id"], name: "index_addresses_users_on_user_id", using: :btree
 
+  create_table "agendas", force: true do |t|
+    t.integer  "warehouse_id"
+    t.integer  "day"
+    t.integer  "opening"
+    t.integer  "closing"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "agendas", ["closing"], name: "index_agendas_on_closing", using: :btree
+  add_index "agendas", ["day"], name: "index_agendas_on_day", using: :btree
+  add_index "agendas", ["opening"], name: "index_agendas_on_opening", using: :btree
+  add_index "agendas", ["warehouse_id"], name: "index_agendas_on_warehouse_id", using: :btree
+
   create_table "allergies", force: true do |t|
     t.string   "name"
     t.datetime "created_at"

@@ -17,5 +17,15 @@
   <%= @warehouse.address.postcode %>
 </p>
 
+<p>
+  <strong>Agenda:</strong>
+  <% @agendas.each do |agenda| %>
+    <dl>
+        <dt><%= agenda.day_name %></dt>
+        <dd><%= agenda.opening_time %> - <%= agenda.closing_time %></dd>
+    </dl>
+  <% end %>
+</p>
+
 <%= link_to 'Edit', edit_admin_warehouse_path(@warehouse) %> |
 <%= link_to 'Back', admin_warehouses_path %>

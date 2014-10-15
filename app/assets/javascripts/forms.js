@@ -146,6 +146,7 @@ function CardUtilities() {}
     };
 
 $(document).ready(function(){
+
     /**
      * Category (bottle) selection actions:
      */

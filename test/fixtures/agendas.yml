@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  warehouse_id: 
+  day: 1
+  opening: 1
+  closing: 1
+
+two:
+  warehouse_id: 
+  day: 1
+  opening: 1
+  closing: 1
