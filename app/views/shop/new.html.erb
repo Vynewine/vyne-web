@@ -365,11 +365,18 @@
   <%# - - - - - -- - - - - - - - - -  Option2 - - - - - -- - - - - - - - - -  %>
 
       <div id="new_delivery_address" style="display:none;">
-        <div><input type="text" id="addr-pc" name="address_p" placeholder="Postcode" /></div>
-        <div><input type="text" disabled="disabled" id="addr-st" name="address_s" placeholder="Street Name" /></div>
-        <div><input type="text" disabled="disabled" id="addr-no" name="address_d" placeholder="No" /></div>
+        <div>
+          <select id="suggested-addresses">
+            <option value="0">Please select your street address</option>
+          </select>
+        </div>
+        <div><textarea rows="3" disabled="disabled" id="addr-st" name="address_s" placeholder="House Number and Street Name"></textarea>
+        </div>
+        <div><input type="text" id="addr-pc" name="address_p" placeholder="Postcode" disabled="disabled"/></div>
+        <div><input type="hidden" disabled="disabled" id="addr-no" name="address_d" placeholder="No"/></div>
       </div>
-      <input type="hidden" id="address-id" name="address_id" />
+      <input type="hidden" id="address-id" name="address_id"/>
+
       <div>
         <!-- Next step -->
         <a href="#" class="btn" id="address-details">use address</a> <!-- Changes class to 'red-button' -->
@@ -396,7 +403,7 @@
         <%
         paymentCards = [['New payment card', -1]]
         if current_user
-          current_user.payments.each do |a|
+          current_user.payments.order(updated_at: :desc).each do |a|
             # [ :visa, :master, :american, :discover, :diners, :jcb ]
             if a.brand == 3 # American Express
               cardNumber = "**** ****** #{a.number}"
