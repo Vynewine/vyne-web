@@ -20,11 +20,20 @@
   <div id="postcode-panel" class="order-panel swiper-slide noSwipingClass">
     <div class="order-panel-overlay"></div>
     <div class="order-panel-content postcode wrapper">
-      <h2 class="title">Availability</h2>
-      <p>We need to check if the wine is available to deliver in your area</p>
-      <input type="text" id="filterPostcode" placeholder="Enter postcode" autocomplete="off"/>
-      <span id="filterPostcodeMessage" class="message"></span>
-      <a href="" id="use-postcode" class="btn next-slide">Choose wine</a>
+      <div class="slideable">
+        <h2 class="title">Availability</h2>
+        <p>We need to check if the wine is available to deliver in your area</p>
+        <input type="text" id="filterPostcode" placeholder="Enter postcode" autocomplete="off"/>
+        <span id="filterPostcodeMessage" class="message"></span>
+        <a href="" id="use-postcode" class="btn next-slide">Choose wine</a>
+        <div class="not-available">
+          <h3>Not available in your area</h3>
+          <p>We're expanding the service throughtout London in the coming weeks.</p>
+          <p>As a thank you for waiting, we'll give you a free bottle with your first order, when we we're available in your postcode.</p>
+          <input type="email" name="email" placeholder="jon@snow.com" />
+          <input type="submit" value="Let me know"/>
+        </div>
+      </div>
     </div>
 
     <!-- Hidden fields -->
@@ -356,11 +365,18 @@
   <%# - - - - - -- - - - - - - - - -  Option2 - - - - - -- - - - - - - - - -  %>
 
       <div id="new_delivery_address" style="display:none;">
-        <div><input type="text" id="addr-pc" name="address_p" placeholder="Postcode" /></div>
-        <div><input type="text" disabled="disabled" id="addr-st" name="address_s" placeholder="Street Name" /></div>
-        <div><input type="text" disabled="disabled" id="addr-no" name="address_d" placeholder="No" /></div>
+        <div>
+          <select id="suggested-addresses">
+            <option value="0">Please select your street address</option>
+          </select>
+        </div>
+        <div><textarea rows="3" disabled="disabled" id="addr-st" name="address_s" placeholder="House Number and Street Name"></textarea>
+        </div>
+        <div><input type="text" id="addr-pc" name="address_p" placeholder="Postcode" disabled="disabled"/></div>
+        <div><input type="hidden" disabled="disabled" id="addr-no" name="address_d" placeholder="No"/></div>
       </div>
-      <input type="hidden" id="address-id" name="address_id" />
+      <input type="hidden" id="address-id" name="address_id"/>
+
       <div>
         <!-- Next step -->
         <a href="#" class="btn" id="address-details">use address</a> <!-- Changes class to 'red-button' -->
@@ -387,7 +403,7 @@
         <%
         paymentCards = [['New payment card', -1]]
         if current_user
-          current_user.payments.each do |a|
+          current_user.payments.order(updated_at: :desc).each do |a|
             # [ :visa, :master, :american, :discover, :diners, :jcb ]
             if a.brand == 3 # American Express
               cardNumber = "**** ****** #{a.number}"
