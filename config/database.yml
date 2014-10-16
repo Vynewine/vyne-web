@@ -22,4 +22,5 @@ test:
   database: db/test.sqlite3
   adapter: sqlite3
 
-# production: comes from ENV['DATABASE_URL']
+production:
+  <<: *default
