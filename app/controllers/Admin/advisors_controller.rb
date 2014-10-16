@@ -157,16 +157,16 @@ class Admin::AdvisorsController < ApplicationController
 
   def shutl_url
     "https://sandbox-v2.shutl.co.uk"
-    # shutlId = "UOuPfVIAvP4BJWDmXdCiSw=="
   end
 
   def shutl_id
     "HnnFB2UbMlBXdD9h4UzKVQ=="
+    # "UOuPfVIAvP4BJWDmXdCiSw=="
   end
 
   def shutl_secret
     "pKNKPPCejzviiPunGNhnJ95G1JdeAbOYbyAygqIXyfIe4lb73iIDKRqmeZmZWT+ORxTqwMP9PhscJAW7GFmz6A=="
-    # shutlSecret = "DAiXY/UzTM14g6PAqAHDrm/ILwkJ3fT5mnh7aT15JiPI6YLz5GYN7qLtx4Yac60PFN+rZRuZuFyi0FExri3F6w=="
+    # "DAiXY/UzTM14g6PAqAHDrm/ILwkJ3fT5mnh7aT15JiPI6YLz5GYN7qLtx4Yac60PFN+rZRuZuFyi0FExri3F6w=="
   end
 
   def shutl_token
