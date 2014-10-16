@@ -256,32 +256,58 @@ var adminReady = function() {
             showConfirmationWindow(wine);
         };
 
+        var parseWarehouseStatuses = function(availabilityList) {
+            var d = new Date();
+            var w = d.getDay();
+            var t = parseInt('' + d.getHours() + d.getMinutes());
+            var o, c;
+            var s = [];
+            for (var i = 0, availability; availability = availabilityList[i++];) {
+                for (var j = 0, agenda; agenda = availability.agendas[j++];) {
+                    if (agenda.day === w) {
+                        o = agenda.opening;
+                        c = agenda.closing;
+                        console.log('w:',w,'o:',o,'c:',c);
+                        s[i-1] = t >= o && t < c;
+                        break;
+                    }
+                }
+            };
+            return s;
+        };
+
+        /**
+         * Renders wine entry into interface
+         */
         var renderWine = function(wine) {
             console.log('rendering wine', wine);
             var $container = $('#wine-list>table>tbody');
-            // var types = [];
-            // for (var i = 0, type; type = wine.type[i++];) {
-            //     types.push(type.name);
-            // }
-
             var basePrice = 0;
             var basePriceWarehouse = 0;
             var basePriceQuantity = 0;
             var multiplePrices = wine.availability.length > 1 ? '+' : ''
             var warehouses = $('#warehouses_ids').val().split(',');
+            var warehousesOpen = parseWarehouseStatuses(wine.availability);
+            var warehouseOpen = true;
+            console.log(warehousesOpen);
+            console.log('----');
             if (warehouses.length > 1) {
                 // console.log('several warehouses');
                 for (var i = 0, availability; availability = wine.availability[i++];) {
-                    if (availability.quantity > 0) {
-                        if (availability.price < basePrice || basePrice === 0) {
-                            basePrice = availability.price;
-                            basePriceQuantity = availability.quantity;
-                            basePriceWarehouse = availability.warehouse;
+                    // If not open, don't bother...
+                    if (warehousesOpen[i-1]) {
+                        if (availability.quantity > 0) {
+                            if (availability.price < basePrice || basePrice === 0) {
+                                basePrice = availability.price;
+                                basePriceQuantity = availability.quantity;
+                                basePriceWarehouse = availability.warehouse;
+                                // warehouseOpen = warehousesOpen[i-1];
+                            }
                         }
                     }
                 }
             } else {
-                // console.log('one warehouse', warehouses);
+                console.log('one warehouse', warehouses);
                 // One warehouse!
                 for (var i = 0, availability; availability = wine.availability[i++];) {
                     // console.log(availability.warehouse, parseInt(warehouses[0]), availability.warehouse === parseInt(warehouses[0]));
@@ -289,6 +315,7 @@ var adminReady = function() {
                         basePrice = availability.price;
                         basePriceQuantity = availability.quantity;
                         basePriceWarehouse = availability.warehouse;
+                        warehouseOpen = warehousesOpen[i-1];
                     }
                 }
             }
@@ -317,6 +344,7 @@ var adminReady = function() {
                 .attr('data-name', wine.name + ' ' + wine.vintage)
                 .attr('data-price', basePrice)
                 .attr('data-warehouse', basePriceWarehouse)
+                .addClass( warehouseOpen ? 'warehouse-open' : 'warehouse-closed')
                 .addClass('wine').append(
                     $('<td>').addClass('flag').append(
                         $('<img>')

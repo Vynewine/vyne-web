@@ -290,6 +290,9 @@ $border: 1px solid #D5E;
             &:hover {
                 background-color: #DDD;
             }
+            &.warehouse-closed {
+                background: #FDD;
+            }
             & > td {
                 padding: 5px;
                 &.flag {
