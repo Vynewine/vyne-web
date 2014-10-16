@@ -1,13 +1,42 @@
-<p id="notice"><%= notice %></p>
-<div style="padding: 120px 0 0 0 ; text-align: center">
+<div class="order-confirmation">
 
-  <p>
-    <strong>Your Order:</strong>
-    <%= @order.id %>
-  </p>
-  <p>
-    <strong>Is currently in Status:</strong>
-    <%= @order.status.label %>
-  </p>
+	<div class="order-confirmation-overlay"></div>
+
+	<div class="order-confirmation-content wrapper">
+		<ul class="accordian">
+			<li class="accordian-item active">
+				<a href="" class="accordian-item-link">
+				<div class="line"></div>
+					<span class="number">1</span>
+					Order Placed</a>
+				<div class="accordian-item-content">
+					<div class="line"></div>
+					<span class="number">1</span>
+					<h3>Thanks for ordering</h3>
+				    <p>Our sommelier is now choosing your wine</p>
+				    <span>(Based on the preferences provided)</span>
+			    </div>
+			</li>
+			<li class="accordian-item">
+				<a href="" class="accordian-item-link"><span>2.</span> Courier picks up</a>
+				<div class="accordian-item-content">
+					<div class="line"></div>
+					<span class="number">2</span>
+					<h3>Just getting your bottle</h3>
+				    <p>Your courier is picking up your bottle of wine</p>
+				</div>
+			</li>
+			<li class="accordian-item">
+				<a href="" class="accordian-item-link"><span>3.</span> Your bottle is on it's way!</a>
+				<div class="accordian-item-content">
+					<div class="line"></div>
+					<span class="number">3</span>
+					<h3>It's on its way!</h3>
+				    <p>Your wine is being delivered and will be with you shortly!</p>
+				</div>
+			</li>
+		</ul>
+	</div>
 
 </div>
+

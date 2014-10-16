@@ -38,10 +38,12 @@ var updatePostcode = function(e){
             mapUtil.calculateDistancesForAllWarehouses(coordinates.lng, coordinates.lat, function(deliverable) {
                 console.log('delivers here?', deliverable);
                 if (deliverable) {
+                    $('#filterPostcodeMessage').removeClass('error');
                     $('#filterPostcodeMessage').html("VYNZ delivers to this area.");
                     // $buttonDone.removeAttr('disabled');
                     // $buttonDone.removeClass('disabled');
                 } else {
+                    $('#filterPostcodeMessage').addClass('error');
                     $('#filterPostcodeMessage').html("VYNZ does NOT deliver to this area!");
                 }
                 $('#filterPostcodeMessage').fadeIn();
@@ -180,8 +182,14 @@ $(document).ready(function(){
         var $street = $('#addr-st');
         var $detail = $('#addr-no');
 
+        // Postcode sliable panel
+        var $slideable = $('#postcode-panel .slideable');
+
         // Feedback area:
         var $feedback = $('#filterPostcodeMessage');
+
+        //Not available
+        var $notavailable = $('.not-available');
 
         if (postcode.length < 5) {
             // Empty fields:
@@ -192,6 +200,8 @@ $(document).ready(function(){
             $detail.attr('disabled','disabled');
             // Feedback from beginning:
             $feedback.html('');
+            $feedback.css({ 'display': 'none'});
+            $('#use-postcode').css({ 'display': 'none'});
         } else {
 
             var mapUtil = new MapUtility();
@@ -200,11 +210,14 @@ $(document).ready(function(){
                 // console.log('callback 1', deliverable);
                 if (delivery.available) {
 
-                    $('#filterPostcode').blur();
+                    $slideable.removeClass('slide-up');
+
+                    $notavailable.hide();
 
                     $feedback.css({ 'display': 'block '});
                     $('#use-postcode').css({ 'display': 'inline-block '});
 
+                    $feedback.removeClass('error');
                     $feedback.html("VYNZ delivers to this area.");
 
                     $('#warehouses').val(delivery.warehouses);
@@ -283,7 +296,11 @@ $(document).ready(function(){
                     mapUtil.findCoordinatesAndExecute(postcode, successCallback, errorCallback);
 
                 } else {
+                    $slideable.addClass('slide-up');
+                    $notavailable.show();
+                    $feedback.hide().addClass('error');
                     $feedback.html("VYNZ does NOT deliver to this area!");
+                    $('#use-postcode').css({ 'display': 'none'});
                 }
             });
         }

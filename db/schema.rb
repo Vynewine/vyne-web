@@ -316,6 +316,7 @@ ActiveRecord::Schema.define(version: 20140925091503) do
     t.string   "title"
     t.string   "email",      default: "", null: false
     t.string   "phone"
+    t.boolean  "shutl"
     t.integer  "address_id"
     t.datetime "created_at"
     t.datetime "updated_at"
