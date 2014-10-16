@@ -175,6 +175,10 @@ select {
     font: 1.7rem/1 'Lato', Helvetica, Arial, sans-serif;
 }
 
+select {
+    padding: 12px 15px;
+}
+
 .form-step-last {
     display: none;
 }
@@ -248,6 +252,29 @@ input:-webkit-autofill {
     background-position: center center;
 }
 
+#postcode-panel {
+
+    .slideable {
+        -webkit-transform: translateY(0px);
+        -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
+
+        h2, p {
+            opacity: 1;
+            -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
+        }
+
+        &.slide-up {
+            -webkit-transform: translateY(-100px);
+            -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
+
+            > h2, > p {
+                opacity: 0;
+                -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
+            }
+        }
+    }
+}
+
 .order-panel {
     overflow: auto;
     position: relative;
@@ -272,6 +299,7 @@ input:-webkit-autofill {
     .order-panel-content {
         position: relative;
         z-index: 2;
+        height: 100%;
         max-height: 100%;
     }
 
@@ -329,6 +357,35 @@ input:-webkit-autofill {
 
         &.success {
             background: #3bab22;
+        }
+
+        &.error {
+            background: rgba(163,36,56,0.8);
+        }
+    }
+
+    .not-available {
+        display: none;
+        margin-bottom: 40px;
+        border-radius: 0 0 5px 5px;
+        background: rgba(0,0,0,0.5);
+
+        h3 {
+            margin: 0;
+            padding: 2rem 0 1rem;
+        }
+
+        p {
+            margin: 0 auto 1rem;
+        }
+
+        input[type="email"] {
+            border-radius: 0;
+            margin-top: 2rem;
+        }
+
+        input[type="submit"] {
+            border-radius: 0 0 5px 5px;
         }
     }
 
@@ -568,7 +625,7 @@ input:-webkit-autofill {
 .main-header {
     position: fixed;
     top: 0;
-    z-index: 2;
+    z-index: 99;
     height: 50px;
     width: 100%;
     background: rgba(0,0,0,0.6);
@@ -641,7 +698,7 @@ input:-webkit-autofill {
 .aside-bar {
     position: fixed;
     top: 0;
-    z-index: 10;
+    z-index: 100;
     right: -210px;
     height: 100%;
     padding: 0 30px;
@@ -1195,3 +1252,112 @@ input:-webkit-autofill {
     }
 
 }
+
+
+/*
+ * Confirmation
+ */
+
+.order-confirmation {
+    height: 100%;
+    background-image: url(../assets/order-confirm@2x.jpg);
+    background-size: cover;
+    background-position: center center;
+
+    .order-confirmation-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+    }
+
+    .order-confirmation-content {
+        position: relative;
+        z-index: 2;
+        padding: 50px 0 0;
+        height: 100%;
+    }
+}
+
+.accordian {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    list-style: none;
+
+    li {
+        text-align: center;
+
+        .accordian-item-link {
+            font-size: 1.6rem;
+            padding: 1rem;
+            display: block;
+            background: black;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .accordian-item-content {
+            display: none;
+            padding: 4rem;
+            position: relative;
+
+            .line {
+                position: absolute;
+                top: 0;
+                left: 50%;
+                width: 2px;
+                height: 100%;
+                margin-left: -1px;
+                display: none;
+                background: rgba(255,255,255,0.1);
+            }
+
+            .number {
+                position: relative;
+                z-index: 2;
+                color: white;
+                width: 50px;
+                margin: 20px 0;
+                padding: 10px 0;
+                font-weight: bold;
+                background: black;
+                display: inline-block;
+                border: 2px white solid;
+                border-radius: 100px;
+            }
+
+            h3 {
+                margin: 0;
+            }
+
+            p, span {
+                margin: 0 auto;
+                width: 70%;
+                color: rgba(255,255,255,0.4);
+            }
+        }
+
+        &.active {
+            opacity: 1;
+            background: rgba(0,0,0,0.8);
+
+            .accordian-item-link {
+                display: none;
+            }
+
+            .accordian-item-content {
+                display: block;
+            }
+        }
+
+        &.complete {
+            
+        }
+    }
+}
+
+
+
+
