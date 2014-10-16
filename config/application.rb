@@ -21,6 +21,10 @@ module Vynz
     # config.i18n.default_locale = :de
     config.serve_static_assets = true
 
+    Dir.glob("#{Rails.root}/app/assets/images/**/").each do |path|
+      config.assets.paths << path
+    end
+
   end
 end
 # If you are deploying on Heroku with Rails 3.2 only, you may want to set:

@@ -321,7 +321,7 @@ var adminReady = function() {
                     $('<td>').addClass('flag').append(
                         $('<img>')
                             .attr('alt', wine.countryName)
-                            .attr('src', "/assets/flags/"+wine.countryCode+".png")
+                            .attr('src', wine.countryFlag)
 
                     ),
                     $('<td>').addClass('subregion').html(wine.subregion),

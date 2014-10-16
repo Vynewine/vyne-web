@@ -1,6 +1,9 @@
+require 'sprockets/railtie'
+
 json.array!(@results) do |wine|
   # Origin info
   json.countryCode wine.producer.country.alpha_2
+  json.countryFlag asset_path(wine.producer.country.alpha_2 + '.png')
   json.countryName wine.producer.country.name
   json.subregion wine.subregion.nil? ? '' : wine.subregion.name
 
