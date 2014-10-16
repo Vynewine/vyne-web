@@ -801,6 +801,7 @@ wareName.each do |ware|
          :title => ware,
          :email => ware.delete(' ') + '@vynz.co',
          :phone => "012312312#{j+1}",
+         :shutl => true,
     :address_id => j
   )
   j += 1

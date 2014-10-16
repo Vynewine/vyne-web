@@ -3,8 +3,10 @@
 <table>
   <thead>
     <tr>
+      <th>Id</th>
       <th>Title</th>
       <th>Email</th>
+      <th>Phone</th>
       <th>Address</th>
       <th colspan="3"></th>
     </tr>
@@ -13,8 +15,10 @@
   <tbody>
     <% @warehouses.each do |warehouse| %>
       <tr>
+        <td><%= warehouse.id %></td>
         <td><%= warehouse.title %></td>
         <td><%= warehouse.email %></td>
+        <td><%= warehouse.phone %></td>
         <td>
           <% if warehouse.address %>
           <%= warehouse.address.full %>

@@ -1,5 +1,6 @@
 class Agenda < ActiveRecord::Base
   belongs_to :warehouse
+  validates :warehouse_id, :day, :presence => true
   validates_uniqueness_of :day, :scope => [:warehouse]
   def day_name
     Date::DAYNAMES[day]
