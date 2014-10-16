@@ -322,6 +322,7 @@ var adminReady = function() {
                         $('<img>')
                             .attr('alt', wine.countryName)
                             .attr('src', "/assets/flags/"+wine.countryCode+".png")
+
                     ),
                     $('<td>').addClass('subregion').html(wine.subregion),
                     $('<td>').addClass('name').html(
@@ -601,7 +602,7 @@ var adminReady = function() {
         $('#reload-orders').click(function(e){
             e.preventDefault();
             $('#order-list').html('');
-            postJSON('../orders/list.json', token, {'status':[1]}, renderOrders, errorMethod);
+            postJSON('../orders/list.json', token, {'status':[2]}, renderOrders, errorMethod);
         });
 
         $('#confirm').click(confirm);
