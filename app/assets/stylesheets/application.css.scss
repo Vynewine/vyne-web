@@ -255,7 +255,7 @@ input:-webkit-autofill {
 }
 
 #order .swiper-wrapper {
-    background-image: url(../assets/order@2x.jpg);
+    background-image: url(asset-path('order@2x.jpg'));
     background-size: 100% auto;
     background-position: center center;
 }
@@ -289,7 +289,7 @@ input:-webkit-autofill {
     -webkit-overflow-scrolling: touch;
 
     /*&#postcode-panel {
-        background-image: url(../assets/two@2x.jpg);
+        background-image: url(asset-path('two@2x.jpg'));
         background-size: cover;
         background-position: top left;
     }*/
@@ -398,7 +398,7 @@ input:-webkit-autofill {
     }
 
     &#bottles-panel {
-        /*background-image: url(../assets/cellar@2x.jpg);
+        /*background-image: url(asset-path('cellar@2x.jpg'));
         background-size: cover;
         background-position: center center;*/
     }
@@ -775,13 +775,13 @@ input:-webkit-autofill {
         text-align: center;
 
         &#one {
-            background-image: url(../assets/one@2x.jpg);
+            background-image: url(asset-path('one@2x.jpg'));
             background-size: cover;
             background-position: center center;
         }
 
         &#two {
-            background-image: url(../assets/two@2x.jpg);
+            background-image: url(asset-path('two@2x.jpg'));
             background-size: cover;
             background-position: center center;
 
@@ -791,7 +791,7 @@ input:-webkit-autofill {
         }
 
         &#three {
-            background-image: url(../assets/three@2x.jpg);
+              background-image: url(asset-path('three@2x.jpg'));
             background-size: cover;
             background-position: center center;
         }

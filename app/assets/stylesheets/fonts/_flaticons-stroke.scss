@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'Flaticons Stroke';
-  src: url('/assets/flaticons-stroke.eot');
-  src: url('/assets/flaticons-stroke.eot?#iefix') format("embedded-opentype"),
-       url('/assets/flaticons-stroke.woff') format('woff'),
-       url('/assets/flaticons-stroke.ttf') format('truetype'),
-       url('/assets/flaticons-stroke.svg#flaticons-stroke') format('svg');
+  src: url(asset-path('flaticons-stroke.eot'));
+  src: url(asset-path('flaticons-stroke.eot?#iefix')) format("embedded-opentype"),
+       url(asset-path('flaticons-stroke.woff')) format('woff'),
+       url(asset-path('flaticons-stroke.ttf')) format('truetype'),
+       url(asset-path('flaticons-stroke.svg#flaticons-stroke')) format('svg');
   font-weight: normal;
   font-style: normal; }
 
