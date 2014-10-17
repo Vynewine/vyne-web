@@ -605,7 +605,6 @@ for j in 1..5 do
     Wine.create(
                   :name => "Random #{j}-#{i}",
                :vintage => 2000 + i,
-                  :cost => 3000 + rand(6000),
                   :area => "Random",
          :single_estate => i%2,
                :alcohol => i+2,
@@ -848,11 +847,15 @@ puts "Warehouses --- OK"
 
 for j in 1..2 do
   for i in 1..10 do
+
+    cost = (300 + rand(3700)).to_f/100
+
     Inventory.create(
       :warehouse_id => j,
            :wine_id => i*j,
           :quantity => rand(80),
-       :category_id => 1 + rand(4)
+              :cost => cost,
+       :category_id => cost < 11 ? 1 : (cost < 16 ? 2 : (cost < 26 ? 3 : 4))
     )
   end
 end
