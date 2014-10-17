@@ -92,8 +92,7 @@ class ShopController < ApplicationController
 
     puts params[:wines]
 
-    @order.info = "{\"warehouses\":[#{warehouses}]}"
-
+    @order.information = "{\"warehouses\":[#{warehouses}]}"
 
 
     # redirect_to action: 'new'
