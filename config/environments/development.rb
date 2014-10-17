@@ -46,4 +46,6 @@ Rails.application.configure do
   #Mandrill API
   config.mandrill = 'ipcLBLgQRHya2q3jvpPQsw'
 
+  config.assets.prefix = "/dev-assets"
+
 end

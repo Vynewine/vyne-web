@@ -18,6 +18,7 @@
 //= require forms
 //# require vendor/retina.min
 //= require vendor/swiper_min
+//= require vendor/custom-select-plugin
 
 var ready = function() {
     // console.log('Doc is apparently ready');
@@ -32,6 +33,8 @@ var ready = function() {
 };
 // console.log(2);
 $(function() {
+
+	new CustomSelect();
 
 	/* Header */
 

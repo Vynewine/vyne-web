@@ -17,6 +17,7 @@
 @import 'normalize';
 @import 'client';
 @import 'swiper';
+@import 'custom-select-plugin';
 
 $primary-colour: #A32438;
 
@@ -172,12 +173,18 @@ textarea {
     width: 100%;
     padding: 15px;
     background: white;
+    border-radius: 2px;
     -webkit-appearance: none;
     font: 1.7rem/1 'Lato', Helvetica, Arial, sans-serif;
 }
 
+input:focus,
+textarea:focus {
+    box-shadow: inset 1px 2px rgba(0,0,0,0.1);
+}
+
 select {
-    padding: 12px 15px;
+    padding: 13px 15px;
 }
 
 .form-step-last {
@@ -248,7 +255,7 @@ input:-webkit-autofill {
 }
 
 #order .swiper-wrapper {
-    background-image: url(../assets/order@2x.jpg);
+    background-image: url(asset-path('order@2x.jpg'));
     background-size: 100% auto;
     background-position: center center;
 }
@@ -282,7 +289,7 @@ input:-webkit-autofill {
     -webkit-overflow-scrolling: touch;
 
     /*&#postcode-panel {
-        background-image: url(../assets/two@2x.jpg);
+        background-image: url(asset-path('two@2x.jpg'));
         background-size: cover;
         background-position: top left;
     }*/
@@ -391,7 +398,7 @@ input:-webkit-autofill {
     }
 
     &#bottles-panel {
-        /*background-image: url(../assets/cellar@2x.jpg);
+        /*background-image: url(asset-path('cellar@2x.jpg'));
         background-size: cover;
         background-position: center center;*/
     }
@@ -425,7 +432,15 @@ input:-webkit-autofill {
                     padding: 17px;
                     display: block;
                     border-radius: 5px;
+                    background: rgba(0,0,0,0.2);
                     border: 1px rgba(255,255,255,0.1) solid;
+                    border-bottom: 1px rgba(255,255,255,0.2) solid;
+                    box-shadow: inset 0 -2px 2px rgba(255,255,255,0.1);
+
+                    &:active {
+                        background: rgba(0,0,0,0.4);
+                        box-shadow: inset 0 1px 3px rgba(0,0,0,0.6);
+                    }
 
                     img {
                         width: 15px;
@@ -451,12 +466,14 @@ input:-webkit-autofill {
                 &:nth-child(2) .bottle-info {
                     left: auto;
                     right: 0;
+                    -webkit-transform-origin: 100% 0%;
                 }
 
                 &:nth-child(3) .bottle-info {
                     top: auto;
                     left: 0;
                     bottom: 0;
+                    -webkit-transform-origin: 0% 100%;
                 }
 
                 &:nth-child(4) .bottle-info {
@@ -464,6 +481,7 @@ input:-webkit-autofill {
                     left: auto;
                     right: 0;
                     bottom: 0;
+                    -webkit-transform-origin: 100% 100%;
                 }
 
                 .bottle-info {
@@ -475,7 +493,9 @@ input:-webkit-autofill {
                     width: 100%;
                     height: 196px;
                     padding: 16px;
-                    border-radius: 5px;
+                    border-radius: 5px; 
+                    -webkit-transform: scale(0);
+                    -webkit-transform-origin: 0% 0%;
                     border: 1px rgba(255,255,255,0.2) solid;
                     -webkit-transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
@@ -562,6 +582,7 @@ input:-webkit-autofill {
                         width: 300px;
                         height: 390px;
                         background: rgba(0,0,0,0.85);
+                        -webkit-transform: scale(1);
                         -webkit-transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
                         .close {
@@ -754,13 +775,13 @@ input:-webkit-autofill {
         text-align: center;
 
         &#one {
-            background-image: url(../assets/one@2x.jpg);
+            background-image: url(asset-path('one@2x.jpg'));
             background-size: cover;
             background-position: center center;
         }
 
         &#two {
-            background-image: url(../assets/two@2x.jpg);
+            background-image: url(asset-path('two@2x.jpg'));
             background-size: cover;
             background-position: center center;
 
@@ -770,7 +791,7 @@ input:-webkit-autofill {
         }
 
         &#three {
-            background-image: url(../assets/three@2x.jpg);
+              background-image: url(asset-path('three@2x.jpg'));
             background-size: cover;
             background-position: center center;
         }
@@ -961,17 +982,24 @@ input:-webkit-autofill {
         display: block;
         width: 46px;
         margin: 0 auto 30px;
-        padding: 10px 0;
+        padding: 11px 0;
+        font-size: 1.4rem;
         text-align: center;
         border-radius: 100px;
-        background: rgba(0,0,0,0.6);
+        text-transform: uppercase;
         border: 1px rgba(255,255,255,0.2) solid;
     }
 
     .specific {
+
         label {
             display: block;
+            text-align: center;
             margin-bottom: 10px;
+        }
+
+        input {
+            text-align: center;
         }
     }
 
