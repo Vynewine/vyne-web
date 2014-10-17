@@ -329,6 +329,7 @@ ActiveRecord::Schema.define(version: 20140925091503) do
     t.integer  "vintage"
     t.string   "area"
     t.boolean  "single_estate"
+    t.integer  "cost"
     t.integer  "alcohol"
     t.integer  "sugar"
     t.integer  "acidity"

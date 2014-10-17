@@ -5,6 +5,7 @@ class CreateWines < ActiveRecord::Migration
       t.integer :vintage
       t.string :area
       t.boolean :single_estate
+      t.integer :cost
       t.integer :alcohol
       t.integer :sugar
       t.integer :acidity

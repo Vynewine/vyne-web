@@ -50,15 +50,19 @@ class Admin::WarehousesController < ApplicationController
   # PATCH/PUT /warehouses/1
   # PATCH/PUT /warehouses/1.json
   def update
-    respond_to do |format|
-      if @warehouse.update(warehouse_params)
-        format.html { redirect_to [:admin, @warehouse], notice: 'Warehouse was successfully updated.' }
-        format.json { render :show, status: :ok, location: @warehouse }
+    # respond_to do |format|
+      if update_shutl == false
+        redirect_to edit_admin_warehouse_url, :flash => { :notice => "Shutl did not update!" }
       else
-        format.html { render :edit }
-        format.json { render json: @warehouse.errors, status: :unprocessable_entity }
+        if @warehouse.update(warehouse_params)
+          format.html { redirect_to [:admin, @warehouse], notice: 'Warehouse was successfully updated.' }
+          format.json { render :show, status: :ok, location: @warehouse }
+        else
+          format.html { render :edit }
+          format.json { render json: @warehouse.errors, status: :unprocessable_entity }
+        end
       end
-    end
+    # end
   end
 
   # DELETE /warehouses/1
@@ -147,7 +151,7 @@ class Admin::WarehousesController < ApplicationController
         if agenda.opening == 0 && agenda.closing == 0
           agendas[agenda.day] = []
         else
-          agendas[agenda.day] = [[agenda.opening, agenda.closing]]
+          agendas[agenda.day] = [[agenda.shutl_opening, agenda.shutl_closing]]
         end
       end
 
@@ -197,6 +201,7 @@ class Admin::WarehousesController < ApplicationController
 # {"errors"=>{"opening_hours"=>["Invalid entry. Multiple opening hours should be comma separated and overlap between opening periods is not allowed"]}}
 
       if response["errors"]
+        # @errors = response["errors"]
         return false
       else
         return true
@@ -204,10 +209,63 @@ class Admin::WarehousesController < ApplicationController
     end
 
     # PUT /stores/:id
-    def update_shutl(name)
+    def update_shutl
+      puts 'Updating warehouse in shutl'
       require 'net/http'
       require 'json'
-      url = shutl_token
+      domain = shutl_url
+      url = URI("#{domain}/stores")
+      token = shutl_token
+      
+      # phoneNumber = @warehouse.phone.to_i.to_s #removes leading zero
+      
+      agendas = []
+      @warehouse.agendas.each do |agenda|
+        if agenda.opening == 0 && agenda.closing == 0
+          agendas[agenda.day] = []
+        else
+          agendas[agenda.day] = [[agenda.shutl_opening, agenda.shutl_closing]]
+        end
+      end
+
+      headers = {
+        'Authorization' => "Bearer #{token}"
+      }
+      body = {
+          :store => {
+              :brand_name => @warehouse.title,
+              :id => @warehouse.shutl_id,
+              :name => "#{@warehouse.title}",
+              :address_line_1 => @warehouse.address.line,
+              :postcode => @warehouse.address.postcode,
+              :phone_number => @warehouse.phone,
+              :email => @warehouse.email,
+              :opening_hours => {
+                  :monday    => agendas[1],
+                  :tuesday   => agendas[2],
+                  :wednesday => agendas[3],
+                  :thursday  => agendas[4],
+                  :friday    => agendas[5],
+                  :saturday  => agendas[6],
+                  :sunday    => agendas[0]
+              }
+          }
+      }
+      puts body.to_json
+      req = Net::HTTP::Put.new(url, headers)
+      req.body = body.to_json
+      connection = Net::HTTP::start(url.hostname, url.port, :use_ssl => true ) {|http|
+        http.request(req)
+      }
+      response = JSON.parse(connection.read_body)
+      puts "================================************"
+      puts response
+
+      if response["errors"]
+        return false
+      else
+        return true
+      end
     end
 
     # def destroy_shutl(name)

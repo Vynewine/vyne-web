@@ -6,10 +6,10 @@ class Warehouse < ActiveRecord::Base
   accepts_nested_attributes_for :address, :reject_if => :all_blank, :allow_destroy => true
   accepts_nested_attributes_for :agendas, :reject_if => :all_blank, :allow_destroy => true
   after_create :set_default_agenda
-  
+
   def set_default_agenda
     if agendas.count == 0
-      for i in 1..7 do
+      for i in 0..6 do
         Agenda.create(
           :warehouse_id => self.id,
                    :day => i,
@@ -31,7 +31,10 @@ class Warehouse < ActiveRecord::Base
   end
 
   def shutl_id
-    "Warehouse_#{id}"
+    n = title.gsub(/\s+/, "").upcase
+    d = created_at || Time.new
+    t = d.to_time.strftime("%H%M%S_%d%m%y")
+    "Warehouse_#{n}_#{t}"
   end
 
 end

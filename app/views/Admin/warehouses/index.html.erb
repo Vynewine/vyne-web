@@ -1,10 +1,11 @@
 <h1>Listing warehouses</h1>
 
-<table>
+<table border="1" class="list-table">
   <thead>
     <tr>
       <th>Id</th>
       <th>Title</th>
+      <th>Shutl id</th>
       <th>Email</th>
       <th>Phone</th>
       <th>Address</th>
@@ -17,6 +18,7 @@
       <tr>
         <td><%= warehouse.id %></td>
         <td><%= warehouse.title %></td>
+        <td><%= warehouse.shutl_id %></td>
         <td><%= warehouse.email %></td>
         <td><%= warehouse.phone %></td>
         <td>
