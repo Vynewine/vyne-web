@@ -26,14 +26,14 @@ class Warehouse < ActiveRecord::Base
       if self.id || self.title && self.email && self.address
         u = agenda_to_update.update_attributes(agenda_attributes)
       end
-      puts u
+      # puts u
     end
   end
 
   def shutl_id
     n = title.gsub(/\s+/, "").upcase
     d = created_at || Time.new
-    t = d.to_time.strftime("%H%M%S_%d%m%y")
+    t = d.to_time.strftime("%H%M_%d%m%y")
     "Warehouse_#{n}_#{t}"
   end
 

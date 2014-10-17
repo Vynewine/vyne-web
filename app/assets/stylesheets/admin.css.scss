@@ -18,6 +18,21 @@ body {
     line-height: 18px;
 }
 
+.alerts {
+    padding: 30px 0 0 30px;
+    & > p {
+        margin: 0;
+        &.notice {
+            color: green;
+            font-weight: bold;
+        }
+        &.alert {
+            color: red;
+            font-weight: bold;
+        }
+    }
+}
+
 // Admin area:
 
 .left-block {
@@ -99,6 +114,9 @@ ul.submenu {
             color: white;
             text-decoration: none;
         }
+        & > a:hover {
+            background: black;
+        }
     }
 }
 
@@ -139,6 +157,23 @@ div.main-wrapper {
     float: left;
     width: 100%;
 }
+
+.buttonStyle {
+    float: left;
+    position: relative;
+    background: #EEE;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-size: 14px;
+    line-height: 14px;
+    color: black;
+    border: 1px solid black;
+    margin: 15px 15px 0 0;
+    &:hover {
+        background: #DDD;
+    }
+}
+
 div.main {
    -moz-box-sizing: border-box;
 -webkit-box-sizing: border-box;
@@ -148,6 +183,17 @@ div.main {
     @extend .left-block;
     display: block;
     padding: 30px;
+    & > a {
+        @extend .buttonStyle;
+    }
+}
+
+div.actions {
+    float: left;
+    & > input[type="submit"] {
+        @extend .buttonStyle;
+        background: lightgreen;
+    }
 }
 
 .button-wrapper > a {

@@ -51,15 +51,18 @@ class Admin::WarehousesController < ApplicationController
   # PATCH/PUT /warehouses/1.json
   def update
     # respond_to do |format|
+      @warehouse.update_attributes(warehouse_params)
       if update_shutl == false
         redirect_to edit_admin_warehouse_url, :flash => { :notice => "Shutl did not update!" }
       else
-        if @warehouse.update(warehouse_params)
-          format.html { redirect_to [:admin, @warehouse], notice: 'Warehouse was successfully updated.' }
-          format.json { render :show, status: :ok, location: @warehouse }
-        else
-          format.html { render :edit }
-          format.json { render json: @warehouse.errors, status: :unprocessable_entity }
+        respond_to do |format|
+          if @warehouse.update(warehouse_params)
+            format.html { redirect_to [:admin, @warehouse], notice: 'Warehouse was successfully updated.' }
+            format.json { render :show, status: :ok, location: @warehouse }
+          else
+            format.html { render :edit }
+            format.json { render json: @warehouse.errors, status: :unprocessable_entity }
+          end
         end
       end
     # end
@@ -195,8 +198,9 @@ class Admin::WarehousesController < ApplicationController
         http.request(req)
       }
       response = JSON.parse(connection.read_body)
-      puts "================================************"
+      puts "================================"
       puts response
+      puts "================================"
 
 # {"errors"=>{"opening_hours"=>["Invalid entry. Multiple opening hours should be comma separated and overlap between opening periods is not allowed"]}}
 
@@ -214,7 +218,7 @@ class Admin::WarehousesController < ApplicationController
       require 'net/http'
       require 'json'
       domain = shutl_url
-      url = URI("#{domain}/stores")
+      url = URI("#{domain}/stores/#{@warehouse.shutl_id}")
       token = shutl_token
       
       # phoneNumber = @warehouse.phone.to_i.to_s #removes leading zero
@@ -233,13 +237,13 @@ class Admin::WarehousesController < ApplicationController
       }
       body = {
           :store => {
-              :brand_name => @warehouse.title,
-              :id => @warehouse.shutl_id,
-              :name => "#{@warehouse.title}",
-              :address_line_1 => @warehouse.address.line,
-              :postcode => @warehouse.address.postcode,
-              :phone_number => @warehouse.phone,
-              :email => @warehouse.email,
+              # :brand_name => @warehouse.title,
+              # :id => @warehouse.shutl_id,
+              # :name => "#{@warehouse.title}",
+              # :address_line_1 => @warehouse.address.line,
+              # :postcode => @warehouse.address.postcode,
+              # :phone_number => @warehouse.phone,
+              # :email => @warehouse.email,
               :opening_hours => {
                   :monday    => agendas[1],
                   :tuesday   => agendas[2],
@@ -258,8 +262,9 @@ class Admin::WarehousesController < ApplicationController
         http.request(req)
       }
       response = JSON.parse(connection.read_body)
-      puts "================================************"
+      puts "================================"
       puts response
+      puts "================================"
 
       if response["errors"]
         return false
