@@ -248,6 +248,10 @@ table.list-table {
         & > td {
             padding: 5px;
         }
+
+        &:hover {
+            background: #EEE;
+        }
     }
 }
 
