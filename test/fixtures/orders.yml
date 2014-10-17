@@ -2,13 +2,9 @@
 
 one:
   warehouse: one
-  wine: one
-  quantity: 1
   status: two
   client: one
 
 two:
   warehouse: two
-  wine: two
-  quantity: 1
   client: two

@@ -1,0 +1,13 @@
+class CreateOrderItems < ActiveRecord::Migration
+  def change
+    create_table :order_items do |t|
+      t.references :order, index: true
+      t.references :wine, index: true
+      t.references :occasion, index: true
+      t.references :type, index: true
+      t.integer :quantity
+
+      t.timestamps
+    end
+  end
+end

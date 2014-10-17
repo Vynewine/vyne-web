@@ -386,7 +386,7 @@ Food.create(
     :name => "sweet",
   :parent => 0
 )
-Food.create(
+@food_one = Food.create(
     :name => "beef",
   :parent => 1
 )
@@ -426,7 +426,7 @@ Food.create(
     :name => "hard cheese",
   :parent => 3
 )
-Food.create(
+@food_two = Food.create(
     :name => "grill & BBQ",
   :parent => 4
 )
@@ -589,9 +589,9 @@ puts "Sub-regions -- OK"
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # 5 types
 
-types = ["red", "white", "sparkling", "sweet", "port"]
-types.each do |t|
-  Type.create(:name => t)
+types = ['Bold Red', 'Medium Red', 'Light Red', 'Rosé', 'Rich White', 'Dry White', 'Sparkling', 'Sweet White', 'Fortified']
+types.each_with_index do |t, index|
+  Type.create(:id => index + 1, :name => t)
 end
 
 puts "Types -------- OK"
@@ -892,15 +892,61 @@ for i in 0..totalOrders do
     warehouses = "1,2"
   end
 
+
+  total_order_items = 1 + rand(2)
+  order_items = Array.new
+
+  total_order_items.times do
+    order_items << OrderItem.create({quantity: 1 + rand(2), foods: [@food_one, @food_two]})
+  end
+
   Order.create(
     :warehouse_id => warehouse,
     :client_id => 2+rand(7),
     :address_id => 4+rand(4),
     :status_id => status,
-    :info => "{\"warehouses\":[#{warehouses}]}"
+    :info => "{\"warehouses\":[#{warehouses}]}",
+    :order_items => order_items
   )
 
 end
 
 puts "Orders ------- OK"
 
+Occasion.create(
+    :id => 1,
+    :name => 'Solo'
+)
+
+Occasion.create(
+    :id => 2,
+    :name => 'With Friends'
+)
+
+Occasion.create(
+    :id => 3,
+    :name => 'Party'
+)
+
+Occasion.create(
+    :id => 4,
+    :name => 'Date'
+)
+
+Occasion.create(
+    :id => 5,
+    :name => 'Dining'
+)
+
+Occasion.create(
+    :id => 6,
+    :name => 'Outdoors'
+)
+
+Occasion.create(
+    :id => 7,
+    :name => 'Gift'
+)
+
+
+puts "Occasions ------- OK"

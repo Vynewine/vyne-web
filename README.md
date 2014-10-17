@@ -44,4 +44,20 @@ To run specific test method
 ruby -I test test/controllers/signup_controller_test.rb -n /.*method name.*/
 ```
 
+### Deployment
+Precompile assets
+```
+RAILS_ENV=production rake assets:precompile
+```
+
+Commit precompiled assets
+```
+git commit -a -m "Adding precompiled assets"
+```
+
+Push to Heroku (assumin you are logged in to Vynz Heroku account)
+```
+git push heroku master
+```
+
 

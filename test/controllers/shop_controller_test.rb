@@ -9,6 +9,9 @@ class ShopControllerTest < ActionController::TestCase
   def setup
     Sunspot.session = Sunspot::Rails::StubSessionProxy.new(Sunspot.session)
     StripeMock.start
+    # Disable mailer
+    Excon.defaults[:mock] = true
+    Excon.stub({}, {body: '{}', status: 200}) # stubs any request to return an empty JSON string
 
     @userOne = User.create!({
                                  :first_name => 'John',
@@ -41,11 +44,30 @@ class ShopControllerTest < ActionController::TestCase
   end
 
   test 'should create order' do
+
+    wines = [{
+                 :quantity => 1,
+                 :specificWine => 'Chateauneuf-du-Pape',
+                 :food => [1, 3, 4],
+                 :occasion => occasions(:one),
+                 :type => types(:one)
+
+             }, {
+                 :quantity => 2,
+                 :specificWine => 'Chateauneuf-du-Pape',
+                 :food => [1, 3, 4],
+                 :occasion => occasions(:two),
+                 :type => types(:two)
+             }
+    ]
+
     post :create, {
         :address_id => @address.id,
         :stripeToken => 'tok_14m18t2eZvKYlo2CHKjAcAVY',
         :new_brand => '1',
-        :new_card => '1111'
+        :new_card => '1111',
+        :warehouses => '1,2',
+        :wines => wines.to_json
     }
 
     payment = Payment.find_by user: @userOne
@@ -56,6 +78,7 @@ class ShopControllerTest < ActionController::TestCase
     assert_equal(order.payment, payment)
     assert_equal(order.client, @userOne)
     assert_equal(payment.user, @userOne)
+    assert_equal(order.info, '{"warehouses":[1,2]}')
 
   end
 

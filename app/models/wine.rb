@@ -4,7 +4,7 @@ class Wine < ActiveRecord::Base
   belongs_to :subregion
   belongs_to :appellation
   belongs_to :maturation
-  belongs_to :order
+  belongs_to :order_item
 
   has_and_belongs_to_many :types
   # has_and_belongs_to_many :grapes

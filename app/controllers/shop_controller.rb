@@ -1,3 +1,5 @@
+require 'json'
+
 class ShopController < ApplicationController
   include UserMailer
   before_action :authenticate_user!, :except => [:new, :create]
@@ -88,7 +90,11 @@ class ShopController < ApplicationController
       warehouses = params[:warehouses]
     end
 
+    puts params[:wines]
+
     @order.info = "{\"warehouses\":[#{warehouses}]}"
+
+
 
     # redirect_to action: 'new'
 
