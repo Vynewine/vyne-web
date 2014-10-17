@@ -23,12 +23,12 @@ json.array!(@results) do |wine|
   
   # Availability
   json.availability do
-    # wine.inventories.each do |inventory|
     json.array!(wine.inventories) do |inventory|
       json.warehouse inventory.warehouse_id
-      json.price inventory.category.price
-      json.quantity inventory.quantity
-      # json.set!(inventory.warehouse_id, inventory.category.price)
+      json.agendas   inventory.warehouse.agendas
+      json.cost      inventory.cost
+      json.price     inventory.category.price
+      json.quantity  inventory.quantity
     end
   end
 

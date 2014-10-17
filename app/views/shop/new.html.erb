@@ -44,7 +44,7 @@
 
 <%# ============================= Wine type 1 ============================= %>
 
-  <div id="bottles-panel" class="order-panel swiper-slide noSwipingClass">
+  <div id="bottles-panel" class="order-panel swiper-slide noSwipingClass" style="display:none;">
     <div class="order-panel-content bottles wrapper">
 
       <h2>Select your bottle</h2>
@@ -87,7 +87,7 @@
 
 <%# ============================= Preferences ============================= %>
 
-  <div class="step order-panel swiper-slide noSwipingClass">
+  <div class="step order-panel swiper-slide noSwipingClass" style="display:none;">
     <div class="order-panel-content preferences wrapper">
 
       <div class="slideable">
@@ -287,11 +287,10 @@
   </div>
 
 <%# =============================== Sign up =============================== %>
-<%# wtf man... %>
 
     <% unless user_signed_in? %>
 
-    <div class="step order-panel swiper-slide noSwipingClass">
+    <div class="step order-panel swiper-slide noSwipingClass" style="display:none;">
       <div class="order-panel-content register wrapper">
         <div id="account-form" class="register-form">
           <h2 class="account-heading">Register</h2>
@@ -344,7 +343,7 @@
 
 <%# ========================== Address selection ========================== %>
 
-  <div class="step order-panel swiper-slide noSwipingClass">
+  <div class="step order-panel swiper-slide noSwipingClass" style="display:none;">
     <div class="order-panel-content delivery wrapper">
       <h2>Delivery address</h2>
 
@@ -397,7 +396,7 @@
 %>
 <%# =============================== Payment =============================== %>
 
-  <div class="step order-panel swiper-slide noSwipingClass">
+  <div class="step order-panel swiper-slide noSwipingClass" style="display:none;">
     <div class="order-panel-content payment wrapper">
       <h2>Link Payment</h2>
         <%

@@ -823,35 +823,39 @@ puts "Warehouses --- OK"
 
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Agendas
-for i in 1..7 do
-  Agenda.create(
-    :warehouse_id => 1,
-             :day => i,
-         :opening =>  800,
-         :closing => 1900
-  )
-end
-for i in 1..7 do
-  Agenda.create(
-    :warehouse_id => 2,
-             :day => i,
-         :opening =>  900,
-         :closing => 2030
-  )
-end
+# for i in 0..6 do
+#   Agenda.create(
+#     :warehouse_id => 1,
+#              :day => i,
+#          :opening =>  800,
+#          :closing => 1900
+#   )
+# end
+# for i in 0..6 do
+#   Agenda.create(
+#     :warehouse_id => 2,
+#              :day => i,
+#          :opening =>  900,
+#          :closing => 2030
+#   )
+# end
 
-puts "Agendas ------ OK"
+# puts "Agendas ------ OK"
 
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Inventory
 
 for j in 1..2 do
   for i in 1..10 do
+
+    cost = (300 + rand(3700)).to_f/100
+
     Inventory.create(
       :warehouse_id => j,
            :wine_id => i*j,
           :quantity => rand(80),
-       :category_id => 1 + rand(4)
+              :cost => cost,
+       :category_id => cost < 11 ? 1 : (cost < 16 ? 2 : (cost < 26 ? 3 : 4))
     )
   end
 end
@@ -905,7 +909,7 @@ for i in 0..totalOrders do
     :client_id => 2+rand(7),
     :address_id => 4+rand(4),
     :status_id => status,
-    :info => "{\"warehouses\":[#{warehouses}]}",
+    :information => "{\"warehouses\":[#{warehouses}]}",
     :order_items => order_items
   )
 

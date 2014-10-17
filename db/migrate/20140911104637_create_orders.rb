@@ -8,8 +8,9 @@ class CreateOrders < ActiveRecord::Migration
       t.references :payment, index: true
       t.references :status, index: true
       t.integer :quantity
-      t.string :delivery
-      t.string :info
+      t.string :delivery_token
+      t.json :information
+      t.json :delivery_status
 
       t.timestamps
     end

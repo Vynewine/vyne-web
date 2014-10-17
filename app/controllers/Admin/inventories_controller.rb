@@ -18,6 +18,7 @@ class Admin::InventoriesController < ApplicationController
   # GET /inventories/new
   def new
     @inventory = Inventory.new
+    @categories = Category.all
   end
 
   # GET /inventories/1/edit

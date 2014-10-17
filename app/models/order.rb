@@ -19,4 +19,10 @@ class Order < ActiveRecord::Base
   scope :valid, -> { where.not(:wine_id => nil) }
   scope :user_id, ->(id) { where("client_id = ?", id) }
 
+  def delivery_status_json
+    d = delivery_status.to_s
+    require 'pp'
+    PP.pp(d,'',80)
+  end
+
 end

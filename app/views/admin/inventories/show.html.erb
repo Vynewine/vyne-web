@@ -15,5 +15,10 @@
   <%= @inventory.quantity %>
 </p>
 
-<%= link_to 'Edit', edit_admin_inventory_path(@inventory) %> |
+<p>
+  <strong>Cost:</strong>
+&pound;<%= "%.2f" % @inventory.cost %>
+</p>
+
+<%= link_to 'Edit', edit_admin_inventory_path(@inventory) %>
 <%= link_to 'Back', admin_inventories_path %>

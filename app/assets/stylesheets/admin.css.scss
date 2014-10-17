@@ -18,6 +18,26 @@ body {
     line-height: 18px;
 }
 
+pre {
+    border: 1px solid black;
+    padding: 10px;
+}
+
+.alerts {
+    padding: 30px 0 0 30px;
+    & > p {
+        margin: 0;
+        &.notice {
+            color: green;
+            font-weight: bold;
+        }
+        &.alert {
+            color: red;
+            font-weight: bold;
+        }
+    }
+}
+
 // Admin area:
 
 .left-block {
@@ -99,6 +119,9 @@ ul.submenu {
             color: white;
             text-decoration: none;
         }
+        & > a:hover {
+            background: black;
+        }
     }
 }
 
@@ -139,6 +162,23 @@ div.main-wrapper {
     float: left;
     width: 100%;
 }
+
+.buttonStyle {
+    float: left;
+    position: relative;
+    background: #EEE;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-size: 14px;
+    line-height: 14px;
+    color: black;
+    border: 1px solid black;
+    margin: 15px 15px 0 0;
+    &:hover {
+        background: #DDD;
+    }
+}
+
 div.main {
    -moz-box-sizing: border-box;
 -webkit-box-sizing: border-box;
@@ -148,15 +188,35 @@ div.main {
     @extend .left-block;
     display: block;
     padding: 30px;
+    & > a {
+        @extend .buttonStyle;
+    }
 }
 
-.button-wrapper > a {
-    display: inline-block;
-    padding: 3px;
-    color: #666;
-    text-decoration: none;
-    &:hover {
-        color: black;
+div.actions {
+    float: left;
+    & > input[type="submit"] {
+        @extend .buttonStyle;
+        background: lightgreen;
+    }
+}
+
+.button-wrapper {
+    // padding: 0 !important;
+    width: 60px;
+    & > a {
+        width: 100%;
+        height: 100%;
+        display: block;
+        background: #DDD;
+        padding: 3px;
+        color: #666;
+        text-decoration: none;
+        text-align: center;
+        &:hover {
+            background: #EEE;
+            color: black;
+        }
     }
 }
 
@@ -192,6 +252,10 @@ table.list-table {
 
         & > td {
             padding: 5px;
+        }
+
+        &:hover {
+            background: #EEE;
         }
     }
 }
@@ -290,6 +354,9 @@ $border: 1px solid #D5E;
             &:hover {
                 background-color: #DDD;
             }
+            &.warehouse-closed {
+                background: #FDD;
+            }
             & > td {
                 padding: 5px;
                 &.flag {
@@ -312,6 +379,9 @@ $border: 1px solid #D5E;
                         padding: 3px;
                         &.single {
                             padding: 3px 4px;
+                        }
+                        &.cost {
+                            text-align: right;
                         }
                         &.vegan {
                             color: darkgreen;

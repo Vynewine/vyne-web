@@ -4,7 +4,8 @@ class CreateInventories < ActiveRecord::Migration
       t.references :warehouse, index: true
       t.references :wine, index: true
       t.references :category, index: true
-      t.integer :quantity
+      t.decimal :cost, index: true
+      t.integer :quantity, index: true
 
       t.timestamps
     end

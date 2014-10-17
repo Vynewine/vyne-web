@@ -24,6 +24,10 @@
     <%= f.number_field :quantity %>
   </div>
   <div class="field">
+    <%= f.label :cost %><br>
+    <%= f.number_field :cost %>
+  </div>
+  <div class="field">
     <%= f.label :category %><br>
     <%= f.select :category_id,
         options_from_collection_for_select(@categories, "id", "name", :selected => @inventory.category_id),
