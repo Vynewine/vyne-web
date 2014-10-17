@@ -901,7 +901,9 @@ for i in 0..totalOrders do
     :client_id => 2+rand(7),
     :address_id => 4+rand(4),
     :status_id => status,
-    :info => "{\"warehouses\":[#{warehouses}]}"
+    :information => "{\"warehouses\":[#{warehouses}]}",
+    # :delivery_token
+    # :delivery_status
   )
 
 end

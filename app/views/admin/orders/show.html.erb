@@ -44,13 +44,27 @@
 </p>
 
 <p>
-  <strong>Delivery info:</strong>
-  <%= @order.delivery %>
+  <strong>Delivery token:</strong>
+  <%= @order.delivery_token %>
 </p>
 
 <p>
   <strong>Information provided by user:</strong>
-  <%= @order.info %>
+  <pre><%= @order.information %></pre>
+</p>
+
+<p>
+  <strong>Delivery information:</strong>
+  <pre><%= @order.delivery_status_json
+    .gsub(/["|\\]/, "")
+    .gsub(/[ ]*\{/, "\{<br /> ")
+    .gsub(/\[/, "\[<br /> ")
+    .gsub(/\}/, "<br />\}")
+    .gsub(/\]/, "<br />\]")
+    .gsub(/\,/, ",<br />")
+    .html_safe
+    # gsub(/["|\\]/, "").gsub(/[\{]/, "\{<br />").gsub(/[\,]/, ",<br />").html_safe
+      %></pre>
 </p>
 
 <%= link_to 'Edit', edit_admin_order_path(@order) %>

@@ -194,8 +194,9 @@ ActiveRecord::Schema.define(version: 20140925091503) do
     t.integer  "payment_id"
     t.integer  "status_id"
     t.integer  "quantity"
-    t.string   "delivery"
-    t.string   "info"
+    t.string   "delivery_token"
+    t.json     "information"
+    t.json     "delivery_status"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

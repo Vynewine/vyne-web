@@ -105,7 +105,9 @@ class Admin::OrdersController < ApplicationController
         :advisor_id,
         :wine_id,
         :quantity,
-        :info,
+        :delivery_token,
+        :information,
+        :delivery_status,
         address_attributes: [:id, :detail, :street, :postcode],
 
         # {warehouses:[1,2],foods:[19],occasions:[5]}

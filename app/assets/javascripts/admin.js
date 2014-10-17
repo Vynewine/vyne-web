@@ -26,7 +26,7 @@ var addNestedField = function($anchorNode, parentEntity, nestedEntity, fieldName
 
 var adminReady = function() {
     console.log('ADMIN JS');
-    // console.log('Doc is apparently ready');
+    // // console.log('Doc is apparently ready');
     if (typeof(admin) !== 'undefined' && admin !== null && admin === true) {
         var tokenFields = ["occasion", "food", "note"];
         for (var i = 0; i < tokenFields.length; i++) {
@@ -38,11 +38,11 @@ var adminReady = function() {
         }
         $('.add_nested_field').click(function(e){
             e.preventDefault();
-            console.log('Generating field',
-                $(this).data('parentEntity'),
-                $(this).data('nestedEntity'),
-                $(this).data('fieldName')
-            );
+            // console.log('Generating field',
+            //     $(this).data('parentEntity'),
+            //     $(this).data('nestedEntity'),
+            //     $(this).data('fieldName')
+            // );
             // var $parentNode = $(this).parent();
             addNestedField($(this), $(this).data('parentEntity'), $(this).data('nestedEntity'), $(this).data('fieldName'));
             // $parentNode.css('background', 'red');
@@ -71,7 +71,7 @@ var adminReady = function() {
          * Then reloads orders.
          */
         var reloadInterface = function() {
-            console.log('reloadInterface');
+            // console.log('reloadInterface');
             // Empty fields:
             $('#warehouses_ids').val('');
             $('#order_id').val('');
@@ -92,7 +92,7 @@ var adminReady = function() {
          * Reloads interface.
          */
         var wineChosen = function(d) {
-            console.log(d.message);
+            // console.log(d.message);
             if (d.message==='success') {
                 reloadInterface();
             } else {
@@ -107,7 +107,7 @@ var adminReady = function() {
             e.preventDefault();
             var $a = $(event.target);
             if ($a.hasClass('disabled')) {
-                console.log('Not ready');
+                // console.log('Not ready');
                 return;
             }
             var order     = $('#order_id').val();
@@ -164,7 +164,7 @@ var adminReady = function() {
             var $li = $a.parent();
             // var $ul = $li.parent();
             var quote = $li.data('id');
-            console.log($li);
+            // console.log($li);
             $('#quote_id').val(quote);
             $('#delivery_quotes>li').removeClass('disabled');
             $li.siblings().addClass('disabled');
@@ -172,7 +172,7 @@ var adminReady = function() {
         };
 
         var showConfirmationWindow = function() {
-            // console.log('show!!');
+            // // console.log('show!!');
             var order     = $('#order_id').val();
             var wine      = $('#wine_id').val();
             var warehouse = $('#warehouses_ids').val();
@@ -193,10 +193,10 @@ var adminReady = function() {
                 'order':order,
                 'warehouse':warehouse
             };
-            console.log('chosen! ',data);
+            // console.log('chosen! ',data);
             postJSON('choose.json', token, data, function(r){
-                console.log('response');
-                console.log(r);
+                // console.log('response');
+                // console.log(r);
                 var details = '';
                 var quote_id = '';
                 for (var i = 0, quote; quote = r[i++];) {
@@ -267,7 +267,7 @@ var adminReady = function() {
                     if (agenda.day === w) {
                         o = agenda.opening;
                         c = agenda.closing;
-                        console.log('w:',w,'o:',o,'c:',c);
+                        // console.log('w:',w,'o:',o,'c:',c);
                         s[i-1] = t >= o && t < c;
                         break;
                     }
@@ -280,7 +280,8 @@ var adminReady = function() {
          * Renders wine entry into interface
          */
         var renderWine = function(wine) {
-            console.log('rendering wine', wine);
+            // console.log('rendering wine', wine);
+            // debugger;
             var $container = $('#wine-list>table>tbody');
             var basePrice = 0;
             var basePriceWarehouse = 0;
@@ -289,10 +290,11 @@ var adminReady = function() {
             var warehouses = $('#warehouses_ids').val().split(',');
             var warehousesOpen = parseWarehouseStatuses(wine.availability);
             var warehouseOpen = true;
-            console.log(warehousesOpen);
-            console.log('----');
+            var cost = 0;
+            // console.log(warehousesOpen);
+            // console.log('----');
             if (warehouses.length > 1) {
-                // console.log('several warehouses');
+                // // console.log('several warehouses');
                 for (var i = 0, availability; availability = wine.availability[i++];) {
                     // If not open, don't bother...
                     if (warehousesOpen[i-1]) {
@@ -301,21 +303,23 @@ var adminReady = function() {
                                 basePrice = availability.price;
                                 basePriceQuantity = availability.quantity;
                                 basePriceWarehouse = availability.warehouse;
+                                cost = availability.cost;
                                 // warehouseOpen = warehousesOpen[i-1];
                             }
                         }
                     }
                 }
             } else {
-                console.log('one warehouse', warehouses);
+                // console.log('one warehouse', warehouses);
                 // One warehouse!
                 for (var i = 0, availability; availability = wine.availability[i++];) {
-                    // console.log(availability.warehouse, parseInt(warehouses[0]), availability.warehouse === parseInt(warehouses[0]));
+                    // // console.log(availability.warehouse, parseInt(warehouses[0]), availability.warehouse === parseInt(warehouses[0]));
                     if (availability.warehouse === parseInt(warehouses[0])) {
                         basePrice = availability.price;
                         basePriceQuantity = availability.quantity;
                         basePriceWarehouse = availability.warehouse;
                         warehouseOpen = warehousesOpen[i-1];
+                        cost = availability.cost;
                     }
                 }
             }
@@ -335,7 +339,6 @@ var adminReady = function() {
                 $vn = $('<span>').addClass('vegan').html('Vn');
             if (wine.organic)
                 $og = $('<span>').addClass('organic').html('Og');
-
 
             $container.append(
                 $('<tr>')
@@ -359,6 +362,9 @@ var adminReady = function() {
                     ),
                     $('<td>').addClass('type').html(
                         wine.types.join(', ')
+                    ),
+                    $('<td>').addClass('cost').html(
+                        '&pound;' + parseInt(cost).toFixed(2)
                     ),
                     $('<td>').addClass('price').html(
                         '&pound;' + basePrice + multiplePrices
@@ -396,7 +402,7 @@ var adminReady = function() {
             renderItems(r);
         };
         var errorMethod = function(e){
-            console.log('not okay');
+            // console.log('not okay');
         };
 
         var findKeywords = function(keywords){
@@ -413,7 +419,7 @@ var adminReady = function() {
                    'organic': $('#tick-orgc').is(':checked'),
                 'categories': categories
             };
-            console.log('data', data);
+            // console.log('data', data);
             postJSON('results.json', token, data, parseResults, errorMethod);
         };
 
@@ -446,7 +452,8 @@ var adminReady = function() {
          * Advise action.
          */
         var adviseActions = function($this, $orderRecoverAnchor) {
-            console.log('advise');
+            // console.log('advise');
+            // debugger;
             var $td = $this.closest("td");
             var $tr = $td.closest("tr");
             var $table = $tr.closest("table");
@@ -470,6 +477,7 @@ var adminReady = function() {
             $('#wine-list').html('').show();
             $searchField.focus();
             $('#order_id').val(id);
+            console.log(warehouses);
             $('#warehouses_ids').val(warehouses);
 
             var suggestedFood = [];
@@ -540,8 +548,8 @@ var adminReady = function() {
             var customerName = order.client.first_name + ' ' + order.client.last_name;
             var fullAddress = order.address.detail + ', ' + order.address.street + ', ' + order.address.postcode;
             var info;
-            if(order.info) {
-                info = JSON.parse(order.info);
+            if (order.information) {
+                info = order.information;
             }
             var warehousesIds = [];
 
@@ -617,7 +625,7 @@ var adminReady = function() {
          * Load data
          */
         if (advisor) {
-            console.log("Advisor area!");
+            // console.log("Advisor area!");
             loadJSON('../foods.json', function(d) {
                 foods = d;
                 postJSON('../orders/list.json', token, {'status':[1]}, renderOrders, errorMethod);
@@ -640,6 +648,6 @@ var adminReady = function() {
 
 
 
-// console.log(2);
+// // console.log(2);
 $(document).ready(adminReady);
 $(document).on('page:load', adminReady);
