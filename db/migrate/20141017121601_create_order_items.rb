@@ -5,6 +5,8 @@ class CreateOrderItems < ActiveRecord::Migration
       t.references :wine, index: true
       t.references :occasion, index: true
       t.references :type, index: true
+      t.references :category
+      t.string :specific_wine
       t.integer :quantity
 
       t.timestamps

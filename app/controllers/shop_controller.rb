@@ -63,7 +63,7 @@ class ShopController < ApplicationController
     if cardId == 0 # New card
       # Set your secret key: remember to change this to your live secret key in production
       # See your keys here https://dashboard.stripe.com/account
-      Stripe.api_key = "sk_test_BQokikJOvBiI2HlWgH4olfQ2"
+      Stripe.api_key = Rails.application.config.stripe_key
 
       # Get the credit card details submitted by the form
       token = params[:stripeToken]
@@ -90,22 +90,50 @@ class ShopController < ApplicationController
       warehouses = params[:warehouses]
     end
 
-    puts params[:wines]
+    wines = JSON.parse params[:wines]
 
     @order.information = "{\"warehouses\":[#{warehouses}]}"
 
+    if @order.save
+      wines.each { |wine|
 
-    # redirect_to action: 'new'
+        occasion = Occasion.find(wine['occasion']) unless wine['occasion'].nil?
+        wine_type = Type.find(wine['type']) unless wine['type'].nil?
+        foods = Food.where(:id => wine['food']) unless wine['food'].nil?
+        category = Category.find(wine['category']) unless wine['category'].nil?
 
-    respond_to do |format|
-      if @order.save
-        first_time_ordered current_user
-        format.html { redirect_to @order } #, notice: 'Order was successfully created.' }
-        format.json { render :confirmed, status: :created, location: @order }
-      else
+        order_item = @order.order_items.create!({
+                                       :specific_wine => wine['specificWine'],
+                                       :quantity => wine['quantity'],
+                                       :category => category
+                                   })
+
+
+        unless foods.nil?
+          order_item.foods = foods
+        end
+
+        unless occasion.nil?
+          order_item.occasion = occasion
+        end
+
+        unless wine_type.nil?
+          order_item.type = wine_type
+        end
+
+        order_item.save
+      }
+    else
+      respond_to do |format|
         format.html { render :new }
         format.json { render json: @order.errors, status: :unprocessable_entity }
       end
+    end
+
+    respond_to do |format|
+      first_time_ordered current_user
+      format.html { redirect_to @order } #, notice: 'Order was successfully created.' }
+      format.json { render :confirmed, status: :created, location: @order }
     end
   end
 

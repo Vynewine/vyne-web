@@ -29,6 +29,11 @@ rails s
 ```
 
 ### Testing
+Create Test Database
+```
+RAILS_ENV=test rake db:drop db:create db:migrate
+```
+
 To run tests 
 ```
 rake test

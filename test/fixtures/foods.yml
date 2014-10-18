@@ -1,5 +1,226 @@
-one:
-  name: 'beef'
 
-two:
-  name: 'bbq'
+meat:
+  id: 1
+  name: 'meat'
+  parent: 0
+
+fish:
+  id: 2
+  name: 'fish'
+  parent: 0
+
+dairy:
+  id: 3
+  name: 'dairy'
+  parent: 0
+
+preparation:
+  id: 4
+  name: 'preparation'
+  parent: 0
+
+vegetables_fungi:
+  id: 5
+  name: 'vegetables & fungi'
+  parent: 0
+
+herb_spice:
+  id: 6
+  name: 'herb & spice'
+  parent: 0
+
+grain:
+  id: 7
+  name: 'grain'
+  parent: 0
+
+potato:
+  id: 8
+  name: 'potato'
+  parent: 0
+
+sweet:
+  id: 9
+  name: 'sweet'
+  parent: 0
+
+beef:
+  id: 10
+  name: 'beef'
+  parent: 1
+
+cured_meat:
+  id: 11
+  name: 'cured meat'
+  parent: 1
+
+pork:
+  id: 12
+  name: 'pork'
+  parent: 1
+
+chicken:
+  id: 13
+  name: 'chicken'
+  parent: 1
+
+lobster_shellfish:
+  id: 14
+  name: 'lobster & shellfish'
+  parent: 2
+
+fish:
+  id: 15
+  name: 'fish'
+  parent: 2
+
+mussels_oysters:
+  id: 16
+  name: 'mussels & oysters'
+  parent: 2
+
+soft_cheese_cream:
+  id: 17
+  name: 'soft cheese & cream'
+  parent: 3
+
+pungent_cheese:
+  id: 18
+  name: 'pungent cheese'
+  parent: 3
+
+hard_cheese:
+  id: 19
+  name: 'hard cheese'
+  parent: 3
+
+grill_BBQ:
+  id: 20
+  name: 'grill & BBQ'
+  parent: 4
+
+roasted:
+  id: 21
+  name: 'roasted'
+  parent: 4
+
+fried_sauteed:
+  id: 22
+  name: 'fried & sautéed'
+  parent: 4
+
+smoke:
+  id: 23
+  name: 'smoke'
+  parent: 4
+
+poached_steamed:
+  id: 24
+  name: 'poached & steamed'
+  parent: 4
+
+onion_garlic:
+  id: 25
+  name: 'onion & garlic'
+  parent: 5
+
+green_vegetables:
+  id: 26
+  name: 'green vegetables'
+  parent: 5
+
+root_vegetables:
+  id: 27
+  name: 'root vegetables'
+  parent: 5
+
+tomato_pepper:
+  id: 28
+  name: 'tomato & pepper'
+  parent: 5
+
+mushroom:
+  id: 29
+  name: 'mushroom'
+  parent: 5
+
+nuts_seeds:
+  id: 30
+  name: 'nuts & seeds'
+  parent: 5
+
+beans_peas:
+  id: 31
+  name: 'beans & peas'
+  parent: 5
+
+red_pepper_chilli:
+  id: 32
+  name: 'red pepper & chilli'
+  parent: 6
+
+pepper:
+  id: 33
+  name: 'pepper'
+  parent: 6
+
+baking_spices:
+  id: 34
+  name: 'baking spices'
+  parent: 6
+
+curry_hot_sauce:
+  id: 35
+  name: 'curry & hot sauce'
+  parent: 6
+
+herbs:
+  id: 36
+  name: 'herbs'
+  parent: 6
+
+exotic_aromatic:
+  id: 37
+  name: 'exotic & aromatic'
+  parent: 6
+
+white_bread:
+  id: 38
+  name: 'white bread'
+  parent: 7
+
+pasta:
+  id: 39
+  name: 'pasta'
+  parent: 7
+
+rice:
+  id: 40
+  name: 'rice'
+  parent: 7
+
+white_potato:
+  id: 41
+  name: 'white potato'
+  parent: 8
+
+sweet_potato:
+  id: 42
+  name: 'sweet potato'
+  parent: 8
+
+fruit_berries:
+  id: 43
+  name: 'fruit & berries'
+  parent: 9
+
+chocolate_coffee:
+  id: 44
+  name: 'chocolate & coffee'
+  parent: 9
+
+vanilla_caramel:
+  id: 45
+  name: 'vanilla & caramel'
+  parent: 9
+

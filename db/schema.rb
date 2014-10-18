@@ -200,6 +200,8 @@ ActiveRecord::Schema.define(version: 20141017152801) do
     t.integer  "wine_id"
     t.integer  "occasion_id"
     t.integer  "type_id"
+    t.integer  "category_id"
+    t.string   "specific_wine"
     t.integer  "quantity"
     t.datetime "created_at"
     t.datetime "updated_at"

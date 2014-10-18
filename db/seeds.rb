@@ -318,31 +318,35 @@ defaultUser.save
 puts "Admin -------- OK"
 
 Category.create(
-              :name => "label",
+                :id => 1,
+              :name => "House",
              :price => 15,
   :restaurant_price => "20-40",
-       :description => "<p>The entry-level product from the same top wineries supplying the best restaurants</p><p>Same painstaking production - only more accesible</p>"
+       :description => "<p>The entry-level wine from the same top wineries supplying the best restaurants</p><p>Same painstaking production - only more accesible</p>"
 )
 
 Category.create(
-              :name => "house",
+                :id => 2,
+              :name => "Reserve",
              :price => 20,
   :restaurant_price => "40-55",
-       :description => "<p>House wines are made by top independent producers</p><p>Their vineyards are in the best parcels of famous wine territories</p>"
+       :description => "<p>Reserve wines are made by top independent producers</p><p>Their vineyards are in the best parcels of famous wine territories</p>"
 )
 
 Category.create(
-              :name => "fine",
+                :id => 3,
+              :name => "Fine",
              :price => 30,
-  :restaurant_price => "200000",
-       :description => "<p>Yadyadya</p><p>duh duh duh</p>"
+  :restaurant_price => "55-75",
+       :description => "<p>Fine wine</p>"
 )
 
 Category.create(
-              :name => "cellar",
+                :id => 4,
+              :name => "Cellar",
              :price => 50,
-  :restaurant_price => "500000",
-       :description => "<p>Yadyadya</p><p>duh duh duh</p>"
+  :restaurant_price => "75-120",
+       :description => "<p>Cellar wine</p>"
 )
 
 puts "Categories --- OK"
