@@ -33,6 +33,8 @@ class ShopController < ApplicationController
     @order = Order.new
     @categories = Category.all
     @foods = Food.all
+    @occasions = Occasion.all
+    @types = Type.all
     logger.warn "New order"
   end
 
