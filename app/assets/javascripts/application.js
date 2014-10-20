@@ -19,6 +19,7 @@
 //# require vendor/retina.min
 //= require vendor/swiper_min
 //= require vendor/custom-select-plugin
+//= require vendor/jquery.lazyload.min
 
 var ready = function() {
     // console.log('Doc is apparently ready');
@@ -31,10 +32,12 @@ var ready = function() {
     }
 
 };
-// console.log(2);
+
 $(function() {
 
 	new CustomSelect();
+
+	$("img").lazyload();
 
 	/* Header */
 
@@ -78,10 +81,26 @@ $(function() {
 	}
 
 
+	/* Bottle array */
+
+	var wines = [];
+
+	var wine = function() {
+		this.quantity = 0,
+		this.label = '',
+		this.price = '',
+		this.specificWine = '',
+		this.food = [],
+		this.occasion = [],
+		this.category = ''
+	}
+
+	var wineCount = 0;
+
+
 	/* Select a Bottle */
 
 	$('.bottle-link').click(function(e) {
-		console.log('hello');
 		if(!$('.close').hasClass('hover')) {
 			$('.bottle-info').removeClass('active');
 			$(this).parent().find('.bottle-info').addClass('active');
@@ -102,19 +121,36 @@ $(function() {
 		$('.bottle-info').removeClass('active');
 	});
 
+	$('.select-bottle').click(function(e) {
+		e.preventDefault();
+		$('.bottle-info').removeClass('active');
+
+		wines[wineCount] = new wine();
+		wines[wineCount].quantity = 1;
+		wines[wineCount].label = $(this).parent().find('.label').text();
+		wines[wineCount].price = $(this).parent().find('.price').text();
+		wines[wineCount].category = $(this).parent().data('category-id');
+		console.log(wines);
+
+		order.swipeNext();
+	});
+
 
 	/* Preferences */
 
 	if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
-	    
-	    $('.prefs-overview').addClass('ios');
+	    $('.prefs-overview, .btn-checkout').addClass('ios');
 
+	    $('#review-panel').scroll(function(e) {
+	    	console.log($(this).scrollTop());
+	    	$('.prefs-overview, .btn-checkout').css({ 'bottom': -$(this).scrollTop() });
+	    });
 	}
 
 	$('.tab').hide();
 	$('.tab-list li a').click(function(e) {
 		e.preventDefault();
-		$('.preferences .slideable').addClass('first-level');
+		$('#preferences-panel .slideable').addClass('first-level');
 		$('.tab-list li').removeClass('active');
 		$(this).parent().addClass('active');
 
@@ -126,7 +162,7 @@ $(function() {
 
 	$('.prefs-list li a').click(function(e) {
 		e.preventDefault();
-		$('.preferences .slideable').addClass('second-level');
+		$('#preferences-panel .slideable').addClass('second-level');
 		$(this).closest('.prefs-list-container').addClass('visible');
 		$('.prefs-list li').removeClass('active');
 		$(this).parent().addClass('active');
@@ -135,9 +171,9 @@ $(function() {
 	$('.slideable-back').click(function(e) {
 		e.preventDefault();
 		if($(this).hasClass('first')) {
-			$('.preferences .slideable').removeClass('first-level');
+			$('#preferences-panel .slideable').removeClass('first-level');
 		} else {
-			$('.preferences .slideable').removeClass('second-level');
+			$('#preferences-panel .slideable').removeClass('second-level');
 		}
 	});
 
@@ -159,10 +195,11 @@ $(function() {
 			if(ingredientCount < 3) {
 				$('.ingredient-count').text(parseInt($('.ingredient-count').text()) + 1);
 				$('.select-category').text('Add another ingredient?');
-				$('.preferences .slideable').removeClass('second-level');
+				$('#preferences-panel .slideable').removeClass('second-level');
 				$(this).parent().addClass('selected');
 				$('.prefs-overview').addClass('visible');
 				$('.prefs-overview-list').prepend('<li><a href="">'+$(this).text()+'</a></li>');
+				wines[wineCount].food.push( $(this).parent().find('span').text() );
 			}
 		}
 	});
@@ -176,6 +213,51 @@ $(function() {
 		e.preventDefault();
 		$(this).parent().remove();
 	});
+
+	$('#select-preferences').click(function(e) {
+
+		if($('input[name="specific-wine"]').val() != '') {
+			wines[wineCount].specificWine = $('input[name="specific-wine"]').val();
+		}
+
+		//console.log(wines);
+		$('.order-table-bottle, .order-table-bottle-price').remove();
+
+		wines.forEach(function(wine) {
+
+			var $td = $('<td>').addClass('order-table-bottle').append('<img alt="wine bottle" src="/assets/wine.png">');
+
+			for (var key in wine) {
+				if (wine.hasOwnProperty(key)) {
+					if(key != 'price') {
+						$('<span/>', {
+							text: wine[key]
+						}).addClass(key).appendTo($td);
+					}
+				}
+			}
+
+			var $pricetd = $('<td>').addClass('order-table-bottle-price').append($('<span/>', { text: wine['price'] }).addClass('price'));
+
+			$('.add-bottle').before($('<tr>').append($td).append($pricetd));
+
+		});
+
+	});
+
+	$('.add-bottle-link').click(function(e) {
+		e.preventDefault();
+
+		order.swipeTo(1, 500, false);
+
+		wineCount++;
+		console.log(wineCount);
+		ingredientCount = 0;
+		$('.ingredient-count').text(ingredientCount);
+		$('.prefs-list-bottom li').removeClass('selected');
+		$('.prefs-overview-list').empty();
+	})
+
 
 	$(document).on('click', '#account-link', function(e) {
 		e.preventDefault();
@@ -340,8 +422,6 @@ $(function() {
 		});
 
 	});
-
-
 
 	/* Order Confirmation */
 	$('.accordian-item-link').click(function(e) {

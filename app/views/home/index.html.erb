@@ -1,5 +1,6 @@
 <div id="walkthrough" class="swiper-container">
     <div class="swiper-wrapper">
+
         <div id="one" class="swiper-slide walkthrough-panel">
             <div class="walkthrough-panel-overlay"></div>
             <div class="inner wrapper">
@@ -7,6 +8,7 @@
                 <p>Get the same wines as top restaurants delivered on-demand</p>
             </div>
         </div>
+        
         <div id="two" class="swiper-slide walkthrough-panel">
             <div class="walkthrough-panel-overlay"></div>
             <div class="inner wrapper">
@@ -18,6 +20,7 @@
                 </ul>
             </div>
         </div>
+
         <div id="three" class="swiper-slide walkthrough-panel">
             <div class="walkthrough-panel-overlay"></div>
             <div class="inner wrapper">
@@ -25,14 +28,19 @@
                 <p>Select the occasion or meal you’re having with your wine. We’ll find a match for you.</p>
             </div>
         </div>
+
     </div>
-    <% #link_to "Order now", neworder_path, :class => "btn order-now" %>
-    <div class="order-now">
-        <h4>Check Availability</h4>
-        <form action="/shop/neworder" method="GET">
-        <input type="text" id="filterPostcode" placeholder="Enter postcode" name="postcode" autocomplete="off"/>
-        <input type="submit" value="Go" />
-        </form>
+
+    <div class="wrapper">
+        <div class="check-availability">
+            <h4>Check Availability</h4>
+            <form action="/shop/neworder" method="GET">
+            <input type="text" id="filterPostcode" placeholder="Enter postcode" name="postcode" autocomplete="off"/>
+            <input type="submit" value="Go" />
+            </form>
+        </div>
     </div>
+
     <div class="pagination"></div>
+
 </div>

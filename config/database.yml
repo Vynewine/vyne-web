@@ -24,6 +24,7 @@ default: &default
 # GRANT ALL PRIVILEGES ON DATABASE vynz_development to vynz;
 
 development: &pg
+  host: localhost
   adapter: postgresql
   encoding: unicode
   username: vynz
