@@ -225,7 +225,7 @@ $(function() {
 
 		wines.forEach(function(wine) {
 
-			var $td = $('<td>').addClass('order-table-bottle').append('<img alt="wine bottle" src="/assets/wine.png">');
+			var $td = $('<td>').addClass('order-table-bottle').append('<div class="wine-bottle"></div>');
 
 			for (var key in wine) {
 				if (wine.hasOwnProperty(key)) {
