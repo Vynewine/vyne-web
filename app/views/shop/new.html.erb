@@ -46,13 +46,8 @@
 
     <%# ============================= Select Bottle ============================= %>
 
-<<<<<<< HEAD
     <div id="bottles-panel" class="order-panel swiper-slide noSwipingClass">
       <div class="order-panel-content wrapper">
-=======
-  <div id="bottles-panel" class="order-panel swiper-slide noSwipingClass" style="display:none;">
-    <div class="order-panel-content bottles wrapper">
->>>>>>> 6b82ddae464f6625e119a475a3e604d46d70c048
 
         <h2>Select your bottle</h2>
 
@@ -94,13 +89,8 @@
 
     <%# ============================= Preferences ============================= %>
 
-<<<<<<< HEAD
     <div id="preferences-panel" class="step order-panel swiper-slide noSwipingClass">
       <div class="order-panel-content wrapper">
-=======
-  <div class="step order-panel swiper-slide noSwipingClass" style="display:none;">
-    <div class="order-panel-content preferences wrapper">
->>>>>>> 6b82ddae464f6625e119a475a3e604d46d70c048
 
         <div class="slideable">
 
@@ -321,22 +311,12 @@
       </div>
     </div>
 
-<<<<<<< HEAD
-
     <%# =============================== Sign up =============================== %>
 
     <% unless user_signed_in? %>
 
     <div id="register-panel" class="step order-panel swiper-slide noSwipingClass">
       <div class="order-panel-content wrapper">
-=======
-<%# =============================== Sign up =============================== %>
-
-    <% unless user_signed_in? %>
-
-    <div class="step order-panel swiper-slide noSwipingClass" style="display:none;">
-      <div class="order-panel-content register wrapper">
->>>>>>> 6b82ddae464f6625e119a475a3e604d46d70c048
         <div id="account-form" class="register-form">
           <h2 class="account-heading">Register</h2>
           <span class="account-message">Have an account? <a href="" id="account-link" class="signin-link">Sign in</a></span>
@@ -388,15 +368,9 @@
 
     <%# ========================== Address selection ========================== %>
 
-<<<<<<< HEAD
     <div id="delivery-panel" class="step order-panel swiper-slide noSwipingClass">
       <div class="order-panel-content wrapper">
         <h2>Delivery address</h2>
-=======
-  <div class="step order-panel swiper-slide noSwipingClass" style="display:none;">
-    <div class="order-panel-content delivery wrapper">
-      <h2>Delivery address</h2>
->>>>>>> 6b82ddae464f6625e119a475a3e604d46d70c048
 
         <%# - - - - - -- - - - - - - - - -  Option1 - - - - - -- - - - - - - - - -  %>
 
@@ -433,7 +407,6 @@
         </div>
       </div>
     </div>
-<<<<<<< HEAD
 
     <%# ========================== Payment ========================== %>
 
@@ -452,37 +425,6 @@
               end  
               paymentCards.push([cardNumber, a.id])
             end
-=======
-  </div>
-<%# ========================= Address confirmation ======================== %>
-<%#
-  #  <div class="step">
-  #    <h1>Delivery address confirmed</h1>
-  #    <p>Once you've booked your order we'll deliver to this address</p>
-  #    <!-- 'confirmed-address' is used by JS -->
-  #    <address class="confirmed-address"></address>
-  #    <div>
-  #        <a href="#" class="red-button" id="">choose your wine</a><!-- Next step -->
-  #    </div>
-  #  </div>
-%>
-<%# =============================== Payment =============================== %>
-
-  <div class="step order-panel swiper-slide noSwipingClass" style="display:none;">
-    <div class="order-panel-content payment wrapper">
-      <h2>Link Payment</h2>
-        <%
-        paymentCards = [['New payment card', -1]]
-        if current_user
-          current_user.payments.order(updated_at: :desc).each do |a|
-            # [ :visa, :master, :american, :discover, :diners, :jcb ]
-            if a.brand == 3 # American Express
-              cardNumber = "**** ****** #{a.number}"
-            else
-              cardNumber = "**** **** **** #{a.number}"
-            end  
-            paymentCards.push([cardNumber, a.id])
->>>>>>> 6b82ddae464f6625e119a475a3e604d46d70c048
           end
           %>
 
