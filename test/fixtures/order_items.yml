@@ -1,0 +1,9 @@
+one:
+  quantity: 1
+  order: orders(:one)
+  foods: foods(:one, :two)
+
+two:
+  quantity: 2
+  order: orders(:two)
+  foods: foods(:one, :two)

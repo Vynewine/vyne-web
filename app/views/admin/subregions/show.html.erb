@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @subregion.name %>
+</p>
+
+<p>
+  <strong>Region:</strong>
+  <%= @subregion.region.name %>
+</p>
+
+<%= link_to 'Edit', edit_admin_subregion_path(@subregion) %>
+<%= link_to 'Back', admin_subregions_path %>

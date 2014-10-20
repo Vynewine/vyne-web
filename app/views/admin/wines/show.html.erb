@@ -1,0 +1,123 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @wine.name %>
+</p>
+
+<p>
+  <strong>Vintage:</strong>
+  <%= @wine.vintage %>
+</p>
+
+<p>
+  <strong>Producer:</strong>
+  <%= if @wine.producer.nil? then 'Unknown' else @wine.producer.name end %>
+</p>
+<p>
+  <strong>Sub-region:</strong>
+  <%= if @wine.subregion.nil? then 'Unknown' else @wine.subregion.name end %>
+</p>
+
+<p>
+  <strong>Area:</strong>
+  <%= @wine.area %>
+</p>
+<p>
+  <strong>Appellation:</strong>
+  <%= if @wine.appellation.nil? then 'Unknown' else @wine.appellation.name end %>
+</p>
+
+<% if @wine.types %>
+<p>
+  <strong>Type:</strong>
+  <ul>
+  <% @wine.types.each do |type| %>
+    <li><%= type.name %></li>
+  <% end %>
+  </ul>
+</p>
+<% end %>
+
+<% if @wine.compositions %>
+<p>
+  <strong>Composition:</strong>
+  <ul>
+  <% @wine.compositions.each do |composition| %>
+    <li><%= composition.grape.name %> - <%= composition.quantity %>%</li>
+  <% end %>
+  </ul>
+</p>
+<% end %>
+
+<p>
+  <strong>Single estate:</strong>
+  <%= @wine.single_estate %>
+</p>
+
+<p>
+  <strong>Alcohol:</strong>
+  <%= @wine.alcohol %>
+</p>
+
+<p>
+  <strong>Sugar:</strong>
+  <%= @wine.sugar %>
+</p>
+
+<p>
+  <strong>Acidity:</strong>
+  <%= @wine.acidity %>
+</p>
+
+<p>
+  <strong>Ph:</strong>
+  <%= @wine.ph %>
+</p>
+
+<p>
+  <strong>Occasions</strong>
+  <ul>
+<% @wine.occasions.each do |occasion| %>
+    <li><%= occasion.name %></li>
+<% end %>
+  </ul>
+</p>
+
+<p>
+  <strong>Food</strong>
+  <ul>
+<% @wine.foods.each do |food| %>
+    <li><%= food.name %></li>
+<% end %>
+  </ul>
+</p>
+
+<p>
+  <strong>Notes</strong>
+  <ul>
+<% @wine.notes.each do |note| %>
+    <li><%= note.name %></li>
+<% end %>
+  </ul>
+</p>
+                                    <p>allergies</p>
+<% if @wine.maturation %>
+<p>
+  <strong>Maturation:</strong>
+  <%= @wine.maturation.bottling.name %> - <%= @wine.maturation.period %> months
+</p>
+<% end %>
+
+<p>
+  <strong>Vegan:</strong>
+  <%= @wine.vegan %>
+</p>
+
+<p>
+  <strong>Organic:</strong>
+  <%= @wine.organic %>
+</p>
+
+<%= link_to 'Edit', edit_admin_wine_path(@wine) %>
+<%= link_to 'Back', admin_wines_path %>

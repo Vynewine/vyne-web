@@ -1,0 +1,58 @@
+<%= form_for([:admin, @order]) do |f| %>
+  <% if @order.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@order.errors.count, "error") %> prohibited this order from being saved:</h2>
+
+      <ul>
+      <% @order.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :status_id %><br>
+    <%= f.select :status_id, options_from_collection_for_select(@statuses, "id", "label", :selected => @order.status_id),
+        :prompt => "Choose a status" %>
+  </div>
+  <div class="field">
+    <%= f.label :client_id %><br>
+    <%= f.text_field :client_id %>
+  </div>
+  <div class="field">
+    <%= f.label :address_id %><br>
+    <%= f.text_field :address_id %>
+  </div>
+  <div class="field">
+    <%= f.label :payment_id %><br>
+    <%= f.text_field :payment_id %>
+  </div>
+  <div class="field">
+    <%= f.label :warehouse_id %><br>
+    <%= f.text_field :warehouse_id %>
+  </div>
+  <div class="field">
+    <%= f.label :advisor_id %><br>
+    <%= f.text_field :advisor_id %>
+  </div>
+  <div class="field">
+    <%= f.label :wine_id %><br>
+    <%= f.text_field :wine_id %>
+  </div>
+  <div class="field">
+    <%= f.label :quantity %><br>
+    <%= f.number_field :quantity %>
+  </div>
+  <div class="field">
+    <%= f.label :delivery_status %><br>
+    <%= f.text_area :delivery_status %>
+  </div>
+  <div class="field">
+    <%= f.label :information %><br>
+    <%= f.text_field :information %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

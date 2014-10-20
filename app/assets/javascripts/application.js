@@ -35,7 +35,7 @@ var ready = function() {
 
 $(function() {
 
-	new CustomSelect();
+	// new CustomSelect();
 
 	$("img").lazyload();
 

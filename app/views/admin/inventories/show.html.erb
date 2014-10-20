@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Warehouse:</strong>
+  <%= @inventory.warehouse.title %>
+</p>
+
+<p>
+  <strong>Wine:</strong>
+  <%= @inventory.wine.name %>
+</p>
+
+<p>
+  <strong>Quantity:</strong>
+  <%= @inventory.quantity %>
+</p>
+
+<p>
+  <strong>Cost:</strong>
+&pound;<%= "%.2f" % @inventory.cost %>
+</p>
+
+<%= link_to 'Edit', edit_admin_inventory_path(@inventory) %>
+<%= link_to 'Back', admin_inventories_path %>

@@ -1,0 +1,71 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @order.status.label %>
+</p>
+
+<p>
+  <strong>Client:</strong>
+  <%= @order.client.name %>
+</p>
+
+<p>
+  <strong>Address:</strong>
+  <% if @order.address %>
+  <%= @order.address.full %>
+  <% end %>
+</p>
+
+<p>
+  <strong>Warehouse:</strong>
+  <% if @order.warehouse %>
+  <%= @order.warehouse_id == 0 ? " - " : @order.warehouse.title %>
+  <% end %>
+</p>
+
+<p>
+  <strong>Advisor:</strong>
+  <% if @order.advisor %>
+  <%= @order.advisor_id == 0 ? " - " : @order.advisor.name %>
+  <% end %>
+</p>
+
+<p>
+  <strong>Wine:</strong>
+  <% if @order.wine %>
+  <%= @order.wine_id == 0 ? " - " : @order.wine.name %>
+  <% end %>
+</p>
+
+<p>
+  <strong>Quantity:</strong>
+  <%= @order.quantity %>
+</p>
+
+<p>
+  <strong>Delivery token:</strong>
+  <%= @order.delivery_token %>
+</p>
+
+<p>
+  <strong>Information provided by user:</strong>
+  <pre><%= @order.information %></pre>
+</p>
+
+<p>
+  <strong>Delivery information:</strong>
+  <pre><%= @order.delivery_status_json
+    .gsub(/["|\\]/, "")
+    .gsub(/[ ]*\{/, "\{<br /> ")
+    .gsub(/\[/, "\[<br /> ")
+    .gsub(/\}/, "<br />\}")
+    .gsub(/\]/, "<br />\]")
+    .gsub(/\,/, ",<br />")
+    .html_safe
+    # gsub(/["|\\]/, "").gsub(/[\{]/, "\{<br />").gsub(/[\,]/, ",<br />").html_safe
+      %></pre>
+</p>
+
+<%= link_to 'Edit', edit_admin_order_path(@order) %>
+<%= link_to 'Back', admin_orders_path %>

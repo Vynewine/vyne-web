@@ -1,0 +1,42 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>E-mail:</strong>
+  <%= @user.email %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @user.name %>
+</p>
+
+<p>
+  <strong>Mobile:</strong>
+  <%= @user.mobile %>
+</p>
+
+<p>
+  <strong>Active:</strong>
+  <%= @user.active %>
+</p>
+<p>
+  <strong>Activation code:</strong>
+  <%= @user.code %>
+</p>
+
+<p>
+  <strong>Addresses:</strong>
+  <ul>
+<% @user.addresses.each do |address| %>
+    <li><%= address.postcode %></li>
+<% end %>
+  </ul>
+</p>
+
+<p>
+  <strong>Roles:</strong>
+  <%= @user.roles.map(&:name).join(" - ") %>
+</p>
+
+<%= link_to 'Edit', edit_admin_user_path(@user) %>
+<%= link_to 'Back', admin_users_path %>
