@@ -147,7 +147,7 @@ class Admin::AdvisorsController < ApplicationController
 
   def charge_card(value, stripeToken)
     puts "Charging card"
-    Stripe.api_key = "sk_test_BQokikJOvBiI2HlWgH4olfQ2"
+    Stripe.api_key = Rails.application.config.stripe_key
     Stripe::Charge.create(
       :amount   => value, 
       :currency => "gbp",
