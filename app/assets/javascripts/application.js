@@ -34,7 +34,7 @@ var ready = function() {
 // console.log(2);
 $(function() {
 
-	new CustomSelect();
+	// new CustomSelect();
 
 	/* Header */
 

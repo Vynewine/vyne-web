@@ -19,8 +19,7 @@ development: &pg
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: db/test.sqlite3
-  adapter: sqlite3
+  database: vynz_testing
 
 production:
   <<: *default

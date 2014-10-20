@@ -29,6 +29,11 @@ rails s
 ```
 
 ### Testing
+Create Test Database
+```
+RAILS_ENV=test rake db:drop db:create db:migrate
+```
+
 To run tests 
 ```
 rake test
@@ -42,6 +47,22 @@ rake test test/controllers/signup_controller_test.rb
 To run specific test method 
 ```
 ruby -I test test/controllers/signup_controller_test.rb -n /.*method name.*/
+```
+
+### Deployment
+Precompile assets
+```
+RAILS_ENV=production rake assets:precompile
+```
+
+Commit precompiled assets
+```
+git commit -a -m "Adding precompiled assets"
+```
+
+Push to Heroku (assumin you are logged in to Vynz Heroku account)
+```
+git push heroku master
 ```
 
 

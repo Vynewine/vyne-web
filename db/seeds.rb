@@ -318,31 +318,35 @@ defaultUser.save
 puts "Admin -------- OK"
 
 Category.create(
-              :name => "label",
+                :id => 1,
+              :name => "House",
              :price => 15,
   :restaurant_price => "20-40",
-       :description => "<p>The entry-level product from the same top wineries supplying the best restaurants</p><p>Same painstaking production - only more accesible</p>"
+       :description => "<p>The entry-level wine from the same top wineries supplying the best restaurants</p><p>Same painstaking production - only more accesible</p>"
 )
 
 Category.create(
-              :name => "house",
+                :id => 2,
+              :name => "Reserve",
              :price => 20,
   :restaurant_price => "40-55",
-       :description => "<p>House wines are made by top independent producers</p><p>Their vineyards are in the best parcels of famous wine territories</p>"
+       :description => "<p>Reserve wines are made by top independent producers</p><p>Their vineyards are in the best parcels of famous wine territories</p>"
 )
 
 Category.create(
-              :name => "fine",
+                :id => 3,
+              :name => "Fine",
              :price => 30,
-  :restaurant_price => "200000",
-       :description => "<p>Yadyadya</p><p>duh duh duh</p>"
+  :restaurant_price => "55-75",
+       :description => "<p>Fine wine</p>"
 )
 
 Category.create(
-              :name => "cellar",
+                :id => 4,
+              :name => "Cellar",
              :price => 50,
-  :restaurant_price => "500000",
-       :description => "<p>Yadyadya</p><p>duh duh duh</p>"
+  :restaurant_price => "75-120",
+       :description => "<p>Cellar wine</p>"
 )
 
 puts "Categories --- OK"
@@ -386,7 +390,7 @@ Food.create(
     :name => "sweet",
   :parent => 0
 )
-Food.create(
+@food_one = Food.create(
     :name => "beef",
   :parent => 1
 )
@@ -426,7 +430,7 @@ Food.create(
     :name => "hard cheese",
   :parent => 3
 )
-Food.create(
+@food_two = Food.create(
     :name => "grill & BBQ",
   :parent => 4
 )
@@ -589,9 +593,9 @@ puts "Sub-regions -- OK"
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # 5 types
 
-types = ["red", "white", "sparkling", "sweet", "port"]
-types.each do |t|
-  Type.create(:name => t)
+types = ['Bold Red', 'Medium Red', 'Light Red', 'Rosé', 'Rich White', 'Dry White', 'Sparkling', 'Sweet White', 'Fortified']
+types.each_with_index do |t, index|
+  Type.create(:id => index + 1, :name => t)
 end
 
 puts "Types -------- OK"
@@ -896,17 +900,61 @@ for i in 0..totalOrders do
     warehouses = "1,2"
   end
 
+
+  total_order_items = 1 + rand(2)
+  order_items = Array.new
+
+  total_order_items.times do
+    order_items << OrderItem.create({quantity: 1 + rand(2), foods: [@food_one, @food_two]})
+  end
+
   Order.create(
     :warehouse_id => warehouse,
     :client_id => 2+rand(7),
     :address_id => 4+rand(4),
     :status_id => status,
     :information => "{\"warehouses\":[#{warehouses}]}",
-    # :delivery_token
-    # :delivery_status
+    :order_items => order_items
   )
 
 end
 
 puts "Orders ------- OK"
 
+Occasion.create(
+    :id => 1,
+    :name => 'Solo'
+)
+
+Occasion.create(
+    :id => 2,
+    :name => 'With Friends'
+)
+
+Occasion.create(
+    :id => 3,
+    :name => 'Party'
+)
+
+Occasion.create(
+    :id => 4,
+    :name => 'Date'
+)
+
+Occasion.create(
+    :id => 5,
+    :name => 'Dining'
+)
+
+Occasion.create(
+    :id => 6,
+    :name => 'Outdoors'
+)
+
+Occasion.create(
+    :id => 7,
+    :name => 'Gift'
+)
+
+
+puts "Occasions ------- OK"

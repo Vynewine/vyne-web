@@ -83,4 +83,7 @@ Rails.application.configure do
   #Mandrill API
   config.mandrill = 'ipcLBLgQRHya2q3jvpPQsw'
 
+  #Stripe
+  config.stripe_key = 'sk_test_BQokikJOvBiI2HlWgH4olfQ2'
+
 end

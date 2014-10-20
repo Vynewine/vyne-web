@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140925091503) do
+ActiveRecord::Schema.define(version: 20141017152801) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -114,6 +114,16 @@ ActiveRecord::Schema.define(version: 20140925091503) do
     t.datetime "updated_at"
   end
 
+  create_table "foods_order_items", id: false, force: true do |t|
+    t.integer  "food_id"
+    t.integer  "order_item_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "foods_order_items", ["food_id"], name: "index_foods_order_items_on_food_id", using: :btree
+  add_index "foods_order_items", ["order_item_id"], name: "index_foods_order_items_on_order_item_id", using: :btree
+
   create_table "foods_wines", id: false, force: true do |t|
     t.integer  "food_id",    null: false
     t.integer  "wine_id",    null: false
@@ -185,11 +195,27 @@ ActiveRecord::Schema.define(version: 20140925091503) do
   add_index "occasions_wines", ["occasion_id"], name: "index_occasions_wines_on_occasion_id", using: :btree
   add_index "occasions_wines", ["wine_id"], name: "index_occasions_wines_on_wine_id", using: :btree
 
+  create_table "order_items", force: true do |t|
+    t.integer  "order_id"
+    t.integer  "wine_id"
+    t.integer  "occasion_id"
+    t.integer  "type_id"
+    t.integer  "category_id"
+    t.string   "specific_wine"
+    t.integer  "quantity"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "order_items", ["occasion_id"], name: "index_order_items_on_occasion_id", using: :btree
+  add_index "order_items", ["order_id"], name: "index_order_items_on_order_id", using: :btree
+  add_index "order_items", ["type_id"], name: "index_order_items_on_type_id", using: :btree
+  add_index "order_items", ["wine_id"], name: "index_order_items_on_wine_id", using: :btree
+
   create_table "orders", force: true do |t|
     t.integer  "warehouse_id"
     t.integer  "client_id"
     t.integer  "advisor_id"
-    t.integer  "wine_id"
     t.integer  "address_id"
     t.integer  "payment_id"
     t.integer  "status_id"
@@ -208,7 +234,6 @@ ActiveRecord::Schema.define(version: 20140925091503) do
   add_index "orders", ["quantity"], name: "index_orders_on_quantity", using: :btree
   add_index "orders", ["status_id"], name: "index_orders_on_status_id", using: :btree
   add_index "orders", ["warehouse_id"], name: "index_orders_on_warehouse_id", using: :btree
-  add_index "orders", ["wine_id"], name: "index_orders_on_wine_id", using: :btree
 
   create_table "payments", force: true do |t|
     t.integer  "user_id"
