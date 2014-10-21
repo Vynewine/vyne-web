@@ -219,6 +219,11 @@ $(function() {
 	$(document).on('click', '.prefs-overview-list li a', function(e) {
 		e.preventDefault();
 		$(this).parent().remove();
+		$('.ingredient-count').text(parseInt($('.ingredient-count').text()) - 1);
+		ingredientCount = parseInt($('.ingredient-count').text());
+		$('.prefs-list-container li').each(function(i, el) {
+			if($(el).hasClass('disabled')) $(el).removeClass('disabled');
+		});
 	});
 
 	$('#select-preferences').click(function(e) {
@@ -249,6 +254,8 @@ $(function() {
 			$('.add-bottle').before($('<tr>').append($td).append($pricetd));
 
 		});
+
+		$('.btn-checkout').show();
 
 	});
 
