@@ -57,6 +57,7 @@ RAILS_ENV=production rake assets:precompile
 
 Commit precompiled assets
 ```
+git add .
 git commit -a -m "Adding precompiled assets"
 ```
 
