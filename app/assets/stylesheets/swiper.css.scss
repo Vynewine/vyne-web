@@ -30,6 +30,7 @@ Basic Swiper Styles
 .swiper-wrapper {
 	position:relative;
 	width:100%;
+	height: 100%;
 	-webkit-transition-property:-webkit-transform, left, top;
 	-webkit-transition-duration:0s;
 	-webkit-transform:translate3d(0px,0,0);
@@ -93,7 +94,6 @@ sizes, pagination, etc.
 	height: 100%;
 }
 .swiper-slide {
-	opacity: 0;
 	/* Specify Slides's Size: */
 	width: 100%;
 	height: 100%;
@@ -103,8 +103,7 @@ sizes, pagination, etc.
 	
 }
 .swiper-slide-visible {
-	/* Specific visible slide styling: */	
-	opacity: 1;
+	/* Specific visible slide styling: */
 }
 
 .order-container {
@@ -119,7 +118,7 @@ Pagination Styles
 	position: absolute;
 	left: 0;
 	text-align: center;
-	bottom: 200px;
+	bottom: 170px;
 	width: 100%;
 }
 

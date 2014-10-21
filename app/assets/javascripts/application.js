@@ -138,12 +138,19 @@ $(function() {
 
 	/* Preferences */
 
+	var ingredientCount = 0;
+
 	if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
 	    $('.prefs-overview, .btn-checkout').addClass('ios');
 
+	    $('#preferences-panel').scroll(function(e) {
+	    	console.log($(this).scrollTop());
+	    	$('.prefs-overview').css({ 'bottom': -$(this).scrollTop() });
+	    });
+
 	    $('#review-panel').scroll(function(e) {
 	    	console.log($(this).scrollTop());
-	    	$('.prefs-overview, .btn-checkout').css({ 'bottom': -$(this).scrollTop() });
+	    	$('.btn-checkout').css({ 'bottom': -$(this).scrollTop() });
 	    });
 	}
 
@@ -151,8 +158,6 @@ $(function() {
 	$('.tab-list li a').click(function(e) {
 		e.preventDefault();
 		$('#preferences-panel .slideable').addClass('first-level');
-		$('.tab-list li').removeClass('active');
-		$(this).parent().addClass('active');
 
 		$('.tab').hide();
 
@@ -164,8 +169,6 @@ $(function() {
 		e.preventDefault();
 		$('#preferences-panel .slideable').addClass('second-level');
 		$(this).closest('.prefs-list-container').addClass('visible');
-		$('.prefs-list li').removeClass('active');
-		$(this).parent().addClass('active');
 	});
 
 	$('.slideable-back').click(function(e) {
@@ -187,12 +190,10 @@ $(function() {
 	$('.prefs-list-bottom li a').click(function(e) {
 		e.preventDefault();
 
-		var ingredientCount = parseInt($('.ingredient-count').text());
+		ingredientCount = parseInt($('.ingredient-count').text());
 
-		if($(this).parent().hasClass('selected')) {
-			
-		} else {
-			if(ingredientCount < 3) {
+		if(!$(this).parent().hasClass('selected') && !$(this).parent().hasClass('disabled')) {
+			if(ingredientCount <= 2) {
 				$('.ingredient-count').text(parseInt($('.ingredient-count').text()) + 1);
 				$('.select-category').text('Add another ingredient?');
 				$('#preferences-panel .slideable').removeClass('second-level');
@@ -200,6 +201,12 @@ $(function() {
 				$('.prefs-overview').addClass('visible');
 				$('.prefs-overview-list').prepend('<li><a href="">'+$(this).text()+'</a></li>');
 				wines[wineCount].food.push( $(this).parent().find('span').text() );
+			}
+
+			if(ingredientCount == 2) {
+				$('.prefs-list-container li').each(function(i, el) {
+					if(!$(el).hasClass('selected')) $(el).addClass('disabled');
+				});
 			}
 		}
 	});
@@ -254,7 +261,7 @@ $(function() {
 		console.log(wineCount);
 		ingredientCount = 0;
 		$('.ingredient-count').text(ingredientCount);
-		$('.prefs-list-bottom li').removeClass('selected');
+		$('.prefs-list-container li').removeClass('selected disabled')
 		$('.prefs-overview-list').empty();
 	})
 
