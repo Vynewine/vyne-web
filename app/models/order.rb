@@ -9,13 +9,6 @@ class Order < ActiveRecord::Base
 
   accepts_nested_attributes_for :address, :reject_if => :all_blank, :allow_destroy => true
 
-  # def new_address_detail
-  # end
-  # def new_address_street
-  # end
-  # def new_address_postcode
-  # end
-
   scope :valid, -> { where.not(:wine_id => nil) }
   scope :user_id, ->(id) { where("client_id = ?", id) }
 

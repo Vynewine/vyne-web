@@ -219,7 +219,6 @@ ActiveRecord::Schema.define(version: 20141017152801) do
     t.integer  "address_id"
     t.integer  "payment_id"
     t.integer  "status_id"
-    t.integer  "quantity"
     t.string   "delivery_token"
     t.json     "information"
     t.json     "delivery_status"
@@ -231,7 +230,6 @@ ActiveRecord::Schema.define(version: 20141017152801) do
   add_index "orders", ["advisor_id"], name: "index_orders_on_advisor_id", using: :btree
   add_index "orders", ["client_id"], name: "index_orders_on_client_id", using: :btree
   add_index "orders", ["payment_id"], name: "index_orders_on_payment_id", using: :btree
-  add_index "orders", ["quantity"], name: "index_orders_on_quantity", using: :btree
   add_index "orders", ["status_id"], name: "index_orders_on_status_id", using: :btree
   add_index "orders", ["warehouse_id"], name: "index_orders_on_warehouse_id", using: :btree
 

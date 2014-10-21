@@ -94,7 +94,7 @@ class ShopController < ApplicationController
 
     wines = JSON.parse params[:wines]
 
-    @order.information = "{\"warehouses\":[#{warehouses}]}"
+    @order.information = warehouses
 
     if @order.save
       wines.each { |wine|

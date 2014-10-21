@@ -1,10 +1,17 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  email: "test@test.test"
-  encrypted_password: "test"
+  email: 'test@test.test'
+  encrypted_password: 'test'
+  roles: client
 
 
 two:
-  email: "test2@test.test"
-  encrypted_password: "test"
+  email: 'test2@test.test'
+  encrypted_password: 'test'
+  roles: client
+
+admin:
+  email: 'admin@vynz.co'
+  encrypted_password: 'test'
+  roles: admin

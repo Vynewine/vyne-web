@@ -108,9 +108,7 @@ class Admin::OrdersController < ApplicationController
         :delivery_token,
         :information,
         :delivery_status,
-        address_attributes: [:id, :detail, :street, :postcode],
-
-        # {warehouses:[1,2],foods:[19],occasions:[5]}
+        address_attributes: [:id, :detail, :street, :postcode]
       )
     end
 end

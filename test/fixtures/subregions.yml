@@ -1,9 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
-  region_id: 1
+  name: 'Subregion One'
+  region: one
 
 two:
-  name: MyString
-  region_id: 1
+  name: 'Subregion Two'
+  region_id: two

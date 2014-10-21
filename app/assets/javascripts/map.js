@@ -69,18 +69,7 @@ function MapUtility() {
         loadJSON(address, methodParam, errorMethod);
     };
 
-
-
-
-
-
-
     _this.calculateDistanceBetween = function(origins, destinations, distances, warehouses, callbackMethod) {
-
-        // DUMMY
-        destinations=['EC1N8DX', 'SE39RQ', 'SW65HU', 'E62JT'];
-        distances=[5,7,5,5];
-        // -- DUMMY
 
         console.log('origin: ', origins);
         console.log('destinations: ', destinations);
@@ -105,31 +94,22 @@ function MapUtility() {
             var delivery = {available: false, warehouses: []};
 
             for (var i = 0; i < response.rows[0].elements.length; i++) {
-                // console.log('response:', response.rows[0].elements[i].distance.value); //in KM
                 if (response.rows[0].elements[i].status === "OK") {
                     distanceKm = parseInt(response.rows[0].elements[i].distance.value);
                     distanceMi = mapUtil.kmToMile(distanceKm/1000);
-                    if (distanceMi >= parseInt(distances[i])) {
+                    if (distanceMi <= parseInt(distances[i])) {
                         delivery.available = true;
-                        delivery.warehouses = warehouses;
+                        delivery.warehouses.push({id: warehouses[i], distance: distanceMi });
                     }
-
                 }
-                // console.log(distances[i]);
-                // console.log('distance in miles:', distanceMi); //in KM
             }
             callbackMethod(delivery);
         });
     };
 
-
-
-
-
     _this.calculateDistanceForAllWarehouses = function(postcode, callbackMethod) {
         var locAddress = "/warehouses/addresses.json";
 
-        // Callback for warehouse addresses:
         var warehousesMethod = function(data) {
             console.log('JSON success:', data);
             var mapUtil = new MapUtility(); // recursive! =D
@@ -137,9 +117,6 @@ function MapUtility() {
             var allDistances = [];
             var warehouses = [];
             for (var i = 0; i < data.warehouses.length; i++) {
-                // var warehouseId = data.warehouses[i].id;
-                // var warehouseAddress = data.warehouses[i].address;
-                // var warehouseDistance = data.warehouses[i].distance;
                 warehouses.push(data.warehouses[i].id);
                 allDistances.push(data.warehouses[i].distance);
                 allPostcodes.push(data.warehouses[i].address);
@@ -154,7 +131,6 @@ function MapUtility() {
 
         // Fetching warehouse addresses:
         loadJSON(locAddress, warehousesMethod, errorMethod);
-        // callbackMethod();
     };
 
 }

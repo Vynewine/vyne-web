@@ -1,0 +1,19 @@
+one:
+  wine: one
+  grape: one
+  quantity: 50
+
+two:
+  wine: one
+  grape: two
+  quantity: 50
+
+three:
+  wine: two
+  grape: one
+  quantity: 50
+
+four:
+  wine: two
+  grape: two
+  quantity: 50

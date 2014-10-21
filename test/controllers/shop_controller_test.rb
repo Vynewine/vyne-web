@@ -41,7 +41,7 @@ class ShopControllerTest < ActionController::TestCase
         :stripeToken => 'tok_14m18t2eZvKYlo2CHKjAcAVY',
         :new_brand => '1',
         :new_card => '1111',
-        :warehouses => '1,2',
+        :warehouses => '{"warehouses":[{"id":' + warehouses(:one).id.to_s + ',"distance":1.914},{"id":' + warehouses(:two).id.to_s + ',"distance":2.123}]}',#{ :warehouses => [{ :id => 1, :distance => 2.5 }, { :id => 2, :distance => 1.8}],
         :wines => nil
     }
 
@@ -58,13 +58,13 @@ class ShopControllerTest < ActionController::TestCase
             {
                  :quantity => 1,
                  :food => [10, 20, 33],
-                 :category => 1
+                 :category => categories(:house).id
 
             },
              {
                  :quantity => 1,
                  :food => [10, 20, 33],
-                 :category => 2
+                 :category => categories(:reserve).id
              }
     ]
 
@@ -80,10 +80,11 @@ class ShopControllerTest < ActionController::TestCase
     assert_equal(order.payment, payment)
     assert_equal(order.client, @userOne)
     assert_equal(payment.user, @userOne)
-    assert_equal({'warehouses'=>[1, 2]}, order.information)
+    expected_information= { "warehouses" => [{ "id" => warehouses(:one).id, "distance" => 1.914 }, { "id" => warehouses(:two).id, "distance" => 2.123}]}
+    assert_equal(expected_information, order.information)
     assert_equal(2, order.order_items.count, 'There should be 2 order items')
     categories = order.order_items.map { |c| c.category.id}
-    assert_equal(true, (categories.include? 1) && (categories.include? 2), 'House and Reserve wines should be present on the order.')
+    assert_equal(true, (categories.include? categories(:house).id) && (categories.include? categories(:reserve).id), 'House and Reserve wines should be present on the order.')
   end
 
   test 'should create order for occasion matching' do
@@ -93,7 +94,7 @@ class ShopControllerTest < ActionController::TestCase
             :quantity => 2,
             :occasion => occasions(:one).id,
             :type => types(:one).id,
-            :category => 1
+            :category => categories(:house).id
         }
     ]
 
@@ -114,7 +115,7 @@ class ShopControllerTest < ActionController::TestCase
         {
             :quantity => 1,
             :specificWine => 'Chateauneuf-du-Pape',
-            :category => 1
+            :category => categories(:house).id
         }
     ]
 

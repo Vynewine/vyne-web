@@ -20,6 +20,6 @@
 solr/development/data/index/*
 solr/development/data/tlog/*
 solr/test
-solr/pids
+solr/pids/*
 sunspot-solr-*.pid
 .idea

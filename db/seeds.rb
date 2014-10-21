@@ -317,7 +317,7 @@ defaultUser.save
 
 puts "Admin -------- OK"
 
-Category.create(
+@house = Category.create(
                 :id => 1,
               :name => "House",
              :price => 15,
@@ -325,7 +325,7 @@ Category.create(
        :description => "<p>The entry-level wine from the same top wineries supplying the best restaurants</p><p>Same painstaking production - only more accesible</p>"
 )
 
-Category.create(
+@reserve = Category.create(
                 :id => 2,
               :name => "Reserve",
              :price => 20,
@@ -333,7 +333,7 @@ Category.create(
        :description => "<p>Reserve wines are made by top independent producers</p><p>Their vineyards are in the best parcels of famous wine territories</p>"
 )
 
-Category.create(
+@fine = Category.create(
                 :id => 3,
               :name => "Fine",
              :price => 30,
@@ -341,7 +341,7 @@ Category.create(
        :description => "<p>Fine wine</p>"
 )
 
-Category.create(
+@cellar = Category.create(
                 :id => 4,
               :name => "Cellar",
              :price => 50,
@@ -892,20 +892,34 @@ for i in 0..totalOrders do
 
   warehouseRand = rand(3)
 
+
   if warehouseRand == 0
-    warehouses = "1"
+    warehouses = { :warehouses => [{ :id => 1, :distance => 1.914 }] }
   elsif warehouseRand == 1
-    warehouses = "2"
+    warehouses = { :warehouses => [{ :id => 2, :distance => 2.123 }] }
   else
-    warehouses = "1,2"
+    warehouses = { :warehouses => [{ :id => 1, :distance => 1.914 },{ :id => 2, :distance => 2.123 }] }
   end
 
 
   total_order_items = 1 + rand(2)
   order_items = Array.new
+  category = 1 + rand(4)
+
+  case category
+    when 1
+      category = @house
+    when 2
+      category = @reserve
+    when 3
+      category = @fine
+    when 4
+      category = @cellar
+  end
+
 
   total_order_items.times do
-    order_items << OrderItem.create({quantity: 1 + rand(2), foods: [@food_one, @food_two]})
+    order_items << OrderItem.create({quantity: 1 + rand(2), foods: [@food_one, @food_two], category: category})
   end
 
   Order.create(
@@ -913,7 +927,7 @@ for i in 0..totalOrders do
     :client_id => 2+rand(7),
     :address_id => 4+rand(4),
     :status_id => status,
-    :information => "{\"warehouses\":[#{warehouses}]}",
+    :information => warehouses.to_json,
     :order_items => order_items
   )
 

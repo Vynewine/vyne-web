@@ -196,7 +196,7 @@ $(document).ready(function(){
                     $feedback.removeClass('error');
                     $feedback.html("VYNZ delivers to this area.");
 
-                    $('#warehouses').val(delivery.warehouses);
+                    $('#warehouses').val('{"warehouses":' + JSON.stringify(delivery.warehouses) + '}');
 
                     var initialPostCode = $('#filterPostcode').val().toUpperCase().replace(/[^A-Z0-9]/g, "");
 
@@ -367,6 +367,8 @@ $(document).ready(function(){
      * Lookup valid addresses for a post code
      */
     var postCodeLookup = function(postcode) {
+
+        return;
 
         var $street = $('#addr-st');
 
