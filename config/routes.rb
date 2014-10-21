@@ -37,7 +37,7 @@ Rails.application.routes.draw do
 
   # ------------
 
-  resources :orders
+  resources :orders, :promotions, :share, :help
 
   # ----------------------------------------------------------------------------
   # User authentication:
