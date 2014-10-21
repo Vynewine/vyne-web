@@ -30,6 +30,11 @@ Rails.application.routes.draw do
   # get 'orders/list' => 'orders#list'
   # get 'orders/confirmed' => 'orders#confirmed'
 
+  # Hooks:
+  get 'hooks/index'
+  post 'hooks/updateorder'
+
+
   # ------------
 
   resources :orders

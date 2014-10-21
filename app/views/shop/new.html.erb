@@ -1,6 +1,6 @@
 <%= form_for(@order, url: create_path(@order), :html => {:id => "order-form"}) do |f| %>
-<%# =============================== Errors  =============================== %>
 
+  <%# =============================== Errors  =============================== %>
   <% if @order.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@order.errors.count, "error") %> prohibited this order from being saved:</h2>
@@ -15,287 +15,312 @@
 
   <div id="order" class="swiper-container">
     <div class="swiper-wrapper">
+    <div class="swiper-overlay"></div>
 
-<%# ============================ Address check ============================ %>
-  <div id="postcode-panel" class="order-panel swiper-slide noSwipingClass">
-    <div class="order-panel-overlay"></div>
-    <div class="order-panel-content postcode wrapper">
-      <div class="slideable">
-        <h2 class="title">Availability</h2>
-        <p>We need to check if the wine is available to deliver in your area</p>
-        <input type="text" id="filterPostcode" placeholder="Enter postcode" autocomplete="off"/>
-        <span id="filterPostcodeMessage" class="message"></span>
-        <a href="" id="use-postcode" class="btn next-slide">Choose wine</a>
-        <div class="not-available">
-          <h3>Not available in your area</h3>
-          <p>We're expanding the service throughtout London in the coming weeks.</p>
-          <p>As a thank you for waiting, we'll give you a free bottle with your first order, when we we're available in your postcode.</p>
-          <input type="email" name="email" placeholder="jon@snow.com" />
-          <input type="submit" value="Let me know"/>
+
+    <%# ============================ Address check ============================ %>
+
+    <div id="postcode-panel" class="order-panel swiper-slide noSwipingClass">
+      <div class="order-panel-content wrapper">
+        <div class="slideable">
+          <h2 class="title">Availability</h2>
+          <p>We need to check if the wine is available to deliver in your area</p>
+          <input type="text" id="filterPostcode" placeholder="Enter postcode" autocomplete="off"/>
+          <span id="filterPostcodeMessage" class="message"></span>
+          <a href="" id="use-postcode" class="btn next-slide">Choose wine</a>
+          <div class="not-available">
+            <h3>Not available in your area</h3>
+            <p>We're expanding the service throughtout London in the coming weeks.</p>
+            <p>As a thank you for waiting, we'll give you a free bottle with your first order, when we we're available in your postcode.</p>
+            <input type="email" name="email" placeholder="jon@snow.com" />
+            <input type="submit" value="Let me know"/>
+          </div>
         </div>
+      </div>
+
+      <!-- Hidden fields -->
+      <input type="hidden" id="warehouses" name="warehouses" class="hidden" />
+
+    </div>
+
+
+    <%# ============================= Select Bottle ============================= %>
+
+    <div id="bottles-panel" class="order-panel swiper-slide noSwipingClass">
+      <div class="order-panel-content wrapper">
+
+        <h2>Select your bottle</h2>
+
+        <ul class="bottle-list cf">
+      
+        <% @categories.each do |category| %>
+          <li class="bottle">
+            <a href="#" class="bottle-link" data-category-id="<%= category.id %>">
+              <%= image_tag "icons/wine/bottle#{category.price}.png", :alt => "wine bottle" %>
+              <span class="label"><%= category.name %></span>
+              <span class="description">Entry-level to best wine regions.</span>
+            </a>
+            <div class="bottle-info" data-category-id="<%= category.id %>">
+              <div class="close">
+                <div class="line"></div>
+                <div class="line"></div>
+              </div>
+              <%= image_tag "icons/wine/bottle#{category.price}.png", :alt => "wine bottle" %>
+              <span class="label"><%= category.name %></span>
+              <span class="price">£<%= category.price %></span>
+              <span class="description">Entry-level to best wine regions.</span>
+              <div class="full-description">
+                <p>Your entry point to wine’s best growing locales.</p>
+                <p>Top producer’s basic versions are much better quality than you’ll find in supermarkets or chain wine shops.</p>
+              </div>
+              <a href="" class="btn select-bottle">Choose bottle</a>
+            </div>
+          </li>
+        <% end %>
+
+        </ul>
+
+        <!-- Hidden fields -->
+        <input type="text" id="category" name="category" class="hidden" />
+
       </div>
     </div>
 
-    <!-- Hidden fields -->
-    <input type="hidden" id="warehouses" name="warehouses" class="hidden" />
 
-  </div>
+    <%# ============================= Preferences ============================= %>
 
+    <div id="preferences-panel" class="step order-panel swiper-slide noSwipingClass">
+      <div class="order-panel-content wrapper">
 
-<%# ============================= Wine type 1 ============================= %>
+        <div class="slideable">
 
-  <div id="bottles-panel" class="order-panel swiper-slide noSwipingClass" style="display:none;">
-    <div class="order-panel-content bottles wrapper">
+          <h2>How would you like us to match your wine?</h2>
 
-      <h2>Select your bottle</h2>
+          <ul class="tab-list">
+            <li><a href="#with-food">With food</a></li><li><a href="#without-food">By occasion</a></li>
+          </ul>
 
-      <ul class="bottle-list cf">
-    
-      <% @categories.each do |category| %>
-        <li class="bottle">
-          <a href="#" class="bottle-link" data-category-id="<%= category.id %>">
-            <%= image_tag "wine.png", :alt => "wine bottle" %>
-            <span class="label"><%= category.name %></span>
-            <span class="description">Entry-level to best wine regions.</span>
-          </a>
-          <div class="bottle-info">
-            <div class="close">
-              <div class="line"></div>
-              <div class="line"></div>
-            </div>
-            <%= image_tag "wine.png", :alt => "wine bottle" %>
-            <span class="label"><%= category.name %></span>
-            <span class="price">£<%= category.price %></span>
-            <span class="description">Entry-level to best wine regions.</span>
-            <div class="full-description">
-              <p>Your entry point to wine’s best growing locales.</p>
-              <p>Top producer’s basic versions are much better quality than you’ll find in supermarkets or chain wine shops.</p>
-            </div>
-            <a href="" id="choose-bottle" class="btn next-slide">Choose bottle</a>
-          </div>
-        </li>
-      <% end %>
+          <span class="or">or</span>
 
-      </ul>
-
-      <!-- Hidden fields -->
-      <input type="text" id="category" name="category" class="hidden" />
-
-    </div>
-  </div>
-
-
-<%# ============================= Preferences ============================= %>
-
-  <div class="step order-panel swiper-slide noSwipingClass" style="display:none;">
-    <div class="order-panel-content preferences wrapper">
-
-      <div class="slideable">
-
-        <h2>How would you like us to match your wine?</h2>
-
-        <ul class="tab-list">
-          <li><a href="#with-food">With food</a></li><li><a href="#without-food">By occasion</a></li>
-        </ul>
-
-        <span class="or">or</span>
-
-        <div class="specific">
-          <label for="specifc-wine">Have a specific wine type in mind?</label>
-          <input type="" name="specific-wine" placeholder="e.g Chateauneuf-du-Pape" />
-        </div>
-
-        <div id="with-food" class="tab">
-        <a href="#" class="slideable-back first">Back</a>
-          <span class="subttitle-select">(select up to three ingredients)</span>
-          <h3 class="select-category">1. Select a category</h3>
-          <div class="prefs-list-container">
-            <ul id="food-list" class="prefs-list prefs-list-top">
-            <% allFood = @foods.clone.to_a %>
-            <% allFood.keep_if {|f| f.parent==0} %>
-            <% allFood.each do |parentFood| %>
-              <li id="<%= parentFood.id %>">
-                <a href="#<%= parentFood.name.gsub(/(((\s)&?)\s?)/, "_")%>">
-                  <%= image_tag "icons/food/"+parentFood.name.gsub(" & ", "_")+".png", :alt => "image description", :class => "logo" %>
-                  <span><%= parentFood.name %></span>
-                </a>
-              </li>
-            <% end %>
-            </ul>
+          <div class="specific">
+            <label for="specifc-wine">Have a specific wine type in mind?</label>
+            <input type="" name="specific-wine" placeholder="e.g Chateauneuf-du-Pape" />
           </div>
 
-          <% nallFood = @foods.clone.to_a %>
-          <% nallFood.keep_if {|f| f.parent==0} %>
-          <% nallFood.each do |parentFood| %>
-
-          <div id="<%= parentFood.name.gsub(/(((\s)&?)\s?)/, "_") %>" class="prefs-box">
-            <a href="#" class="slideable-back second">Back</a>
-            <h3>2. What type of <%= parentFood.name %>?</h3>
+          <div id="with-food" class="tab">
+          <a href="#" class="slideable-back first">Back</a>
+            <h3 class="select-category">1. Select a category</h3>
+            <span class="subttitle-select">(select up to three ingredients)</span>
             <div class="prefs-list-container">
-              <ul id="meat-list" class="prefs-list prefs-list-bottom">
-                <% subFood = @foods.clone.to_a %>
-                <% subFood.keep_if {|f| f.parent==parentFood.id} %>
-                <% subFood.each do |food| %>
-                <li id="<%= food.id %>">
-                  <a href="">
-                    <%= image_tag "icons/food/"+food.name.gsub(/(((\s)&?)\s?)/, "_")+".png", :alt => "image description" %>
-                    <span><%= food.name %></span>
+              <ul id="food-list" class="prefs-list prefs-list-top">
+              <% allFood = @foods.clone.to_a %>
+              <% allFood.keep_if {|f| f.parent==0} %>
+              <% allFood.each do |parentFood| %>
+                <li id="<%= parentFood.id %>">
+                  <a href="#<%= parentFood.name.gsub(/(((\s)&?)\s?)/, "_")%>">
+                    <%= image_tag "icons/food/"+parentFood.name.gsub(" & ", "_")+".png", :alt => "image description", :class => "logo" %>
+                    <span><%= parentFood.name %></span>
                   </a>
                 </li>
-                <% end %>
+              <% end %>
               </ul>
             </div>
-          </div>
 
-          <% end %>
+            <% nallFood = @foods.clone.to_a %>
+            <% nallFood.keep_if {|f| f.parent==0} %>
+            <% nallFood.each do |parentFood| %>
 
-        </div>
-
-        <div id="without-food" class="tab">
-          <a href="#" class="slideable-back first">Back</a>
-          <h3>Whats the occasion?</h3>
-          <div class="prefs-list-container">
-            <ul id="occasion-list" class="prefs-list prefs-list-top">
-              <li>
-                <a href="#wine-type">
-                  <%= image_tag "icons/food/solo.png", :alt => "image description" %>
-                  <span>Solo</span>
-                </a>
-              </li>
-              <li>
-                <a href="#wine-type">
-                  <%= image_tag "icons/food/with_friends.png", :alt => "image description" %>
-                  <span>With friends</span>
-                </a>
-              </li>
-              <li>
-                <a href="#wine-type">
-                  <%= image_tag "icons/food/party.png", :alt => "image description" %>
-                  <span>Party</span>
-                </a>
-              </li>
-              <li>
-                <a href="#wine-type">
-                  <%= image_tag "icons/food/date.png", :alt => "image description" %>
-                  <span>Date</span>
-                </a>
-              </li>
-              <li>
-                <a href="#wine-type">
-                  <%= image_tag "icons/food/dining.png", :alt => "image description" %>
-                  <span>Dining</span>
-                </a>
-              </li>
-              <li>
-                <a href="#wine-type">
-                  <%= image_tag "icons/food/outdoors.png", :alt => "image description" %>
-                  <span>Outdoors</span>
-                </a>
-              </li>
-              <li>
-                <a href="#wine-type">
-                  <%= image_tag "icons/food/gift.png", :alt => "image description" %>
-                  <span>Gift</span>
-                </a>
-              </li>
-            </ul>
-
-            <div id="wine-type" class="prefs-box">
+            <div id="<%= parentFood.name.gsub(/(((\s)&?)\s?)/, "_") %>" class="prefs-box">
               <a href="#" class="slideable-back second">Back</a>
-              <h3>2. What type of Wine would you like?</h3>
+              <h3>2. What type of <%= parentFood.name %>?</h3>
               <div class="prefs-list-container">
-                <ul id="wine-list" class="prefs-list prefs-list-bottom">
-                  <li>
+                <ul id="meat-list" class="prefs-list prefs-list-bottom">
+                  <% subFood = @foods.clone.to_a %>
+                  <% subFood.keep_if {|f| f.parent==parentFood.id} %>
+                  <% subFood.each do |food| %>
+                  <li id="<%= food.id %>">
                     <a href="">
-                      <%= image_tag "icons/wine/bold_red.png", :alt => "image description" %>
-                      <span>Bold red</span>
+                      <%= image_tag "icons/food/"+food.name.gsub(/(((\s)&?)\s?)/, "_")+".png", :alt => "image description" %>
+                      <span><%= food.name %></span>
                     </a>
                   </li>
-                  <li>
-                    <a href="">
-                      <%= image_tag "icons/wine/medium_red.png", :alt => "image description" %>
-                      <span>Medium red</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="">
-                      <%= image_tag "icons/wine/light_red.png", :alt => "image description" %>
-                      <span>Light red</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="">
-                      <%= image_tag "icons/wine/rosé.png", :alt => "image description" %>
-                      <span>Rosé</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="">
-                      <%= image_tag "icons/wine/rich_white.png", :alt => "image description" %>
-                      <span>Rich white</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="">
-                      <%= image_tag "icons/wine/dry_white.png", :alt => "image description" %>
-                      <span>Dry white</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="">
-                      <%= image_tag "icons/wine/sparkling.png", :alt => "image description" %>
-                      <span>Sparkling</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="">
-                      <%= image_tag "icons/wine/sweet_white.png", :alt => "image description" %>
-                      <span>Sweet white</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="">
-                      <%= image_tag "icons/wine/fortified.png", :alt => "image description" %>
-                      <span>Fortified</span>
-                    </a>
-                  </li>
+                  <% end %>
                 </ul>
               </div>
             </div>
 
+            <% end %>
+
+          </div>
+
+          <div id="without-food" class="tab">
+            <a href="#" class="slideable-back first">Back</a>
+            <h3>Whats the occasion?</h3>
+            <div class="prefs-list-container">
+              <ul id="occasion-list" class="prefs-list prefs-list-top">
+                <li>
+                  <a href="#wine-type">
+                    <%= image_tag "icons/food/solo.png", :alt => "image description" %>
+                    <span>Solo</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#wine-type">
+                    <%= image_tag "icons/food/with_friends.png", :alt => "image description" %>
+                    <span>With friends</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#wine-type">
+                    <%= image_tag "icons/food/party.png", :alt => "image description" %>
+                    <span>Party</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#wine-type">
+                    <%= image_tag "icons/food/date.png", :alt => "image description" %>
+                    <span>Date</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#wine-type">
+                    <%= image_tag "icons/food/dining.png", :alt => "image description" %>
+                    <span>Dining</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#wine-type">
+                    <%= image_tag "icons/food/outdoors.png", :alt => "image description" %>
+                    <span>Outdoors</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#wine-type">
+                    <%= image_tag "icons/food/gift.png", :alt => "image description" %>
+                    <span>Gift</span>
+                  </a>
+                </li>
+              </ul>
+
+              <div id="wine-type" class="prefs-box">
+                <a href="#" class="slideable-back second">Back</a>
+                <h3>2. What type of Wine would you like?</h3>
+                <div class="prefs-list-container">
+                  <ul id="wine-list" class="prefs-list prefs-list-bottom">
+                    <li>
+                      <a href="">
+                        <%= image_tag "icons/wine/bold_red.png", :alt => "image description" %>
+                        <span>Bold red</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="">
+                        <%= image_tag "icons/wine/medium_red.png", :alt => "image description" %>
+                        <span>Medium red</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="">
+                        <%= image_tag "icons/wine/light_red.png", :alt => "image description" %>
+                        <span>Light red</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="">
+                        <%= image_tag "icons/wine/rosé.png", :alt => "image description" %>
+                        <span>Rosé</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="">
+                        <%= image_tag "icons/wine/rich_white.png", :alt => "image description" %>
+                        <span>Rich white</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="">
+                        <%= image_tag "icons/wine/dry_white.png", :alt => "image description" %>
+                        <span>Dry white</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="">
+                        <%= image_tag "icons/wine/sparkling.png", :alt => "image description" %>
+                        <span>Sparkling</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="">
+                        <%= image_tag "icons/wine/sweet_white.png", :alt => "image description" %>
+                        <span>Sweet white</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="">
+                        <%= image_tag "icons/wine/fortified.png", :alt => "image description" %>
+                        <span>Fortified</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+
           </div>
 
         </div>
 
-      </div>
-
-      <div class="prefs-overview cf">
-        <div class="prefs-overview-list-container">
-          <a href="#" class="prefs-overview-popup-link">
-          <%= image_tag "icons/list@2x.png", :alt => "list" %>
-          <span class="ingredient-count">0</span>
-          </a>
-          <div class="prefs-overview-popup">
-            <ul class="prefs-overview-list">
-            </ul>
+        <div class="prefs-overview cf">
+          <div class="prefs-overview-list-container">
+            <a href="#" class="prefs-overview-popup-link">
+            <%= image_tag "icons/list@2x.png", :alt => "list" %>
+            <span class="ingredient-count">0</span>
+            </a>
+            <div class="prefs-overview-popup">
+              <ul class="prefs-overview-list">
+              </ul>
+            </div>
           </div>
+          <a href="" id="select-preferences" class="next-slide btn-order">Review order</a>
         </div>
-        <a href="" class="next-slide btn-order">Checkout</a>
-      </div>
 
+      </div>
     </div>
-  </div>
 
-<%# =============================== Sign up =============================== %>
+
+    <%# =============================== Review =============================== %>
+
+    <div id="review-panel" class="step order-panel swiper-slide noSwipingClass">
+      <div class="order-panel-content wrapper">
+        <h2 class="title">Review</h2>
+        <p>We need to check if the wine is available to deliver in your area</p>
+
+        <table class="order-table">
+          <tr>
+            <th width="80%">Wine</th>
+            <th width="20%">Price</th>
+          </tr>
+          <tr class="add-bottle">
+            <td colspan="2"><a href="" class="btn add-bottle-link">Add another bottle</a></td>
+          </tr>
+        </table>
+
+        <a href="" id="checkout" class="next-slide btn-checkout">Checkout</a>
+
+      </div>
+    </div>
+
+    <%# =============================== Sign up =============================== %>
 
     <% unless user_signed_in? %>
 
-    <div class="step order-panel swiper-slide noSwipingClass" style="display:none;">
-      <div class="order-panel-content register wrapper">
+    <div id="register-panel" class="step order-panel swiper-slide noSwipingClass">
+      <div class="order-panel-content wrapper">
         <div id="account-form" class="register-form">
           <h2 class="account-heading">Register</h2>
           <span class="account-message">Have an account? <a href="" id="account-link" class="signin-link">Sign in</a></span>
-          <ul class="errors" id="sing-in-errors"></ul>
+          <ul class="errors" id="sign-in-errors"></ul>
           <div>
             <%= text_field :user, :first_name, :placeholder => "First Name" %>
           </div>
@@ -341,96 +366,86 @@
 
     <% end %>
 
-<%# ========================== Address selection ========================== %>
+    <%# ========================== Address selection ========================== %>
 
-  <div class="step order-panel swiper-slide noSwipingClass" style="display:none;">
-    <div class="order-panel-content delivery wrapper">
-      <h2>Delivery address</h2>
+    <div id="delivery-panel" class="step order-panel swiper-slide noSwipingClass">
+      <div class="order-panel-content wrapper">
+        <h2>Delivery address</h2>
 
-  <%# - - - - - -- - - - - - - - - -  Option1 - - - - - -- - - - - - - - - -  %>
+        <%# - - - - - -- - - - - - - - - -  Option1 - - - - - -- - - - - - - - - -  %>
 
-      <%
-      addressOptions = [['New address', -1]]
-      # billingAddressOptions = [['Same address', -1],['Custom address', 0]]
-      if current_user
-        current_user.addresses.order(updated_at: :desc).each do |a|
-          addressOptions.push([a.full, a.id])
-          # billingAddressOptions.push([a.full, a.id])
-        end
-      end
-      %>
-      <%= select_tag "order-address", options_for_select(addressOptions, @order.address_id), :prompt => "Choose Address", :name => "" %>
-
-  <%# - - - - - -- - - - - - - - - -  Option2 - - - - - -- - - - - - - - - -  %>
-
-      <div id="new_delivery_address" style="display:none;">
-        <div>
-          <select id="suggested-addresses">
-            <option value="0">Please select your street address</option>
-          </select>
-        </div>
-        <div><textarea rows="3" disabled="disabled" id="addr-st" name="address_s" placeholder="House Number and Street Name"></textarea>
-        </div>
-        <div><input type="text" id="addr-pc" name="address_p" placeholder="Postcode" disabled="disabled"/></div>
-        <div><input type="hidden" disabled="disabled" id="addr-no" name="address_d" placeholder="No"/></div>
-      </div>
-      <input type="hidden" id="address-id" name="address_id"/>
-
-      <div>
-        <!-- Next step -->
-        <a href="#" class="btn" id="address-details">use address</a> <!-- Changes class to 'red-button' -->
-      </div>
-    </div>
-  </div>
-<%# ========================= Address confirmation ======================== %>
-<%#
-  #  <div class="step">
-  #    <h1>Delivery address confirmed</h1>
-  #    <p>Once you've booked your order we'll deliver to this address</p>
-  #    <!-- 'confirmed-address' is used by JS -->
-  #    <address class="confirmed-address"></address>
-  #    <div>
-  #        <a href="#" class="red-button" id="">choose your wine</a><!-- Next step -->
-  #    </div>
-  #  </div>
-%>
-<%# =============================== Payment =============================== %>
-
-  <div class="step order-panel swiper-slide noSwipingClass" style="display:none;">
-    <div class="order-panel-content payment wrapper">
-      <h2>Link Payment</h2>
         <%
-        paymentCards = [['New payment card', -1]]
+        addressOptions = [['New address', -1]]
+        # billingAddressOptions = [['Same address', -1],['Custom address', 0]]
         if current_user
-          current_user.payments.order(updated_at: :desc).each do |a|
-            # [ :visa, :master, :american, :discover, :diners, :jcb ]
-            if a.brand == 3 # American Express
-              cardNumber = "**** ****** #{a.number}"
-            else
-              cardNumber = "**** **** **** #{a.number}"
-            end  
-            paymentCards.push([cardNumber, a.id])
+          current_user.addresses.order(updated_at: :desc).each do |a|
+            addressOptions.push([a.full, a.id])
+            # billingAddressOptions.push([a.full, a.id])
           end
         end
         %>
+        <%= select_tag "order-address", options_for_select(addressOptions, @order.address_id), :prompt => "Choose Address", :name => "" %>
 
-      <%= select_tag "orderCard", options_for_select(paymentCards, @order.payment_id), :prompt => "Choose Card", :name => "" %>
-      <div id="new_card" style="display:none;">
-        <div><input type="text" id="pmnm" size="20" placeholder="0000 0000 0000 0000" data-stripe="number" /></div>
-        <div><input type="text" id="pmcv" size="4"  placeholder="CVC" data-stripe="cvc" /></div>
-        <div><input type="text" id="pmxp" size="5"  placeholder="MM/YY" /></div>
-      </div>
-      <!-- Hidden fields -->
-      <input type="hidden" id="old-card" name="old_card" />
-      <input type="hidden" id="new-card" name="new_card" />
-      <input type="hidden" id="new-brand" name="new_brand" />
-      <input type="hidden" id="expm" data-stripe="exp-month" />
-      <input type="hidden" id="expy" data-stripe="exp-year" />
-      <div>
-        <%= f.submit "Submit Order", :class => 'red-button' %>
+        <%# - - - - - -- - - - - - - - - -  Option2 - - - - - -- - - - - - - - - -  %>
+
+        <div id="new_delivery_address" style="display:none;">
+          <div>
+            <select id="suggested-addresses">
+              <option value="0">Please select your street address</option>
+            </select>
+          </div>
+          <div><textarea rows="3" disabled="disabled" id="addr-st" name="address_s" placeholder="House Number and Street Name"></textarea>
+          </div>
+          <div><input type="text" id="addr-pc" name="address_p" placeholder="Postcode" disabled="disabled"/></div>
+          <div><input type="hidden" disabled="disabled" id="addr-no" name="address_d" placeholder="No"/></div>
+        </div>
+        <input type="hidden" id="address-id" name="address_id"/>
+
+        <div>
+          <!-- Next step -->
+          <a href="#" class="btn" id="address-details">use address</a> <!-- Changes class to 'red-button' -->
+        </div>
       </div>
     </div>
-  </div>
+
+    <%# ========================== Payment ========================== %>
+
+    <div id="payment-panel" class="step order-panel swiper-slide noSwipingClass">
+      <div class="order-panel-content wrapper">
+        <h2>Link Payment</h2>
+          <%
+          paymentCards = [['New payment card', -1]]
+          if current_user
+            current_user.payments.order(updated_at: :desc).each do |a|
+              # [ :visa, :master, :american, :discover, :diners, :jcb ]
+              if a.brand == 3 # American Express
+                cardNumber = "**** ****** #{a.number}"
+              else
+                cardNumber = "**** **** **** #{a.number}"
+              end  
+              paymentCards.push([cardNumber, a.id])
+            end
+          end
+          %>
+
+        <%= select_tag "orderCard", options_for_select(paymentCards, @order.payment_id), :prompt => "Choose Card", :name => "" %>
+        <div id="new_card" style="display:none;">
+          <div><input type="text" id="pmnm" size="20" placeholder="0000 0000 0000 0000" data-stripe="number" /></div>
+          <div><input type="text" id="pmcv" size="4"  placeholder="CVC" data-stripe="cvc" /></div>
+          <div><input type="text" id="pmxp" size="5"  placeholder="MM/YY" /></div>
+        </div>
+        <!-- Hidden fields -->
+        <input type="hidden" id="old-card" name="old_card" />
+        <input type="hidden" id="new-card" name="new_card" />
+        <input type="hidden" id="new-brand" name="new_brand" />
+        <input type="hidden" id="expm" data-stripe="exp-month" />
+        <input type="hidden" id="expy" data-stripe="exp-year" />
+        <div>
+          <%= f.submit "Submit Order", :class => 'red-button' %>
+        </div>
+      </div>
+
+    </div>
 
   <% end %>
 
