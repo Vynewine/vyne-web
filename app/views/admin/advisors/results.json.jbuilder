@@ -18,7 +18,7 @@ json.array!(@results) do |wine|
 
   # Relationships
   json.types wine.types.map {|t| t.name}
-  json.compositions wine.compositions_array
+  json.compositions wine.compositions.map { |c| { :name => c.grape.name, :quantity => c.quantity }}
   json.notes wine.notes.map {|n| n.name}
   
   # Availability
@@ -29,6 +29,7 @@ json.array!(@results) do |wine|
       json.cost      inventory.cost
       json.price     inventory.category.price
       json.quantity  inventory.quantity
+      json.category  inventory.category
     end
   end
 

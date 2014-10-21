@@ -1,3 +1,5 @@
+require 'json'
+
 class Admin::AdvisorsController < ApplicationController
   layout "admin"
   before_action :authenticate_user!
@@ -6,6 +8,12 @@ class Admin::AdvisorsController < ApplicationController
 
   def index
     @orders = Order.where.not(status_id: [5,6]) # Ignores delivered and cancelled
+    @categories = Category.all
+  end
+
+  def item
+    @order_item = OrderItem.find(params[:id])
+    @order = @order_item.order
     @categories = Category.all
   end
 
@@ -97,6 +105,8 @@ class Admin::AdvisorsController < ApplicationController
 
       # facet(:warehouse_id) do
 
+      puts params[:categories]
+
       with(:warehouse_ids, params[:warehouses].split(","))
 
       unless params[:categories].nil?
@@ -106,6 +116,7 @@ class Admin::AdvisorsController < ApplicationController
       # end
       # warehouse_filter = with(:warehouse_id, 1)
       # facet :warehouse_id, exclude: [warehouse_filter]
+
       if params[:single]
         with(:single_estate, true)
       end
@@ -117,7 +128,14 @@ class Admin::AdvisorsController < ApplicationController
       end
     end
     puts PP.pp(@search.total,'',80)
-    # puts PP.pp(@search.results,'',80)
+    # @search.results.each { |wine|
+    #   wine.compositions.each { |c|
+    #     #puts PP.pp(c.grape,'',80)
+    #     puts PP.pp(wine.compositions.map { |c| c.grape.name })
+    #   }
+    #   # puts PP.pp(wine.compositions,'',80)
+    # }
+    puts PP.pp(@search.results,'',80)
     @results = @search.results
     
     # puts '--------------------------'

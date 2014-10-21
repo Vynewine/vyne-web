@@ -1,28 +1,24 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 house:
-  id: 1
   name: 'house'
   price: 15
   restaurant_price: '20-40'
   description: 'house wine'
 
 reserve:
-  id: 2
   name: 'reserve'
   price: 20
   restaurant_price: '40-55'
   description: 'reserve wine'
 
 fine:
-   id: 3
    name: 'fine'
    price: 30
    restaurant_price: '55-75'
    description: 'fine wine'
 
 cellar:
-   id: 4
    name: 'cellar'
    price: 50
    restaurant_price: '75-120'

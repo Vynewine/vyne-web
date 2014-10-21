@@ -8,8 +8,6 @@
       <th>Address</th>
       <th>Warehouse</th>
       <th>Advisor</th>
-      <th>Wine</th>
-      <th>Quantity</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -22,8 +20,6 @@
         <td><%= order.address.postcode %></td>
         <td><%= order.warehouse ? order.warehouse.title : '' %></td>
         <td><%= order.advisor ? order.advisor.name : '' %></td>
-        <td><%= order.wine ? order.wine.name : '' %></td>
-        <td><%= order.quantity %></td>
         <td class="button-wrapper">
           <%= link_to admin_order_path(order) do %>
             <i class="flaticon stroke zoom-1"></i>

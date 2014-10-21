@@ -1,11 +1,13 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  warehouse: 
-  wine: 
+  warehouse: one
+  wine: one
   quantity: 1
+  category: house
 
 two:
-  warehouse: 
-  wine: 
+  warehouse: two
+  wine: two
   quantity: 1
+  category: house

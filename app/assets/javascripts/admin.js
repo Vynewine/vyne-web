@@ -259,7 +259,7 @@ var adminReady = function() {
         var parseWarehouseStatuses = function(availabilityList) {
             var d = new Date();
             var w = d.getDay();
-            var t = parseInt('' + d.getHours() + d.getMinutes());
+            var t = parseInt('' + (d.getHours() * 100 + d.getMinutes()));
             var o, c;
             var s = [];
             for (var i = 0, availability; availability = availabilityList[i++];) {
@@ -420,7 +420,7 @@ var adminReady = function() {
                 'categories': categories
             };
             // console.log('data', data);
-            postJSON('results.json', token, data, parseResults, errorMethod);
+            postJSON('/admin/advise/results.json', token, data, parseResults, errorMethod);
         };
 
         var sortKeyWords = function(e){
@@ -547,6 +547,10 @@ var adminReady = function() {
             var $orderRecoverAnchor = $('<a>').attr('href', '#').text('Return');
             var customerName = order.client.first_name + ' ' + order.client.last_name;
             var fullAddress = order.address.detail + ', ' + order.address.street + ', ' + order.address.postcode;
+
+
+            var $adviseAnchorOrder = $('<a>').attr('href', '/admin/orders/' + order.id).text('AdviseOrder');
+
             var info;
             if (order.information) {
                 info = order.information;
@@ -591,7 +595,9 @@ var adminReady = function() {
                       $('<td>').addClass('postcode').text(
                           order.address.postcode
                       ),
-                      $('<td>').addClass('actions').append($adviseAnchor)
+                      $('<td>').addClass('actions').append($adviseAnchor),
+                    $('<td>').addClass('actions').append($adviseAnchorOrder)
+
                 )
             );
         };

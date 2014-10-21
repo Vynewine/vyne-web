@@ -1,9 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
-  country: 1
+  name: 'Region One'
+  country: france
 
 two:
-  name: MyString
-  country: 1
+  name: 'Region Two'
+  country: italy

@@ -1,35 +1,26 @@
 one:
-  id: 1
   name: 'Bold Red'
 
 two:
-  id: 2
   name: 'Medium Red'
 
 three:
-  id: 3
   name: 'Light Red'
 
 four:
-  id: 4
   name: 'Rosé'
 
 five:
-  id: 5
   name: 'Rich White'
 
 six:
-  id: 6
   name: 'Dry White'
 
 seven:
-  id: 7
   name: 'Sparkling'
 
 eight:
-  id: 8
   name: 'Sweet White'
 
 nine:
-  id: 9
   name: 'Fortified'

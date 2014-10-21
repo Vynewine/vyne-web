@@ -32,18 +32,6 @@
 </p>
 
 <p>
-  <strong>Wine:</strong>
-  <% if @order.wine %>
-  <%= @order.wine_id == 0 ? " - " : @order.wine.name %>
-  <% end %>
-</p>
-
-<p>
-  <strong>Quantity:</strong>
-  <%= @order.quantity %>
-</p>
-
-<p>
   <strong>Delivery token:</strong>
   <%= @order.delivery_token %>
 </p>
@@ -51,6 +39,38 @@
 <p>
   <strong>Information provided by user:</strong>
   <pre><%= @order.information %></pre>
+</p>
+
+<p>
+  <strong>Details</strong>
+<table border="1" class="list-table">
+  <thead>
+  <tr>
+    <th>Advise</th>
+    <th>Food</th>
+    <th>Occasion</th>
+    <th>Specific Wine</th>
+    <th>Quantity</th>
+    <th>Category</th>
+    <th>Wine</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @order.order_items.each do |item| %>
+      <tr>
+        <td>
+          <a href="/admin/advise/item/<%= item.id %>">Advise</a>
+          <%= item.wine.nil? ? 'Advise' : 'Advised' %></td>
+        <td><%= item.foods.to_json %></td>
+        <td><%= item.occasion.nil? ? '' : item.occasion.name %></td>
+        <td><%= item.specific_wine.nil? ? '' : item.specific_wine %></td>
+        <td><%= item.quantity %></td>
+        <td><%= item.category.name %></td>
+        <td><%= item.wine.nil? ? '' : item.wine.name %></td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>
 </p>
 
 <p>

@@ -5,7 +5,7 @@ module UserMailer
 
     begin
       mandrill = Mandrill::API.new Rails.application.config.mandrill
-      template_name = "thanks-buy-first-bottle"
+      template_name = 'orderplaced-1tochv1'
       message = {
           :to => [
               {
@@ -18,7 +18,7 @@ module UserMailer
                   :rcpt => user.email,
                   :vars => [
                       {
-                          :name => "NAME",
+                          :name => 'NAME',
                           :content => user.name
                       }
                   ]

@@ -80,8 +80,8 @@ Rails.application.routes.draw do
   # Admin access
 
   # Actions for admins are under "/admin"
-  namespace "admin" do
-    root :to => "producers#index"
+  namespace 'admin' do
+    root :to => 'producers#index'
     resources :producers
     resources :regions
     resources :subregions
@@ -105,12 +105,13 @@ Rails.application.routes.draw do
     resources :statuses
     # resources :advisors
     resources :inventories
-    post '/orders/list' => "orders#list"
-    get 'advise/index' => "advisors#index"
-    get 'advise/choose' => "advisors#choose"
-    post 'advise/choose' => "advisors#choose"
-    post 'advise/complete' => "advisors#complete"
-    post 'advise/results' => "advisors#results"
+    post '/orders/list' => 'orders#list'
+    get 'advise/index' => 'advisors#index'
+    get 'advise/choose' => 'advisors#choose'
+    get 'advise/item/:id' => 'advisors#item'
+    post 'advise/choose' => 'advisors#choose'
+    post 'advise/complete' => 'advisors#complete'
+    post 'advise/results' => 'advisors#results'
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

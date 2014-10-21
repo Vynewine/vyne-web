@@ -1,11 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyString
-  alpha_2: MyString
-  alpha_3: MyString
+france:
+  name: 'France'
+  alpha_2: 'fr'
+  alpha_3: 'fra'
 
-two:
-  name: MyString
-  alpha_2: MyString
-  alpha_3: MyString
+italy:
+  name: 'Italy'
+  alpha_2: 'it'
+  alpha_3: 'ita'
