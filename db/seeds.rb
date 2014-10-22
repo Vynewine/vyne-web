@@ -322,7 +322,8 @@ puts "Admin -------- OK"
               :name => "House",
              :price => 15,
   :restaurant_price => "20-40",
-       :description => "<p>The entry-level wine from the same top wineries supplying the best restaurants</p><p>Same painstaking production - only more accesible</p>"
+       :description => "<p>Your entry-point to wine's best regions.</p><p>Problems from locations making far better wine than the mass production wines you'll find in supermarkets</p>",
+           :summary => "Entry-level to best wine regions"
 )
 
 @reserve = Category.create(
@@ -330,7 +331,8 @@ puts "Admin -------- OK"
               :name => "Reserve",
              :price => 20,
   :restaurant_price => "40-55",
-       :description => "<p>Reserve wines are made by top independent producers</p><p>Their vineyards are in the best parcels of famous wine territories</p>"
+       :description => "<p>Get introduced to producers from the most sought after locations of the world's best wine regions</p>",
+           :summary => "Premium production, best vineyards"
 )
 
 @fine = Category.create(
@@ -338,7 +340,8 @@ puts "Admin -------- OK"
               :name => "Fine",
              :price => 30,
   :restaurant_price => "55-75",
-       :description => "<p>Fine wine</p>"
+       :description => "<p>From the very best of the most cherished vineyards</p><p>Top producers with critically acclaimed wines</p><p>Discover clarity of flavours unique to the finest wines.</p>",
+           :summary => "Top producers, acclaimed locations"
 )
 
 @cellar = Category.create(
@@ -346,7 +349,8 @@ puts "Admin -------- OK"
               :name => "Cellar",
              :price => 50,
   :restaurant_price => "75-120",
-       :description => "<p>Cellar wine</p>"
+       :description => "<p>The best producers from wine's most sacred vineyards</p><p>Cellar wines are chosen at the perfect age to fully experience greatness in winemaking</p>",
+           :summary => "Great vintages of top producers"
 )
 
 puts "Categories --- OK"
@@ -355,184 +359,224 @@ puts "Categories --- OK"
 # 45 food types
 
 Food.create(
+    :id => 1,
     :name => "meat",
   :parent => 0
 )
 Food.create(
+    :id => 2,
     :name => "fish",
   :parent => 0
 )
 Food.create(
+    :id => 3,
     :name => "dairy",
   :parent => 0
 )
 Food.create(
+    :id => 4,
     :name => "preparation",
   :parent => 0
 )
 Food.create(
+    :id => 5,
     :name => "vegetables & fungi",
   :parent => 0
 )
 Food.create(
+    :id => 6,
     :name => "herb & spice",
   :parent => 0
 )
 Food.create(
-    :name => "grain",
+    :id => 7,
+    :name => "carbs",
   :parent => 0
 )
 Food.create(
-    :name => "potato",
-  :parent => 0
-)
-Food.create(
+    :id => 8,
     :name => "sweet",
   :parent => 0
 )
 @food_one = Food.create(
+    :id => 9,
     :name => "beef",
   :parent => 1
 )
 Food.create(
+    :id => 10,
     :name => "cured meat",
   :parent => 1
 )
 Food.create(
+    :id => 11,
     :name => "pork",
   :parent => 1
 )
 Food.create(
+    :id => 12,
     :name => "chicken",
   :parent => 1
 )
 Food.create(
+    :id => 13,
     :name => "lobster & shellfish",
   :parent => 2
 )
 Food.create(
+    :id => 14,
     :name => "fish",
   :parent => 2
 )
 Food.create(
+    :id => 15,
     :name => "mussels & oysters",
   :parent => 2
 )
 Food.create(
+    :id => 16,
     :name => "soft cheese & cream",
   :parent => 3
 )
 Food.create(
+    :id => 17,
     :name => "pungent cheese",
   :parent => 3
 )
 Food.create(
+    :id => 18,
     :name => "hard cheese",
   :parent => 3
 )
 @food_two = Food.create(
+    :id => 19,
     :name => "grill & BBQ",
   :parent => 4
 )
 Food.create(
+    :id => 20,
     :name => "roasted",
   :parent => 4
 )
 Food.create(
+    :id => 21,
     :name => "fried & sautéed",
   :parent => 4
 )
 Food.create(
+    :id => 22,
     :name => "smoke",
   :parent => 4
 )
 Food.create(
+    :id => 23,
     :name => "poached & steamed",
   :parent => 4
 )
 Food.create(
+    :id => 24,
     :name => "onion & garlic",
   :parent => 5
 )
 Food.create(
+    :id => 25,
     :name => "green vegetables",
   :parent => 5
 )
 Food.create(
+    :id => 26,
     :name => "root vegetables",
   :parent => 5
 )
 Food.create(
+    :id => 27,
     :name => "tomato & pepper",
   :parent => 5
 )
 Food.create(
+    :id => 28,
     :name => "mushroom",
   :parent => 5
 )
 Food.create(
+    :id => 29,
     :name => "nuts & seeds",
   :parent => 5
 )
 Food.create(
+    :id => 30,
     :name => "beans & peas",
   :parent => 5
 )
 Food.create(
+    :id => 31,
     :name => "red pepper & chilli",
   :parent => 6
 )
 Food.create(
+    :id => 32,
     :name => "pepper",
   :parent => 6
 )
 Food.create(
+    :id => 33,
     :name => "baking spices",
   :parent => 6
 )
 Food.create(
+    :id => 34,
     :name => "curry & hot sauce",
   :parent => 6
 )
 Food.create(
+    :id => 35,
     :name => "herbs",
   :parent => 6
 )
 Food.create(
+    :id => 36,
     :name => "exotic & aromatic",
   :parent => 6
 )
 Food.create(
+    :id => 37,
     :name => "white bread",
   :parent => 7
 )
 Food.create(
+    :id => 38,
     :name => "pasta",
   :parent => 7
 )
 Food.create(
+    :id => 39,
     :name => "rice",
   :parent => 7
 )
 Food.create(
+    :id => 40,
     :name => "white potato",
-  :parent => 8
+  :parent => 5
 )
 Food.create(
+    :id => 41,
     :name => "sweet potato",
+  :parent => 5
+)
+Food.create(
+    :id =>42,
+    :name => "fruit & berries",
   :parent => 8
 )
 Food.create(
-    :name => "fruit & berries",
-  :parent => 9
-)
-Food.create(
+    :id => 43,
     :name => "chocolate & coffee",
-  :parent => 9
+  :parent => 8
 )
 Food.create(
+    :id => 44,
     :name => "vanilla & caramel",
-  :parent => 9
+  :parent => 8
 )
 
 puts "Foods -------- OK"

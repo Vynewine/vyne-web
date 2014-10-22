@@ -5,6 +5,7 @@ class CreateCategories < ActiveRecord::Migration
       t.integer :price
       t.string :restaurant_price
       t.text :description
+      t.text :summary
 
       t.timestamps
     end

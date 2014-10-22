@@ -2,8 +2,8 @@
 
 one:
   title: RockstarDev Warehouse
-  address_id: 1
+  address: one
 
 two:
   title: Vynz Warehouse
-  address_id: 1
+  address: two

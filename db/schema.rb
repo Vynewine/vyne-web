@@ -84,6 +84,7 @@ ActiveRecord::Schema.define(version: 20141017152801) do
     t.integer  "price"
     t.string   "restaurant_price"
     t.text     "description"
+    t.text     "summary"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -46,22 +46,15 @@ class Admin::AdvisorsController < ApplicationController
   end
 
   def choose
-    require 'pp'
-    logger.warn '--------------------------'
-    logger.warn "Choice request"
+    @order = Order.find(params[:order])
+    warehouse = @order.warehouse
+    wine = @order.order_items[0].wine
+    puts json: warehouse.address
+    quotes = shutl_quotes(@order, warehouse, wine)
 
-    # We pass order and warehouse. Warehouse must have a keyword inside shutl's application.
-    puts PP.pp("Warehouse:",'',80)
-    puts PP.pp(params[:warehouse],'',80)
-    order = Order.find(params[:order])
-    warehouse = Warehouse.find(params[:warehouse])
-    wine = Wine.find(params[:wine])
-    quotes = shutl_quotes(order, warehouse, wine)
+    #@quotes = {"quote_collection"=> {"id"=>"5447c602e4b0b774cd566ffb", "created_at"=>"2014-10-22T15:58+01:00", "time_zone"=>"Europe/London", "distance"=>4.5, "no_coverage"=>false, "shop_and_pay_by_card"=>false, "best_quote"=>{"id"=>"5447c602e4b0b774cd566ffb-asap", "merchant_price"=>921, "customer_price"=>1105, "customer_price_ex_tax"=>920, "vehicle"=>"motorbike", "pickup_start"=>"2014-10-22T16:13+01:00", "pickup_finish"=>"2014-10-22T16:43+01:00", "delivery_start"=>"2014-10-22T16:13+01:00", "delivery_finish"=>"2014-10-22T17:58+01:00", "valid_until"=>"2014-10-22T16:13+01:00", "delivery_promise"=>105, "delivery_promise_text"=>"delivery within 1 hour and 45 minutes for £11.05"}, "quotes"=>[{"id"=>"5447c602e4b0b774cd566ffb-1413990790", "merchant_price"=>921, "customer_price"=>1105, "customer_price_ex_tax"=>920, "vehicle"=>"bicycle", "pickup_start"=>"2014-10-22T16:15+01:00", "pickup_finish"=>"2014-10-22T17:00+01:00", "delivery_start"=>"2014-10-22T17:00+01:00", "delivery_finish"=>"2014-10-22T18:00+01:00", "valid_until"=>"2014-10-22T16:15+01:00"}, {"id"=>"5447c602e4b0b774cd566ffb-1413994390", "merchant_price"=>921, "customer_price"=>1105, "customer_price_ex_tax"=>920, "vehicle"=>"bicycle", "pickup_start"=>"2014-10-22T17:15+01:00", "pickup_finish"=>"2014-10-22T18:00+01:00", "delivery_start"=>"2014-10-22T18:00+01:00", "delivery_finish"=>"2014-10-22T19:00+01:00", "valid_until"=>"2014-10-22T17:15+01:00"}, {"id"=>"5447c602e4b0b774cd566ffb-1413997990", "merchant_price"=>960, "customer_price"=>1152, "customer_price_ex_tax"=>960, "vehicle"=>"small_van", "pickup_start"=>"2014-10-22T18:15+01:00", "pickup_finish"=>"2014-10-22T19:00+01:00", "delivery_start"=>"2014-10-22T19:00+01:00", "delivery_finish"=>"2014-10-22T20:00+01:00", "valid_until"=>"2014-10-22T18:15+01:00"}, {"id"=>"5447c602e4b0b774cd566ffb-1414001590", "merchant_price"=>1145, "customer_price"=>1374, "customer_price_ex_tax"=>1145, "vehicle"=>"motorbike", "pickup_start"=>"2014-10-22T19:15+01:00", "pickup_finish"=>"2014-10-22T20:00+01:00", "delivery_start"=>"2014-10-22T20:00+01:00", "delivery_finish"=>"2014-10-22T21:00+01:00", "valid_until"=>"2014-10-22T19:15+01:00"}, {"id"=>"5447c602e4b0b774cd566ffb-1414163590", "merchant_price"=>921, "customer_price"=>1105, "customer_price_ex_tax"=>920, "vehicle"=>"motorbike", "pickup_start"=>"2014-10-24T16:15+01:00", "pickup_finish"=>"2014-10-24T17:00+01:00", "delivery_start"=>"2014-10-24T17:00+01:00", "delivery_finish"=>"2014-10-24T18:00+01:00", "valid_until"=>"2014-10-24T16:00+01:00"}]}}
+    puts quotes
     @quotes = JSON.parse(quotes) # Hash obj
-
-    puts PP.pp(@quotes,'',80)
-    logger.warn '--------------------------'
-
   end
 
   def complete
@@ -261,6 +254,8 @@ class Admin::AdvisorsController < ApplicationController
     #   "expires_in": 999
     # }
 
+
+
     response = JSON.parse(connection.read_body)
     response['access_token']
     # puts response
@@ -281,11 +276,10 @@ class Admin::AdvisorsController < ApplicationController
 
     params = {
       :quote_collection => {
-        :channel => "pos",
-        :page => "product",
-        :session_id => "example123",
+        :channel => 'mobile',
+        :page => 'product',
+        :session_id => 'example123',
         :basket_value => 1999,
-        # :pickup_store_id => warehouse,
         :pickup_location => {
           :address => {
             :postcode => warehouse.address.postcode
@@ -326,9 +320,7 @@ class Admin::AdvisorsController < ApplicationController
     connection = Net::HTTP::start(url.hostname, url.port, :use_ssl => true ) {|http|
       http.request(req)
     }
-    
-    response = JSON.parse(connection.read_body)
-    # puts connection
+
     connection.read_body
     # puts response
 

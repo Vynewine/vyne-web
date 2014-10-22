@@ -1,0 +1,45 @@
+<table border="1" class="list-table">
+  <thead>
+  <tr>
+    <td>Delivery Time</td>
+    <td>Offer Valid Until</td>
+    <td>Vehicle</td>
+    <td>Price</td>
+    <td></td>
+  </tr>
+  </thead>
+  <tbody>
+  <% @quotes['quote_collection']['quotes'].each do |quote| %>
+      <tr>
+        <td><%= Time.parse(quote['delivery_finish']).strftime("%d/%m/%Y - %H:%M") %></td>
+        <td><%= Time.parse(quote['valid_until']).strftime("%d/%m/%Y - %H:%M") %></td>
+        <td><%= quote['vehicle'] %></td>
+        <td>£<%= '%.2f' % (quote['customer_price']/100) %></td>
+        <td data-id="<%= quote['id'] %>"
+            data-price="<%= '%.2f' % (quote['customer_price']/100) %>"
+            data-vehicle="<%= quote['vehicle'] %>">
+          <a href="#" class="choose-quote">Choose</a>
+        </td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<form method="post" action="/admin/advise/complete" id="choose-form">
+  <input type="hidden" id="quote" name="quote"/>
+  <input type="hidden" id="order" name="order" value="<%= @order.id %>"/>
+  <%= hidden_field_tag(request_forgery_protection_token.to_s, form_authenticity_token) %>
+</form>
+
+<script>
+  $('.choose-quote').click(function() {
+      var $a = $(event.target);
+      var $td = $a.parent();
+      var response = confirm("You chose to schedule: " + $td.data('vehicle') + ' - for: ' + $td.data('price') +
+              '\nWe will charge customer and schedule delivery.');
+      if (response == true) {
+          $('#quote').val($td.data('id'));
+          $('#choose-form').submit();
+      }
+  });
+</script>
