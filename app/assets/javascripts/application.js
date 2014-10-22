@@ -14,30 +14,22 @@
 //= require jquery_ujs
 //= require library
 //= require map
-//= require maskedinput
 //= require forms
-//# require vendor/retina.min
+//= require vendor/maskedinput
 //= require vendor/swiper_min
 //= require vendor/custom-select-plugin
-//= require vendor/jquery.lazyload.min
 
 var ready = function() {
     // console.log('Doc is apparently ready');
     if (typeof(admin) !== 'undefined' && admin !== null && admin === true) {
+    	
     } else {
-        // console.log('Executing onReady functions');
-        // Transferred from client.js
-        // loadCrappyCode();
-        // formStepSetup();
+
     }
 
 };
 
 $(function() {
-
-	// new CustomSelect();
-
-	$("img").lazyload();
 
 	/* Header */
 
