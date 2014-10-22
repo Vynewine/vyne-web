@@ -412,7 +412,7 @@
                             }
 
                             &.first-level {
-                                -webkit-transform: translateY(-346px);
+                                -webkit-transform: translateY(-347px);
                                 -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
 
                                 .select-category,
@@ -432,7 +432,7 @@
                             }
 
                             &.second-level {
-                                -webkit-transform: translateY(-762px);
+                                -webkit-transform: translateY(-764px);
 
                                 .prefs-list-top {
                                     opacity: 0;
@@ -456,7 +456,7 @@
                                 width: 80px;
                                 border-radius: 0 0 10px 10px;
                                 text-align: center;
-                                background: rgba(255,255,255,0.2);
+                                border: 1px rgba(255,255,255,0.2) solid;
                             }
 
                             h2 {
@@ -612,6 +612,7 @@
                             z-index: 99;
                             width: 320px;
                             height: 50px;
+                            display: none;
                             font-size: 1.6rem;
                             margin-left: -20px;
                             background: rgba(255,255,255,0.95);
