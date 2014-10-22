@@ -1,9 +1,17 @@
 one:
   quantity: 1
-  order: orders(:one)
+  order: order1
   foods: foods(:one, :two)
+  category: house
 
 two:
   quantity: 2
-  order: orders(:two)
+  order: order1
   foods: foods(:one, :two)
+  category: house
+
+three:
+  quantity: 1
+  order: order2
+  foods: foods(:one, :two)
+  category: reserve

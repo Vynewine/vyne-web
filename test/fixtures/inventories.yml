@@ -4,10 +4,12 @@ one:
   warehouse: one
   wine: one
   quantity: 1
+  cost: 6
   category: house
 
 two:
   warehouse: two
   wine: two
   quantity: 1
+  cost: 7
   category: house

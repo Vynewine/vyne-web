@@ -73,7 +73,7 @@ var adminReady = function() {
         var reloadInterface = function() {
             // console.log('reloadInterface');
             // Empty fields:
-            $('#warehouses_ids').val('');
+            $('#warehouses-ids').val('');
             $('#order_id').val('');
             $('#wine_id').val('');
             $('#warehouse_id').val('');
@@ -175,7 +175,7 @@ var adminReady = function() {
             // // console.log('show!!');
             var order     = $('#order_id').val();
             var wine      = $('#wine_id').val();
-            var warehouse = $('#warehouses_ids').val();
+            var warehouse = $('#warehouses-ids').val();
             var $orderTr  = $("#order-" + order);
             var $wineTr   = $("#wine-" + wine);
             disableConfirm();
@@ -195,8 +195,6 @@ var adminReady = function() {
             };
             // console.log('chosen! ',data);
             postJSON('choose.json', token, data, function(r){
-                // console.log('response');
-                // console.log(r);
                 var details = '';
                 var quote_id = '';
                 for (var i = 0, quote; quote = r[i++];) {
@@ -212,10 +210,6 @@ var adminReady = function() {
                                     .attr('href', '#')
                                     .html(details)
                                     .click(chooseDelivery)
-                                    //     function(e) {
-                                    //         chooseDelivery(e, quote_id, i);
-                                    //     }
-                                    // )
                             )
                     );
 
@@ -241,19 +235,13 @@ var adminReady = function() {
         var chooseWine = function(e) {
             e.preventDefault();
 
-            // return;
-
-            // var result = confirm("Are you sure?");
-            // if (result === false) {
-            //     return;
-            // }
             var $tr = $(this).closest('tr');
             var wine = $tr.data('id');
             var warehouse = $tr.data('warehouse');
-            $('#wine_id').val(wine);
-            $('#warehouse_id').val(warehouse);
-            
-            showConfirmationWindow(wine);
+            $('#wine-id').val(wine);
+            $('#warehouse-id').val(warehouse);
+
+            $('#update-form').submit();
         };
 
         var parseWarehouseStatuses = function(availabilityList) {
@@ -283,46 +271,15 @@ var adminReady = function() {
             // console.log('rendering wine', wine);
             // debugger;
             var $container = $('#wine-list>table>tbody');
-            var basePrice = 0;
-            var basePriceWarehouse = 0;
-            var basePriceQuantity = 0;
-            var multiplePrices = wine.availability.length > 1 ? '+' : ''
-            var warehouses = $('#warehouses_ids').val().split(',');
-            var warehousesOpen = parseWarehouseStatuses(wine.availability);
+            var basePrice = wine.price;
+            var basePriceWarehouse = wine.warehouse; //redundant
+            var basePriceQuantity = wine.quantity;
+            //var multiplePrices = wine.availability.length > 1 ? '+' : ''
+            var warehouses = $('#warehouses-ids').val().split(',');
+            //TODO:Check if warehouses are open
+            //var warehousesOpen = parseWarehouseStatuses(wine.availability);
             var warehouseOpen = true;
-            var cost = 0;
-            // console.log(warehousesOpen);
-            // console.log('----');
-            if (warehouses.length > 1) {
-                // // console.log('several warehouses');
-                for (var i = 0, availability; availability = wine.availability[i++];) {
-                    // If not open, don't bother...
-                    if (warehousesOpen[i-1]) {
-                        if (availability.quantity > 0) {
-                            if (availability.price < basePrice || basePrice === 0) {
-                                basePrice = availability.price;
-                                basePriceQuantity = availability.quantity;
-                                basePriceWarehouse = availability.warehouse;
-                                cost = availability.cost;
-                                // warehouseOpen = warehousesOpen[i-1];
-                            }
-                        }
-                    }
-                }
-            } else {
-                // console.log('one warehouse', warehouses);
-                // One warehouse!
-                for (var i = 0, availability; availability = wine.availability[i++];) {
-                    // // console.log(availability.warehouse, parseInt(warehouses[0]), availability.warehouse === parseInt(warehouses[0]));
-                    if (availability.warehouse === parseInt(warehouses[0])) {
-                        basePrice = availability.price;
-                        basePriceQuantity = availability.quantity;
-                        basePriceWarehouse = availability.warehouse;
-                        warehouseOpen = warehousesOpen[i-1];
-                        cost = availability.cost;
-                    }
-                }
-            }
+            var cost = wine.cost;
 
             if (basePrice === 0) return;
 
@@ -348,7 +305,8 @@ var adminReady = function() {
                 .attr('data-price', basePrice)
                 .attr('data-warehouse', basePriceWarehouse)
                 .addClass( warehouseOpen ? 'warehouse-open' : 'warehouse-closed')
-                .addClass('wine').append(
+                .addClass('wine')
+                    .append(
                     $('<td>').addClass('flag').append(
                         $('<img>')
                             .attr('alt', wine.countryName)
@@ -364,16 +322,19 @@ var adminReady = function() {
                         wine.types.join(', ')
                     ),
                     $('<td>').addClass('cost').html(
-                        '&pound;' + parseInt(cost).toFixed(2)
+                        '&pound;' + cost
                     ),
                     $('<td>').addClass('price').html(
-                        '&pound;' + basePrice + multiplePrices
+                        '&pound;' + basePrice
                     ),
                     $('<td>').addClass('composition').html(
                         compositionArray.join(', ')
                     ),
                     $('<td>').addClass('flags').append(
                         $se, $vg, $vn, $og
+                    ),
+                    $('<td>').html(
+                            wine.warehouse_distance
                     ),
                     $('<td>').addClass('actions').append(
                         $('<a>').attr('href', '#').html('Choose').click(chooseWine)
@@ -387,6 +348,20 @@ var adminReady = function() {
             $container.html('');
             $container.append(
                 $('<table>').attr('border','1').append(
+                    $('<thead>').append(
+                        $('<tr>').append(
+                            $('<td>').html(''),
+                            $('<td>').html(''),
+                            $('<td>').html('Name'),
+                            $('<td>').html('Type'),
+                            $('<td>').html('Cost'),
+                            $('<td>').html('Category'),
+                            $('<td>').html('Composition'),
+                            $('<td>').html(''),
+                            $('<td>').html('Distance'),
+                            $('<td>').html('')
+                        )
+                    ),
                     $('<tbody>')
                 )
             );
@@ -413,11 +388,12 @@ var adminReady = function() {
             });
             var data = {
                   'keywords': keywords,
-                'warehouses': $('#warehouses_ids').val(),
+                'warehouses': $('#warehouses-ids').val(),
                     'single': $('#tick-sing').is(':checked'),
                      'vegan': $('#tick-vegn').is(':checked'),
                    'organic': $('#tick-orgc').is(':checked'),
-                'categories': categories
+                'categories': categories,
+                  'order_id': $('#order-id').val()
             };
             // console.log('data', data);
             postJSON('/admin/advise/results.json', token, data, parseResults, errorMethod);
@@ -478,7 +454,7 @@ var adminReady = function() {
             $searchField.focus();
             $('#order_id').val(id);
             console.log(warehouses);
-            $('#warehouses_ids').val(warehouses);
+            $('#warehouses-ids').val(warehouses);
 
             var suggestedFood = [];
             if (typeof(info) !== 'undefined' && info !== null) {
@@ -518,7 +494,7 @@ var adminReady = function() {
             var $tr = $td.closest("tr");
             var $siblings = $tr.siblings();
             $('#order_id').val('');
-            $('#warehouses_ids').val('');
+            $('#warehouses-ids').val('');
             $('#quote_id').val('');
             $('#warehouse_id').val('');
             $tr.removeClass('selected');
@@ -628,23 +604,12 @@ var adminReady = function() {
         });
 
         /**
-         * Load data
-         */
-        if (advisor) {
-            // console.log("Advisor area!");
-            loadJSON('../foods.json', function(d) {
-                foods = d;
-                postJSON('../orders/list.json', token, {'status':[1]}, renderOrders, errorMethod);
-            }, errorMethod);
-        }
-
-        /**
          * Reload data
          */
         $('#reload-orders').click(function(e){
             e.preventDefault();
             $('#order-list').html('');
-            postJSON('../orders/list.json', token, {'status':[2]}, renderOrders, errorMethod);
+            postJSON('../orders/list.json', token, {'status':[1]}, renderOrders, errorMethod);
         });
 
         $('#confirm').click(confirm);

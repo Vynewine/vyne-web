@@ -8,7 +8,8 @@ class CreateOrderItems < ActiveRecord::Migration
       t.references :category
       t.string :specific_wine
       t.integer :quantity
-
+      t.decimal :cost, index: true
+      t.decimal :price, index: true
       t.timestamps
     end
   end

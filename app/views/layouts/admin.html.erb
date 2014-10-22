@@ -68,6 +68,9 @@ end
 <div class="alerts">
   <p class="notice"><%= notice %></p>
   <p class="alert"><%= alert %></p>
+  <% flash.each do |name, msg| -%>
+      <p class="alert"><h3 style="color: red;"><%= content_tag :div, msg, class: name %></h3></p>
+  <% end -%>
 </div>
 
 <div class="main-wrapper">
@@ -82,14 +85,6 @@ end
   <p>user_session: <%= debug user_session%></p>
 </footer>
 <% end %>
-<% if params[:controller] == 'admin/advisors' %>
-<script>
-  var advisor = true;
-</script>
-<% else %>
-<script>
-  var advisor = false;
-</script>
-<% end %>
+
 </body>
 </html>

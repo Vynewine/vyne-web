@@ -1,9 +1,37 @@
-<p><%= @order_item.to_json %></p>
-<p><%= @order.to_json %></p>
-<p><%= @order.client.to_json %></p>
+<p><h3>Customer <i><%= @order.client.name %></i> selected:</h3></p>
+<% if @order_item.foods %>
+    <p><strong>Food</strong></p>
+    <ul>
+      <% @order_item.foods.each do |food| %>
+          <li><%= food.name %> </li>
+      <% end %>
+    </ul>
+<% end %>
+<% if @order_item.occasion %>
+    <p><strong>Occasion</strong></p>
+    <p><%= @order_item.occasion.name %></p>
+<% end %>
+
+<% if @order_item.type %>
+    <p><strong>Wine Type</strong></p>
+    <p><%= @order_item.type.name %></p>
+<% end %>
+
+<% if @order_item.specific_wine %>
+    <p><strong>Specific Wine</strong></p>
+    <p><%= @order_item.specific_wine %></p>
+<% end %>
+
+<p><strong>Warehouses Matched: <%= @order.information['warehouses'].length %></strong></p>
+
+<% if !@order_item.wine.nil? %>
+    <p><strong>Already Selected Wine:</strong></p>
+    <p>Name: <%= @order_item.wine.name %> - Cost: £<%= @order_item.cost %></p>
+<% end %>
 
 <p>
-<input type="text" id="warehouses_ids" value="<%= (@order.information['warehouses'].map { |w| w['id']}).join(",") %>" />
+  <input type="hidden" id="warehouses-ids" value="<%= (@order.information['warehouses'].map { |w| w['id'] }).join(",") %>"/>
+  <input type="hidden" id="order-id" name="order-id" value="<%= @order.id %>"/>
 <div class="advisor-area">
   <div id="wine-filters">
     <input type="text" id="search" autocomplete="off" placeholder="Search wines..."/>
@@ -14,10 +42,10 @@
     <div style="float:right">
       <% @categories.each do |category| %>
           <input type="checkbox" class="tick-category" name="tick-cat-<%= category.id %>"
-          <% if @order_item.category.id == category.id %>
-                  checked="checked"
-          <% end %>
-          />
+                 <% if @order_item.category.id == category.id %>
+                 checked="checked"
+                 <% end %>
+                 />
           <label for="tick-cat-<%= category.name %>">
             &pound;<%= category.price %>
             (<%= category.name.capitalize %>)
@@ -28,4 +56,8 @@
   <div id="wine-list"></div>
 </div>
 </p>
-
+<form method="post" action="/admin/advise/item/<%= @order_item.id %>" id="update-form">
+  <input type="hidden" id="wine-id" name="wine-id"/>
+  <input type="hidden" id="warehouse-id" name="warehouse-id"/>
+  <%= hidden_field_tag(request_forgery_protection_token.to_s, form_authenticity_token) %>
+</form>
