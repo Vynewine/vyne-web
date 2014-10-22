@@ -28,6 +28,7 @@ class Admin::OrdersController < ApplicationController
   # GET /orders/1
   # GET /orders/1.json
   def show
+    @warehouses = Warehouse.find(@order.information['warehouses'].map { |warehouse| warehouse['id']})
   end
 
   # GET /orders/new

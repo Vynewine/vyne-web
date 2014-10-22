@@ -114,6 +114,7 @@ Rails.application.routes.draw do
     get 'advise/index' => 'advisors#index'
     get 'advise/choose' => 'advisors#choose'
     get 'advise/item/:id' => 'advisors#item'
+    post 'advise/item/:id' => 'advisors#update'
     post 'advise/choose' => 'advisors#choose'
     post 'advise/complete' => 'advisors#complete'
     post 'advise/results' => 'advisors#results'

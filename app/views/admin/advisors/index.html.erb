@@ -1,32 +1,35 @@
+
 <div class="advisor-area">
     <div id="orders-header">
-        <h2>Orders</h2>
-        <a href="#" id="reload-orders">Reload orders</a>
+        <h2>Orders to be advised</h2>
     </div>
-    
-    order <input type="text" id="order_id" />
-    wine <input type="text" id="wine_id" />
-    warehouses <input type="text" id="warehouses_ids" />
-    warehouse <input type="text" id="warehouse_id" />
-    quote <input type="text" id="quote_id" />
 
-    <div id="order-list"></div>
-    <div id="wine-filters" style="display:none;">
-        <input type="text" id="search" autocomplete="off" placeholder="Search wines..." />
-        <input type="checkbox" id="tick-sing" name="single"     /><label for="single"    > Single estate</label>
-        <input type="checkbox" id="tick-vegn" name="vegan"      /><label for="vegan"     >Vegan</label>
-        <input type="checkbox" id="tick-orgc" name="organic"    /><label for="organic"   >Organic</label>
-        <div style="float:right">
-<% @categories.each do |category| %>
-        <input type="checkbox" class="tick-category" name="tick-cat-<%= category.id %>" />
-        <label for="tick-cat-<%= category.name %>">
-            &pound;<%= category.price %>
-            (<%= category.name.capitalize %>) 
-        </label>
-<% end %>
-        </div>
+    <div id="order-list">
+
+          <table border="1">
+            <tbody>
+            <% @orders.each do |order|  %>
+            <tr class="order">
+              <td class="client">Order Id: <%= order.id %></td>
+              <td class="client"><%= order.client.name %></td>
+              <td class="phone"><%= order.client.mobile %></td>
+              <td class="postcode"><%= order.address.postcode %></td>
+              <td class="actions"><a href="/admin/orders/<%= order.id %>">Advise Order</a></td>
+            </tr>
+            <tr>
+              <td colspan="5">
+                <strong>Order Items:</strong>
+                <% order.order_items.each do |item| %>
+                    <a href="/admin/advise/item/<%= item.id %>" style="margin-right: 20px;"><%= item.id%> - Advise Wine</a>
+                <% end %>
+              </td>
+            </tr>
+            <% end %>
+            </tbody>
+          </table>
+
     </div>
-    <div id="wine-list" style="display:none;"></div>
+
 </div>
 <div id="confirmation-area" class="shadow" style="display:none;">
     <div id="confirmation-screen">

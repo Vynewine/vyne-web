@@ -203,6 +203,8 @@ ActiveRecord::Schema.define(version: 20141017152801) do
     t.integer  "category_id"
     t.string   "specific_wine"
     t.integer  "quantity"
+    t.decimal  "cost"
+    t.decimal  "price"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

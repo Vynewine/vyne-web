@@ -1,4 +1,5 @@
 require 'json'
+require 'sprockets/railtie'
 
 class Admin::AdvisorsController < ApplicationController
   layout "admin"
@@ -7,7 +8,7 @@ class Admin::AdvisorsController < ApplicationController
   respond_to :html, :js
 
   def index
-    @orders = Order.where.not(status_id: [5,6]) # Ignores delivered and cancelled
+    @orders = Order.where(status_id: [1]) # Ignores delivered and cancelled
     @categories = Category.all
   end
 
@@ -15,6 +16,33 @@ class Admin::AdvisorsController < ApplicationController
     @order_item = OrderItem.find(params[:id])
     @order = @order_item.order
     @categories = Category.all
+  end
+
+  def update
+    @order_item = OrderItem.find(params[:id])
+    @order = @order_item.order
+    wine = Wine.find(params['wine-id'])
+    warehouse = Warehouse.find(params['warehouse-id'])
+    inventory = Inventory.find_by(:warehouse => warehouse, :wine => wine)
+
+    if !@order.warehouse.nil? && @order.warehouse.id.to_s != params['warehouse-id']
+      flash[:error] = 'Warehouse doesn\'t match warehouse chosen for previous wine'
+      redirect_to admin_order_path @order and return
+    end
+
+    puts json: @order_item.cost.to_s
+    puts json: inventory.cost.to_s
+
+    @order_item.wine = wine
+    @order_item.cost = inventory.cost
+    @order_item.price = @order_item.category.price
+    @order.warehouse = warehouse
+    @order.advisor = current_user
+    @order_item.save
+    @order.save
+    respond_to do |format|
+      format.html { redirect_to admin_order_path @order}
+    end
   end
 
   def choose
@@ -97,25 +125,20 @@ class Admin::AdvisorsController < ApplicationController
     puts PP.pp(params[:keywords],'',80)
     puts PP.pp(request.request_parameters,'',80)
 
-    # params[:categories]
+    order = Order.find(params[:order_id])
+
+    warehouses = order.information['warehouses'].sort! { |a,b| a['distance'] <=> b['distance'] }
 
     # Solr:
     @search = Wine.search do
       fulltext params[:keywords]
 
-      # facet(:warehouse_id) do
-
-      puts params[:categories]
 
       with(:warehouse_ids, params[:warehouses].split(","))
 
       unless params[:categories].nil?
         with(:price_categories, params[:categories])
       end
-
-      # end
-      # warehouse_filter = with(:warehouse_id, 1)
-      # facet :warehouse_id, exclude: [warehouse_filter]
 
       if params[:single]
         with(:single_estate, true)
@@ -127,34 +150,49 @@ class Admin::AdvisorsController < ApplicationController
         with(:organic, true)
       end
     end
-    puts PP.pp(@search.total,'',80)
-    # @search.results.each { |wine|
-    #   wine.compositions.each { |c|
-    #     #puts PP.pp(c.grape,'',80)
-    #     puts PP.pp(wine.compositions.map { |c| c.grape.name })
-    #   }
-    #   # puts PP.pp(wine.compositions,'',80)
-    # }
-    puts PP.pp(@search.results,'',80)
-    @results = @search.results
-    
-    # puts '--------------------------'
-    # puts ' RESULTS'
-    # puts '--------------------------'
-    # @results.each do |wine|
-      # puts '- - - - - - - - - - - - -'
-      # puts PP.pp(wine.name,'',80)
-      # puts PP.pp(wine.appellation,'',80)
-      # puts PP.pp(wine.vintage,'',80)
-      # puts PP.pp(wine.producer.country.alpha_2,'',80)
-      # puts PP.pp(wine.producer.country.name,'',80)
-      # puts PP.pp(wine.compositions,'',80)
-      # puts PP.pp(wine.grapes,'',80)
-      # puts PP.pp(wine.warehouses,'',80)
-      # puts PP.pp(wine.subregion || 'none' ,'',80)
-      # puts '- - - - - - - - - - - - -'
-    # end
-    # puts '--------------------------'
+
+
+    #Transform Results
+
+    wines = []
+
+    warehouses.each{ |warehouse|
+
+      warehouse_id =  warehouse['id']
+
+      @search.results.each{|wine|
+        wine.inventories.each{ |inv|
+
+          if inv.warehouse.id.to_s == warehouse_id.to_s
+            wines << {
+                :countryCode => wine.producer.country.alpha_2,
+                :countryName => wine.producer.country.name,
+                :subregion => wine.subregion.nil? ? '' : wine.subregion.name,
+                :id => wine.id,
+                :appellation => wine.appellation.name,
+                :name => wine.name,
+                :vintage => wine.vintage,
+                :single_estate => wine.single_estate,
+                :vegan => wine.vegan,
+                :organic => wine.organic,
+                :types => wine.types.map {|t| t.name},
+                :compositions => wine.compositions.map { |c| { :name => c.grape.name, :quantity => c.quantity }},
+                :notes => wine.notes.map {|n| n.name},
+                :warehouse => warehouse_id,
+                :agendas => inv.warehouse.agendas,
+                :cost => inv.cost.to_s,
+                :price => inv.category.price,
+                :quantity => inv.quantity,
+                :category => inv.category.name + ' - £' + inv.category.price.to_s,
+                :warehouse_distance => warehouse['distance']
+            }
+          end
+        }
+      }
+    }
+
+    @results = wines
+
 
     respond_to do |format|
       format.json

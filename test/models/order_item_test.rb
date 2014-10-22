@@ -2,7 +2,7 @@ require 'test_helper'
 
 class OrderItemTest < ActiveSupport::TestCase
   setup do
-    @order = orders(:one)
+    @order = orders(:order1)
     @wine = wines(:one)
     @food_selection_one = Food.new({name: 'beef'})
     @food_selection_two = Food.new({name: 'grill & BBQ'})
