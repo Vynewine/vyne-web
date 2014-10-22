@@ -48,6 +48,11 @@ $(function() {
 		$('.aside-bar').toggleClass('visible');
 	});
 
+	$('.cart-link').click(function(e) {
+		e.preventDefault();
+		order.swipeTo(3, 500, false);
+	});
+
 
 	/* Walkthrough */
 
@@ -138,7 +143,7 @@ $(function() {
 
 	/* Preferences */
 
-	var ingredientCount = 0;
+	var ingredientCount, cartCount = 0;
 
 	if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
 	    $('.prefs-overview, .btn-checkout').addClass('ios');
@@ -254,6 +259,8 @@ $(function() {
 			$('.add-bottle').before($('<tr>').append($td).append($pricetd));
 
 		});
+
+		$('.cart-count').show().text(parseInt($('.cart-count').text()) + 1);
 
 		$('.btn-checkout').show();
 

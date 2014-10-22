@@ -1,0 +1,76 @@
+.accordian {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    list-style: none;
+
+    li {
+        text-align: center;
+
+        .accordian-item-link {
+            font-size: 1.6rem;
+            padding: 1rem;
+            display: block;
+            background: black;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .accordian-item-content {
+            display: none;
+            padding: 4rem;
+            position: relative;
+
+            .line {
+                position: absolute;
+                top: 0;
+                left: 50%;
+                width: 2px;
+                height: 100%;
+                margin-left: -1px;
+                display: none;
+                background: rgba(255,255,255,0.1);
+            }
+
+            .number {
+                position: relative;
+                z-index: 2;
+                color: white;
+                width: 50px;
+                margin: 20px 0;
+                padding: 10px 0;
+                font-weight: bold;
+                background: black;
+                display: inline-block;
+                border: 2px white solid;
+                border-radius: 100px;
+            }
+
+            h3 {
+                margin: 0;
+            }
+
+            p, span {
+                margin: 0 auto;
+                width: 70%;
+                color: rgba(255,255,255,0.4);
+            }
+        }
+
+        &.active {
+            opacity: 1;
+            background: rgba(0,0,0,0.8);
+
+            .accordian-item-link {
+                display: none;
+            }
+
+            .accordian-item-content {
+                display: block;
+            }
+        }
+
+        &.complete {
+            
+        }
+    }
+}

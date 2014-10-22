@@ -22,7 +22,8 @@
       </li>
       <% end %>
 
-      <li><a href="#" class="promotions">Promotions</a></li>
+      <li><a href="/promotions" class="promotions">Promotions</a></li>
+      <li><a href="share" class="share">Share</a></li>
 
       <% if user_signed_in? %>
       <% if current_user.has_role?(:client) %>
@@ -39,13 +40,13 @@
       <!--<li class="hidden"><a href="#" class="share">Share</a></li>-->
     </ul>
   </nav>
-  <nav>
+  <!--<nav>
     <ul class="nav">
       <li><%= link_to 'Home', root_path %></li>
       <li><a href="#" class="about">About</a></li>
       <li><a href="#" class="help">Help</a></li>
     </ul>
-  </nav>
+  </nav>-->
   <% if user_signed_in? %>
       <%= link_to "Sign out", logout_path, :method => :delete, :class => "sign-out" %>
   <% end %>
