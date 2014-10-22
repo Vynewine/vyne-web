@@ -69,7 +69,13 @@ $(function() {
 		mode: 'horizontal',
 		noSwiping: true,
 		simulateTouch: false,
-		onlyExternal: true
+		onlyExternal: true,
+        onSlideChangeStart: function(swiper) {
+            if (swiper.activeSlide().id == 'delivery-panel')
+            {
+                verifyAddress();
+            }
+        }
 	});
 
 	$('.next-slide').click(function(e) {
@@ -451,7 +457,90 @@ $(function() {
 		$(this).parent().addClass('active');
 	});
 
+    /**
+     * Lookup valid addresses for a post code
+     */
+    var verifyAddress = function() {
+        var initialPostCode = $('#filterPostcode').val().toUpperCase().replace(/[^A-Z0-9]/g, "");
+
+        //Preselect existing address for logged-in users
+        var existingAddresses = $('#order-address').find('option');
+        if(existingAddresses.length > 2) {
+            var foundSavedAddress = false;
+            existingAddresses.filter(function () {
+                if ($(this).text().match(initialPostCode) && !foundSavedAddress) {
+                    foundSavedAddress = true;
+                    $('#address-id').val($(this).val());
+                    $('#new_delivery_address').fadeOut();
+                    return true;
+                }
+            }).prop('selected', true);
+
+            if (!foundSavedAddress) {
+                postCodeLookup(initialPostCode);
+            }
+        } else {
+            $('#order-address').hide();
+            //Pre-fill addresses available for that postcode
+            postCodeLookup(initialPostCode);
+        }
+    };
+
 });
+
+var postCodeLookup = function(postcode) {
+
+
+    if($('#suggested-addresses').find('option').length > 1)
+    {
+        return;
+    }
+
+    var $street = $('#addr-st');
+
+    var apiUrl = 'https://api.ideal-postcodes.co.uk/v1/postcodes/' + postcode;
+
+    $.getJSON(apiUrl,
+        {
+            api_key: 'ak_i1kkwsp8EIoMBD8vWt8q9NZSG74De'
+        },
+        function (data) {
+            if(data.code === 2000) {
+                console.log(data.result)
+
+                $.each(data.result, function (key, value) {
+
+                    var address = value.line_1;
+
+                    if(value.line_2) {
+                        address = address + ', ' + value.line_2;
+                    }
+
+                    if(value.line_3) {
+                        address = address + ', ' + value.line_3;
+                    }
+
+                    $('#suggested-addresses')
+                        .append($("<option></option>")
+                            .attr("value", address)
+                            .text(address));
+                });
+
+                $('#suggested-addresses').change(function() {
+                    $( "#suggested-addresses").find("option:selected").each(function() {
+                        if(this.value !== '0') {
+                            $street.val($(this).text());
+                        } else {
+                            $street.val('');
+                        }
+                    });
+                });
+
+            } else {
+                console.log(data);
+            }
+        });
+}
 
 
 // Read a page's GET URL variables and return them as an associative array.

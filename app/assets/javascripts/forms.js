@@ -198,30 +198,6 @@ $(document).ready(function(){
 
                     $('#warehouses').val('{"warehouses":' + JSON.stringify(delivery.warehouses) + '}');
 
-                    var initialPostCode = $('#filterPostcode').val().toUpperCase().replace(/[^A-Z0-9]/g, "");
-
-                    //Preselect existing address for logged-in users
-                    var existingAddresses = $('#order-address').find('option');
-                    if(existingAddresses.length > 2) {
-                        var foundSavedAddress = false;
-                        existingAddresses.filter(function () {
-                            if ($(this).text().match(initialPostCode) && !foundSavedAddress) {
-                                foundSavedAddress = true;
-                                $('#address-id').val($(this).val());
-                                $('#new_delivery_address').fadeOut();
-                                return true;
-                            }
-                        }).prop('selected', true);
-
-                        if (!foundSavedAddress) {
-                            postCodeLookup(initialPostCode);
-                        }
-                    } else {
-                        $('#order-address').hide();
-                        //Pre-fill addresses available for that postcode
-                        postCodeLookup(initialPostCode);
-                    }
-
                     // Google API cannot find the street name based on the postcode!
                     // This is why we must first find the damn longitude and latitude first.
                     // So this is a 2-step process, don't be alarmed.
@@ -294,6 +270,7 @@ $(document).ready(function(){
     $('#order-address').change(function() {
         var value = $(this).val();
         var $addrFields = $('#new_delivery_address');
+        var initialPostCode = $('#addr-pc').val().toUpperCase().replace(/[^A-Z0-9]/g, "");
         if (parseInt(value) === -1) {
             $('#address-id').val(0);
             $addrFields.fadeIn();
@@ -362,53 +339,6 @@ $(document).ready(function(){
             $('#expy').val(v[1].substr(0,2));
         }
     });
-
-    /**
-     * Lookup valid addresses for a post code
-     */
-    var postCodeLookup = function(postcode) {
-
-        return;
-
-        var $street = $('#addr-st');
-
-        $.getJSON("http://services.postcodeanywhere.co.uk/PostcodeAnywhere/Interactive/Find/v1.10/json3.ws?callback=?",
-            {
-                Key: 'EC89-AH81-AF29-TX89',
-                SearchTerm: postcode,
-                PreferredLanguage: 'English',
-                Filter: 'None',
-                UserName: ''
-            },
-            function (data) {
-                if (data.Items.length == 1 && typeof(data.Items[0].Error) != "undefined") {
-                    console.log(data.Items[0].Description);
-                } else {
-                    if (data.Items.length == 0) {
-                        console.log("Sorry, there were no results");
-                    } else {
-                        console.log(data.Items);
-
-                        $.each(data.Items, function (key, value) {
-                            $('#suggested-addresses')
-                                .append($("<option></option>")
-                                    .attr("value", value.StreetAddress)
-                                    .text(value.StreetAddress));
-                        });
-
-                        $('#suggested-addresses').change(function() {
-                            $( "#suggested-addresses").find("option:selected").each(function() {
-                                if(this.value !== '0') {
-                                    $street.val($(this).text());
-                                } else {
-                                    $street.val('');
-                                }
-                            });
-                        });
-                    }
-                }
-            });
-    }
 
 });
 
