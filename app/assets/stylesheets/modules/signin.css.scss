@@ -1,0 +1,42 @@
+.sign-in-form {
+
+    input[type="email"] {
+        border-radius: 5px 5px 0 0;
+        border-bottom: 1px #ddd solid;
+    }
+
+    input[type="password"] {
+        border-radius: 0 0 5px 5px;
+    }
+
+    .remember {
+        margin: 15px 0;
+        padding: 10px 15px;
+        border-radius: 5px;
+        border: 1px rgba(255,255,255,0.2) solid;
+
+        input {
+            position: relative;
+            top: -2px;
+            width: auto;
+            margin-right: 10px;
+            display: inline-block;
+        } 
+
+        label {
+            width: auto;
+            color: rgba(255,255,255,0.6);
+            display: inline-block;
+        }
+    }
+}
+
+.form-links {
+    margin: 30px 0;
+    text-align: center;
+
+    a {
+        font-size: 1.6rem;
+        color: rgba(255,255,255,0.3);
+    }
+}

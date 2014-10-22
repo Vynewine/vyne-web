@@ -1,0 +1,36 @@
+.aside-bar {
+    position: fixed;
+    top: 0;
+    z-index: 100;
+    left: -210px;
+    height: 100%;
+    padding: 0 30px;
+    background: rgba(0,0,0,0.75);
+    -webkit-transition: all 0.5s cubic-bezier(0.8,0,0,0.8);
+
+    &.visible {
+        -webkit-transform: translateX(100px);
+        -webkit-transition: all 0.5s cubic-bezier(0.8,0,0,0.8);
+    }
+
+    ul {
+        margin: 0;
+        padding: 10px 0;
+        list-style: none;
+        border-bottom: 1px rgba(255,255,255,0.1) solid;
+
+        li {
+
+            a {
+                width: 150px;
+                color: rgba(255,255,255,0.9);
+                display: block;
+                padding: 10px 0;
+
+                &:hover {
+                    color: white;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,101 @@
+.main-header {
+    position: fixed;
+    top: 0;
+    z-index: 99;
+    height: 50px;
+    width: 100%;
+    background: rgba(0,0,0,0.6);
+    border-bottom: 1px rgba(255,255,255,0.2) solid;
+
+    .cart-link {
+        float: right;
+        position: relative;
+        padding: 15px 18px 12px 12px;
+        display: block;
+
+        img {
+            width: 16px;
+            height: auto;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: 9px;
+            right: 9px;
+            background: #a32438;
+            color: white;
+            line-height: 1;
+            padding: 2px 0;
+            width: 16px;
+            display: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 100px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+    }
+
+    .logo {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        padding: 12px;
+        display: block;
+        margin-left: -50px;
+
+        img {
+            width: 75px;
+            height: 13px;
+        }
+    }
+
+    .menu-link {
+        float: left;
+        padding: 16px 18px 12px 18px;
+        display: block;
+        -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
+
+        .top {
+            -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
+        }
+
+        .middle {
+            -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
+        }
+
+        .bottom {
+            -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
+        }
+
+        &.slide {
+            -webkit-transform: translateX(100px);
+            -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
+
+            .top {
+                -webkit-transform: rotate(45deg);
+                -webkit-transform-origin: 0 0;
+                -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
+            }
+
+            .middle {
+                opacity: 0;
+                -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
+            }
+
+            .bottom {
+                -webkit-transform: rotate(-45deg);
+                -webkit-transform-origin: 0 100%;
+                -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
+            }
+        }
+
+        div {
+            width: 20px;
+            height: 2px;
+            background: white;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+    }
+}

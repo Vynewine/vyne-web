@@ -2,7 +2,6 @@
 <html>
 <head>
   <title>Vynz</title>
-  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0 " /> -->
   <meta charset="utf-8">
   <%= stylesheet_link_tag 'application', media: 'all' %>
   <%= csrf_meta_tags %>
@@ -13,16 +12,7 @@
 
   <div class="container">
 
-    <header class="main-header">
-      <div class="wrapper wrapper-fluid">
-        <%= link_to root_path do %><%= image_tag "logo.png", :alt => "image description", :class => "logo" %><% end %>
-        <a href="" class="menu-link">
-          <div class="top"></div>
-          <div class="middle"></div>
-          <div class="bottom"></div>
-        </a>
-      </div>
-    </header>
+    <%= render :partial => "layouts/header" %>
 
     <main class="main-content">
       <%= yield %>
@@ -32,7 +22,7 @@
 
   </div>
 
-  <% # jav ascript_include_tag 'data-turbolinks-track' => true %>
+  <% # javascript_include_tag 'data-turbolinks-track' => true %>
   <% if params[:controller] == 'shop' %>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYpKRqaf8jYVoxl39_Y1mXnHZ9sJbBTHY"></script>
     <script>console.log('google maps loaded');</script>

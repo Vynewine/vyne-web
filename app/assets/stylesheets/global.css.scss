@@ -1,0 +1,40 @@
+/*
+ * GLOBALS
+ */
+
+html {
+    height: 100%;
+    font-size: 62.5%;
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+body {
+    height: 100%;
+    color: white;
+    background: #111;
+    font: 17px/1.5 'Lato', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+a {
+    color: $primary-colour;
+    text-decoration: none;
+
+    &:hover {
+
+    }
+}
+
+h2 {
+    font-weight: normal;
+    text-align: center;
+}
+
+.main-content {
+    height: 100%;
+}

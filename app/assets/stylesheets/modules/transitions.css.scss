@@ -1,0 +1,30 @@
+.container {
+    height: 100%;
+    transition: all 0.5s ease;
+
+    .logo {
+        opacity: 1;
+        transition: all 0.5s ease;
+    }
+
+    .main-content {
+        transition: all 0.5s ease;
+    }
+
+    &.menu-visible {
+        transform: translateX(100px);
+        transition: all 0.5s ease;
+
+        .logo {
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .main-content {
+            opacity: 0.5;
+            transform: scale(0.8);
+            filter: grayscale(50%);
+            transition: all 0.5s ease;
+        }
+    }
+}

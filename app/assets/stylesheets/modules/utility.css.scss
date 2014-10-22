@@ -1,0 +1,30 @@
+.cf:before,
+.cf:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.cf:after {
+    clear: both;
+}
+
+.container {
+	height: 100%;
+}
+
+.inner {
+    padding: 70px 20px 0;
+}
+
+.wrapper {
+    width: 280px;
+    margin: auto;
+}
+
+.wrapper-large {
+    width: 320px;
+}
+
+.wrapper-fluid {
+    width: 100%;
+}
