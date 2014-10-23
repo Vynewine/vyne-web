@@ -75,26 +75,6 @@
 
                 &#postcode-panel {
 
-                    .slideable {
-                        -webkit-transform: translateY(0px);
-                        -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
-
-                        h2, p {
-                            opacity: 1;
-                            -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
-                        }
-
-                        &.slide-up {
-                            -webkit-transform: translateY(-135px);
-                            -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
-
-                            > h2, > p {
-                                opacity: 0;
-                                -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
-                            }
-                        }
-                    }
-
                     .order-panel-content {
                         padding: 120px 0 0 0;
                         text-align: center;
@@ -217,14 +197,14 @@
                                 &:nth-child(2) .bottle-info {
                                     left: auto;
                                     right: 0;
-                                    -webkit-transform-origin: 100% 0%;
+                                    transform-origin: 50% 50%;
                                 }
 
                                 &:nth-child(3) .bottle-info {
                                     top: auto;
                                     left: 0;
                                     bottom: 0;
-                                    -webkit-transform-origin: 0% 100%;
+                                    transform-origin: 50% 50%;
                                 }
 
                                 &:nth-child(4) .bottle-info {
@@ -232,7 +212,7 @@
                                     left: auto;
                                     right: 0;
                                     bottom: 0;
-                                    -webkit-transform-origin: 100% 100%;
+                                    transform-origin: 50% 50%;
                                 }
 
                                 .bottle-info {
@@ -245,10 +225,9 @@
                                     height: 196px;
                                     padding: 16px;
                                     border-radius: 5px; 
-                                    -webkit-transform: scale(0);
-                                    -webkit-transform-origin: 0% 0%;
+                                    transform: scale(0);
+                                    transform-origin: 50% 50%;
                                     border: 1px rgba(255,255,255,0.2) solid;
-                                    -webkit-transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
                                     .close {
                                         width: 38px;
@@ -259,8 +238,7 @@
                                         right: 3px;
                                         z-index: 99;
                                         background: black;
-                                        -webkit-transform: scale(0);
-                                        -webkit-transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                                        transform: scale(0);
 
                                         .line {
                                             position: relative;
@@ -272,13 +250,13 @@
 
                                             &:nth-child(1) {
                                                 margin-bottom: 14px;
-                                                -webkit-transform-origin: 0 0;
-                                                -webkit-transform: rotate(45deg);
+                                                transform-origin: 0 0;
+                                                transform: rotate(45deg);
                                             }
 
                                             &:nth-child(2) {
-                                                -webkit-transform-origin: 0 100%;
-                                                -webkit-transform: rotate(-45deg);
+                                                transform-origin: 0 100%;
+                                                transform: rotate(-45deg);
                                             }
                                         }
                                     }
@@ -286,37 +264,25 @@
                                     img {
                                         width: 15px;
                                         height: auto;
-                                        -webkit-transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                                        margin-bottom: 8px;
                                     }
 
                                     span {
                                         color: white;
                                         display: block;
 
-                                        &.label {
-                                            -webkit-transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-                                        }
-
-                                        &.price {
-                                            display: none;
-                                        }
-
+                                        &.price,
                                         &.description {
                                             display: none;
                                         }
                                     }
 
                                     .full-description {
-                                        text-align: left;
-                                        position: absolute;
-                                        top: 80px;
-                                        right: 0;
-                                        width: 220px;
                                         display: none;
 
                                         p {
                                             font-size: 1.6rem;
-                                            margin: 0 0 1rem 3rem;
+                                            margin: 0 auto 1rem;
                                         }
                                     }
 
@@ -332,35 +298,29 @@
                                         opacity: 1;
                                         width: 300px;
                                         height: 416px;
-                                        background: rgba(0,0,0,0.85);
-                                        -webkit-transform: scale(1);
-                                        -webkit-transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                                        transform: scale(1);
+                                        background: rgba(0,0,0,0.90);
 
                                         .close {
-                                            -webkit-transform: scale(1);
-                                            -webkit-transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                                            transform: scale(1);
                                         }
 
                                         img {
                                             width: 55px;
                                             height: auto;
-                                            -webkit-transform: translateX(-95px) translateY(70px);
-                                            -webkit-transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
                                         }
 
                                         span {
 
                                             &.label {
                                                 font-size: 2.6rem;
-                                                -webkit-transform: translateY(-120px);
-                                                -webkit-transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
                                             }
 
                                             &.price {
                                                 text-align: left;
                                                 margin: 40px 0 0 22px;
                                                 font-weight: bold;
-                                                display: block;
+                                                display: none;
                                             }
 
                                             &.description {
@@ -393,340 +353,188 @@
                 &#preferences-panel {
 
                     .order-panel-content {
-                        padding: 70px 20px 50px;
+                        position: relative;
 
-                        .slideable {
-                            -webkit-transform: translateY(30px);
-                            -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
+                        .preferences-sub-panel,
+                        .preferences-sub-sub-panel {
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 100%;
+                            background: black;
+                            padding: 80px 20px 50px;
+                        }
 
-                            .slideable-back,
-                            .select-category,
-                            .prefs-list-top, {
-                                opacity: 0;
-                                -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
-                            }
+                        .preferences-sub-panel {
+                            z-index: 3;
+                        }
 
-                            .specific {
-                                opacity: 1;
-                                -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
-                            }
+                        .preferences-sub-sub-panel {
+                            z-index: 4;
+                        }
 
-                            &.first-level {
-                                -webkit-transform: translateY(-347px);
-                                -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
+                        .food-limit {
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            right: 0;
+                            bottom: 0;
+                            z-index: 9;
+                            display: none;
+                            background: rgba(0,0,0,0.8);
+                        }
 
-                                .select-category,
-                                .prefs-list-top,
-                                .slideable-back,
-                                .specific {
-                                    opacity: 1;
-                                    -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
-                                }
+                        h2 {
+                            text-align: center;
+                            margin-bottom: 20px;
+                        }
 
-                                .tab-list,
-                                .prefs-box,
-                                .specific {
-                                    opacity: 0;
-                                    -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
-                                }
-                            }
+                        h3 {
+                            margin: 0 0 20px 0;
+                            font-size: 1.4rem;
+                            text-align: center;
+                            text-transform: uppercase;
+                        }
 
-                            &.second-level {
-                                -webkit-transform: translateY(-764px);
+                        .or {
+                            display: block;
+                            width: 46px;
+                            margin: 0 auto 30px;
+                            padding: 11px 0;
+                            font-size: 1.4rem;
+                            text-align: center;
+                            border-radius: 100px;
+                            text-transform: uppercase;
+                            color: rgba(255,255,255,0.5);
+                            border: 1px rgba(255,255,255,0.15) solid;
+                        }
 
-                                .prefs-list-top {
-                                    opacity: 0;
-                                    -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
-                                }
+                        .specific {
 
-                                .prefs-box {
-                                    opacity: 1;
-                                    -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
-                                }
-                            }
-
-                            .slideable-back {
-                                text-transform: uppercase;
-                                font-weight: bold;
-                                color: white;
-                                font-size: 1.3rem;
+                            label {
                                 display: block;
-                                margin: 0 auto 20px;
-                                padding: 6px 10px;
-                                width: 80px;
-                                border-radius: 0 0 10px 10px;
                                 text-align: center;
-                                border: 1px rgba(255,255,255,0.2) solid;
+                                margin-bottom: 10px;
                             }
 
-                            h2 {
+                            input {
+                                position: relative;
+                                z-index: 2;
                                 text-align: center;
-                                margin-bottom: 20px;
                             }
 
-                            h3 {
+                            .btn {
+                                margin-top: -3px;
+                            }
+                        }
+
+                        .prefs-list-container {
+
+                            .prefs-list {
                                 margin: 0 0 20px 0;
-                                font-size: 1.4rem;
-                                text-align: center;
-                                text-transform: uppercase;
-                            }
-
-                            .tab-list {
-                                margin: 0 0 40px;
                                 padding: 0;
                                 list-style: none;
-                                border-radius: 5px;
-                                border: 1px rgba(255,255,255,0.2) solid;
-                                -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
+
+                                &.prefs-list-bottom {
+                                    li.active {
+                                        opacity: 0.2;
+                                    }
+                                }
 
                                 li {
-                                    width: 50%;
-                                    text-align: center;
+                                    width: 31%;
+                                    float: left;
+                                    margin: 0 3.5% 12px 0;
                                     display: inline-block;
 
-                                    &:first-child {
-                                        border-right: 1px rgba(255,255,255,0.15) solid;
+                                    &:nth-child(3n) {
+                                        margin-right: 0;
                                     }
 
-                                    &.active {
-                                        margin: -1px;
+                                    &.active a {
+                                        background: $primary-colour;
+                                    }
 
-                                        a {
-                                            color: white;
-                                            background: $primary-colour;
-                                        }
-
-                                        &:first-child a {
-                                            border-radius: 5px 0 0 5px;
-                                        }
-
-                                        &:last-child a {
-                                            border-radius: 0 5px 5px 0;
-                                        }
+                                    &.selected,
+                                    &.disabled {
+                                        opacity: 0.3;
                                     }
 
                                     a {
-                                        padding: 6px;
+                                        padding: 2px;
                                         display: block;
-                                        color: rgba(255,255,255,0.7);
-                                    }
-                                }
-                            }
+                                        text-align: center;
+                                        border-radius: 5px;
 
-                            .or {
-                                display: block;
-                                width: 46px;
-                                margin: 0 auto 30px;
-                                padding: 11px 0;
-                                font-size: 1.4rem;
-                                text-align: center;
-                                border-radius: 100px;
-                                text-transform: uppercase;
-                                color: rgba(255,255,255,0.5);
-                                border: 1px rgba(255,255,255,0.15) solid;
-                            }
-
-                            .specific {
-
-                                label {
-                                    display: block;
-                                    text-align: center;
-                                    margin-bottom: 10px;
-                                }
-
-                                input {
-                                    text-align: center;
-                                }
-                            }
-
-                            .prefs-list-container {
-                                overflow: auto;
-                                -webkit-overflow-scrolling: touch;
-                                opacity: 0;
-                                -webkit-transform: translateY(-20px);
-                                -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
-
-                                &.visible {
-                                    opacity: 1;
-                                    -webkit-transform: translateY(0px);
-                                    -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
-                                }
-
-                                .prefs-list {
-                                    margin: 0 0 20px 0;
-                                    padding: 0;
-                                    list-style: none;
-
-                                    li {
-                                        width: 31%;
-                                        float: left;
-                                        margin: 0 3.5% 12px 0;
-                                        display: inline-block;
-
-                                        &:nth-child(3n) {
-                                            margin-right: 0;
-                                        }
-
-                                        &.active a {
-                                            background: $primary-colour;
-                                        }
-
-                                        &.selected,
-                                        &.disabled {
-                                            opacity: 0.3;
-                                        }
-
-                                        a {
-                                            padding: 2px;
+                                        img {
+                                            width: 48px;
+                                            height: auto;
                                             display: block;
-                                            text-align: center;
-                                            border-radius: 5px;
-                                            //border: 1px rgba(255,255,255,0.1) solid;
+                                            margin: 0 auto 10px;
+                                        }
 
-                                            img {
-                                                width: 48px;
-                                                height: auto;
-                                                margin: 0 auto 10px;
-                                                display: block;
-                                            }
-
-                                            span {
-                                                color: rgba(255,255,255,0.5);
-                                            }
+                                        span {
+                                            color: rgba(255,255,255,0.5);
                                         }
                                     }
                                 }
 
-                            }
-
-                            .prefs-box {
-                                clear: both;
                             }
 
                         }
 
                         .prefs-overview {
-                            position: fixed;
                             bottom: 0;
-                            opacity: 0;
                             z-index: 99;
                             width: 320px;
-                            height: 50px;
+                            position: fixed;
                             display: none;
-                            font-size: 1.6rem;
-                            margin-left: -20px;
-                            background: rgba(255,255,255,0.95);
-                            -webkit-transform: translateY(50px);
-                            -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
+                            background: rgba(0,0,0,0.9);
+                            border-top: 1px rgba(255,255,255,0.2) solid;
 
-                            &.visible {
-                                opacity: 1;
-                                -webkit-transform: translateY(0px);
-                                -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
+                            .prefs-overview-content {
+                                padding: 2rem;
                             }
 
                             &.ios {
                                 position: absolute;
                             }
 
-                            .prefs-overview-list-container {
-                                float: left;
-                                width: 20%;
-                                height: 50px;
-                                position: relative;
+                            .prefs-overview-list {
+                                margin: 0 0 2rem;
+                                padding: 0 2rem;
+                                list-style: none;
+                                text-align: center;
 
-                                .prefs-overview-popup-link {
+                                li {
+                                    float: left;
+                                    padding: 0 1rem;
                                     display: block;
-                                    padding: 9px 0;
-                                    position: relative;
 
-                                    img {
-                                        width: 25px;
-                                        height: 30px;
+                                    a {
+                                        width: 60px;
+                                        height: 60px;
                                         display: block;
-                                        margin: auto;
-                                    }
+                                        border-radius: 50px;
+                                        border: 1px rgba(255,255,255,0.2) solid;
 
-                                    .ingredient-count {
-                                        position: absolute;
-                                        top: 5px;
-                                        right: 10px;
-                                        width: 18px;
-                                        color: white;
-                                        display: block;
-                                        font-size: 1.2rem;
-                                        text-align: center;
-                                        font-weight: bold;
-                                        border-radius: 20px;
-                                        background: #a32438;
-                                    }
-                                }
+                                        img {
+                                            position: relative;
+                                            top: 10px;
+                                            width: 65%;
+                                            height: auto;
+                                        }
 
-                                .prefs-overview-popup {
-                                    position: absolute;
-                                    bottom: 47px;
-                                    left: 6px;
-                                    display: none;
-                                    width: 200px;
-                                    height: 200px;
-                                    padding: 5px 0;
-                                    border-radius: 5px;
-                                    background: rgba(0,0,0,0.9);
-                                    -webkit-transform: scale(0);
-                                    -webkit-transform-origin: 0% 100%;
-                                    -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
-
-                                    &:after {
-                                        top: 100%;
-                                        left: 26px;
-                                        border: solid transparent;
-                                        content: " ";
-                                        height: 0;
-                                        width: 0;
-                                        position: absolute;
-                                        pointer-events: none;
-                                        border-color: rgba(136, 183, 213, 0);
-                                        border-top-color: rgba(0,0,0,0.9);
-                                        border-width: 6px;
-                                        margin-left: -6px;
-                                    }
-
-                                    &.open {
-                                        -webkit-transform: scale(1);
-                                        -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
-                                    }
-
-                                    .prefs-overview-list {
-                                        margin: 0;
-                                        padding: 0;
-                                        overflow: auto;
-                                        list-style: none;
-
-                                        li {
-
-
-                                            a {
-                                                color: white;
-                                                font-size: 1.8rem;
-                                                padding: 8px 16px;
-                                                display: block;
-                                            }
+                                        span {
+                                            width: 100%;
+                                            display: block;
+                                            padding: 15px 0;
+                                            text-align: center;
+                                            color: rgba(255,255,255,0.5);
                                         }
                                     }
-
                                 }
-
-                            }
-
-                            .btn-order {
-                                color: white;
-                                float: right;
-                                width: 80%;
-                                text-align: center;
-                                font-weight: bold;
-                                padding: 13px 25px;
-                                background: #a32438;
-                                text-transform: uppercase;
                             }
                         }
 
@@ -738,22 +546,20 @@
 
                     .order-panel-content {
                         padding: 70px 20px;
+                        position: relative;
 
                         .order-table {
                             width: 100%;
                             text-align: left;
                             margin-bottom: 80px;
 
-                            th {
-                                border-bottom: 1px rgba(255,255,255,0.3) solid;
-                            }
+                            th {}
 
-                            td {
-                                border-bottom: 1px rgba(255,255,255,0.15) solid;
-                            }
+                            td {}
 
                             th, td {
                                 padding: 10px;
+                                border: 1px #333 solid;
 
                                 .wine-bottle {
                                     width: 15px;
@@ -779,6 +585,10 @@
                                     &.food {
                                         font-size: 1.6rem;
                                         color: rgba(255,255,255,0.6);
+                                    }
+
+                                    &.price {
+                                        text-align: center;
                                     }
                                 }
 

@@ -1,30 +1,77 @@
 .container {
     height: 100%;
-    transition: all 0.5s ease;
+    transition: all $fast ease;
 
     .logo {
         opacity: 1;
-        transition: all 0.5s ease;
+        transition: all $fast ease;
     }
 
     .main-content {
-        transition: all 0.5s ease;
+        transition: all $fast ease;
     }
 
     &.menu-visible {
         transform: translateX(100px);
-        transition: all 0.5s ease;
+        transition: all $fast ease;
 
         .logo {
             opacity: 0;
-            transition: all 0.5s ease;
+            transition: all $fast ease;
         }
 
         .main-content {
             opacity: 0.5;
-            transform: scale(0.8);
+            transform: scale(0.9);
             filter: grayscale(50%);
-            transition: all 0.5s ease;
+            transition: all $fast ease;
         }
+    }
+}
+
+.menu-link {
+    transition: all $fast cubic-bezier(0.8, 0, 0, 0.8);
+
+    .top {
+        transition: all $fast cubic-bezier(0.8, 0, 0, 0.8);
+    }
+
+    .middle {
+        transition: all $fast cubic-bezier(0.8, 0, 0, 0.8);
+    }
+
+    .bottom {
+        transition: all $fast cubic-bezier(0.8, 0, 0, 0.8);
+    }
+
+    &.slide {
+        transform: translateX(100px);
+        transition: all $fast cubic-bezier(0.8, 0, 0, 0.8);
+
+        .top {
+            transform: rotate(45deg);
+            transform-origin: 0 0;
+            transition: all $fast cubic-bezier(0.8, 0, 0, 0.8);
+        }
+
+        .middle {
+            opacity: 0;
+            transition: all $fast cubic-bezier(0.8, 0, 0, 0.8);
+        }
+
+        .bottom {
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+            transition: all $fast cubic-bezier(0.8, 0, 0, 0.8);
+        }
+    }
+}
+
+.aside-bar {
+    transition: all $fast cubic-bezier(0.8,0,0,0.8);
+
+    &.visible {
+        transform: translateX(100px);
+        transition: all $fast cubic-bezier(0.8,0,0,0.8);
     }
 }

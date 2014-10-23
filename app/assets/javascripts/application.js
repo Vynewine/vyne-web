@@ -22,7 +22,7 @@
 var ready = function() {
     // console.log('Doc is apparently ready');
     if (typeof(admin) !== 'undefined' && admin !== null && admin === true) {
-    	
+
     } else {
 
     }
@@ -50,6 +50,7 @@ $(function() {
 
 	var mySwiper = $('#walkthrough').swiper({
 		mode: 'horizontal',
+		speed: 200,
 		pagination: '.pagination',
 		paginationClickable: true
 	});
@@ -59,6 +60,7 @@ $(function() {
 
 	var order = $('#order').swiper({
 		mode: 'horizontal',
+		speed: 200,
 		noSwiping: true,
 		simulateTouch: false,
 		onlyExternal: true
@@ -132,95 +134,56 @@ $(function() {
 		order.swipeNext();
 	});
 
-
 	/* Preferences */
 
 	var ingredientCount, cartCount = 0;
 
-	if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
-	    $('.prefs-overview, .btn-checkout').addClass('ios');
-
-	    $('#preferences-panel').scroll(function(e) {
-	    	console.log($(this).scrollTop());
-	    	$('.prefs-overview').css({ 'bottom': -$(this).scrollTop() });
-	    });
-
-	    $('#review-panel').scroll(function(e) {
-	    	console.log($(this).scrollTop());
-	    	$('.btn-checkout').css({ 'bottom': -$(this).scrollTop() });
-	    });
-	}
-
-	$('.tab').hide();
 	$('.tab-list li a').click(function(e) {
 		e.preventDefault();
-		$('#preferences-panel .slideable').addClass('first-level');
-
-		$('.tab').hide();
-
-		$($(this).attr('href')).show();
-		$($(this).attr('href')).find('.prefs-list-container').addClass('visible');
+		console.log('clicked');
+		$($(this).attr('href')).parent().find('.tab').removeClass('active');
+		$($(this).attr('href')).addClass('active');
 	});
 
-	$('.prefs-list li a').click(function(e) {
+	$(document).on('click', '.prefs-list-bottom li a', function(e) {
 		e.preventDefault();
-		$('#preferences-panel .slideable').addClass('second-level');
-		$(this).closest('.prefs-list-container').addClass('visible');
-	});
 
-	$('.slideable-back').click(function(e) {
-		e.preventDefault();
-		if($(this).hasClass('first')) {
-			$('#preferences-panel .slideable').removeClass('first-level');
+		$this = $(this);
+
+		if(!$this.parent().hasClass('selected')) {
+			wines[wineCount].food.push( $this.parent().find('span').text() );
+
+			$('.prefs-overview').show();
+			$this.parent().addClass('selected');
+			$this.closest('.tab').removeClass('active');
+			$('.select-category').text('Add another ingredient?');
+
+			$img = $this.find('img').clone();
+			$img.attr('id', 'food-'+$this.parent().attr('id'));
+			$empty = $('.prefs-overview-list .empty').first();
+			$empty.find('span').replaceWith($img);
+			$empty.removeClass('empty');
+
+			if($('.prefs-overview-list .empty').length == 0) $('.food-limit').show();
 		} else {
-			$('#preferences-panel .slideable').removeClass('second-level');
+			$this.parent().removeClass('selected');
+			$('#food-'+$this.parent().attr('id')).closest('li').addClass('empty')
+			$('#food-'+$this.parent().attr('id')).replaceWith('<span>+</span>');
 		}
 	});
-
-	$('.prefs-box').hide();
-	$('.prefs-list-top li a').click(function(e) {
-		e.preventDefault();
-		$('.prefs-box').hide();
-		$($(this).attr('href')).show();
-	});
-
-	$('.prefs-list-bottom li a').click(function(e) {
-		e.preventDefault();
-
-		ingredientCount = parseInt($('.ingredient-count').text());
-
-		if(!$(this).parent().hasClass('selected') && !$(this).parent().hasClass('disabled')) {
-			if(ingredientCount <= 2) {
-				$('.ingredient-count').text(parseInt($('.ingredient-count').text()) + 1);
-				$('.select-category').text('Add another ingredient?');
-				$('#preferences-panel .slideable').removeClass('second-level');
-				$(this).parent().addClass('selected');
-				$('.prefs-overview').addClass('visible');
-				$('.prefs-overview-list').prepend('<li><a href="">'+$(this).text()+'</a></li>');
-				wines[wineCount].food.push( $(this).parent().find('span').text() );
-			}
-
-			if(ingredientCount == 2) {
-				$('.prefs-list-container li').each(function(i, el) {
-					if(!$(el).hasClass('selected')) $(el).addClass('disabled');
-				});
-			}
-		}
-	});
-
-	$('.prefs-overview-popup-link').click(function(e) {
-		e.preventDefault();
-		$(this).parent().find('.prefs-overview-popup').toggle().toggleClass('open');
-	})
 
 	$(document).on('click', '.prefs-overview-list li a', function(e) {
 		e.preventDefault();
-		$(this).parent().remove();
-		$('.ingredient-count').text(parseInt($('.ingredient-count').text()) - 1);
-		ingredientCount = parseInt($('.ingredient-count').text());
-		$('.prefs-list-container li').each(function(i, el) {
-			if($(el).hasClass('disabled')) $(el).removeClass('disabled');
-		});
+		$this = $(this);
+		if($this.hasClass('empty')) {
+			$('prefs-list-bottom').closest('.tab').removeClass('active');
+		} else {
+			$foodid = $this.find('img').attr('id').split('-');
+			$('#'+$foodid[1]).removeClass('selected');
+			$('.food-limit').hide();
+			$this.parent().addClass('empty');
+			$this.find('img').replaceWith('<span>+</span>');
+		}
 	});
 
 	$('#select-preferences').click(function(e) {
@@ -264,11 +227,9 @@ $(function() {
 		order.swipeTo(1, 500, false);
 
 		wineCount++;
-		console.log(wineCount);
-		ingredientCount = 0;
-		$('.ingredient-count').text(ingredientCount);
-		$('.prefs-list-container li').removeClass('selected disabled')
-		$('.prefs-overview-list').empty();
+
+		$(this).parent().hide();
+
 	})
 
 

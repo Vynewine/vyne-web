@@ -8,10 +8,10 @@
         text-align: center;
 
         .accordian-item-link {
-            font-size: 1.6rem;
             padding: 1rem;
             display: block;
             background: black;
+            font-size: 1.6rem;
             color: rgba(255,255,255,0.4);
         }
 
@@ -21,18 +21,17 @@
             position: relative;
 
             .line {
-                position: absolute;
                 top: 0;
                 left: 50%;
                 width: 2px;
                 height: 100%;
-                margin-left: -1px;
                 display: none;
+                margin-left: -1px;
+                position: absolute;
                 background: rgba(255,255,255,0.1);
             }
 
             .number {
-                position: relative;
                 z-index: 2;
                 color: white;
                 width: 50px;
@@ -40,9 +39,10 @@
                 padding: 10px 0;
                 font-weight: bold;
                 background: black;
+                position: relative;
+                border-radius: 100px;
                 display: inline-block;
                 border: 2px white solid;
-                border-radius: 100px;
             }
 
             h3 {
@@ -50,8 +50,8 @@
             }
 
             p, span {
-                margin: 0 auto;
                 width: 70%;
+                margin: 0 auto;
                 color: rgba(255,255,255,0.4);
             }
         }
