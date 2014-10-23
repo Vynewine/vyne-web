@@ -1,8 +1,10 @@
 require 'json'
 require 'sprockets/railtie'
+require 'net/http'
+require 'json'
 
 class Admin::AdvisorsController < ApplicationController
-  layout "admin"
+  layout 'admin'
   before_action :authenticate_user!
   authorize_actions_for SupplierAuthorizer # Triggers user check
   respond_to :html, :js
@@ -47,74 +49,75 @@ class Admin::AdvisorsController < ApplicationController
 
   def choose
     @order = Order.find(params[:order])
-    warehouse = @order.warehouse
-    wine = @order.order_items[0].wine
-    puts json: warehouse.address
-    quotes = shutl_quotes(@order, warehouse, wine)
-
-    #@quotes = {"quote_collection"=> {"id"=>"5447c602e4b0b774cd566ffb", "created_at"=>"2014-10-22T15:58+01:00", "time_zone"=>"Europe/London", "distance"=>4.5, "no_coverage"=>false, "shop_and_pay_by_card"=>false, "best_quote"=>{"id"=>"5447c602e4b0b774cd566ffb-asap", "merchant_price"=>921, "customer_price"=>1105, "customer_price_ex_tax"=>920, "vehicle"=>"motorbike", "pickup_start"=>"2014-10-22T16:13+01:00", "pickup_finish"=>"2014-10-22T16:43+01:00", "delivery_start"=>"2014-10-22T16:13+01:00", "delivery_finish"=>"2014-10-22T17:58+01:00", "valid_until"=>"2014-10-22T16:13+01:00", "delivery_promise"=>105, "delivery_promise_text"=>"delivery within 1 hour and 45 minutes for £11.05"}, "quotes"=>[{"id"=>"5447c602e4b0b774cd566ffb-1413990790", "merchant_price"=>921, "customer_price"=>1105, "customer_price_ex_tax"=>920, "vehicle"=>"bicycle", "pickup_start"=>"2014-10-22T16:15+01:00", "pickup_finish"=>"2014-10-22T17:00+01:00", "delivery_start"=>"2014-10-22T17:00+01:00", "delivery_finish"=>"2014-10-22T18:00+01:00", "valid_until"=>"2014-10-22T16:15+01:00"}, {"id"=>"5447c602e4b0b774cd566ffb-1413994390", "merchant_price"=>921, "customer_price"=>1105, "customer_price_ex_tax"=>920, "vehicle"=>"bicycle", "pickup_start"=>"2014-10-22T17:15+01:00", "pickup_finish"=>"2014-10-22T18:00+01:00", "delivery_start"=>"2014-10-22T18:00+01:00", "delivery_finish"=>"2014-10-22T19:00+01:00", "valid_until"=>"2014-10-22T17:15+01:00"}, {"id"=>"5447c602e4b0b774cd566ffb-1413997990", "merchant_price"=>960, "customer_price"=>1152, "customer_price_ex_tax"=>960, "vehicle"=>"small_van", "pickup_start"=>"2014-10-22T18:15+01:00", "pickup_finish"=>"2014-10-22T19:00+01:00", "delivery_start"=>"2014-10-22T19:00+01:00", "delivery_finish"=>"2014-10-22T20:00+01:00", "valid_until"=>"2014-10-22T18:15+01:00"}, {"id"=>"5447c602e4b0b774cd566ffb-1414001590", "merchant_price"=>1145, "customer_price"=>1374, "customer_price_ex_tax"=>1145, "vehicle"=>"motorbike", "pickup_start"=>"2014-10-22T19:15+01:00", "pickup_finish"=>"2014-10-22T20:00+01:00", "delivery_start"=>"2014-10-22T20:00+01:00", "delivery_finish"=>"2014-10-22T21:00+01:00", "valid_until"=>"2014-10-22T19:15+01:00"}, {"id"=>"5447c602e4b0b774cd566ffb-1414163590", "merchant_price"=>921, "customer_price"=>1105, "customer_price_ex_tax"=>920, "vehicle"=>"motorbike", "pickup_start"=>"2014-10-24T16:15+01:00", "pickup_finish"=>"2014-10-24T17:00+01:00", "delivery_start"=>"2014-10-24T17:00+01:00", "delivery_finish"=>"2014-10-24T18:00+01:00", "valid_until"=>"2014-10-24T16:00+01:00"}]}}
-    puts quotes
+    quotes = shutl_quotes(@order)
     @quotes = JSON.parse(quotes) # Hash obj
   end
 
   def complete
-    require 'pp'
-    logger.warn '--------------------------'
-    logger.warn "Complete order request"
-    puts PP.pp(params,'',80)
+    logger.warn 'Complete order request'
 
-    # return;
-    warehouse = Warehouse.find(params[:warehouse])
-    wine = Wine.find(params[:wine])
-    inventory = Inventory.find_by(:wine_id => params[:wine], :warehouse_id => params[:warehouse])
-    puts PP.pp("Warehouse:",'',80)
-    puts PP.pp(params[:warehouse],'',80)
     order = Order.find(params[:order])
-    order.wine = wine
-    order.quantity = 1
-    order.advisor_id = current_user.id
-    order.warehouse_id = params[:warehouse]
-    inventory.quantity = inventory.quantity - 1
-    if inventory.save
+
+    #1 Charge Card
+
+    payment_data = order.payment
+    stripe_token = payment_data.stripe
+    value = (order.total_price * 100).to_i
+    charge_details = charge_card(value, stripe_token)
+    if charge_details.paid
+      order.status_id = 2 # paid
       if order.save
-        # Stripe
-        paymentData = order.payment
-        stripeToken = 'cus_4uQiP8ZhPAKXoa' # paymentData.stripe
-        value = 1500 # $15.00 this time
-        chargeDetails = charge_card(value, stripeToken)
-        if chargeDetails.paid == true
-          order.status_id = 2 # paid
-          if order.save
-            # Shutl
-            booking_ref = shutl_book(params[:quote], order)
-            unless booking_ref.nil? == true
-              order.delivery = booking_ref
-              order.status_id = 4 #pickup
-              if order.save
-                @message = 'success'
-              else
-                @message = "error:Couldn't save order after booking"                
-              end
-            else
-              @message = "error:Couldn't do the booking."
-            end
-          end
+
+        #2 Schedule Shutl
+
+        booking_response = shutl_book(params[:quote], order)
+        booking_hash = JSON.parse(booking_response)
+        booking_ref = nil
+
+        unless booking_hash.nil?
+          booking_ref = booking_hash['booking']['reference']
+        end
+
+        if booking_ref.nil?
+          @message = "error:Couldn't do the booking."
         else
-          @message = "error:The payment was not processed. #{chargeDetails.description}"
-          order.status_id = 3 #payment failed
+          order.delivery_token = booking_ref
+          order.delivery_status = booking_response
+          order.status_id = 4 #pickup
+          if order.save
+            @message = 'success'
+
+            #3 Reduce Inventory Count
+
+            order.order_items.each do |item|
+              inventory = Inventory.find_by(:wine => item.wine, :warehouse => order.warehouse)
+              inventory.quantity = inventory.quantity - 1
+              inventory.save #TODO: Handle inventory update failure
+            end
+
+          else
+            @message = "error:Couldn't save order after booking"
+          end
         end
       else
-        @message = "error:Couldn't save order"
+        @message = "error:Couldn't save order after booking"
       end
     else
-      @message = "error:Couldn't update inventory"
+      @message = "error:The payment was not processed. #{charge_details.description}"
+      order.status_id = 3 #payment failed
     end
+
+    respond_to do |format|
+      flash[:error] = @message
+      format.html { redirect_to admin_order_path order}
+    end
+
   end
 
   def results
     require 'pp'
     puts '--------------------------'
-    logger.warn "Search request"
+    logger.warn 'Search request'
     puts PP.pp(params[:keywords],'',80)
     puts PP.pp(request.request_parameters,'',80)
 
@@ -122,7 +125,8 @@ class Admin::AdvisorsController < ApplicationController
 
     warehouses = order.information['warehouses'].sort! { |a,b| a['distance'] <=> b['distance'] }
 
-    # Solr:
+    # Solr search
+
     @search = Wine.search do
       fulltext params[:keywords]
 
@@ -144,8 +148,7 @@ class Admin::AdvisorsController < ApplicationController
       end
     end
 
-
-    #Transform Results
+    #Transform Results to order by warehouse that's closest to the client
 
     wines = []
 
@@ -194,95 +197,86 @@ class Admin::AdvisorsController < ApplicationController
 
   private
 
-  def charge_card(value, stripeToken)
-    puts "Charging card"
+  #TODO: Capture Response Here!!!!
+  def charge_card(value, stripe_token)
+    puts 'Charging card'
     Stripe.api_key = Rails.application.config.stripe_key
     Stripe::Charge.create(
       :amount   => value, 
-      :currency => "gbp",
-      :customer => stripeToken
+      :currency => 'gbp',
+      :customer => stripe_token
     )
   end
 
-  def shutl_url
-    "https://sandbox-v2.shutl.co.uk"
-  end
-
-  def shutl_id
-    "HnnFB2UbMlBXdD9h4UzKVQ=="
-    # "UOuPfVIAvP4BJWDmXdCiSw=="
-  end
-
-  def shutl_secret
-    "pKNKPPCejzviiPunGNhnJ95G1JdeAbOYbyAygqIXyfIe4lb73iIDKRqmeZmZWT+ORxTqwMP9PhscJAW7GFmz6A=="
-    # "DAiXY/UzTM14g6PAqAHDrm/ILwkJ3fT5mnh7aT15JiPI6YLz5GYN7qLtx4Yac60PFN+rZRuZuFyi0FExri3F6w=="
-  end
+  # Requests token:
 
   def shutl_token
-    puts "Requesting delivery token"
-    require 'net/http'
-    require 'json'
+    puts 'Requesting delivery token'
 
-    domain = shutl_url
-    shutlId = shutl_id
-    shutlSecret = shutl_secret
+    domain = Rails.application.config.shutl_url
+    shutl_id = Rails.application.config.shutl_id
+    shutl_secret = Rails.application.config.shutl_secret
+
     url = URI("#{domain}/token")
 
     params = {
-      'client_id' => shutlId,
-      'client_secret' => shutlSecret,
-      'grant_type' => 'client_credentials'
+      :client_id => shutl_id,
+      :client_secret => shutl_secret,
+      :grant_type => 'client_credentials'
     }
 
     headers = {
       'Content-Type' => 'application/x-www-form-urlencoded'
     }
 
-    #**************************
-    # Requests token:
-
-    reqToken = Net::HTTP::Post.new(url, headers)
-    reqToken.form_data = params
+    req_token = Net::HTTP::Post.new(url, headers)
+    req_token.form_data = params
     connection = Net::HTTP::start(url.hostname, url.port, :use_ssl => true ) {|http|
-      http.request(reqToken)
+      http.request(req_token)
     }
-
-    # Dummy response:
-    # { 
-    #   "access_token": "DUMMY_TOKEN",
-    #   "token_type": "bearer",
-    #   "expires_in": 999
-    # }
-
-
 
     response = JSON.parse(connection.read_body)
     response['access_token']
-    # puts response
-    # puts token
   end
 
-  def shutl_quotes(order, warehouse, wine)
+  # Requests quotes:
+
+  def shutl_quotes(order)
 
     token = shutl_token
 
-    #**************************
-    # Requests quote:
+    domain = Rails.application.config.shutl_url
 
-    domain = shutl_url
     url = URI("#{domain}/quote_collections")
-    inventory_entry = Inventory.find_by(:warehouse_id => warehouse.id, :wine_id => wine.id)
-    price = inventory_entry.category.price
+
+    basket_value = ((order.order_items.map { |item| item.cost}).inject(:+)*100).to_i
+
+    products = []
+
+    order.order_items.each do |item|
+      products << {
+          :id => "wine_#{item.wine.id}",
+          :name => 'Bottle of wine',
+          :description => 'Bottle of wine',
+          :url => "http://127.0.0.1/admin/wines/#{item.wine.id}",
+          :length => 20,
+          :width => 15,
+          :height => 10,
+          :weight => 1,
+          :quantity => 1,
+          :price => (item.cost*100).to_i
+      }
+    end
 
     params = {
       :quote_collection => {
         :channel => 'mobile',
         :page => 'product',
         :session_id => 'example123',
-        :basket_value => 1999,
+        :basket_value => basket_value,
         :pickup_location => {
           :address => {
-            :postcode => warehouse.address.postcode
+            :postcode => order.warehouse.address.postcode
           }
         },
         :delivery_location => {
@@ -290,23 +284,9 @@ class Admin::AdvisorsController < ApplicationController
             :postcode => order.address.postcode
           }
         },
-        :products => [
-          {
-            :id => "wine_#{wine.id}",
-            :name => "Bottle of wine",
-            :description => "Bottle of wine",
-            :url => "http://127.0.0.1/admin/wines/#{wine.id}",
-            :length => 20,
-            :width => 15,
-            :height => 10,
-            :weight => 1,
-            :quantity => 1,
-            :price => price*100
-          }
-        ]
+        :products => products
       }
     }
-    require 'json'
 
     puts params.to_json
 
@@ -322,25 +302,6 @@ class Admin::AdvisorsController < ApplicationController
     }
 
     connection.read_body
-    # puts response
-
-    # channel: “ecommerce”, “desktop”, “tablet”, “mobile”
-
-    # {
-    #   "quote_collection": { 
-    #               "channel": "pos",
-    #                  "page": "product",
-    #            "session_id": "example123",
-    #          "basket_value": 1999,
-    #       "pickup_store_id": "448",
-    #     "delivery_location": {                         
-    #       "address": {                                               
-    #         "postcode":      "EC2A 3LT"              
-    #       }
-    #     },
-    #     "vehicle":           "parcel_car"
-    #   }
-    # }
 
   end
 
@@ -351,7 +312,7 @@ class Admin::AdvisorsController < ApplicationController
     #**************************
     # Requests quote:
 
-    domain = shutl_url
+    domain = Rails.application.config.shutl_url
     url = URI("#{domain}/bookings")
 
     params = {
@@ -399,24 +360,9 @@ class Admin::AdvisorsController < ApplicationController
     connection = Net::HTTP::start(url.hostname, url.port, :use_ssl => true ) {|http|
       http.request(req)
     }
-    
-    response = JSON.parse(connection.read_body)
-    # puts connection
-    # connection.read_body
-    puts response
-    unless response.nil?
-      return response['booking']['reference']
-    else
-      return nil
-    end
-# Booking:
-# {
-#   "booking": {
-#     "quote_id": "1a2b3c-asap", 
-#     "merchant_booking_reference": "YOUR_REF"
-#   }
-# }
-# {"booking"=>{"reference"=>"V4A2MRR", "delivery_window_start"=>"2014-10-13T20:00+01:00", "delivery_window_finish"=>"2014-10-13T21:00+01:00"}}
+
+    connection.read_body
+
   end
 
 end

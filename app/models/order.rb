@@ -12,6 +12,22 @@ class Order < ActiveRecord::Base
   scope :valid, -> { where.not(:wine_id => nil) }
   scope :user_id, ->(id) { where("client_id = ?", id) }
 
+  def total_price
+    if (order_items.map { |item| item.price }).include?(nil)
+      nil
+    else
+      (order_items.map { |item| item.price }).inject(:+)
+    end
+  end
+
+  def total_cost
+    if (order_items.map { |item| item.cost }).include?(nil)
+      nil
+    else
+      (order_items.map { |item| item.cost }).inject(:+)
+    end
+  end
+
   def delivery_status_json
     d = delivery_status.to_s
     require 'pp'

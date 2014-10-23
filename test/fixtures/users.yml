@@ -4,6 +4,7 @@ one:
   email: 'test@test.test'
   encrypted_password: 'test'
   roles: client
+  addresses: addresses(:three)
 
 
 two:
@@ -15,3 +16,4 @@ admin:
   email: 'admin@vynz.co'
   encrypted_password: 'test'
   roles: admin
+  addresses: addresses(:four)

@@ -798,6 +798,8 @@ end
 
 puts "Wines (2) ---- OK"
 
+
+
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # 7 users
 
@@ -820,6 +822,18 @@ for j in 0..6 do
 end
 
 puts "Users -------- OK"
+
+(0..6).each { |j|
+  payment = Payment.new(
+      :user_id => j+2,
+      :brand => 1,
+      :number => '1111',
+      :stripe => 'cus_4uQiP8ZhPAKXoa'
+  )
+  payment.save
+}
+
+puts 'Payment --- OK'
 
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # 10 addresses
@@ -908,12 +922,12 @@ for j in 1..2 do
   end
 end
 
-puts "Inventory ---- OK"
+puts 'Inventory ---- OK'
 
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Orders!!!
 
-totalOrders = 5 + rand(50)
+totalOrders = 30
 
 for i in 0..totalOrders do
   # 1 pending
@@ -966,13 +980,15 @@ for i in 0..totalOrders do
     order_items << OrderItem.create({quantity: 1 + rand(2), foods: [@food_one, @food_two], category: category})
   end
 
+  client_id = 2+rand(7)
   Order.create(
     :warehouse_id => warehouse,
-    :client_id => 2+rand(7),
+    :client_id => client_id,
     :address_id => 4+rand(4),
     :status_id => status,
     :information => warehouses.to_json,
-    :order_items => order_items
+    :order_items => order_items,
+    :payment_id => client_id - 1
   )
 
 end

@@ -85,6 +85,7 @@ class ShopControllerTest < ActionController::TestCase
     assert_equal(2, order.order_items.count, 'There should be 2 order items')
     categories = order.order_items.map { |c| c.category.id}
     assert_equal(true, (categories.include? categories(:house).id) && (categories.include? categories(:reserve).id), 'House and Reserve wines should be present on the order.')
+    assert(!order.address.nil?, 'Order should have address assigned')
   end
 
   test 'should create order for occasion matching' do

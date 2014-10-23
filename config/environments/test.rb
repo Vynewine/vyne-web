@@ -43,4 +43,9 @@ Rails.application.configure do
   #Stripe
   config.stripe_key = 'sk_test_BQokikJOvBiI2HlWgH4olfQ2'
 
+  #Shutl
+  config.shutl_url = 'https://sandbox-v2.shutl.co.uk'
+  config.shutl_id = 'HnnFB2UbMlBXdD9h4UzKVQ=='
+  config.shutl_secret = 'pKNKPPCejzviiPunGNhnJ95G1JdeAbOYbyAygqIXyfIe4lb73iIDKRqmeZmZWT+ORxTqwMP9PhscJAW7GFmz6A=='
+
 end

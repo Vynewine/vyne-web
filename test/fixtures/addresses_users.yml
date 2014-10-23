@@ -1,9 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  address_id: MyString
-  user_id: MyString
-
-two:
-  address_id: MyString
-  user_id: MyString
+#one:
+#  address: addresses(:three)
+#  user: users(:one)
+#
+#two:
+#  address: addresses(:four)
+#  user: users(:admin)
