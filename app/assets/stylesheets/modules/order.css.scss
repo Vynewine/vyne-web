@@ -201,7 +201,9 @@
                                     left: 0;
                                     right: 0;
                                     bottom: 0;
+                                    margin: -1px;
                                     opacity: 0.8;
+                                    border-radius: 5px 5px 0 0;
                                     background-image: url(asset-path('select/housebg1.jpg'));
                                     background-size: 100% auto;
                                     background-position: top center;
@@ -312,7 +314,6 @@
                                         display: none;
 
                                         p {
-                                            width: auto;
                                             font-size: 1.6rem;
                                             margin: 0 auto 1rem;
                                         }
