@@ -64,3 +64,32 @@
         }
     }
 }
+
+.breadcrumbs-container {
+    top: 50px;
+    z-index: 99;
+    width: 100%;
+    position: fixed;
+    overflow: auto;
+    display: none;
+    background: rgba(0,0,0,0.9);
+    border-bottom: 1px rgba(255,255,255,0.2) solid;
+
+    .breadcrumbs {
+        margin: 0;
+        padding: 0;
+        width: 584px;
+        list-style: none;
+
+        li {
+            display: inline-block;
+
+            a {
+                padding: 10px;
+                display: block;
+                color: rgba(255,255,255,0.3);
+            }
+        }
+    }
+
+}

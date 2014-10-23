@@ -24,7 +24,11 @@ textarea:focus {
 }
 
 select {
-    padding: 13px 15px;
+    padding: 13px 40px 13px 15px;
+    background-image: url(asset-path('icons/down@2x.png'));
+    background-size: 10px 8px;
+    background-position: top 18px right 14px;;
+    background-repeat: no-repeat;
 }
 
 .form-step-last {

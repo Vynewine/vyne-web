@@ -57,21 +57,24 @@
             <a href="#" class="bottle-link" data-category-id="<%= category.id %>">
               <%= image_tag "icons/wine/bottle#{category.price}.png", :alt => "wine bottle" %>
               <span class="label"><%= category.name %></span>
-              <span class="description">Entry-level to best wine regions.</span>
+              <span class="description"><%= category.summary %></span>
             </a>
             <div class="bottle-info" data-category-id="<%= category.id %>">
-              <div class="close">
-                <div class="line"></div>
-                <div class="line"></div>
+              <div class="bottle-info-bg"></div>
+              <div class="bottle-info-content">
+                <div class="close">
+                  <div class="line"></div>
+                  <div class="line"></div>
+                </div>
+                <%= image_tag "icons/wine/bottle#{category.price}.png", :alt => "wine bottle" %>
+                <span class="label"><%= category.name %></span>
+                <span class="price">£<%= category.price %></span>
+                <span class="description">Entry-level to best wine regions.</span>
+                <div class="full-description">
+                  <%= category.description.html_safe %>
+                </div>
+                <a href="" class="btn select-bottle">Choose bottle</a>
               </div>
-              <%= image_tag "icons/wine/bottle#{category.price}.png", :alt => "wine bottle" %>
-              <span class="label"><%= category.name %></span>
-              <span class="price">£<%= category.price %></span>
-              <span class="description">Entry-level to best wine regions.</span>
-              <div class="full-description">
-                <%= category.description.html_safe %>
-              </div>
-              <a href="" class="btn select-bottle">Choose bottle</a>
             </div>
           </li>
         <% end %>
@@ -294,7 +297,10 @@
             <th width="20%">Price</th>
           </tr>
           <tr class="add-bottle">
-            <td colspan="2"><a href="" class="btn add-bottle-link">Add another bottle</a></td>
+            <td colspan="2">
+              <span>Save £5 of a second bottle</span>
+              <a href="" class="btn btn__small add-bottle-link">Add another bottle</a>
+            </td>
           </tr>
         </table>
 
@@ -308,7 +314,7 @@
     <% unless user_signed_in? %>
 
     <div id="register-panel" class="step order-panel swiper-slide noSwipingClass">
-      <div class="order-panel-content wrapper">
+      <div class="order-panel-content wrapper wrapper-large">
         <div id="account-form" class="register-form">
           <h2 class="account-heading">Register</h2>
           <span class="account-message">Have an account? <a href="" id="account-link" class="signin-link">Sign in</a></span>
@@ -361,7 +367,7 @@
     <%# ========================== Address selection ========================== %>
 
     <div id="delivery-panel" class="step order-panel swiper-slide noSwipingClass">
-      <div class="order-panel-content wrapper">
+      <div class="order-panel-content wrapper wrapper-large">
         <h2>Delivery address</h2>
 
         <%# - - - - - -- - - - - - - - - -  Option1 - - - - - -- - - - - - - - - -  %>
@@ -403,7 +409,7 @@
     <%# ========================== Payment ========================== %>
 
     <div id="payment-panel" class="step order-panel swiper-slide noSwipingClass">
-      <div class="order-panel-content wrapper">
+      <div class="order-panel-content wrapper wrapper-large">
         <h2>Link Payment</h2>
           <%
           paymentCards = [['New payment card', -1]]

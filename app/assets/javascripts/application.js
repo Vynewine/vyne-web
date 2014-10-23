@@ -77,6 +77,15 @@ $(function() {
 		order.swipeNext();
 	});
 
+	/* Create breadcrumbs */
+	var $breadcrumbsContainer = $('<div/>').addClass('breadcrumbs-container');
+	var $breadcrumbs = $('<ul/>').addClass('breadcrumbs');
+	$breadcrumbsContainer.append($breadcrumbs);
+	order.slides.forEach(function(slide) {
+		var breadcrumb = slide.id.split('-')[0];
+		$breadcrumbs.append($('<li/>').append($('<a/>', { text: breadcrumb })));
+	});
+	$('.main-header').after($breadcrumbsContainer);
 
 	/* Availabilty */
 	try {
@@ -91,6 +100,7 @@ $(function() {
 	var wines = [];
 
 	var wine = function() {
+		this.id,
 		this.quantity = 0,
 		this.label = '',
 		this.price = '',
@@ -207,12 +217,12 @@ $(function() {
 			wines[wineCount].specificWine = $('input[name="specific-wine"]').val();
 		}
 
-		//console.log(wines);
 		$('.order-table-bottle, .order-table-bottle-price').remove();
 
+		//loop though wines
 		wines.forEach(function(wine) {
 
-			var $td = $('<td>').addClass('order-table-bottle').append('<div class="wine-bottle"></div>');
+			var $td = $('<td>').addClass('order-table-bottle').append($('<a/>', { text: 'x' }).addClass('close')).append('<div class="wine-bottle"></div>');
 
 			for (var key in wine) {
 				if (wine.hasOwnProperty(key)) {
@@ -251,6 +261,10 @@ $(function() {
 
 		$('.btn-checkout').show();
 
+	});
+
+	$(document).on('click', '.order-table .close', function(e) {
+		$(this).closest('tr').remove();
 	});
 
 	$('.add-bottle-link').click(function(e) {

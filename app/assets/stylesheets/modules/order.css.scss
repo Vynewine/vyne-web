@@ -164,6 +164,7 @@
                                     opacity: 0.9;
                                     padding: 17px;
                                     display: block;
+                                    min-height: 203px;
                                     border-radius: 5px;
                                     background: rgba(0,0,0,0.2);
                                     border: 1px rgba(255,255,255,0.15) solid;
@@ -194,10 +195,33 @@
 
                                 }
 
+                                .bottle-info-bg {
+                                    position: absolute;
+                                    top: 0;
+                                    left: 0;
+                                    right: 0;
+                                    bottom: 0;
+                                    opacity: 0.8;
+                                    background-image: url(asset-path('select/housebg1.jpg'));
+                                    background-size: 100% auto;
+                                    background-position: top center;
+                                    backgroudn-repeat: no-repeat;
+                                    -webkit-mask-image: -webkit-gradient(linear, left top, left 50%, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
+                                }
+
+                                .bottle-info-content {
+                                    position: relative;
+                                    z-index: 9;
+                                }
+
                                 &:nth-child(2) .bottle-info {
                                     left: auto;
                                     right: 0;
                                     transform-origin: 50% 50%;
+
+                                    .bottle-info-bg {
+                                        background-image: url(asset-path('select/reservebg1.jpg'));
+                                    }
                                 }
 
                                 &:nth-child(3) .bottle-info {
@@ -205,6 +229,10 @@
                                     left: 0;
                                     bottom: 0;
                                     transform-origin: 50% 50%;
+
+                                    .bottle-info-bg {
+                                        background-image: url(asset-path('select/finebg1.jpg'));
+                                    }
                                 }
 
                                 &:nth-child(4) .bottle-info {
@@ -213,6 +241,10 @@
                                     right: 0;
                                     bottom: 0;
                                     transform-origin: 50% 50%;
+
+                                    .bottle-info-bg {
+                                        background-image: url(asset-path('select/cellarbg1.jpg'));
+                                    }
                                 }
 
                                 .bottle-info {
@@ -234,10 +266,9 @@
                                         height: 39px;
                                         border-radius: 100%;
                                         position: absolute;
-                                        top: 3px;
-                                        right: 3px;
+                                        top: -10px;
+                                        right: -10px;
                                         z-index: 99;
-                                        background: black;
                                         transform: scale(0);
 
                                         .line {
@@ -281,16 +312,10 @@
                                         display: none;
 
                                         p {
+                                            width: auto;
                                             font-size: 1.6rem;
                                             margin: 0 auto 1rem;
                                         }
-                                    }
-
-                                    .btn {
-                                        position: absolute;
-                                        bottom: 10px;
-                                        left: 50%;
-                                        margin-left: -82px;
                                     }
 
                                     &.active {
@@ -299,7 +324,7 @@
                                         width: 300px;
                                         height: 416px;
                                         transform: scale(1);
-                                        background: rgba(0,0,0,0.90);
+                                        background: rgba(0,0,0,0.95);
 
                                         .close {
                                             transform: scale(1);
@@ -562,13 +587,29 @@
                             }
 
                             th, td {
+                                position: relative;
                                 border: 1px #222 solid;
+
+                                .close {
+                                    position: absolute;
+                                    top: 50%;
+                                    left: -15px;
+                                    line-height: 1;
+                                    display: block;
+                                    width: 28px;
+                                    margin-top: -15px;
+                                    padding: 3px 0 7px;
+                                    text-align: center;
+                                    border-radius: 40px;
+                                    background: black;
+                                    border: 1px rgba(255,255,255,0.2) solid;
+                                }
 
                                 .wine-bottle {
                                     width: 44px;
                                     height: 95px;
                                     float: left;
-                                    margin: 10px 15px 10px 5px;
+                                    margin: 10px 15px 10px 10px;
                                     background-image: url("/dev-assets/wine/bottle15.png");
                                     background-size: 100%;
                                 }
@@ -601,10 +642,18 @@
                                         color: rgba(255,255,255,0.6);
                                     }
                                 }
+                            }
 
-                                .btn {
-                                    width: 100%;
-                                    text-align: center;
+                            .add-bottle {
+                                text-align: center;
+
+                                td {
+                                    padding: 2rem;
+
+                                    span {
+                                        line-height: 1;
+                                        margin-bottom: 1rem;
+                                    }
                                 }
                             }
                         }
@@ -621,8 +670,7 @@
                         bottom: 0;
                         z-index: 99;
                         width: 320px;
-                        height: 50px;
-                        color: #a32438;
+                        color: white;
                         padding: 15px;
                         display: none;
                         font-size: 1.6rem;
@@ -630,7 +678,7 @@
                         margin-left: -20px;
                         text-align: center;
                         text-transform: uppercase;
-                        background: rgba(255,255,255,0.95);
+                        background: $primary-colour;
 
                         &.ios {
                             position: absolute;
