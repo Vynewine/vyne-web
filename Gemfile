@@ -10,6 +10,7 @@ gem 'pg'
 group :test do
   gem 'sqlite3', '1.3.9'
   gem 'stripe-ruby-mock', '~> 1.10.1.7'
+  gem 'webmock', '1.19.0'
 end
 
 group :production do

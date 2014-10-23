@@ -1,5 +1,6 @@
 require 'test_helper'
 require 'sunspot/rails'
+require 'webmock/minitest'
 
 class Admin::AdvisorsControllerTest < ActionController::TestCase
   include Devise::TestHelpers
@@ -36,7 +37,7 @@ class Admin::AdvisorsControllerTest < ActionController::TestCase
     # puts @results
   end
 
-  test 'filter wine search' do
+  test 'Filter wine search' do
 
     wines = [wines(:one), wines(:two)]
     order_info = { "warehouses" => [{ "id" => warehouses(:one).id, "distance" => 2.123}, { "id" => warehouses(:two).id, "distance" => 1.123}]}
@@ -72,7 +73,7 @@ class Admin::AdvisorsControllerTest < ActionController::TestCase
     # puts @wines.each{ |wine| wine.inventories.each{ |inv| inv.warehouse.id } }
   end
 
-  test 'should update order item with chosen wine' do
+  test 'Should update order item with chosen wine' do
     @order = orders(:order1)
     @wine = wines(:one)
     @warehouse = warehouses(:one)
@@ -92,4 +93,93 @@ class Admin::AdvisorsControllerTest < ActionController::TestCase
     assert(!order_item.price.nil?, 'Wine price should be present on the order item')
     assert_equal(order_item.price, order_item.category.price, 'Price should match price from category')
   end
+
+  test 'Should retrieve quotes from Shutl' do
+
+    # stub_request(:post, 'https://sandbox-v2.shutl.co.uk/token').
+    #     with(:body => {
+    #     'client_id'=>'HnnFB2UbMlBXdD9h4UzKVQ==',
+    #     'client_secret'=>'pKNKPPCejzviiPunGNhnJ95G1JdeAbOYbyAygqIXyfIe4lb73iIDKRqmeZmZWT+ORxTqwMP9PhscJAW7GFmz6A==',
+    #     'grant_type'=>'client_credentials'
+    # }, :headers => {
+    #     'Accept'=>'*/*',
+    #     'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+    #     'Content-Type'=>'application/x-www-form-urlencoded',
+    #     'Host'=>'sandbox-v2.shutl.co.uk',
+    #     'User-Agent'=>'Ruby'
+    # }).to_return(:status => 200, :body => @token_response, :headers => {})
+
+    stub_request(:post, "https://sandbox-v2.shutl.co.uk/token").
+        with(:body => {"client_id"=>"HnnFB2UbMlBXdD9h4UzKVQ==", "client_secret"=>"pKNKPPCejzviiPunGNhnJ95G1JdeAbOYbyAygqIXyfIe4lb73iIDKRqmeZmZWT+ORxTqwMP9PhscJAW7GFmz6A==", "grant_type"=>"client_credentials"},
+             :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'Host'=>'sandbox-v2.shutl.co.uk', 'User-Agent'=>'Ruby'}).
+        to_return(:status => 200, :body => '{"access_token":"493nSJPSh9_jUsjJe3S59FNnAx3-jcKBjBBzCFM_BkF9ePKcmRPqf-XqwZ3GWdBc9M4ZH-mUb0Okn1e_WPKrwg","token_type":"bearer","expires_in":788939999}', :headers => {})
+
+    @order = orders(:order1)
+    @wine = wines(:one)
+    @warehouse = warehouses(:one)
+    puts json: @warehouse.address.postcode
+    @order.order_items[0].wine = @wine
+    @order.order_items[1].wine = @wine
+    @order.warehouse = @warehouse
+    @order.save
+    @order.order_items[0].save
+    @order.order_items[1].save
+
+    post :choose, {:order => @order.id}
+
+    puts @response.body
+  end
 end
+
+#@token_response = '{"access_token":"493nSJPSh9_jUsjJe3S59FNnAx3-jcKBjBBzCFM_BkF9ePKcmRPqf-XqwZ3GWdBc9M4ZH-mUb0Okn1e_WPKrwg","token_type":"bearer","expires_in":788939999}'
+#@token_response = {"access_token" => "493nSJPSh9_jUsjJe3S59FNnAx3-jcKBjBBzCFM_BkF9ePKcmRPqf-XqwZ3GWdBc9M4ZH-mUb0Okn1e_WPKrwg","token_type" => "bearer","expires_in" =>788939999}
+@quote_response = '{
+   "quote_collection":{
+      "id":"5447e3e3e4b0b774cd5673eb",
+      "created_at":"2014-10-22T18:05+01:00",
+      "time_zone":"Europe/London",
+      "distance":5.7,
+      "no_coverage":false,
+      "shop_and_pay_by_card":false,
+      "best_quote":{
+         "id":"5447e3e3e4b0b774cd5673eb-asap",
+         "merchant_price":1162,
+         "customer_price":1394,
+         "customer_price_ex_tax":1161,
+         "vehicle":"motorbike",
+         "pickup_start":"2014-10-22T18:20+01:00",
+         "pickup_finish":"2014-10-22T18:50+01:00",
+         "delivery_start":"2014-10-22T18:20+01:00",
+         "delivery_finish":"2014-10-22T20:35+01:00",
+         "valid_until":"2014-10-22T18:20+01:00",
+         "delivery_promise":135,
+         "delivery_promise_text":"delivery within 2 hours and 15 minutes for &pound;13.94"
+      },
+      "quotes":[
+         {
+            "id":"5447e3e3e4b0b774cd5673eb-1413998439",
+            "merchant_price":1162,
+            "customer_price":1394,
+            "customer_price_ex_tax":1161,
+            "vehicle":"motorbike",
+            "pickup_start":"2014-10-22T18:30+01:00",
+            "pickup_finish":"2014-10-22T20:00+01:00",
+            "delivery_start":"2014-10-22T20:00+01:00",
+            "delivery_finish":"2014-10-22T21:00+01:00",
+            "valid_until":"2014-10-22T18:30+01:00"
+         },
+         {
+            "id":"5447e3e3e4b0b774cd5673eb-1414002039",
+            "merchant_price":1348,
+            "customer_price":1617,
+            "customer_price_ex_tax":1347,
+            "vehicle":"small_van",
+            "pickup_start":"2014-10-22T19:30+01:00",
+            "pickup_finish":"2014-10-22T21:00+01:00",
+            "delivery_start":"2014-10-22T21:00+01:00",
+            "delivery_finish":"2014-10-22T22:00+01:00",
+            "valid_until":"2014-10-22T19:30+01:00"
+         }
+      ]
+   }
+}'

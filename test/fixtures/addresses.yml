@@ -1,11 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  street: MyString
-  detail: MyString
-  postcode: MyString
+  street: Street1
+  detail: Detail1
+  postcode: EC3V1LR
 
 two:
-  street: MyString
-  detail: MyString
-  postcode: MyString
+  street: Street1
+  detail: Detail1
+  postcode: NW107ST

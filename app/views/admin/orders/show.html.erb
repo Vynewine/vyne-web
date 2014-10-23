@@ -115,12 +115,35 @@
   <% end %>
   </tbody>
 </table>
-<% if !(@order.order_items.map { |item| item.cost}).include?(nil) %>
-    <strong>Cost Total:</strong> <%= (@order.order_items.map { |item| item.cost}).inject(:+) %>
-<% end %>
-<% if !(@order.order_items.map { |item| item.price}).include?(nil) %>
-    <strong>Price Total:</strong> <%= (@order.order_items.map { |item| item.price}).inject(:+) %>
-<% end %>
+<table>
+  <tbody>
+    <tr>
+      <td>
+        <% if !(@order.order_items.map { |item| item.wine}).include?(nil) %>
+            <form action="/admin/advise/choose" method="post">
+              <input type="hidden" name="order" value="<%= @order.id %>"/>
+              <input type="hidden" id="warehouse-id" name="warehouse-id"/>
+              <%= hidden_field_tag(request_forgery_protection_token.to_s, form_authenticity_token) %>
+              <input type="submit" value="Schedule Delivery" class="buttonStyle" />
+            </form>
+        <% end %>
+      </td>
+      <td>
+        <% if !(@order.order_items.map { |item| item.cost}).include?(nil) %>
+            <strong>Cost Total:</strong> <%= (@order.order_items.map { |item| item.cost}).inject(:+) %>
+        <% end %>
+      </td>
+      <td>
+        <% if !(@order.order_items.map { |item| item.price}).include?(nil) %>
+            <strong>Price Total:</strong> <%= (@order.order_items.map { |item| item.price}).inject(:+) %>
+        <% end %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+
 </p>
 
 <p>
