@@ -1,0 +1,68 @@
+/*
+
+Tab examples.
+----------------
+
+.tab-list {} is used by javascript to allow endless nested tabs
+
+
+Horizontal:
+<ul class="tab-list tab-list__horizontal">
+    <li><a href="#with-food">With food</a></li><li><a href="#without-food">By occasion</a></li>
+</ul>
+
+*/
+
+.tab-list__horizontal {
+    padding: 0;
+    margin: 0 0 40px;
+    list-style: none;
+    border-radius: 5px;
+    border: 1px rgba(255,255,255,0.2) solid;
+    -webkit-transition: all 0.5s cubic-bezier(0.8, 0, 0, 0.8);
+
+    li {
+        width: 50%;
+        text-align: center;
+        display: inline-block;
+
+        &:first-child {
+            border-right: 1px rgba(255,255,255,0.15) solid;
+        }
+
+        &.active {
+            margin: -1px;
+
+            a {
+                color: white;
+                background: $primary-colour;
+            }
+
+            &:first-child a {
+                border-radius: 5px 0 0 5px;
+            }
+
+            &:last-child a {
+                border-radius: 0 5px 5px 0;
+            }
+        }
+
+        a {
+            padding: 6px;
+            display: block;
+            color: rgba(255,255,255,0.7);
+        }
+    }
+}
+
+.tab {
+    opacity: 0;
+    display: none;
+    transition: all 0.5s ease;
+
+    &.active {
+        opacity: 1;
+        display: block;
+        transition: all 0.5s ease;
+    }
+}
