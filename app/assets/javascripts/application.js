@@ -100,6 +100,11 @@ $(function() {
 		this.category = ''
 	}
 
+	var food = function(id, name) {
+		this.id = id,
+		this.name = name
+	}
+
 	var wineCount = 0;
 
 
@@ -147,6 +152,7 @@ $(function() {
 	$('.tab-list li a').click(function(e) {
 		e.preventDefault();
 		console.log('clicked');
+		$('.prefs-overview').show();
 		$($(this).attr('href')).parent().find('.tab').removeClass('active');
 		$($(this).attr('href')).addClass('active');
 	});
@@ -154,18 +160,19 @@ $(function() {
 	$(document).on('click', '.prefs-list-bottom li a', function(e) {
 		e.preventDefault();
 
-		$this = $(this);
+		var $this = $(this);
+		var id = $this.parent().attr('id');
+		var name = $this.parent().find('span').text();
 
 		if(!$this.parent().hasClass('selected')) {
-			wines[wineCount].food.push( $this.parent().find('span').text() );
+			wines[wineCount].food.push( new food( id, name ) );
 
-			$('.prefs-overview').show();
 			$this.parent().addClass('selected');
 			$this.closest('.tab').removeClass('active');
 			$('.select-category').text('Add another ingredient?');
 
 			$img = $this.find('img').clone();
-			$img.attr('id', 'food-'+$this.parent().attr('id'));
+			$img.attr('id', 'food-'+id);
 			$empty = $('.prefs-overview-list .empty').first();
 			$empty.find('span').replaceWith($img);
 			$empty.removeClass('empty');
@@ -194,6 +201,8 @@ $(function() {
 
 	$('#select-preferences').click(function(e) {
 
+		console.log(wines);
+
 		if($('input[name="specific-wine"]').val() != '') {
 			wines[wineCount].specificWine = $('input[name="specific-wine"]').val();
 		}
@@ -208,9 +217,26 @@ $(function() {
 			for (var key in wine) {
 				if (wine.hasOwnProperty(key)) {
 					if(key != 'price') {
-						$('<span/>', {
-							text: wine[key]
-						}).addClass(key).appendTo($td);
+						if(key == 'food') {
+							var foods = wine[key];
+							var $ul = $('<ul/>').addClass('food');
+
+							//sort foods
+							foods.sort(function(a, b){
+								return a.name.length - b.name.length;
+							});
+
+							foods.forEach(function(food) {
+								$ul.append($('<li/>', {
+									text: food.name
+								}));
+							});
+							$ul.appendTo($td);
+						} else {
+							$('<span/>', {
+								text: wine[key]
+							}).addClass(key).appendTo($td);
+						}
 					}
 				}
 			}

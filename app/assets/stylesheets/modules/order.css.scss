@@ -553,20 +553,23 @@
                             text-align: left;
                             margin-bottom: 80px;
 
-                            th {}
+                            th {
+                                padding: 5px 10px;
+                            }
 
-                            td {}
+                            td {
+                                padding: 10px;
+                            }
 
                             th, td {
-                                padding: 10px;
-                                border: 1px #333 solid;
+                                border: 1px #222 solid;
 
                                 .wine-bottle {
-                                    width: 15px;
-                                    height: 60px;
+                                    width: 44px;
+                                    height: 95px;
                                     float: left;
-                                    margin: 20px;
-                                    background-image: url(asset-path('wine/bottle15.png'));
+                                    margin: 10px 15px 10px 5px;
+                                    background-image: url("/dev-assets/wine/bottle15.png");
                                     background-size: 100%;
                                 }
 
@@ -574,7 +577,8 @@
                                     display: block;
 
                                     &.label {
-                                        font-size: 26px;
+                                        font-size: 22px;
+                                        margin-top: 7px;
                                     }
 
                                     &.quantity,
@@ -582,13 +586,19 @@
                                         display: none;
                                     }
 
-                                    &.food {
-                                        font-size: 1.6rem;
-                                        color: rgba(255,255,255,0.6);
-                                    }
-
                                     &.price {
                                         text-align: center;
+                                    }
+                                }
+
+                                .food {
+                                    margin: 0;
+                                    padding: 0;
+                                    list-style: none;
+
+                                    li {
+                                        font-size: 1.4rem;
+                                        color: rgba(255,255,255,0.6);
                                     }
                                 }
 
