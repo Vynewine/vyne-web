@@ -33,6 +33,7 @@ $(function() {
 
 	/* Header */
 
+	//Hamburger/menu icon animation classes
 	$('.menu-link').click(function(e) {
 		e.preventDefault();
 		$('.menu-link').toggleClass('slide');
@@ -40,14 +41,18 @@ $(function() {
 		$('.aside-bar').toggleClass('visible');
 	});
 
+	//Clicking the cart link takes you to the review page
 	$('.cart-link').click(function(e) {
 		e.preventDefault();
 		order.swipeTo(3, 500, false);
 	});
 
 
+
+
 	/* Walkthrough */
 
+	//Initialising the walkthrough slider
 	var mySwiper = $('#walkthrough').swiper({
 		mode: 'horizontal',
 		speed: 200,
@@ -58,6 +63,7 @@ $(function() {
 
 	/* Order */
 
+	//Initialising order slider
 	var order = $('#order').swiper({
 		mode: 'horizontal',
 		speed: 200,
@@ -72,12 +78,17 @@ $(function() {
         }
 	});
 
+	//A class for navigating to the next slide
 	$('.next-slide').click(function(e) {
 		e.preventDefault();
 		order.swipeNext();
 	});
 
-	/* Create breadcrumbs */
+
+
+
+	/* Beadcrumbs */
+
 	var $breadcrumbsContainer = $('<div/>').addClass('breadcrumbs-container');
 	var $breadcrumbs = $('<ul/>').addClass('breadcrumbs');
 	$breadcrumbsContainer.append($breadcrumbs);
@@ -87,7 +98,12 @@ $(function() {
 	});
 	$('.main-header').after($breadcrumbsContainer);
 
+
+
+
 	/* Availabilty */
+
+	//Get the postcode form the URL using query params
 	try {
 		$('#filterPostcode').val(getUrlVars()["postcode"].replace('+', ' '));
 	} catch(err) {
@@ -99,6 +115,7 @@ $(function() {
 
 	var wines = [];
 
+	//Object to store bottle details
 	var wine = function() {
 		this.id,
 		this.quantity = 0,
@@ -110,6 +127,7 @@ $(function() {
 		this.category = ''
 	}
 
+	//Object to store food details
 	var food = function(id, name) {
 		this.id = id,
 		this.name = name
@@ -118,8 +136,11 @@ $(function() {
 	var wineCount = 0;
 
 
+
+
 	/* Select a Bottle */
 
+	//Display more infomation about a bottle on click
 	$('.bottle-link').click(function(e) {
 		if(!$('.close').hasClass('hover')) {
 			$('.bottle-info').removeClass('active');
@@ -145,6 +166,7 @@ $(function() {
 		e.preventDefault();
 		$('.bottle-info').removeClass('active');
 
+		//Create a new wine object
 		wines[wineCount] = new wine();
 		wines[wineCount].quantity = 1;
 		wines[wineCount].label = $(this).parent().find('.label').text();
@@ -155,10 +177,14 @@ $(function() {
 		order.swipeNext();
 	});
 
+
+
+
 	/* Preferences */
 
 	var ingredientCount, cartCount = 0;
 
+	//Simple tab naviation
 	$('.tab-list li a').click(function(e) {
 		e.preventDefault();
 		console.log('clicked');
@@ -174,25 +200,46 @@ $(function() {
 		var id = $this.parent().attr('id');
 		var name = $this.parent().find('span').text();
 
-		if(!$this.parent().hasClass('selected')) {
-			wines[wineCount].food.push( new food( id, name ) );
+		if($this.attr('href') == '#preparation') {
+			parentid = $this.parent().attr('id');
+		}
 
-			$this.parent().addClass('selected');
+		if(!$this.parent().hasClass('selected')) {
+
+			if($this.closest('.tab').attr('id') == 'preparation') {
+				$img = $this.find('img').clone();
+				$('#food-'+parentid).after($img.addClass('food-prep').attr('id',parentid));
+			} else {
+
+				//Add the food to the wine object
+				wines[wineCount].food.push( new food( id, name ) );
+
+				//Add the food to our mini review bar at the bottom
+				$img = $this.find('img').clone();
+				$img.attr('id', 'food-'+id);
+				$empty = $('.prefs-overview-list .empty').first();
+				$empty.find('span').replaceWith($img);
+				$empty.removeClass('empty');
+
+				$this.parent().addClass('selected');
+
+			}
+
+			if($('.prefs-overview-list .empty').length == 0 && $this.attr('href') != '#preparation') $('.food-limit').show();
+
 			$this.closest('.tab').removeClass('active');
 			$('.select-category').text('Add another ingredient?');
 
-			$img = $this.find('img').clone();
-			$img.attr('id', 'food-'+id);
-			$empty = $('.prefs-overview-list .empty').first();
-			$empty.find('span').replaceWith($img);
-			$empty.removeClass('empty');
-
-			if($('.prefs-overview-list .empty').length == 0) $('.food-limit').show();
 		} else {
 			$this.parent().removeClass('selected');
 			$('#food-'+$this.parent().attr('id')).closest('li').addClass('empty')
 			$('#food-'+$this.parent().attr('id')).replaceWith('<span>+</span>');
 		}
+
+		if($this.closest('.prefs-list').attr('id') == "wine-list") {
+			$('.occasion-limit').show();
+		}
+
 	});
 
 	$(document).on('click', '.prefs-overview-list li a', function(e) {
@@ -205,7 +252,7 @@ $(function() {
 			$('#'+$foodid[1]).removeClass('selected');
 			$('.food-limit').hide();
 			$this.parent().addClass('empty');
-			$this.find('img').replaceWith('<span>+</span>');
+			$this.empty().append('<span>+</span>');
 		}
 	});
 
@@ -217,12 +264,13 @@ $(function() {
 			wines[wineCount].specificWine = $('input[name="specific-wine"]').val();
 		}
 
-		$('.order-table-bottle, .order-table-bottle-price').remove();
+		$('.no-bottles').hide();
+		$('.order-bottle').remove();
 
-		//loop though wines
+		//Creates some html for each to be displayed on the review page
 		wines.forEach(function(wine) {
 
-			var $td = $('<td>').addClass('order-table-bottle').append($('<a/>', { text: 'x' }).addClass('close')).append('<div class="wine-bottle"></div>');
+			var $td = $('<td>').attr('id','wine-'+wines.indexOf(wine)).addClass('order-table-bottle').append($('<a/>', { text: 'x' }).addClass('delete')).append('<div class="wine-bottle"></div>');
 
 			for (var key in wine) {
 				if (wine.hasOwnProperty(key)) {
@@ -231,7 +279,7 @@ $(function() {
 							var foods = wine[key];
 							var $ul = $('<ul/>').addClass('food');
 
-							//sort foods
+							//sort foods, for aesthetics
 							foods.sort(function(a, b){
 								return a.name.length - b.name.length;
 							});
@@ -253,9 +301,19 @@ $(function() {
 
 			var $pricetd = $('<td>').addClass('order-table-bottle-price').append($('<span/>', { text: wine['price'] }).addClass('price'));
 
-			$('.add-bottle').before($('<tr>').append($td).append($pricetd));
+			$('.add-bottle').before($('<tr>').addClass('order-bottle').append($td).append($pricetd));
+
+			//Reset prefs
+			$('.food-limit').hide();
+			$('.prefs-list li').removeClass('selected');
+			$('.prefs-overview-list li a img').replaceWith('<span>+</span>');
+			$('.prefs-overview-list li').removeClass('empty').addClass('empty');
 
 		});
+
+		if($('.order-bottle').length == 1) {
+			$('.add-bottle').show();
+		}
 
 		$('.cart-count').show().text(parseInt($('.cart-count').text()) + 1);
 
@@ -263,8 +321,27 @@ $(function() {
 
 	});
 
-	$(document).on('click', '.order-table .close', function(e) {
-		$(this).closest('tr').remove();
+	$(document).on('click', '.order-table .delete', function(e) {
+		$this = $(this);
+		$this.closest('tr').remove();
+
+		var wineid = $this.closest('td').attr('id').split('-')[1];
+
+		if(wineid > 0) {
+			wines.splice($this.closest('td').attr('id').split('-')[1]);
+		} else {
+			wines.shift();
+		}
+		
+		$('.cart-count').show().text(parseInt($('.cart-count').text()) - 1);
+		console.log(wines);
+
+		if(!$('.order-bottle').length) {
+			$('.no-bottles').show();
+			$('.add-bottle').hide();
+		} else if($('.order-bottle').length == 1) {
+			$('.add-bottle').show();
+		}
 	});
 
 	$('.add-bottle-link').click(function(e) {
@@ -274,7 +351,7 @@ $(function() {
 
 		wineCount++;
 
-		$(this).parent().hide();
+		$('.add-bottle').hide();
 
 	})
 
@@ -293,6 +370,9 @@ $(function() {
 			$('input[name="user[first_name]"], input[name="user[last_name]"], input[name="user[mobile]"], input[name="user[password_confirmation]"]').show();
 		}
 	});
+
+
+
 
 
 	/* Delivery Details */
@@ -401,6 +481,9 @@ $(function() {
 		}
 
 	});
+
+
+
 
 
 	/* Address Details */
