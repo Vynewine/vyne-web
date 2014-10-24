@@ -400,7 +400,8 @@
                             z-index: 4;
                         }
 
-                        .food-limit {
+                        .food-limit,
+                        .occasion-limit {
                             position: absolute;
                             top: 0;
                             left: 0;
@@ -550,6 +551,14 @@
                                             top: 10px;
                                             width: 65%;
                                             height: auto;
+
+                                            &.food-prep {
+                                                width: 55%;
+                                                top: -8px;
+                                                right: -22px;
+                                                padding: 5px;
+                                                background: black;
+                                            }
                                         }
 
                                         span {
@@ -591,7 +600,7 @@
                                 position: relative;
                                 border: 1px #222 solid;
 
-                                .close {
+                                .delete {
                                     position: absolute;
                                     top: 50%;
                                     left: -15px;
@@ -645,7 +654,8 @@
                                 }
                             }
 
-                            .add-bottle {
+                            .add-bottle,
+                            .no-bottles {
                                 text-align: center;
 
                                 td {
@@ -656,6 +666,10 @@
                                         margin-bottom: 1rem;
                                     }
                                 }
+                            }
+
+                            .no-bottles {
+                                display: none;
                             }
                         }
 

@@ -322,8 +322,8 @@ puts "Admin -------- OK"
               :name => "House",
              :price => 15,
   :restaurant_price => "20-40",
-       :description => "<p>Your entry-point to wine's best regions.</p><p>Problems from locations making far better wine than the mass production wines you'll find in supermarkets</p>",
-           :summary => "Entry-level to best wine regions"
+       :description => "<p>Producers with much higher quality than mass-production wines you'll find in supermarkets.</p>",
+           :summary => "Entry-point to best wine regions"
 )
 
 @reserve = Category.create(
@@ -331,7 +331,7 @@ puts "Admin -------- OK"
               :name => "Reserve",
              :price => 20,
   :restaurant_price => "40-55",
-       :description => "<p>Get introduced to producers from the most sought after locations of the world's best wine regions</p>",
+       :description => "<p>An introduction to producers from the most sought after locations in the world's best wine regions, with the most rigorous and premium production.</p>",
            :summary => "Premium production, best vineyards"
 )
 
@@ -340,8 +340,8 @@ puts "Admin -------- OK"
               :name => "Fine",
              :price => 30,
   :restaurant_price => "55-75",
-       :description => "<p>From the very best of the most cherished vineyards</p><p>Top producers with critically acclaimed wines</p><p>Discover clarity of flavours unique to the finest wines.</p>",
-           :summary => "Top producers, acclaimed locations"
+       :description => "<p>The most cherished  locations in wine, producing critically acclaimed wines. Discover clarity of flavours unique to the finest wines.</p>",
+           :summary => "Top producers from famed vineyards"
 )
 
 @cellar = Category.create(
@@ -350,7 +350,7 @@ puts "Admin -------- OK"
              :price => 50,
   :restaurant_price => "75-120",
        :description => "<p>The best producers from wine's most sacred vineyards</p><p>Cellar wines are chosen at the perfect age to fully experience greatness in winemaking</p>",
-           :summary => "Great vintages of top producers"
+           :summary => "Great vintages of the top producers"
 )
 
 puts "Categories --- OK"

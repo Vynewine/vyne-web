@@ -112,6 +112,7 @@
         </div>
 
         <div id="with-food" class="tab preferences-sub-panel">
+
           <div class="food-limit"></div>
           <h3 class="select-category">Select a category</h3>
           <div class="prefs-list-container cf">
@@ -136,14 +137,22 @@
           <% nallFood.each do |parentFood| %>
 
           <div id="<%= parentFood.name.gsub(/(((\s)&?)\s?)/, "_") %>" class="tab preferences-sub-sub-panel">
+            <% if parentFood.id == 4 %>
+            <h3>How was it prepared?</h3>
+            <% else %>
             <h3>What type of <%= parentFood.name %>?</h3>
+            <% end %>
             <div class="prefs-list-container">
-              <ul id="meat-list" class="prefs-list prefs-list-bottom">
+              <ul id="<%= parentFood.name %>-list" class="tab-list prefs-list prefs-list-bottom cf">
                 <% subFood = @foods.clone.to_a %>
                 <% subFood.keep_if {|f| f.parent==parentFood.id} %>
                 <% subFood.each do |food| %>
                 <li id="<%= food.id %>">
-                  <a href="">
+                  <% if [5,9,11,12,13,14,25,26,27,40,41].include? food.id %>
+                  <a href="#preparation">
+                  <% else %>
+                  <a href="#">
+                  <% end %>
                     <%= image_tag "icons/food/"+food.name.gsub(/(((\s)&?)\s?)/, "_")+".png", :alt => "image description" %>
                     <span><%= food.name %></span>
                   </a>
@@ -158,9 +167,10 @@
         </div>
 
         <div id="without-food" class="tab preferences-sub-panel">
+          <div class="occasion-limit"></div>
           <h3>Whats the occasion?</h3>
           <div class="prefs-list-container">
-            <ul id="occasion-list" class="prefs-list prefs-list-top">
+            <ul id="occasion-list" class="prefs-list prefs-list-top tab-list cf">
               <li>
                 <a href="#wine-type">
                   <%= image_tag "icons/food/solo.png", :alt => "image description" %>
@@ -295,6 +305,12 @@
           <tr>
             <th width="80%">Wine</th>
             <th width="20%">Price</th>
+          </tr>
+          <tr class="no-bottles">
+            <td colspan="2">
+              <span>No bottles :(</span>
+              <a href="" class="btn btn__small add-bottle-link">Add a bottle</a>
+            </td>
           </tr>
           <tr class="add-bottle">
             <td colspan="2">
