@@ -4,6 +4,8 @@ require 'net/http'
 require 'json'
 
 class Admin::AdvisorsController < ApplicationController
+  include ShutlHelper
+
   layout 'admin'
   before_action :authenticate_user!
   authorize_actions_for SupplierAuthorizer # Triggers user check
@@ -208,36 +210,6 @@ class Admin::AdvisorsController < ApplicationController
     )
   end
 
-  # Requests token:
-
-  def shutl_token
-    puts 'Requesting delivery token'
-
-    domain = Rails.application.config.shutl_url
-    shutl_id = Rails.application.config.shutl_id
-    shutl_secret = Rails.application.config.shutl_secret
-
-    url = URI("#{domain}/token")
-
-    params = {
-      :client_id => shutl_id,
-      :client_secret => shutl_secret,
-      :grant_type => 'client_credentials'
-    }
-
-    headers = {
-      'Content-Type' => 'application/x-www-form-urlencoded'
-    }
-
-    req_token = Net::HTTP::Post.new(url, headers)
-    req_token.form_data = params
-    connection = Net::HTTP::start(url.hostname, url.port, :use_ssl => true ) {|http|
-      http.request(req_token)
-    }
-
-    response = JSON.parse(connection.read_body)
-    response['access_token']
-  end
 
   # Requests quotes:
 
