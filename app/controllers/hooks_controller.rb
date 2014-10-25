@@ -1,19 +1,9 @@
 class HooksController < ApplicationController
   include ShutlHelper
+  protect_from_forgery :except => [:updateorder]
 
-  # JSON Payload
-  # Notes and comments
-  # {
-  #  "notification": {
-  #    "type": "booking_update",
-  #    "shutl_booking_reference": "SHUTL_BOOKING_REF",
-  #    "merchant_booking_reference": "MERCHANT_BOOKING_REFERENCE",
-  #    "uri": "https://api.shutl.co.uk/bookings/SHUTL_BOOKING_REF"
-  #  }
-  # }
   def updateorder
-
-    puts "***********************************"
+    puts 'Hook from Shuttle received with params: ' + params.to_s
     notification = params[:notification]
     if notification[:type] == "booking_update"
       uri = notification[:uri]
@@ -25,13 +15,10 @@ class HooksController < ApplicationController
       order = Order.find_by(:delivery_token => token)
       puts "Order id = #{order.id}"
       response = fetch_order_information(uri)
-      puts response
-      # order.delivery_status = response
+      order.delivery_status = response
+      order.save
+      render :text => 'OK'
     end
-    # puts JSON.parse(params.to_s)
-    # @order = JSON.parse(params[:notification])
-    # params[:]
-    # @order = Order.find(params[:id])
   end
 
   def index

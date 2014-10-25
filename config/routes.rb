@@ -31,7 +31,6 @@ Rails.application.routes.draw do
   # get 'orders/confirmed' => 'orders#confirmed'
 
   # Hooks:
-  get 'hooks/index'
   post 'hooks/updateorder'
 
 
@@ -110,6 +109,7 @@ Rails.application.routes.draw do
     resources :statuses
     # resources :advisors
     resources :inventories
+    resources :delivery
     post '/orders/list' => 'orders#list'
     get 'advise/index' => 'advisors#index'
     get 'advise/choose' => 'advisors#choose'

@@ -614,6 +614,27 @@ var adminReady = function() {
 
         $('#confirm').click(confirm);
 
+        var refreshDelivery = $('#refresh-delivery');
+
+        refreshDelivery.click(function(){
+            var orderId = refreshDelivery.data('id');
+
+            $.ajax({
+                type: "PUT",
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('X-CSRF-Token', token)
+                },
+                url: '/admin/delivery/' + orderId,
+                success: function(data) {
+                    location.reload();
+                },
+                error: function(err) {
+                    console.log(err);
+                }
+            });
+
+        })
+
     }
 };
 

@@ -119,7 +119,7 @@
   <tbody>
     <tr>
       <td>
-        <% if !(@order.order_items.map { |item| item.wine}).include?(nil) &&  @order == 1%>
+        <% if !(@order.order_items.map { |item| item.wine}).include?(nil) %>
             <form action="/admin/advise/choose" method="post">
               <input type="hidden" name="order" value="<%= @order.id %>"/>
               <input type="hidden" id="warehouse-id" name="warehouse-id"/>
@@ -148,8 +148,8 @@
 <% if !@order.delivery_status.nil? %>
 
     <p>
-      <strong>Delivery information:</strong>
-    <pre><%= @order.delivery_status_json
+      <strong>Delivery information: <a href="#" id="refresh-delivery" data-id="<%= @order.id %>">Refresh</a></strong>
+    <pre id="delivery-status"><%= @order.delivery_status_json
              .gsub(/["|\\]/, "")
              .gsub(/[ ]*\{/, "\{<br /> ")
              .gsub(/\[/, "\[<br /> ")
