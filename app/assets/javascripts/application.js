@@ -277,7 +277,7 @@ $(function() {
 		//Creates some html for each to be displayed on the review page
 		wines.forEach(function(wine) {
 
-			var $td = $('<td>').attr('id','wine-'+wines.indexOf(wine)).addClass('order-table-bottle').append($('<a/>', { text: 'x' }).addClass('delete')).append('<div class="wine-bottle"></div>');
+			var $td = $('<td>').attr('id','wine-'+wines.indexOf(wine)).addClass('order-table-bottle').append($('<a/>', { href: '#', text: 'x' }).addClass('delete')).append('<div class="wine-bottle"></div>');
 
 			for (var key in wine) {
 				if (wine.hasOwnProperty(key)) {

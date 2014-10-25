@@ -207,7 +207,7 @@
                                     background-image: url(asset-path('select/housebg1.jpg'));
                                     background-size: 100% auto;
                                     background-position: top center;
-                                    backgroudn-repeat: no-repeat;
+                                    background-repeat: no-repeat;
                                     -webkit-mask-image: -webkit-gradient(linear, left top, left 50%, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
                                 }
 
@@ -606,6 +606,7 @@
                                     position: absolute;
                                     top: 50%;
                                     left: -15px;
+                                    z-index: 99;
                                     line-height: 1;
                                     display: block;
                                     width: 28px;
