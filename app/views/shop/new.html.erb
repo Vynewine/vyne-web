@@ -171,108 +171,28 @@
           <h3>Whats the occasion?</h3>
           <div class="prefs-list-container">
             <ul id="occasion-list" class="prefs-list prefs-list-top tab-list cf">
-              <li>
+              <% @occasions.each do |occasion| %>
+              <li id="occasion-<%= occasion.id %>">
                 <a href="#wine-type">
-                  <%= image_tag "icons/food/solo.png", :alt => "image description" %>
-                  <span>Solo</span>
+                  <%= image_tag "icons/food/"+occasion.name.gsub(/(((\s)&?)\s?)/, "_").downcase+".png", :alt => "image description" %>
+                  <span><%= occasion.name %></span>
                 </a>
               </li>
-              <li>
-                <a href="#wine-type">
-                  <%= image_tag "icons/food/with_friends.png", :alt => "image description" %>
-                  <span>With friends</span>
-                </a>
-              </li>
-              <li>
-                <a href="#wine-type">
-                  <%= image_tag "icons/food/party.png", :alt => "image description" %>
-                  <span>Party</span>
-                </a>
-              </li>
-              <li>
-                <a href="#wine-type">
-                  <%= image_tag "icons/food/date.png", :alt => "image description" %>
-                  <span>Date</span>
-                </a>
-              </li>
-              <li>
-                <a href="#wine-type">
-                  <%= image_tag "icons/food/dining.png", :alt => "image description" %>
-                  <span>Dining</span>
-                </a>
-              </li>
-              <li>
-                <a href="#wine-type">
-                  <%= image_tag "icons/food/outdoors.png", :alt => "image description" %>
-                  <span>Outdoors</span>
-                </a>
-              </li>
-              <li>
-                <a href="#wine-type">
-                  <%= image_tag "icons/food/gift.png", :alt => "image description" %>
-                  <span>Gift</span>
-                </a>
-              </li>
+              <% end %>
             </ul>
 
             <div id="wine-type" class="tab preferences-sub-sub-panel">
               <h3>2. What type of Wine would you like?</h3>
               <div class="prefs-list-container">
-                <ul id="wine-list" class="prefs-list prefs-list-bottom">
-                  <li>
+                <ul id="wine-list" class="prefs-list prefs-list-bottom cf">
+                  <% @types.each do |type| %>
+                  <li id="winetype-<%= type.id %>">
                     <a href="">
-                      <%= image_tag "icons/wine/bold_red.png", :alt => "image description" %>
-                      <span>Bold red</span>
+                      <%= image_tag "icons/wine/"+type.name.gsub(/(((\s)&?)\s?)/, "_").downcase+".png", :alt => "image description" %>
+                      <span><%= type.name %></span>
                     </a>
                   </li>
-                  <li>
-                    <a href="">
-                      <%= image_tag "icons/wine/medium_red.png", :alt => "image description" %>
-                      <span>Medium red</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="">
-                      <%= image_tag "icons/wine/light_red.png", :alt => "image description" %>
-                      <span>Light red</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="">
-                      <%= image_tag "icons/wine/rosé.png", :alt => "image description" %>
-                      <span>Rosé</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="">
-                      <%= image_tag "icons/wine/rich_white.png", :alt => "image description" %>
-                      <span>Rich white</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="">
-                      <%= image_tag "icons/wine/dry_white.png", :alt => "image description" %>
-                      <span>Dry white</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="">
-                      <%= image_tag "icons/wine/sparkling.png", :alt => "image description" %>
-                      <span>Sparkling</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="">
-                      <%= image_tag "icons/wine/sweet_white.png", :alt => "image description" %>
-                      <span>Sweet white</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="">
-                      <%= image_tag "icons/wine/fortified.png", :alt => "image description" %>
-                      <span>Fortified</span>
-                    </a>
-                  </li>
+                  <% end %>
                 </ul>
               </div>
             </div>
@@ -289,6 +209,8 @@
             <a href="#" id="select-preferences" class="btn btn__full-width next-slide">Checkout</a>
           </div>
         </div>
+
+        <input type="hidden" name="wines" />
 
       </div>
     </div>

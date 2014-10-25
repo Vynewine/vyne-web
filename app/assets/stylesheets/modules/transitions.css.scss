@@ -12,7 +12,7 @@
     }
 
     &.menu-visible {
-        transform: translateX(100px);
+        @include translate(100px, 0);
         @include transition(all, $fast, ease);
 
         .logo {
@@ -22,8 +22,8 @@
 
         .main-content {
             opacity: 0.5;
-            transform: scale(0.9);
             filter: grayscale(50%);
+            @include scale(0.9);
             @include transition(all, $fast, ease);
         }
     }
@@ -45,12 +45,12 @@
     }
 
     &.slide {
-        transform: translateX(100px);
+        @include translate(100px, 0);
         @include transition(all, $fast, cubic-bezier(0.8, 0, 0, 0.8));
 
         .top {
-            transform: rotate(45deg);
-            transform-origin: 0 0;
+            @include rotate(45);
+            @include transform-origin(0 0);
             @include transition(all, $fast, cubic-bezier(0.8, 0, 0, 0.8));
         }
 
@@ -60,8 +60,8 @@
         }
 
         .bottom {
-            transform: rotate(-45deg);
-            transform-origin: 0 100%;
+            @include rotate(-45);
+            @include transform-origin(0 100%);
             @include transition(all, $fast, cubic-bezier(0.8, 0, 0, 0.8));
         }
     }
@@ -71,7 +71,7 @@
     @include transition(all, $fast, cubic-bezier(0.8,0,0,0.8));
 
     &.visible {
-        transform: translateX(100px);
+        @include translate(100px, 0);
         @include transition(all, $fast, cubic-bezier(0.8,0,0,0.8));
     }
 }

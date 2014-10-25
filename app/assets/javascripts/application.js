@@ -31,6 +31,12 @@ var ready = function() {
 
 $(function() {
 
+	/* iOS Check */
+	var iOS = ( navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false );
+	if(iOS) {
+		$('.prefs-overview, .btn-checkout').addClass('ios');
+	}
+
 	/* Header */
 
 	//Hamburger/menu icon animation classes
@@ -119,12 +125,12 @@ $(function() {
 	var wine = function() {
 		this.id,
 		this.quantity = 0,
+		this.category = 0,
 		this.label = '',
 		this.price = '',
 		this.specificWine = '',
 		this.food = [],
-		this.occasion = [],
-		this.category = ''
+		this.occasion = []
 	}
 
 	//Object to store food details
@@ -171,7 +177,7 @@ $(function() {
 		wines[wineCount].quantity = 1;
 		wines[wineCount].label = $(this).parent().find('.label').text();
 		wines[wineCount].price = $(this).parent().find('.price').text();
-		wines[wineCount].category = $(this).parent().data('category-id');
+		wines[wineCount].category = $(this).closest('.bottle-info').data('category-id');
 		console.log(wines);
 
 		order.swipeNext();
@@ -233,7 +239,7 @@ $(function() {
 		} else {
 			$this.parent().removeClass('selected');
 			$('#food-'+$this.parent().attr('id')).closest('li').addClass('empty')
-			$('#food-'+$this.parent().attr('id')).replaceWith('<span>+</span>');
+			$('#food-'+$this.parent().attr('id')).empty().append('<span>+</span>');
 		}
 
 		if($this.closest('.prefs-list').attr('id') == "wine-list") {
@@ -259,6 +265,7 @@ $(function() {
 	$('#select-preferences').click(function(e) {
 
 		console.log(wines);
+		$('input[name="wines"]').val( JSON.stringify(wines) );
 
 		if($('input[name="specific-wine"]').val() != '') {
 			wines[wineCount].specificWine = $('input[name="specific-wine"]').val();
@@ -306,7 +313,7 @@ $(function() {
 			//Reset prefs
 			$('.food-limit').hide();
 			$('.prefs-list li').removeClass('selected');
-			$('.prefs-overview-list li a img').replaceWith('<span>+</span>');
+			$('.prefs-overview-list li a').empty().append('<span>+</span>');;
 			$('.prefs-overview-list li').removeClass('empty').addClass('empty');
 
 		});
