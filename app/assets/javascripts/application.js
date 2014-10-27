@@ -324,7 +324,8 @@ $(function() {
 			$('.add-bottle').before($('<tr>').addClass('order-bottle').append($td).append($pricetd));
 
 			//Reset prefs
-			$('.food-limit, .occasion-limit').hide();
+			$('.tab').removeClass('active');
+			$('.prefs-overview, .food-limit, .occasion-limit').hide();
 			$('.prefs-list li').removeClass('selected');
 			$('.prefs-overview-list li a').empty().append('<span>+</span>');;
 			$('.prefs-overview-list li').removeClass('empty').addClass('empty');
