@@ -627,6 +627,18 @@
                                     background-size: 100%;
                                 }
 
+                                &.wine-bottle-20 .wine-bottle {
+                                    background-image: url("/dev-assets/wine/bottle20.png");
+                                }
+
+                                &.wine-bottle-30 .wine-bottle {
+                                    background-image: url("/dev-assets/wine/bottle30.png");
+                                }
+
+                                &.wine-bottle-50 .wine-bottle {
+                                    background-image: url("/dev-assets/wine/bottle50.png");
+                                }
+
                                 del {
                                     font-size: 1.4rem;
                                     color: rgba(255,255,255,0.5);
