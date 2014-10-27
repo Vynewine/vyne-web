@@ -21,19 +21,32 @@
 
     <%# ============================ Address check ============================ %>
 
-    <div id="postcode-panel" class="order-panel swiper-slide noSwipingClass">
+    <div id="postcode-panel" class="order-panel swiper-slide noSwipingClass" data-hash="postcode">
       <div class="order-panel-content wrapper">
-        <h2 class="title">Availability</h2>
-        <p>We need to check if the wine is available to deliver in your area</p>
-        <input type="text" id="filterPostcode" placeholder="Enter postcode" autocomplete="off"/>
-        <span id="filterPostcodeMessage" class="message"></span>
-        <a href="" id="use-postcode" class="btn next-slide">Choose wine</a>
-        <div class="not-available">
-          <h3>Not available in your area</h3>
-          <p>We're expanding the service throughtout London in the coming weeks.</p>
-          <p>As a thank you for waiting, we'll give you a free bottle with your first order, when we we're available in your postcode.</p>
-          <input type="email" name="email" placeholder="jon@snow.com" />
-          <input type="submit" value="Let me know"/>
+        <div class="slideable">
+          <h2 class="title">Availability</h2>
+          <p>We need to check if the wine is available to deliver in your area</p>
+          <input type="text" id="filterPostcode" placeholder="Enter postcode" autocomplete="off"/>
+          <div class="opening-times">
+            <span>Opening hours:</span>
+            <span>12:00 - 20:15</span>
+          </div>
+          <span id="filterPostcodeMessage" class="message"></span>
+          <a href="" id="use-postcode" class="btn next-slide">Choose wine</a>
+          <div class="not-available">
+            <div class="outside">
+              <h3>Not available in your area</h3>
+              <p>We're expanding the service throughtout London in the coming weeks.</p>
+              <p>As a thank you for waiting, we'll give you a free bottle with your first order, when we we're available in your postcode.</p>
+            </div>
+            <div class="closed">
+              <h3>Closed but in area</h3>
+              <p>Our cellars are currently closed in your area, come back between 12:00 - 20:15 daily.</p>
+              <p>We're working hard to extend the service in the coming weeks.</p>
+            </div>
+            <input type="email" name="email" placeholder="jon@snow.com" />
+            <input type="submit" value="Let me know"/>
+          </div>
         </div>
       </div>
 
@@ -45,7 +58,7 @@
 
     <%# ============================= Select Bottle ============================= %>
 
-    <div id="bottles-panel" class="order-panel swiper-slide noSwipingClass">
+    <div id="bottles-panel" class="order-panel swiper-slide noSwipingClass" data-hash="bottles">
       <div class="order-panel-content wrapper wrapper-large">
 
         <h2>Select your bottle</h2>
@@ -90,7 +103,7 @@
 
     <%# ============================= Preferences ============================= %>
 
-    <div id="preferences-panel" class="step order-panel swiper-slide noSwipingClass">
+    <div id="preferences-panel" class="step order-panel swiper-slide noSwipingClass" data-hash="preferences">
       <div class="order-panel-content wrapper wrapper-large">
 
         <div id="matching-wine" class="preferences-sub-panel active">
@@ -218,7 +231,7 @@
 
     <%# =============================== Review =============================== %>
 
-    <div id="review-panel" class="step order-panel swiper-slide noSwipingClass">
+    <div id="review-panel" class="step order-panel swiper-slide noSwipingClass" data-hash="review">
       <div class="order-panel-content wrapper wrapper-large">
         <h2>Review order</h2>
         <p>We need to check if the wine is available to deliver in your area</p>
@@ -261,7 +274,7 @@
 
     <% unless user_signed_in? %>
 
-    <div id="register-panel" class="step order-panel swiper-slide noSwipingClass">
+    <div id="register-panel" class="step order-panel swiper-slide noSwipingClass" data-hash="register">
       <div class="order-panel-content wrapper wrapper-large">
         <div id="account-form" class="register-form">
           <h2 class="account-heading">Register</h2>
@@ -314,7 +327,7 @@
 
     <%# ========================== Address selection ========================== %>
 
-    <div id="delivery-panel" class="step order-panel swiper-slide noSwipingClass">
+    <div id="delivery-panel" class="step order-panel swiper-slide noSwipingClass" data-hash="delivery">
       <div class="order-panel-content wrapper wrapper-large">
         <h2>Delivery address</h2>
 
@@ -356,7 +369,7 @@
 
     <%# ========================== Payment ========================== %>
 
-    <div id="payment-panel" class="step order-panel swiper-slide noSwipingClass">
+    <div id="payment-panel" class="step order-panel swiper-slide noSwipingClass" data-hash="payment">
       <div class="order-panel-content wrapper wrapper-large">
         <h2>Link Payment</h2>
           <%

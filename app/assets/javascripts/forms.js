@@ -186,70 +186,84 @@ $(document).ready(function(){
                 // console.log('callback 1', deliverable);
                 if (delivery.available) {
 
-                    $slideable.removeClass('slide-up');
+                    var currentHour = new Date().getHours();
 
-                    $notavailable.hide();
+                    if(currentHour > 12 && currentHour < 20) {
 
-                    $feedback.css({ 'display': 'block '});
-                    $('#use-postcode').css({ 'display': 'inline-block '});
+                        $slideable.removeClass('slideup');
 
-                    $feedback.removeClass('error');
-                    $feedback.html("VYNZ delivers to this area.");
+                        $notavailable.hide();
+                        $('.opening-times').hide();
 
-                    $('#warehouses').val('{"warehouses":' + JSON.stringify(delivery.warehouses) + '}');
+                        $feedback.css({ 'display': 'block '});
+                        $('#use-postcode').css({ 'display': 'inline-block '});
 
-                    // Google API cannot find the street name based on the postcode!
-                    // This is why we must first find the damn longitude and latitude first.
-                    // So this is a 2-step process, don't be alarmed.
+                        $feedback.removeClass('error');
+                        $feedback.html("VYNZ delivers to this area.");
 
-                    /**
-                     * Callback for when the coordinates are returned from Google.
-                     * This will request a geocode lookup to fetch the address.
-                     */
-                    var successCallback = function(coordinates) {
-                        // console.log('okie', coordinates.lng, coordinates.lat);
+                        $('#warehouses').val('{"warehouses":' + JSON.stringify(delivery.warehouses) + '}');
 
-                        var geocoder = new google.maps.Geocoder();
-                        var latlng = new google.maps.LatLng(coordinates.lat, coordinates.lng);
-                        
+                        // Google API cannot find the street name based on the postcode!
+                        // This is why we must first find the damn longitude and latitude first.
+                        // So this is a 2-step process, don't be alarmed.
+
                         /**
-                         * Formats readable address and updates interface.
+                         * Callback for when the coordinates are returned from Google.
+                         * This will request a geocode lookup to fetch the address.
                          */
-                        var successAddressCallback = function(results, status) {
-                            if (status == google.maps.GeocoderStatus.OK) {
-                                // console.log(results[0].formatted_address);
-                                var fullAddress = results[0].formatted_address;
-                                var simpleAddress = fullAddress.split(',')[0];
-                                var street = simpleAddress.replace(/[\d]+\s/, "");
-                                var detail = simpleAddress.match(/[\d]+/)[0];
-                                $street.removeAttr('disabled');
-                                $detail.removeAttr('disabled');
-                            } else {
-                                console.error("Geocode was not successful for the following reason: " + status);
-                            }
+                        var successCallback = function(coordinates) {
+                            // console.log('okie', coordinates.lng, coordinates.lat);
+
+                            var geocoder = new google.maps.Geocoder();
+                            var latlng = new google.maps.LatLng(coordinates.lat, coordinates.lng);
+                            
+                            /**
+                             * Formats readable address and updates interface.
+                             */
+                            var successAddressCallback = function(results, status) {
+                                if (status == google.maps.GeocoderStatus.OK) {
+                                    // console.log(results[0].formatted_address);
+                                    var fullAddress = results[0].formatted_address;
+                                    var simpleAddress = fullAddress.split(',')[0];
+                                    var street = simpleAddress.replace(/[\d]+\s/, "");
+                                    var detail = simpleAddress.match(/[\d]+/)[0];
+                                    $street.removeAttr('disabled');
+                                    $detail.removeAttr('disabled');
+                                } else {
+                                    console.error("Geocode was not successful for the following reason: " + status);
+                                }
+                            };
+
+                            // Address lookup:
+                            geocoder.geocode( { 'latLng': latlng}, successAddressCallback);
                         };
 
-                        // Address lookup:
-                        geocoder.geocode( { 'latLng': latlng}, successAddressCallback);
-                    };
+                        /**
+                         * Error callback method for the coordinates lookup.
+                         * The postcode is already considered to be "deliverable", so it enables the fields anyway.
+                         */
+                        var errorCallback = function() {
+                            console.error('Could not find coordinates for this postcode!');
+                            $street.removeAttr('disabled');
+                            $detail.removeAttr('disabled');
+                            $feedback.html("Unknown address, please try again.");
+                        };
 
-                    /**
-                     * Error callback method for the coordinates lookup.
-                     * The postcode is already considered to be "deliverable", so it enables the fields anyway.
-                     */
-                    var errorCallback = function() {
-                        console.error('Could not find coordinates for this postcode!');
-                        $street.removeAttr('disabled');
-                        $detail.removeAttr('disabled');
-                        $feedback.html("Unknown address, please try again.");
-                    };
-
-                    // Coordinates lookup:
-                    mapUtil.findCoordinatesAndExecute(postcode, successCallback, errorCallback);
+                        // Coordinates lookup:
+                        mapUtil.findCoordinatesAndExecute(postcode, successCallback, errorCallback);
+                    } else {
+                        $slideable.addClass('slideup');
+                        $('.opening-times').hide();
+                        $notavailable.show();
+                        $('.closed').show();
+                        $('.outside').hide();
+                    }
 
                 } else {
-                    $slideable.addClass('slide-up');
+                    $slideable.addClass('slideup');
                     $notavailable.show();
+                    $('.outside').show();
+                    $('.closed').hide();
                     $feedback.hide().addClass('error');
                     $feedback.html("VYNZ does NOT deliver to this area!");
                     $('#use-postcode').css({ 'display': 'none'});

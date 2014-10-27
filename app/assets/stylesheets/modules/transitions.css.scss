@@ -22,8 +22,6 @@
 
         .main-content {
             opacity: 0.5;
-            filter: grayscale(50%);
-            @include scale(0.9);
             @include transition(all, $fast, ease);
         }
     }

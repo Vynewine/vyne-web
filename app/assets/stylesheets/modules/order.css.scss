@@ -76,8 +76,18 @@
                 &#postcode-panel {
 
                     .order-panel-content {
-                        padding: 120px 0 0 0;
+                        padding: 110px 0 0 0;
                         text-align: center;
+
+                        .slideable {
+                            @include translate(0, 0);
+                            @include transition(all, $fast, cubic-bezier(0.8, 0, 0, 0.8));
+
+                            &.slideup {
+                                @include translate(0, -170px);
+                                @include transition(all, $fast, cubic-bezier(0.8, 0, 0, 0.8));
+                            }
+                        }
 
                         input {
                             text-align: center;
@@ -88,6 +98,10 @@
                             margin-bottom: 40px;
                             border-radius: 0 0 5px 5px;
                             background: rgba(0,0,0,0.5);
+
+                            .outside, .closed {
+                                display: none;
+                            }
 
                             h3 {
                                 margin: 0;
@@ -123,6 +137,25 @@
 
                             &.error {
                                 background: rgba(163,36,56,0.8);
+                            }
+                        }
+
+                        .opening-times {
+                            margin: 2rem 0 0;
+                            padding: 1rem;
+                            border-radius: 3px;
+                            border: 1px rgba(255,255,255,0.1) solid;
+
+                            span {
+                                font-size: 1.3rem;
+                                display: block;
+                                color: rgba(255, 255, 255, 0.3);
+
+                                &:last-child {
+                                    color: white;
+                                    font-size: 1.6rem;
+                                    color: rgba(255, 255, 255, 0.8);
+                                }
                             }
                         }
 
@@ -208,7 +241,7 @@
                                     background-size: cover;
                                     background-position: top center;
                                     background-repeat: no-repeat;
-                                    -webkit-mask-image: -webkit-gradient(linear, left top, left 100%, from(rgba(0,0,0,1)), to(rgba(0,0,0,0.05)));
+                                    -webkit-mask-image: -webkit-linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.1) 60%);
                                 }
 
                                 .bottle-info-content {

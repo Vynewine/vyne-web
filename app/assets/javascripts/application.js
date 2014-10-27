@@ -17,7 +17,7 @@
 //= require forms
 //= require vendor/maskedinput
 //= require vendor/swiper_min
-//= require vendor/custom-select-plugin
+//= require vendor/idangerous.swiper.hashnav
 
 var ready = function() {
     // console.log('Doc is apparently ready');
@@ -80,6 +80,7 @@ $(function() {
 	var order = $('#order').swiper({
 		mode: 'horizontal',
 		speed: 200,
+		hashNav: true,
 		noSwiping: true,
 		simulateTouch: false,
 		onlyExternal: true,
@@ -90,6 +91,14 @@ $(function() {
             }
         }
 	});
+
+	/*$(window).on('hashchange', function() {
+		order.slides.forEach(function(slide) {
+			if(slide.id == (window.location.hash+'-panel').substr(1)) {
+				order.swipeTo(order.slides.indexOf(slide), 200, false);
+			}
+		});
+	});*/
 
 	//A class for navigating to the next slide
 	$('.next-slide').click(function(e) {
