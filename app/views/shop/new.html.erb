@@ -116,7 +116,7 @@
           <div class="food-limit"></div>
           <h3 class="select-category">Select a category</h3>
           <div class="prefs-list-container cf">
-            <ul id="food-list" class="tab-list prefs-list prefs-list-top">
+            <ul id="food-list" class="tab-list prefs-list prefs-list-top cf">
             <% allFood = @foods.clone.to_a %>
             <% allFood.keep_if {|f| f.parent==0} %>
             <% allFood.each do |parentFood| %>
@@ -240,9 +240,19 @@
               <a href="" class="btn btn__small add-bottle-link">Add another bottle</a>
             </td>
           </tr>
+          <tr class="total">
+            <td>Total:</td>
+            <td class="total-cost">
+              <span>£20</span>
+            </td>
+          </tr>
         </table>
 
-        <a href="" id="checkout" class="next-slide btn-checkout">Checkout</a>
+        <div class="btn-checkout">
+          <div class="wrapper wrapper-large">
+            <a href="" id="checkout" class="next-slide btn btn__full-width">Checkout</a>
+          </div>
+        </div>
 
       </div>
     </div>
