@@ -25,6 +25,8 @@ module Vynz
       config.assets.paths << path
     end
 
+    config.autoload_paths << Rails.root.join('lib')
+
   end
 end
 # If you are deploying on Heroku with Rails 3.2 only, you may want to set:

@@ -1,4 +1,3 @@
 class Composition < ActiveRecord::Base
-  belongs_to :grape
-  belongs_to :wine
+  has_many :composition_grapes
 end

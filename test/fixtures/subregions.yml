@@ -7,3 +7,15 @@ one:
 two:
   name: 'Subregion Two'
   region_id: two
+
+three:
+  name: 'Côte de Nuits'
+  region_id: two
+
+four:
+  name: 'Gavi'
+  region_id: two
+
+five:
+  name: 'St-Chinain'
+  region_id: two

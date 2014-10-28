@@ -67,3 +67,6 @@ gem 'sunspot_solr' # optional pre-packaged Solr distribution for use in developm
 
 # Mandrill API
 gem 'mandrill-api'
+
+#Process CSV and XLS files
+gem 'roo', '~> 1.13.2'

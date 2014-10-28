@@ -1,0 +1,9 @@
+one:
+  composition: one
+  grape: one
+  percentage: 50
+
+two:
+  composition: one
+  grape: two
+  percentage: 50

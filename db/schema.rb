@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141017152801) do
+ActiveRecord::Schema.define(version: 20141025112900) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,8 @@ ActiveRecord::Schema.define(version: 20141017152801) do
 
   create_table "appellations", force: true do |t|
     t.string   "name"
+    t.string   "classification"
+    t.integer  "region_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -89,16 +91,22 @@ ActiveRecord::Schema.define(version: 20141017152801) do
     t.datetime "updated_at"
   end
 
-  create_table "compositions", force: true do |t|
+  create_table "composition_grapes", force: true do |t|
+    t.integer  "composition_id"
     t.integer  "grape_id"
-    t.integer  "wine_id"
-    t.integer  "quantity"
+    t.integer  "percentage"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "compositions", ["grape_id"], name: "index_compositions_on_grape_id", using: :btree
-  add_index "compositions", ["wine_id"], name: "index_compositions_on_wine_id", using: :btree
+  add_index "composition_grapes", ["composition_id"], name: "index_composition_grapes_on_composition_id", using: :btree
+  add_index "composition_grapes", ["grape_id"], name: "index_composition_grapes_on_grape_id", using: :btree
+
+  create_table "compositions", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "countries", force: true do |t|
     t.string   "name"
@@ -147,6 +155,7 @@ ActiveRecord::Schema.define(version: 20141017152801) do
     t.integer  "category_id"
     t.decimal  "cost"
     t.integer  "quantity"
+    t.string   "vendor_sku"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -155,30 +164,24 @@ ActiveRecord::Schema.define(version: 20141017152801) do
   add_index "inventories", ["warehouse_id"], name: "index_inventories_on_warehouse_id", using: :btree
   add_index "inventories", ["wine_id"], name: "index_inventories_on_wine_id", using: :btree
 
+  create_table "locales", force: true do |t|
+    t.string   "name"
+    t.integer  "subregion_id"
+    t.text     "note"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "locales", ["subregion_id"], name: "index_locales_on_subregion_id", using: :btree
+
   create_table "maturations", force: true do |t|
     t.integer  "bottling_id"
-    t.integer  "period"
+    t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "maturations", ["bottling_id"], name: "index_maturations_on_bottling_id", using: :btree
-
-  create_table "notes", force: true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "notes_wines", id: false, force: true do |t|
-    t.integer  "note_id",    null: false
-    t.integer  "wine_id",    null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "notes_wines", ["note_id"], name: "index_notes_wines_on_note_id", using: :btree
-  add_index "notes_wines", ["wine_id"], name: "index_notes_wines_on_wine_id", using: :btree
 
   create_table "occasions", force: true do |t|
     t.string   "name"
@@ -251,6 +254,7 @@ ActiveRecord::Schema.define(version: 20141017152801) do
   create_table "producers", force: true do |t|
     t.string   "name"
     t.integer  "country_id"
+    t.text     "note"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -298,16 +302,6 @@ ActiveRecord::Schema.define(version: 20141017152801) do
     t.datetime "updated_at"
   end
 
-  create_table "types_wines", id: false, force: true do |t|
-    t.integer  "type_id",    null: false
-    t.integer  "wine_id",    null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "types_wines", ["type_id"], name: "index_types_wines_on_type_id", using: :btree
-  add_index "types_wines", ["wine_id"], name: "index_types_wines_on_wine_id", using: :btree
-
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -340,6 +334,13 @@ ActiveRecord::Schema.define(version: 20141017152801) do
 
   add_index "users_roles", ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id", using: :btree
 
+  create_table "vinifications", force: true do |t|
+    t.text     "description"
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "warehouses", force: true do |t|
     t.string   "title"
     t.string   "email",      default: "", null: false
@@ -354,28 +355,36 @@ ActiveRecord::Schema.define(version: 20141017152801) do
 
   create_table "wines", force: true do |t|
     t.string   "name"
+    t.string   "wine_key"
     t.integer  "vintage"
-    t.string   "area"
     t.boolean  "single_estate"
-    t.integer  "alcohol"
-    t.integer  "sugar"
-    t.integer  "acidity"
-    t.integer  "ph"
-    t.boolean  "vegan"
-    t.boolean  "organic"
+    t.decimal  "alcohol"
     t.integer  "producer_id"
+    t.integer  "region_id"
     t.integer  "subregion_id"
+    t.integer  "locale_id"
     t.integer  "appellation_id"
     t.integer  "maturation_id"
+    t.integer  "type_id"
+    t.integer  "vinification_id"
+    t.integer  "composition_id"
+    t.text     "note"
+    t.decimal  "bottle_size"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "wines", ["appellation_id"], name: "index_wines_on_appellation_id", using: :btree
+  add_index "wines", ["composition_id"], name: "index_wines_on_composition_id", using: :btree
+  add_index "wines", ["locale_id"], name: "index_wines_on_locale_id", using: :btree
   add_index "wines", ["maturation_id"], name: "index_wines_on_maturation_id", using: :btree
   add_index "wines", ["name"], name: "index_wines_on_name", using: :btree
   add_index "wines", ["producer_id"], name: "index_wines_on_producer_id", using: :btree
+  add_index "wines", ["region_id"], name: "index_wines_on_region_id", using: :btree
   add_index "wines", ["subregion_id"], name: "index_wines_on_subregion_id", using: :btree
+  add_index "wines", ["type_id"], name: "index_wines_on_type_id", using: :btree
+  add_index "wines", ["vinification_id"], name: "index_wines_on_vinification_id", using: :btree
   add_index "wines", ["vintage"], name: "index_wines_on_vintage", using: :btree
+  add_index "wines", ["wine_key"], name: "index_wines_on_wine_key", unique: true, using: :btree
 
 end
