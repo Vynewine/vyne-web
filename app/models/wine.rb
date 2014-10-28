@@ -2,15 +2,18 @@ class Wine < ActiveRecord::Base
 
   belongs_to :producer
   belongs_to :subregion
-  belongs_to :appellation
   belongs_to :maturation
   belongs_to :order_item
+  belongs_to :type
+  belongs_to :vinification
+  belongs_to :region
+  belongs_to :locale
+  belongs_to :appellation
+  belongs_to :composition
 
-  has_and_belongs_to_many :types
   # has_and_belongs_to_many :grapes
   has_and_belongs_to_many :occasions
   has_and_belongs_to_many :foods
-  has_and_belongs_to_many :notes
   has_and_belongs_to_many :allergies
 
   attr_accessor :occasion_tokens
@@ -27,14 +30,14 @@ class Wine < ActiveRecord::Base
     self.note_ids = ids.split(",")
   end
 
-  has_many :compositions
-  has_many :grapes, through: :compositions
-  accepts_nested_attributes_for :compositions
+
+  #has_many :grapes, through: :compositions:composition_grapes
+  #accepts_nested_attributes_for :compositions
 
   has_many :inventories
   has_many :warehouses, through: :inventories
 
-  validates :name, :vintage, :producer_id, :presence => true
+  validates :name, :producer_id, :presence => true
 
   # validates :compulsory_fields
 
@@ -53,7 +56,7 @@ class Wine < ActiveRecord::Base
 
   # Solr & sunspot:
   searchable do
-    text :name, :area
+    text :name
 
     # Single relationships
     text :country_name do
@@ -64,18 +67,22 @@ class Wine < ActiveRecord::Base
       producer.country.alpha_2
     end
 
+
     text :subregion do
-      subregion.name
+      unless subregion.nil?
+        subregion.name
+      end
     end
 
-    # Many relationships
-    text :type_names do # types are an association (many), so returns as array
-      types.map {|type| type.name}
+
+    text :type do
+      type.name
     end
 
-    text :grapes do
-      grapes.map {|g| g.name}
-    end
+    #TODO Review this. I think grapes go through compositions.
+    # text :grapes do
+    #   grapes.map {|g| g.name}
+    # end
 
     text :foods do
       foods.map {|f| f.name}
@@ -84,8 +91,10 @@ class Wine < ActiveRecord::Base
     text :txt_vintage
 
     boolean :single_estate
-    boolean :vegan
-    boolean :organic
+    # boolean :vegan
+    # boolean :organic
+
+    text :note
 
     integer :warehouse_ids, :multiple => true
 
@@ -113,6 +122,7 @@ class Wine < ActiveRecord::Base
   end
 
   def txt_vintage
+    #TODO: if nil display NV - Non Vintage if 0 display Unknown
     vintage.to_s
   end
 

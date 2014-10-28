@@ -1,4 +1,5 @@
 class Admin::WinesController < ApplicationController
+  include WineImporter
   layout "admin"
   before_filter :authenticate_user!
   before_action :set_wine, only: [:show, :edit, :update, :destroy]
@@ -179,6 +180,10 @@ puts "-------------------------------"
       format.html { redirect_to admin_wines_url, notice: 'Wine was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def import
+    render :text => 'OK'
   end
 
   private

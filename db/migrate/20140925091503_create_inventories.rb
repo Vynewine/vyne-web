@@ -6,7 +6,7 @@ class CreateInventories < ActiveRecord::Migration
       t.references :category, index: true
       t.decimal :cost, index: true
       t.integer :quantity, index: true
-
+      t.string :vendor_sku, inex: true
       t.timestamps
     end
   end

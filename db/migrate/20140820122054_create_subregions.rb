@@ -6,5 +6,13 @@ class CreateSubregions < ActiveRecord::Migration
 
       t.timestamps
     end
+
+    # add a foreign key
+    execute <<-SQL
+      ALTER TABLE subregions
+        ADD CONSTRAINT fk_subregions_regions
+        FOREIGN KEY (region_id)
+        REFERENCES regions(id)
+    SQL
   end
 end

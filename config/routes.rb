@@ -99,7 +99,11 @@ Rails.application.routes.draw do
     resources :occasions
     resources :appellations
     resources :categories
-    resources :wines
+    resources :wines do
+      collection do
+        post 'import'
+      end
+    end
     resources :roles
     resources :users
     resources :addresses
@@ -108,7 +112,11 @@ Rails.application.routes.draw do
     resources :payments
     resources :statuses
     # resources :advisors
-    resources :inventories
+    resources :inventories do
+      collection do
+        post 'import'
+      end
+    end
     resources :delivery
     post '/orders/list' => 'orders#list'
     get 'advise/index' => 'advisors#index'
@@ -118,6 +126,7 @@ Rails.application.routes.draw do
     post 'advise/choose' => 'advisors#choose'
     post 'advise/complete' => 'advisors#complete'
     post 'advise/results' => 'advisors#results'
+
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

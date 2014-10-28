@@ -1,29 +1,17 @@
 one:
   name: Cálem 20yr Tawny Red
   vintage: 1994
-  area: Cima Corgo
   single_estate: false
   alcohol: 20
-  sugar: 1
-  acidity: 1
-  ph: 1
-  vegan: false
-  organic: false
   producer: one
   subregion: one
-  types: one
+  type: one
 
 two:
   name: Cálem White & Dry Red
   vintage: 2007
-  area: Cima Corgo
   single_estate: false
   alcohol: 19.5
-  sugar: 1
-  acidity: 1
-  ph: 1
-  vegan: false
-  organic: false
   producer: two
   subregion: two
-  types: one
+  type: one
