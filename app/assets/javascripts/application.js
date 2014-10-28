@@ -17,7 +17,7 @@
 //= require forms
 //= require vendor/maskedinput
 //= require vendor/swiper_min
-//= require vendor/custom-select-plugin
+//= require vendor/idangerous.swiper.hashnav
 
 var ready = function() {
     // console.log('Doc is apparently ready');
@@ -30,6 +30,19 @@ var ready = function() {
 };
 
 $(function() {
+
+	/* iOS Check */
+	if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
+	    $('.prefs-overview, .btn-checkout').addClass('ios');
+
+	    $('#preferences-panel').scroll(function(e) {
+	    	$('.prefs-overview').css({ 'bottom': -$(this).scrollTop() });
+	    });
+
+	    $('#review-panel').scroll(function(e) {
+	    	$('.btn-checkout').css({ 'bottom': -$(this).scrollTop() });
+	    });
+	}
 
 	/* Header */
 
@@ -67,6 +80,7 @@ $(function() {
 	var order = $('#order').swiper({
 		mode: 'horizontal',
 		speed: 200,
+		hashNav: true,
 		noSwiping: true,
 		simulateTouch: false,
 		onlyExternal: true,
@@ -77,6 +91,14 @@ $(function() {
             }
         }
 	});
+
+	/*$(window).on('hashchange', function() {
+		order.slides.forEach(function(slide) {
+			if(slide.id == (window.location.hash+'-panel').substr(1)) {
+				order.swipeTo(order.slides.indexOf(slide), 200, false);
+			}
+		});
+	});*/
 
 	//A class for navigating to the next slide
 	$('.next-slide').click(function(e) {
@@ -119,12 +141,12 @@ $(function() {
 	var wine = function() {
 		this.id,
 		this.quantity = 0,
+		this.category = 0,
 		this.label = '',
 		this.price = '',
 		this.specificWine = '',
 		this.food = [],
-		this.occasion = [],
-		this.category = ''
+		this.occasion = []
 	}
 
 	//Object to store food details
@@ -171,7 +193,7 @@ $(function() {
 		wines[wineCount].quantity = 1;
 		wines[wineCount].label = $(this).parent().find('.label').text();
 		wines[wineCount].price = $(this).parent().find('.price').text();
-		wines[wineCount].category = $(this).parent().data('category-id');
+		wines[wineCount].category = $(this).closest('.bottle-info').data('category-id');
 		console.log(wines);
 
 		order.swipeNext();
@@ -191,6 +213,11 @@ $(function() {
 		$('.prefs-overview').show();
 		$($(this).attr('href')).parent().find('.tab').removeClass('active');
 		$($(this).attr('href')).addClass('active');
+	});
+
+	$(document).on('click', '.prefs-list li a', function(e) {
+		e.preventDefault();
+		$('.order-panel').scrollTop(0);
 	});
 
 	$(document).on('click', '.prefs-list-bottom li a', function(e) {
@@ -233,7 +260,7 @@ $(function() {
 		} else {
 			$this.parent().removeClass('selected');
 			$('#food-'+$this.parent().attr('id')).closest('li').addClass('empty')
-			$('#food-'+$this.parent().attr('id')).replaceWith('<span>+</span>');
+			$('#food-'+$this.parent().attr('id')).empty().append('<span>+</span>');
 		}
 
 		if($this.closest('.prefs-list').attr('id') == "wine-list") {
@@ -259,6 +286,7 @@ $(function() {
 	$('#select-preferences').click(function(e) {
 
 		console.log(wines);
+		$('input[name="wines"]').val( JSON.stringify(wines) );
 
 		if($('input[name="specific-wine"]').val() != '') {
 			wines[wineCount].specificWine = $('input[name="specific-wine"]').val();
@@ -268,9 +296,10 @@ $(function() {
 		$('.order-bottle').remove();
 
 		//Creates some html for each to be displayed on the review page
+
 		wines.forEach(function(wine) {
 
-			var $td = $('<td>').attr('id','wine-'+wines.indexOf(wine)).addClass('order-table-bottle').append($('<a/>', { text: 'x' }).addClass('delete')).append('<div class="wine-bottle"></div>');
+			var $td = $('<td>').attr('id','wine-'+wines.indexOf(wine)).addClass('order-table-bottle wine-bottle-'+wine.price.substr(1,2)).append($('<a/>', { href: '#', text: 'x' }).addClass('delete')).append('<div class="wine-bottle"></div>');
 
 			for (var key in wine) {
 				if (wine.hasOwnProperty(key)) {
@@ -304,9 +333,10 @@ $(function() {
 			$('.add-bottle').before($('<tr>').addClass('order-bottle').append($td).append($pricetd));
 
 			//Reset prefs
-			$('.food-limit').hide();
+			$('.tab').removeClass('active');
+			$('.prefs-overview, .food-limit, .occasion-limit').hide();
 			$('.prefs-list li').removeClass('selected');
-			$('.prefs-overview-list li a img').replaceWith('<span>+</span>');
+			$('.prefs-overview-list li a').empty().append('<span>+</span>');;
 			$('.prefs-overview-list li').removeClass('empty').addClass('empty');
 
 		});
@@ -319,11 +349,14 @@ $(function() {
 
 		$('.btn-checkout').show();
 
+		calculateTotalCost();
+
 	});
 
 	$(document).on('click', '.order-table .delete', function(e) {
 		$this = $(this);
 		$this.closest('tr').remove();
+		$bottle = $(this).closest('.order-bottle');
 
 		var wineid = $this.closest('td').attr('id').split('-')[1];
 
@@ -342,6 +375,16 @@ $(function() {
 		} else if($('.order-bottle').length == 1) {
 			$('.add-bottle').show();
 		}
+
+		if(!$bottle.find('.order-table-bottle-price').has('del').length) {
+			$discountedBottle = $('.order-table-bottle-price del').closest('.order-bottle');
+			$('.order-table-bottle-price del').remove();
+			var diff = parseInt($discountedBottle.find('.order-table-bottle-price span').text().substr(1,2))+5;
+			$discountedBottle.find('.order-table-bottle-price span').text('£'+diff);
+		}
+
+		calculateTotalCost();
+
 	});
 
 	$('.add-bottle-link').click(function(e) {
@@ -616,6 +659,28 @@ var postCodeLookup = function(postcode) {
                 console.log(data);
             }
         });
+}
+
+
+function calculateTotalCost() {
+	var totalCost = 0;
+
+	$('.order-bottle').each(function(i, el) {
+		$price = $(el).find('.price');
+
+		if(i > 0) {
+			var discountedPrice = parseInt($price.text().substr(1,2)) - 5;
+			totalCost += discountedPrice;
+			$price.wrap('<del></del>');
+			$price.parent().after($('<span/>', { text: '£'+discountedPrice }).addClass('price'));
+		} else {
+			totalCost += parseInt($price.text().substr(1,2));
+		}
+		
+	});
+
+	$('.total-cost span').text('£'+totalCost);
+
 }
 
 

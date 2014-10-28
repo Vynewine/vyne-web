@@ -21,19 +21,32 @@
 
     <%# ============================ Address check ============================ %>
 
-    <div id="postcode-panel" class="order-panel swiper-slide noSwipingClass">
+    <div id="postcode-panel" class="order-panel swiper-slide noSwipingClass" data-hash="postcode">
       <div class="order-panel-content wrapper">
-        <h2 class="title">Availability</h2>
-        <p>We need to check if the wine is available to deliver in your area</p>
-        <input type="text" id="filterPostcode" placeholder="Enter postcode" autocomplete="off"/>
-        <span id="filterPostcodeMessage" class="message"></span>
-        <a href="" id="use-postcode" class="btn next-slide">Choose wine</a>
-        <div class="not-available">
-          <h3>Not available in your area</h3>
-          <p>We're expanding the service throughtout London in the coming weeks.</p>
-          <p>As a thank you for waiting, we'll give you a free bottle with your first order, when we we're available in your postcode.</p>
-          <input type="email" name="email" placeholder="jon@snow.com" />
-          <input type="submit" value="Let me know"/>
+        <div class="slideable">
+          <h2 class="title">Availability</h2>
+          <p>We need to check if the wine is available to deliver in your area</p>
+          <input type="text" id="filterPostcode" placeholder="Enter postcode" autocomplete="off"/>
+          <div class="opening-times">
+            <span>Opening hours:</span>
+            <span>12:00 - 20:15</span>
+          </div>
+          <span id="filterPostcodeMessage" class="message"></span>
+          <a href="" id="use-postcode" class="btn next-slide">Choose wine</a>
+          <div class="not-available">
+            <div class="outside">
+              <h3>Not available in your area</h3>
+              <p>We're expanding the service throughtout London in the coming weeks.</p>
+              <p>As a thank you for waiting, we'll give you a free bottle with your first order, when we we're available in your postcode.</p>
+            </div>
+            <div class="closed">
+              <h3>Closed but in area</h3>
+              <p>Our cellars are currently closed in your area, come back between 12:00 - 20:15 daily.</p>
+              <p>We're working hard to extend the service in the coming weeks.</p>
+            </div>
+            <input type="email" name="email" placeholder="jon@snow.com" />
+            <input type="submit" value="Let me know"/>
+          </div>
         </div>
       </div>
 
@@ -45,7 +58,7 @@
 
     <%# ============================= Select Bottle ============================= %>
 
-    <div id="bottles-panel" class="order-panel swiper-slide noSwipingClass">
+    <div id="bottles-panel" class="order-panel swiper-slide noSwipingClass" data-hash="bottles">
       <div class="order-panel-content wrapper wrapper-large">
 
         <h2>Select your bottle</h2>
@@ -90,7 +103,7 @@
 
     <%# ============================= Preferences ============================= %>
 
-    <div id="preferences-panel" class="step order-panel swiper-slide noSwipingClass">
+    <div id="preferences-panel" class="step order-panel swiper-slide noSwipingClass" data-hash="preferences">
       <div class="order-panel-content wrapper wrapper-large">
 
         <div id="matching-wine" class="preferences-sub-panel active">
@@ -116,7 +129,7 @@
           <div class="food-limit"></div>
           <h3 class="select-category">Select a category</h3>
           <div class="prefs-list-container cf">
-            <ul id="food-list" class="tab-list prefs-list prefs-list-top">
+            <ul id="food-list" class="tab-list prefs-list prefs-list-top cf">
             <% allFood = @foods.clone.to_a %>
             <% allFood.keep_if {|f| f.parent==0} %>
             <% allFood.each do |parentFood| %>
@@ -171,108 +184,28 @@
           <h3>Whats the occasion?</h3>
           <div class="prefs-list-container">
             <ul id="occasion-list" class="prefs-list prefs-list-top tab-list cf">
-              <li>
+              <% @occasions.each do |occasion| %>
+              <li id="occasion-<%= occasion.id %>">
                 <a href="#wine-type">
-                  <%= image_tag "icons/food/solo.png", :alt => "image description" %>
-                  <span>Solo</span>
+                  <%= image_tag "icons/food/"+occasion.name.gsub(/(((\s)&?)\s?)/, "_").downcase+".png", :alt => "image description" %>
+                  <span><%= occasion.name %></span>
                 </a>
               </li>
-              <li>
-                <a href="#wine-type">
-                  <%= image_tag "icons/food/with_friends.png", :alt => "image description" %>
-                  <span>With friends</span>
-                </a>
-              </li>
-              <li>
-                <a href="#wine-type">
-                  <%= image_tag "icons/food/party.png", :alt => "image description" %>
-                  <span>Party</span>
-                </a>
-              </li>
-              <li>
-                <a href="#wine-type">
-                  <%= image_tag "icons/food/date.png", :alt => "image description" %>
-                  <span>Date</span>
-                </a>
-              </li>
-              <li>
-                <a href="#wine-type">
-                  <%= image_tag "icons/food/dining.png", :alt => "image description" %>
-                  <span>Dining</span>
-                </a>
-              </li>
-              <li>
-                <a href="#wine-type">
-                  <%= image_tag "icons/food/outdoors.png", :alt => "image description" %>
-                  <span>Outdoors</span>
-                </a>
-              </li>
-              <li>
-                <a href="#wine-type">
-                  <%= image_tag "icons/food/gift.png", :alt => "image description" %>
-                  <span>Gift</span>
-                </a>
-              </li>
+              <% end %>
             </ul>
 
             <div id="wine-type" class="tab preferences-sub-sub-panel">
               <h3>2. What type of Wine would you like?</h3>
               <div class="prefs-list-container">
-                <ul id="wine-list" class="prefs-list prefs-list-bottom">
-                  <li>
+                <ul id="wine-list" class="prefs-list prefs-list-bottom cf">
+                  <% @types.each do |type| %>
+                  <li id="winetype-<%= type.id %>">
                     <a href="">
-                      <%= image_tag "icons/wine/bold_red.png", :alt => "image description" %>
-                      <span>Bold red</span>
+                      <%= image_tag "icons/wine/"+type.name.gsub(/(((\s)&?)\s?)/, "_").downcase+".png", :alt => "image description" %>
+                      <span><%= type.name %></span>
                     </a>
                   </li>
-                  <li>
-                    <a href="">
-                      <%= image_tag "icons/wine/medium_red.png", :alt => "image description" %>
-                      <span>Medium red</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="">
-                      <%= image_tag "icons/wine/light_red.png", :alt => "image description" %>
-                      <span>Light red</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="">
-                      <%= image_tag "icons/wine/rosé.png", :alt => "image description" %>
-                      <span>Rosé</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="">
-                      <%= image_tag "icons/wine/rich_white.png", :alt => "image description" %>
-                      <span>Rich white</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="">
-                      <%= image_tag "icons/wine/dry_white.png", :alt => "image description" %>
-                      <span>Dry white</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="">
-                      <%= image_tag "icons/wine/sparkling.png", :alt => "image description" %>
-                      <span>Sparkling</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="">
-                      <%= image_tag "icons/wine/sweet_white.png", :alt => "image description" %>
-                      <span>Sweet white</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="">
-                      <%= image_tag "icons/wine/fortified.png", :alt => "image description" %>
-                      <span>Fortified</span>
-                    </a>
-                  </li>
+                  <% end %>
                 </ul>
               </div>
             </div>
@@ -290,13 +223,15 @@
           </div>
         </div>
 
+        <input type="hidden" name="wines" />
+
       </div>
     </div>
 
 
     <%# =============================== Review =============================== %>
 
-    <div id="review-panel" class="step order-panel swiper-slide noSwipingClass">
+    <div id="review-panel" class="step order-panel swiper-slide noSwipingClass" data-hash="review">
       <div class="order-panel-content wrapper wrapper-large">
         <h2>Review order</h2>
         <p>We need to check if the wine is available to deliver in your area</p>
@@ -318,9 +253,19 @@
               <a href="" class="btn btn__small add-bottle-link">Add another bottle</a>
             </td>
           </tr>
+          <tr class="total">
+            <td>Total:</td>
+            <td class="total-cost">
+              <span>£20</span>
+            </td>
+          </tr>
         </table>
 
-        <a href="" id="checkout" class="next-slide btn-checkout">Checkout</a>
+        <div class="btn-checkout">
+          <div class="wrapper wrapper-large">
+            <a href="" id="checkout" class="next-slide btn btn__full-width">Checkout</a>
+          </div>
+        </div>
 
       </div>
     </div>
@@ -329,7 +274,7 @@
 
     <% unless user_signed_in? %>
 
-    <div id="register-panel" class="step order-panel swiper-slide noSwipingClass">
+    <div id="register-panel" class="step order-panel swiper-slide noSwipingClass" data-hash="register">
       <div class="order-panel-content wrapper wrapper-large">
         <div id="account-form" class="register-form">
           <h2 class="account-heading">Register</h2>
@@ -382,7 +327,7 @@
 
     <%# ========================== Address selection ========================== %>
 
-    <div id="delivery-panel" class="step order-panel swiper-slide noSwipingClass">
+    <div id="delivery-panel" class="step order-panel swiper-slide noSwipingClass" data-hash="delivery">
       <div class="order-panel-content wrapper wrapper-large">
         <h2>Delivery address</h2>
 
@@ -424,7 +369,7 @@
 
     <%# ========================== Payment ========================== %>
 
-    <div id="payment-panel" class="step order-panel swiper-slide noSwipingClass">
+    <div id="payment-panel" class="step order-panel swiper-slide noSwipingClass" data-hash="payment">
       <div class="order-panel-content wrapper wrapper-large">
         <h2>Link Payment</h2>
           <%

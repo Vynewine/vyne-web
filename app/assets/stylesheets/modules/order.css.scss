@@ -76,8 +76,18 @@
                 &#postcode-panel {
 
                     .order-panel-content {
-                        padding: 120px 0 0 0;
+                        padding: 110px 0 0 0;
                         text-align: center;
+
+                        .slideable {
+                            @include translate(0, 0);
+                            @include transition(all, $fast, cubic-bezier(0.8, 0, 0, 0.8));
+
+                            &.slideup {
+                                @include translate(0, -170px);
+                                @include transition(all, $fast, cubic-bezier(0.8, 0, 0, 0.8));
+                            }
+                        }
 
                         input {
                             text-align: center;
@@ -88,6 +98,10 @@
                             margin-bottom: 40px;
                             border-radius: 0 0 5px 5px;
                             background: rgba(0,0,0,0.5);
+
+                            .outside, .closed {
+                                display: none;
+                            }
 
                             h3 {
                                 margin: 0;
@@ -126,6 +140,25 @@
                             }
                         }
 
+                        .opening-times {
+                            margin: 2rem 0 0;
+                            padding: 1rem;
+                            border-radius: 3px;
+                            border: 1px rgba(255,255,255,0.1) solid;
+
+                            span {
+                                font-size: 1.3rem;
+                                display: block;
+                                color: rgba(255, 255, 255, 0.3);
+
+                                &:last-child {
+                                    color: white;
+                                    font-size: 1.6rem;
+                                    color: rgba(255, 255, 255, 0.8);
+                                }
+                            }
+                        }
+
                         #use-postcode {
                             display: none;
                         }
@@ -138,7 +171,7 @@
 
                     .order-panel-content {
                         text-align: center;
-                        padding: 70px 10px 30px;
+                        padding: 60px 10px 30px;
 
                         .bottle-list {
                             margin: 0;
@@ -205,10 +238,10 @@
                                     opacity: 0.8;
                                     border-radius: 5px 5px 0 0;
                                     background-image: url(asset-path('select/housebg1.jpg'));
-                                    background-size: 100% auto;
+                                    background-size: cover;
                                     background-position: top center;
-                                    backgroudn-repeat: no-repeat;
-                                    -webkit-mask-image: -webkit-gradient(linear, left top, left 50%, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
+                                    background-repeat: no-repeat;
+                                    -webkit-mask-image: -webkit-linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.1) 60%);
                                 }
 
                                 .bottle-info-content {
@@ -219,7 +252,7 @@
                                 &:nth-child(2) .bottle-info {
                                     left: auto;
                                     right: 0;
-                                    transform-origin: 50% 50%;
+                                    @include transform-origin(50% 50%);
 
                                     .bottle-info-bg {
                                         background-image: url(asset-path('select/reservebg1.jpg'));
@@ -230,7 +263,7 @@
                                     top: auto;
                                     left: 0;
                                     bottom: 0;
-                                    transform-origin: 50% 50%;
+                                    @include transform-origin(50% 50%);
 
                                     .bottle-info-bg {
                                         background-image: url(asset-path('select/finebg1.jpg'));
@@ -242,7 +275,7 @@
                                     left: auto;
                                     right: 0;
                                     bottom: 0;
-                                    transform-origin: 50% 50%;
+                                    @include transform-origin(50% 50%);
 
                                     .bottle-info-bg {
                                         background-image: url(asset-path('select/cellarbg1.jpg'));
@@ -259,8 +292,8 @@
                                     height: 196px;
                                     padding: 16px;
                                     border-radius: 5px; 
-                                    transform: scale(0);
-                                    transform-origin: 50% 50%;
+                                    @include scale(0);
+                                    @include transform-origin(50% 50%);
                                     border: 1px rgba(255,255,255,0.2) solid;
 
                                     .close {
@@ -268,10 +301,10 @@
                                         height: 39px;
                                         border-radius: 100%;
                                         position: absolute;
-                                        top: -10px;
-                                        right: -10px;
+                                        top: -14px;
+                                        right: -14px;
                                         z-index: 99;
-                                        transform: scale(0);
+                                        @include scale(0);
 
                                         .line {
                                             position: relative;
@@ -280,16 +313,17 @@
                                             width: 22px;
                                             height: 1px;
                                             background: white;
+                                            box-shadow: 0 0 6px rgba(0,0,0,0.5);
 
                                             &:nth-child(1) {
                                                 margin-bottom: 14px;
-                                                transform-origin: 0 0;
-                                                transform: rotate(45deg);
+                                                @include transform-origin(0 0);
+                                                @include rotate(45);
                                             }
 
                                             &:nth-child(2) {
-                                                transform-origin: 0 100%;
-                                                transform: rotate(-45deg);
+                                                @include transform-origin(0 100%);
+                                                @include rotate(-45);
                                             }
                                         }
                                     }
@@ -324,11 +358,11 @@
                                         opacity: 1;
                                         width: 300px;
                                         height: 416px;
-                                        transform: scale(1);
+                                        @include scale(1);
                                         background: rgba(0,0,0,0.95);
 
                                         .close {
-                                            transform: scale(1);
+                                            @include scale(1);
                                         }
 
                                         img {
@@ -389,7 +423,7 @@
                             width: 100%;
                             height: 100%;
                             background: black;
-                            padding: 80px 20px 50px;
+                            padding: 60px 20px 50px;
                         }
 
                         .preferences-sub-panel {
@@ -459,8 +493,8 @@
                         .prefs-list-container {
 
                             .prefs-list {
-                                margin: 0 0 20px 0;
-                                padding: 0;
+                                margin: 0;
+                                padding: 0 0 160px 0;
                                 list-style: none;
 
                                 &.prefs-list-bottom {
@@ -518,7 +552,6 @@
                             position: fixed;
                             display: none;
                             background: rgba(0,0,0,0.9);
-                            border-top: 1px rgba(255,255,255,0.2) solid;
 
                             .prefs-overview-content {
                                 padding: 2rem;
@@ -544,7 +577,7 @@
                                         height: 60px;
                                         display: block;
                                         border-radius: 50px;
-                                        border: 1px rgba(255,255,255,0.2) solid;
+                                        border: 2px rgba(255,255,255,0.2) solid;
 
                                         img {
                                             position: relative;
@@ -558,13 +591,15 @@
                                                 right: -22px;
                                                 padding: 5px;
                                                 background: black;
+                                                border-radius: 100px;
                                             }
                                         }
 
                                         span {
                                             width: 100%;
                                             display: block;
-                                            padding: 15px 0;
+                                            padding: 9px 0;
+                                            font-size: 2.5rem;
                                             text-align: center;
                                             color: rgba(255,255,255,0.5);
                                         }
@@ -580,13 +615,13 @@
                 &#review-panel {
 
                     .order-panel-content {
-                        padding: 70px 20px;
+                        padding: 60px 20px;
                         position: relative;
 
                         .order-table {
                             width: 100%;
                             text-align: left;
-                            margin-bottom: 80px;
+                            margin-bottom: 100px;
 
                             th {
                                 padding: 5px 10px;
@@ -604,6 +639,7 @@
                                     position: absolute;
                                     top: 50%;
                                     left: -15px;
+                                    z-index: 99;
                                     line-height: 1;
                                     display: block;
                                     width: 28px;
@@ -622,6 +658,23 @@
                                     margin: 10px 15px 10px 10px;
                                     background-image: url("/dev-assets/wine/bottle15.png");
                                     background-size: 100%;
+                                }
+
+                                &.wine-bottle-20 .wine-bottle {
+                                    background-image: url("/dev-assets/wine/bottle20.png");
+                                }
+
+                                &.wine-bottle-30 .wine-bottle {
+                                    background-image: url("/dev-assets/wine/bottle30.png");
+                                }
+
+                                &.wine-bottle-50 .wine-bottle {
+                                    background-image: url("/dev-assets/wine/bottle50.png");
+                                }
+
+                                del {
+                                    font-size: 1.4rem;
+                                    color: rgba(255,255,255,0.5);
                                 }
 
                                 span {
@@ -671,6 +724,20 @@
                             .no-bottles {
                                 display: none;
                             }
+
+                            .total {
+                                td {
+                                    &:first-child {
+                                        border: 0;
+                                        text-align: right;
+                                        color: rgba(255,255,255,0.4);
+                                    }
+                                }
+                                span {
+                                    display: block;
+                                    text-align: center;
+                                }
+                            }
                         }
 
                         p {
@@ -683,17 +750,14 @@
                     .btn-checkout {
                         position: fixed;
                         bottom: 0;
-                        z-index: 99;
-                        width: 320px;
-                        color: white;
-                        padding: 15px;
+                        left: 0;
+                        width: 100%;
                         display: none;
-                        font-size: 1.6rem;
-                        font-weight: bold;
-                        margin-left: -20px;
-                        text-align: center;
-                        text-transform: uppercase;
-                        background: $primary-colour;
+                        background: rgba(0,0,0,0.9);
+
+                        .wrapper {
+                            padding: 20px;
+                        }
 
                         &.ios {
                             position: absolute;
@@ -705,7 +769,7 @@
                 &#register-panel {
 
                     .order-panel-content {
-                        padding: 70px 20px;
+                        padding: 60px 20px;
 
                         .errors {
                             display: none;
@@ -753,7 +817,7 @@
                 &#delivery-panel {
 
                     .order-panel-content {
-                        padding: 70px 20px;
+                        padding: 60px 20px;
 
                         h2 {
                             margin-bottom: 2rem;
@@ -775,7 +839,7 @@
                 &#payment-panel {
 
                     .order-panel-content {
-                        padding: 70px 20px;
+                        padding: 60px 20px;
 
                         h2 {
                             margin-bottom: 2rem;
