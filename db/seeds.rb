@@ -2222,7 +2222,7 @@ CompositionGrape.create(:composition_id => 68, :grape_id => 65, :percentage => n
 
 puts 'Compositions - OK'
 
-wine_and_inventory_file_path = "/Users/jakub/Development/Vynz/docs/inventory-documents-export-2014-10-25/Upload wine data7.csv"
+wine_and_inventory_file_path = File.dirname(__FILE__) + '/wine_seed.csv'
 
 include WineImporter
 
