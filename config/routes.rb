@@ -86,8 +86,18 @@ Rails.application.routes.draw do
   # Actions for admins are under "/admin"
   namespace 'admin' do
     root :to => 'wines#index'
-    resources :producers
-    resources :regions
+    resources :producers do
+      collection do
+        post 'import'
+        get 'upload'
+      end
+    end
+    resources :regions do
+      collection do
+        post 'import'
+        get 'upload'
+      end
+    end
     resources :subregions
     resources :grapes
     resources :types

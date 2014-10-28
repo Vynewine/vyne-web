@@ -16,7 +16,7 @@ class Admin::InventoriesControllerTest < ActionController::TestCase
     Sunspot.session = Sunspot.session.original_session
   end
 
-  test 'can import wine inventory from CSV' do
+  test 'Can import wine inventory from CSV' do
 
     path = create_file
 
@@ -34,7 +34,7 @@ class Admin::InventoriesControllerTest < ActionController::TestCase
 
   end
 
-  test 'can post inventory file' do
+  test 'Can post inventory file' do
 
     inventory_file = fixture_file_upload('files/wine_seed.csv','text/csv')
 

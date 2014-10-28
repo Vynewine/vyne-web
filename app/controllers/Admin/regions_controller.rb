@@ -1,4 +1,5 @@
 class Admin::RegionsController < ApplicationController
+  include GenericImporter
   layout "admin"
   before_action :authenticate_user!
   authorize_actions_for SupplierAuthorizer # Triggers user check
@@ -7,7 +8,7 @@ class Admin::RegionsController < ApplicationController
   # GET /regions
   # GET /regions.json
   def index
-    @regions = Region.all
+    @regions = Region.all.order(:id)
   end
 
   # GET /regions/1
@@ -64,6 +65,20 @@ class Admin::RegionsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to admin_regions_url, notice: 'Region was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def import
+    results = import_data(params[:file], :regions)
+
+    if results[:success]
+      respond_to do |format|
+        format.html { redirect_to admin_regions_path, notice: 'Regions were successfully uploaded.' }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to upload_admin_regions_path, alert: results[:errors].join(', ') }
+      end
     end
   end
 

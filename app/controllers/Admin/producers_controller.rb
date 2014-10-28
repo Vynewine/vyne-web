@@ -1,4 +1,5 @@
 class Admin::ProducersController < ApplicationController
+  include GenericImporter
   layout "admin"
   before_action :authenticate_user!
   authorize_actions_for SupplierAuthorizer # Triggers user check
@@ -7,7 +8,7 @@ class Admin::ProducersController < ApplicationController
   # GET /producers
   # GET /producers.json
   def index
-    @producers = Producer.all
+    @producers = Producer.all.order(:id)
   end
 
   # GET /producers/1
@@ -64,6 +65,20 @@ class Admin::ProducersController < ApplicationController
     respond_to do |format|
       format.html { redirect_to admin_producers_url, notice: 'Producer was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def import
+    results = import_data(params[:file], :producers)
+
+    if results[:success]
+      respond_to do |format|
+        format.html { redirect_to admin_producers_path, notice: 'Producers were successfully uploaded.' }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to upload_admin_producers_path, alert: results[:errors].join(', ') }
+      end
     end
   end
 
