@@ -85,7 +85,7 @@ Rails.application.routes.draw do
 
   # Actions for admins are under "/admin"
   namespace 'admin' do
-    root :to => 'producers#index'
+    root :to => 'wines#index'
     resources :producers
     resources :regions
     resources :subregions
@@ -102,6 +102,7 @@ Rails.application.routes.draw do
     resources :wines do
       collection do
         post 'import'
+        get 'upload'
       end
     end
     resources :roles
@@ -115,6 +116,7 @@ Rails.application.routes.draw do
     resources :inventories do
       collection do
         post 'import'
+        get 'upload'
       end
     end
     resources :delivery

@@ -1,6 +1,7 @@
 module InventoryImporter
-  #todo need to return status and errors
+  #TODO need to return status and errors
   def import_inventory(file, warehouse)
+
     inventory_data = Roo::CSV.new(file)
 
     header = inventory_data.row(1)
@@ -31,6 +32,7 @@ module InventoryImporter
           inventory_item.update(
               :cost => row['cost'],
               :quantity => row['quantity'],
+              :category => assign_category(categories, row['cost'])[0]
           )
         end
 

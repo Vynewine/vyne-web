@@ -1,4 +1,6 @@
 class Admin::InventoriesController < ApplicationController
+  include InventoryImporter
+
   layout "admin"
   before_action :authenticate_user!
   authorize_actions_for SupplierAuthorizer # Triggers user check
@@ -7,7 +9,7 @@ class Admin::InventoriesController < ApplicationController
   # GET /inventories
   # GET /inventories.json
   def index
-    @inventories = Inventory.all
+    @inventories = Inventory.joins(:warehouse, :wine).order('warehouses.title', 'wines.name')
   end
 
   # GET /inventories/1
@@ -64,6 +66,54 @@ class Admin::InventoriesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to admin_inventories_url, notice: 'Inventory was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def upload
+    @warehouses = Warehouse.all
+  end
+
+  def import
+
+    uploaded_file = params[:inventory]
+
+    if uploaded_file.nil? || params[:warehouse].blank?
+      respond_to do |format|
+        format.html { redirect_to upload_admin_inventories_path, alert: 'Please select Warehouse and file to upload.' }
+      end
+      return
+    end
+
+    warehouse = Warehouse.find_by_id(params[:warehouse])
+
+    if warehouse.nil?
+      respond_to do |format|
+        format.html { redirect_to upload_admin_inventories_path, alert: 'Warehouse Not Found' }
+      end
+      return
+    end
+
+    file_name = uploaded_file.original_filename
+
+    file_extension = File.extname(file_name)
+
+    if file_extension != '.csv'
+      respond_to do |format|
+        format.html { redirect_to upload_admin_inventories_path, alert: 'File must be .csv format' }
+      end
+      return
+    end
+
+    file_path = Rails.root.join('public', 'uploads', [Time.now.strftime('%Y-%m-%d-%H%M%S'),file_name].join('_'))
+
+    File.open(file_path, 'wb') do |file|
+      file.write(uploaded_file.read)
+    end
+
+    import_inventory(file_path.to_s, warehouse)
+
+    respond_to do |format|
+      format.html { redirect_to admin_inventories_path, notice: 'Inventory was successfully uploaded.' }
     end
   end
 

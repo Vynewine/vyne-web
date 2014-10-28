@@ -1,0 +1,46 @@
+<p>
+<h1>Upload Inventory</h1>
+<p>
+<h3>File Structure</h3>
+<ul>
+  <li>Accepted File format: CSV</li>
+  <li>First Row must specify column names</li>
+  <li>Expected column names:</li>
+  <ul>
+    <li>
+      <strong>wine_key</strong> : Required. Must match existing wine key in Vyne directory.
+    </li>
+    <li>
+      <strong>vendor_sku</strong> : Required. Will be used to locate and update existing record.
+      If existing record not found new entry will be created.
+    </li>
+    <li>
+      <strong>quantity</strong> : Required.
+    </li>
+    <li>
+      <strong>cost</strong> : Required. Will be used to determine category.
+    </li>
+  </ul>
+</ul>
+</p>
+</p>
+
+<p>
+  <strong>Select Warehouse</strong>
+<p>
+  <%
+     warehouses = []
+     @warehouses.each do |w|
+       warehouses.push([w.title, w.id])
+     end
+  %>
+
+  <%= form_tag({action: :import}, multipart: true) do %>
+      <%= select_tag 'warehouse', options_for_select(warehouses, ''), :prompt => 'Select Warehouse', :name => 'warehouse' %>
+      <%= file_field_tag 'inventory' %>
+      <%= submit_tag('Upload') %>
+  <% end %>
+</p>
+</p>
+
+<%= link_to 'Back', admin_inventories_path %>

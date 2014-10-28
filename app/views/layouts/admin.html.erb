@@ -65,13 +65,9 @@ end
   <% end %>
   </ul>
 </header>
-<div class="alerts">
-  <p class="notice"><%= notice %></p>
-  <p class="alert"><%= alert %></p>
-  <% flash.each do |name, msg| -%>
-      <p class="alert"><h3 style="color: red;"><%= content_tag :div, msg, class: name %></h3></p>
-  <% end -%>
-</div>
+<% flash.each do |name, msg| -%>
+    <div class="alerts"><%= content_tag :p, msg, class: name %></div>
+<% end -%>
 
 <div class="main-wrapper">
   <div class="main">

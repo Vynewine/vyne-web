@@ -7,7 +7,7 @@ class Admin::WinesController < ApplicationController
   # GET /wines
   # GET /wines.json
   def index
-    @wines = Wine.all
+    @wines = Wine.all.order(:name)
   end
 
   # GET /wines/1
@@ -182,8 +182,41 @@ puts "-------------------------------"
     end
   end
 
+  def upload
+  end
+
   def import
-    render :text => 'OK'
+    uploaded_file = params[:wines]
+
+    if uploaded_file.nil?
+      respond_to do |format|
+        format.html { redirect_to upload_admin_inventories_path, alert: 'Please specify file to upload.' }
+      end
+      return
+    end
+
+    file_name = uploaded_file.original_filename
+
+    file_extension = File.extname(file_name)
+
+    if file_extension != '.csv'
+      respond_to do |format|
+        format.html { redirect_to upload_admin_inventories_path, alert: 'File must be .csv format' }
+      end
+      return
+    end
+
+    file_path = Rails.root.join('public', 'uploads', [Time.now.strftime('%Y-%m-%d-%H%M%S'),file_name].join('_'))
+
+    File.open(file_path, 'wb') do |file|
+      file.write(uploaded_file.read)
+    end
+
+    import_wines(file_path.to_s)
+
+    respond_to do |format|
+      format.html { redirect_to admin_wines_path, notice: 'Wines were successfully uploaded.' }
+    end
   end
 
   private
