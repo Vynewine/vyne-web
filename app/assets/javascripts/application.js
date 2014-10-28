@@ -210,9 +210,9 @@ $(function() {
 	$('.tab-list li a').click(function(e) {
 		e.preventDefault();
 		console.log('clicked');
-		$('.prefs-overview').show();
 		$($(this).attr('href')).parent().find('.tab').removeClass('active');
 		$($(this).attr('href')).addClass('active');
+		if($(this).attr('href') == '#with-food') $('.prefs-overview').show();
 	});
 
 	$(document).on('click', '.prefs-list li a', function(e) {
@@ -257,14 +257,14 @@ $(function() {
 			$this.closest('.tab').removeClass('active');
 			$('.select-category').text('Add another ingredient?');
 
+			if($this.closest('ul').attr('id') == 'wine-list') {
+				$('#select-preferences').click();
+			}
+
 		} else {
 			$this.parent().removeClass('selected');
 			$('#food-'+$this.parent().attr('id')).closest('li').addClass('empty')
 			$('#food-'+$this.parent().attr('id')).empty().append('<span>+</span>');
-		}
-
-		if($this.closest('.prefs-list').attr('id') == "wine-list") {
-			$('.occasion-limit').show();
 		}
 
 	});
@@ -389,14 +389,10 @@ $(function() {
 
 	$('.add-bottle-link').click(function(e) {
 		e.preventDefault();
-
-		order.swipeTo(1, 500, false);
-
 		wineCount++;
-
+		order.swipeTo(1, 500, false);
 		$('.add-bottle, .btn-checkout').hide();
-
-	})
+	});
 
 
 	$(document).on('click', '#account-link', function(e) {

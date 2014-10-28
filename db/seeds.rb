@@ -2226,7 +2226,7 @@ wine_and_inventory_file_path = File.dirname(__FILE__) + '/wine_seed.csv'
 
 include WineImporter
 
-import_wines(wine_and_inventory_file_path)
+#import_wines(wine_and_inventory_file_path)
 
 puts 'Wines ---- OK'
 
@@ -2275,9 +2275,9 @@ puts 'Warehouses - OK'
 
 include InventoryImporter
 
-import_inventory(wine_and_inventory_file_path, warehouse_one)
-import_inventory(wine_and_inventory_file_path, warehouse_two)
-import_inventory(wine_and_inventory_file_path, warehouse_three)
+#import_inventory(wine_and_inventory_file_path, warehouse_one)
+#import_inventory(wine_and_inventory_file_path, warehouse_two)
+#import_inventory(wine_and_inventory_file_path, warehouse_three)
 
 puts 'Inventories ---- OK'
 
