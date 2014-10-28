@@ -656,20 +656,20 @@
                                     height: 95px;
                                     float: left;
                                     margin: 10px 15px 10px 10px;
-                                    background-image: url("/dev-assets/wine/bottle15.png");
+                                    background-image: url(asset-path('icons/wine/bottle15.png'));
                                     background-size: 100%;
                                 }
 
                                 &.wine-bottle-20 .wine-bottle {
-                                    background-image: url("/dev-assets/wine/bottle20.png");
+                                    background-image: url(asset-path('icons/wine/bottle20.png'));
                                 }
 
                                 &.wine-bottle-30 .wine-bottle {
-                                    background-image: url("/dev-assets/wine/bottle30.png");
+                                    background-image: url(asset-path('icons/wine/bottle30.png'));
                                 }
 
                                 &.wine-bottle-50 .wine-bottle {
-                                    background-image: url("/dev-assets/wine/bottle50.png");
+                                    background-image: url(asset-path('icons/wine/bottle50.png'));
                                 }
 
                                 del {
