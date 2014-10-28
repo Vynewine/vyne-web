@@ -80,7 +80,7 @@ $(function() {
 	var order = $('#order').swiper({
 		mode: 'horizontal',
 		speed: 200,
-		hashNav: true,
+		//hashNav: true,
 		noSwiping: true,
 		simulateTouch: false,
 		onlyExternal: true,
@@ -394,7 +394,7 @@ $(function() {
 
 		wineCount++;
 
-		$('.add-bottle').hide();
+		$('.add-bottle, .btn-checkout').hide();
 
 	})
 
