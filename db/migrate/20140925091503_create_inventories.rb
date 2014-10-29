@@ -9,5 +9,26 @@ class CreateInventories < ActiveRecord::Migration
       t.string :vendor_sku, inex: true
       t.timestamps
     end
+
+    execute <<-SQL
+      ALTER TABLE inventories
+        ADD CONSTRAINT fk_inventories_warehouses
+        FOREIGN KEY (warehouse_id)
+        REFERENCES warehouses(id)
+    SQL
+
+    execute <<-SQL
+      ALTER TABLE inventories
+        ADD CONSTRAINT fk_inventories_wines
+        FOREIGN KEY (wine_id)
+        REFERENCES wines(id)
+    SQL
+
+    execute <<-SQL
+      ALTER TABLE inventories
+        ADD CONSTRAINT fk_inventories_categories
+        FOREIGN KEY (category_id)
+        REFERENCES categories(id)
+    SQL
   end
 end

@@ -1112,7 +1112,7 @@ Subregion.create(
 )
 Subregion.create(
     :id => 12,
-    :region_id => 27,
+    :region_id => 17,
     :name => 'St Hilare d\'Ozilhan'
 )
 Subregion.create(
@@ -1507,77 +1507,77 @@ puts "Types -------- OK"
 
 Vinification.create(
     :id => 1,
-    :description => 'grape must to remain in contact with the skins for a short while (just a few hours). Thus the natural pigments in the skins of the black grapes begin to colour the juice and at the same time they enrich the juice with their aromatic components. After maceration, the juices are bled off - hence the name. Bled pink champagnes generally have a more intense pink robe, but this colour can vary widely with different vintages',
+    :method => 'grape must to remain in contact with the skins for a short while (just a few hours). Thus the natural pigments in the skins of the black grapes begin to colour the juice and at the same time they enrich the juice with their aromatic components. After maceration, the juices are bled off - hence the name. Bled pink champagnes generally have a more intense pink robe, but this colour can vary widely with different vintages',
     :name => 'Rosé Champagne Saignée'
 )
 Vinification.create(
     :id => 2,
-    :description => 'Winemaking at low temperature (max 27 ° C) with maceration on the skins for 4 days, racking and end of fermentation without the skins. The malolactic fermentation takes place naturally.',
+    :method => 'Winemaking at low temperature (max 27 ° C) with maceration on the skins for 4 days, racking and end of fermentation without the skins. The malolactic fermentation takes place naturally.',
     :name => ''
 )
 Vinification.create(
     :id => 3,
-    :description => 'Fermentation in steel tank',
+    :method => 'Fermentation in steel tank',
     :name => ''
 )
 Vinification.create(
     :id => 4,
-    :description => 'Fermentation in temperature-regulated stainless steel fermenters,  Full malolactic fermentation',
+    :method => 'Fermentation in temperature-regulated stainless steel fermenters,  Full malolactic fermentation',
     :name => ''
 )
 Vinification.create(
     :id => 5,
-    :description => 'All the different grapes spent 5 days on cold maceration, where after it was fermented in stainless steel tanks at optimal temperatures between 22-28°C. Here after malo-lactic fermentation took place on wood staves in stainless steel tanks',
+    :method => 'All the different grapes spent 5 days on cold maceration, where after it was fermented in stainless steel tanks at optimal temperatures between 22-28°C. Here after malo-lactic fermentation took place on wood staves in stainless steel tanks',
     :name => ''
 )
 Vinification.create(
     :id => 6,
-    :description => 'Maceration on the grapes occurs at a controlled temperature that varies from 26 till 28°C for about 15/18 days in order to obtain a good extraction of the colour and to keep a good structure able to maintain itself for a long time. When the liquid part separates itself from the solid one, the must is kept in steel tanks for some days for the cleaning.',
+    :method => 'Maceration on the grapes occurs at a controlled temperature that varies from 26 till 28°C for about 15/18 days in order to obtain a good extraction of the colour and to keep a good structure able to maintain itself for a long time. When the liquid part separates itself from the solid one, the must is kept in steel tanks for some days for the cleaning.',
     :name => ''
 )
 Vinification.create(
     :id => 7,
-    :description => 'The juice undergoes low temperature alcoholic fermentation in stainless steel tanks, occasional lees stirring depending on vintage and then bottled after 8-10 months.',
+    :method => 'The juice undergoes low temperature alcoholic fermentation in stainless steel tanks, occasional lees stirring depending on vintage and then bottled after 8-10 months.',
     :name => ''
 )
 Vinification.create(
     :id => 8,
-    :description => 'It happens at a controlled temperature (which varies from 18 to 20°C) in steel tanks and continues for quite 16 days.',
+    :method => 'It happens at a controlled temperature (which varies from 18 to 20°C) in steel tanks and continues for quite 16 days.',
     :name => ''
 )
 Vinification.create(
     :id => 9,
-    :description => 'The Viognier was partly fermented in stainless steel tanks and then completed fermentation and malo-lactic in 60% new French oak 225L barrels. Both red varieties received 4 days pre-fermentation cold maceration prior to fermentation in stainless steel tanks. Malolactic fermentation was completed in 70% new oak 225L barrels and matured in these same barrels. The Shiraz and Mourvedre was then blended and matured',
+    :method => 'The Viognier was partly fermented in stainless steel tanks and then completed fermentation and malo-lactic in 60% new French oak 225L barrels. Both red varieties received 4 days pre-fermentation cold maceration prior to fermentation in stainless steel tanks. Malolactic fermentation was completed in 70% new oak 225L barrels and matured in these same barrels. The Shiraz and Mourvedre was then blended and matured',
     :name => ''
 )
 Vinification.create(
     :id => 10,
-    :description => 'Charmat (Italian) Method - the second fermentation which causes the bubbles is undertaken in large pressurised steel vats. The wine is bottled in its pressurised form. This is distinguished from the Champagne Method, in which the second fermentation is done in the bottle without any additional pressurisaiton.',
+    :method => 'Charmat (Italian) Method - the second fermentation which causes the bubbles is undertaken in large pressurised steel vats. The wine is bottled in its pressurised form. This is distinguished from the Champagne Method, in which the second fermentation is done in the bottle without any additional pressurisaiton.',
     :name => ''
 )
 Vinification.create(
     :id => 11,
-    :description => 'The grapes are picked when fully ripe, gently crushed and allowed to begin fermentation with their skins. This process is what gives the wine its elegant pink colour. The pink skins are removed when the colour and aromas are judged by the winemaker to be just right. The wine then finishes the fermentation in large modern steel tanks at a cool temperature, which keeps the wine very fresh.',
+    :method => 'The grapes are picked when fully ripe, gently crushed and allowed to begin fermentation with their skins. This process is what gives the wine its elegant pink colour. The pink skins are removed when the colour and aromas are judged by the winemaker to be just right. The wine then finishes the fermentation in large modern steel tanks at a cool temperature, which keeps the wine very fresh.',
     :name => ''
 )
 Vinification.create(
     :id => 12,
-    :description => 'It was fermented with a selected burgundy yeast in open fermenters for over a week before being pressed off. It then underwent malolactic fermentation and was racked into French oak barriques.',
+    :method => 'It was fermented with a selected burgundy yeast in open fermenters for over a week before being pressed off. It then underwent malolactic fermentation and was racked into French oak barriques.',
     :name => ''
 )
 Vinification.create(
     :id => 13,
-    :description => 'The wine is left to macerate for 20 days, resulting in a rich ruby colour and a complex bouquet of red fruits, spices and truffles.',
+    :method => 'The wine is left to macerate for 20 days, resulting in a rich ruby colour and a complex bouquet of red fruits, spices and truffles.',
     :name => ''
 )
 Vinification.create(
     :id => 14,
-    :description => 'Fermentation takes place in vitrified cement vats at a temperature of approx. 28°C (82°F). Maceration on skins for 18 days with re-circulation carried out three times a day during the first 5 days, and two times a day in the remaining period.',
+    :method => 'Fermentation takes place in vitrified cement vats at a temperature of approx. 28°C (82°F). Maceration on skins for 18 days with re-circulation carried out three times a day during the first 5 days, and two times a day in the remaining period.',
     :name => ''
 )
 Vinification.create(
     :id => 15,
-    :description => 'The grapes are picked during three or four passes through the vineyards, with a further sorting just before pressing. After being completely destemmed, the grapes are placed in a hand operated basket press, where the juice then runs into cement tanks or barrels. Themacérations is relatively long, and all the wine is ultimately aged in barrel, of which 25% is new each year.',
+    :method => 'The grapes are picked during three or four passes through the vineyards, with a further sorting just before pressing. After being completely destemmed, the grapes are placed in a hand operated basket press, where the juice then runs into cement tanks or barrels. Themacérations is relatively long, and all the wine is ultimately aged in barrel, of which 25% is new each year.',
     :name => ''
 )
 
@@ -2241,7 +2241,7 @@ wine_and_inventory_file_path = File.dirname(__FILE__) + '/wine_seed.csv'
 
 include WineImporter
 
-#import_wines(wine_and_inventory_file_path)
+import_wines(wine_and_inventory_file_path)
 
 puts 'Wines ---- OK'
 
@@ -2290,9 +2290,9 @@ puts 'Warehouses - OK'
 
 include InventoryImporter
 
-#import_inventory(wine_and_inventory_file_path, warehouse_one)
-#import_inventory(wine_and_inventory_file_path, warehouse_two)
-#import_inventory(wine_and_inventory_file_path, warehouse_three)
+import_inventory(wine_and_inventory_file_path, warehouse_one)
+import_inventory(wine_and_inventory_file_path, warehouse_two)
+import_inventory(wine_and_inventory_file_path, warehouse_three)
 
 puts 'Inventories ---- OK'
 

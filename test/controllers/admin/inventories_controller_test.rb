@@ -1,7 +1,7 @@
 require 'test_helper'
 require 'csv'
 
-class Admin::WinesControllerTest < ActionController::TestCase
+class Admin::InventoriesControllerTest < ActionController::TestCase
   include Devise::TestHelpers
   include InventoryImporter
   include WineImporter
@@ -16,7 +16,7 @@ class Admin::WinesControllerTest < ActionController::TestCase
     Sunspot.session = Sunspot.session.original_session
   end
 
-  test 'can import wine inventory from CSV' do
+  test 'Can import wine inventory from CSV' do
 
     path = create_file
 
@@ -30,18 +30,32 @@ class Admin::WinesControllerTest < ActionController::TestCase
 
     inventories = Inventory.all
 
-    assert(inventories.select{ |inventory| inventory.wine.wine_key == 'ssb-09-c4-vado-fr-rh-ct'}.count == 1, 'Inventory items with correct wine doesn\'t exist')
+    assert(inventories.select { |inventory| inventory.wine.wine_key == 'ssb-09-c4-vado-fr-rh-ct' }.count == 1, 'Inventory items with correct wine doesn\'t exist')
 
   end
+
+  test 'Can post inventory file' do
+
+    inventory_file = fixture_file_upload('files/wine_seed.csv','text/csv')
+
+    post :import , {
+        :inventory => inventory_file,
+        :warehouse => warehouses(:one)
+    }
+
+    assert_redirected_to admin_inventories_path
+
+  end
+
 
   def create_file
     file_path = 'wine_data.csv'
 
     content = []
     content << %w(wine_key name vintage single_estate alcohol composition_id type_id note bottle_size producer_id region_id subregion_id locale_id appellation_id maturation_id vinification_id vendor_sku cost quantity)
-    content << ['ssb-09-c4-vado-fr-rh-ct', 'Semillon Sauvignon Blanc', '2009','FALSE','11','4','6',
-                'apricots, as well as hazelnuts and fresh almonds. Several floral and spicy notes add an extra hint','75',
-                producers(:three).id.to_s,regions(:four).id.to_s,subregions(:three).id.to_s,'','4','4','3','POCT20', '16.50', '89']
+    content << ['ssb-09-c4-vado-fr-rh-ct', 'Semillon Sauvignon Blanc', '2009', 'FALSE', '11', '4', '6',
+                'apricots, as well as hazelnuts and fresh almonds. Several floral and spicy notes add an extra hint', '75',
+                producers(:three).id.to_s, regions(:four).id.to_s, subregions(:three).id.to_s, '', '4', '4', '3', 'POCT20', '16.50', '89']
 
     CSV.open(file_path, 'wb') do |csv|
       content.each { |row| csv << row }

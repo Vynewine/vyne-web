@@ -1,0 +1,44 @@
+<%= render :partial => "layouts/winemenu" %>
+
+<h1>Listing Vinifications</h1>
+<%= link_to 'Upload', controller: 'vinifications', action: 'upload' %><br/><br/><br/>
+<table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Method</th>
+      <th>Name</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @vinifications.each do |vinification| %>
+      <tr>
+        <td><%= vinification.id %></td>
+        <td><%= vinification[:method] %></td>
+        <td><%= vinification.name %></td>
+
+        <td class="button-wrapper">
+          <%= link_to admin_vinification_path(vinification) do %>
+            <i class="flaticon stroke zoom-1"></i>
+          <% end %>
+        </td>
+        <td class="button-wrapper">
+          <%= link_to edit_admin_vinification_path(vinification) do %>
+            <i class="flaticon stroke pencil-2"></i>
+          <% end %>
+        </td>
+        <td class="button-wrapper">
+          <%= link_to admin_vinification_path(vinification), method: :delete, data: { confirm: 'Are you sure?' } do %>
+            <i class="flaticon stroke trash-2"></i>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New vinification', new_admin_vinification_path %>

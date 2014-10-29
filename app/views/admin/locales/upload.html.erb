@@ -1,0 +1,33 @@
+<p>
+<h1>Upload locales</h1>
+<p>
+<h3>File Structure</h3>
+<ul>
+  <li>Accepted File format: CSV</li>
+  <li>First Row must specify column names</li>
+  <li>Expected column names:</li>
+  <ul>
+    <li>
+      <strong>locale_id</strong> : Required.
+    </li>
+    <li>
+      <strong>name</strong> : Required.
+    </li>
+    <li>
+      <strong>subregion_id</strong> : Required.
+    </li>
+  </ul>
+</ul>
+</p>
+</p>
+<p>
+  <%= form_tag({action: :import}, multipart: true) do %>
+      <%= file_field_tag 'file' %>
+      <%= submit_tag('Upload') %>
+  <% end %>
+</p>
+
+  <%= link_to 'Back', admin_locales_path %>
+
+
+

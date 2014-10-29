@@ -1,20 +1,24 @@
-<%= form_for([:admin, @note]) do |f| %>
-  <% if @note.errors.any? %>
+<%= form_for([:admin, @composition]) do |f| %>
+  <% if @composition.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@note.errors.count, "error") %> prohibited this note from being saved:</h2>
+      <h2><%= pluralize(@composition.errors.count, "error") %> prohibited this composition from being saved:</h2>
 
       <ul>
-      <% @note.errors.full_messages.each do |message| %>
+      <% @composition.errors.full_messages.each do |message| %>
         <li><%= message %></li>
       <% end %>
       </ul>
     </div>
   <% end %>
 
+    NOT DONE
+
   <div class="field">
     <%= f.label :name %><br>
     <%= f.text_field :name %>
   </div>
+
+
   <div class="actions">
     <%= f.submit %>
   </div>

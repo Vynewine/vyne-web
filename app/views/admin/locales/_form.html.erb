@@ -1,0 +1,32 @@
+<%= form_for([:admin, @locale]) do |f| %>
+  <% if @locale.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@locale.errors.count, "error") %> prohibited this locale from being saved:</h2>
+
+      <ul>
+      <% @locale.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+    <div class="field">
+      <%= f.label :note %><br>
+      <%= f.text_field :note %>
+    </div>
+  <div class="field">
+    <%= f.label :subregion_id %><br>
+    <%= select_tag :subregion_id,
+        options_from_collection_for_select(@subregions, "id", "name", :selected => @locale.subregion_id),
+        :prompt => "Choose a subregion"
+    %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

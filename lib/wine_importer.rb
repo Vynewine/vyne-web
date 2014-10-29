@@ -22,7 +22,11 @@ module WineImporter
           wine.update(
               name: row['name'],
               vintage: convert_vintage(row['vintage']),
-              single_estate: row['single_estate'].downcase.strip == 'true' ? true : false,
+              single_estate: if row['single_estate'].nil?
+                               false
+                             else
+                               row['single_estate'].downcase.strip == 'true' ? true : false
+                             end,
               alcohol: row['alcohol'],
               producer_id: row['producer_id'].to_i,
               type_id: row['type_id'].to_i,

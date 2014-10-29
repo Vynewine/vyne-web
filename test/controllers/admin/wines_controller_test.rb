@@ -24,7 +24,7 @@ class Admin::WinesControllerTest < ActionController::TestCase
               producers(:three).id.to_s,regions(:four).id.to_s,subregions(:three).id.to_s,'','4','4','3']
     end
 
-    file_path = 'wine_data.csv'#"/Users/jakub/Development/Vynz/docs/inventory-documents-export-2014-10-25/Upload wine data.csv"
+    file_path = 'wine_data.csv'
     import_wines(file_path)
     wines = Wine.all
     assert(wines.select{ |wine| wine.wine_key == 'ssb-09-c4-vado-fr-rh-ct'}.count == 1)

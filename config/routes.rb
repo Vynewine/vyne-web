@@ -85,25 +85,29 @@ Rails.application.routes.draw do
 
   # Actions for admins are under "/admin"
   namespace 'admin' do
-    root :to => 'producers#index'
-    resources :producers
-    resources :regions
-    resources :subregions
-    resources :grapes
+    root :to => 'wines#index'
     resources :types
     resources :bottlings
-    resources :maturations
-    resources :allergies
-    resources :notes
-    resources :foods
-    resources :occasions
-    resources :appellations
-    resources :categories
-    resources :wines do
+    resources :inventories,
+              :producers,
+              :regions,
+              :vinifications,
+              :appellations,
+              :grapes,
+              :maturations,
+              :locales,
+              :subregions,
+              :wines,
+              :compositions do
       collection do
         post 'import'
+        get 'upload'
       end
     end
+    resources :allergies
+    resources :foods
+    resources :occasions
+    resources :categories
     resources :roles
     resources :users
     resources :addresses
@@ -111,12 +115,6 @@ Rails.application.routes.draw do
     resources :orders
     resources :payments
     resources :statuses
-    # resources :advisors
-    resources :inventories do
-      collection do
-        post 'import'
-      end
-    end
     resources :delivery
     post '/orders/list' => 'orders#list'
     get 'advise/index' => 'advisors#index'

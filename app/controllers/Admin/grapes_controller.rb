@@ -1,4 +1,5 @@
 class Admin::GrapesController < ApplicationController
+  include GenericImporter
   layout "admin"
   before_action :authenticate_user!
   authorize_actions_for SupplierAuthorizer # Triggers user check
@@ -7,7 +8,7 @@ class Admin::GrapesController < ApplicationController
   # GET /grapes
   # GET /grapes.json
   def index
-    @grapes = Grape.all
+    @grapes = Grape.all.order(:id)
   end
 
   # GET /grapes/1
@@ -61,6 +62,20 @@ class Admin::GrapesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to admin_grapes_url, notice: 'Grape was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def import
+    results = import_data(params[:file], :grapes, %w(grape_id name))
+
+    if results[:success]
+      respond_to do |format|
+        format.html { redirect_to admin_grapes_path, notice: 'Grapes were successfully uploaded.' }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to upload_admin_grapes_path, alert: results[:errors].join(', ') }
+      end
     end
   end
 

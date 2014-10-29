@@ -1,0 +1,36 @@
+<p>
+<h1>Upload Wines</h1>
+<p>
+<h3>File Structure</h3>
+<ul>
+  <li>Accepted File format: CSV</li>
+  <li>First Row must specify column names</li>
+  <li>Expected column names:</li>
+  <ul>
+    <li>
+      <strong>wine_key</strong> : Optional. If key is provided existing wine will be updated.
+    </li>
+    <li>
+      <strong>name</strong> : Required.
+    </li>
+    <li>
+      <strong>vintage</strong>, <strong>single_estate</strong>, <strong>alcohol</strong>, <strong>producer_id</strong>,
+      <strong>type_id</strong>, <strong>note</strong>, <strong>bottle_size</strong>, <strong>region_id</strong>,
+      <strong>subregion_id</strong>, <strong>locale_id</strong>, <strong>appellation_id</strong>,
+      <strong>maturation_id</strong>, <strong>vinification_id</strong>, <strong>composition_id</strong>
+    </li>
+  </ul>
+</ul>
+</p>
+</p>
+<p>
+  <%= form_tag({action: :import}, multipart: true) do %>
+      <%= file_field_tag 'wines' %>
+      <%= submit_tag('Upload') %>
+  <% end %>
+</p>
+
+  <%= link_to 'Back', admin_wines_path %>
+
+
+

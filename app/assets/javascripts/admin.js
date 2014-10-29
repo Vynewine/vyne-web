@@ -285,17 +285,13 @@ var adminReady = function() {
 
             var compositionArray = [];
             for (var i = 0, composition; composition = wine.compositions[i++];) {
-                compositionArray.push(composition.name + ': ' + composition.quantity + '%');
+                compositionArray.push(composition.name + ': ' + composition.percentage + '%');
             }
 
-            var $se, $vg, $vn, $og;
+            var $se
 
             if (wine.single_estate)
                 $se = $('<span>').addClass('single flaticon solid house-2');
-            if (wine.vegan)
-                $vn = $('<span>').addClass('vegan').html('Vn');
-            if (wine.organic)
-                $og = $('<span>').addClass('organic').html('Og');
 
             $container.append(
                 $('<tr>')
@@ -319,7 +315,7 @@ var adminReady = function() {
                         ' ' + wine.vintage
                     ),
                     $('<td>').addClass('type').html(
-                        wine.types.join(', ')
+                        wine.type
                     ),
                     $('<td>').addClass('cost').html(
                         '&pound;' + cost
@@ -331,7 +327,7 @@ var adminReady = function() {
                         compositionArray.join(', ')
                     ),
                     $('<td>').addClass('flags').append(
-                        $se, $vg, $vn, $og
+                        $se
                     ),
                     $('<td>').html(
                             wine.warehouse_distance
@@ -357,7 +353,7 @@ var adminReady = function() {
                             $('<td>').html('Cost'),
                             $('<td>').html('Category'),
                             $('<td>').html('Composition'),
-                            $('<td>').html(''),
+                            $('<td>').html('Estate'),
                             $('<td>').html('Distance'),
                             $('<td>').html('')
                         )
@@ -401,11 +397,17 @@ var adminReady = function() {
 
         var sortKeyWords = function(e){
             $('#wine-list').slideUp(100);
+            var keywordLongEnough = false;
             var keywords = $searchField.val().split(',');
             for (var i = keywords.length - 1; i >= 0; i--) {
                 keywords[i] = keywords[i].trim();
+                if(keywords[i].length > 1) {
+                    keywordLongEnough = true;
+                }
             }
-            findKeywords(keywords.join(' '));
+            if (keywordLongEnough) {
+                findKeywords(keywords.join(' '));
+            }
         };
 
 
@@ -601,6 +603,14 @@ var adminReady = function() {
                      wait: 800,
             captureLength: -1,
                  callback: sortKeyWords
+        });
+
+        $('.tick-category').change(function() {
+            sortKeyWords();
+        });
+
+        $('#tick-sing').change(function() {
+            sortKeyWords();
         });
 
         /**

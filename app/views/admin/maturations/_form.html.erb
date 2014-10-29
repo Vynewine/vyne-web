@@ -15,12 +15,12 @@
     <%= f.label :bottling_id %><br>
     <%= select_tag :bottling_id,
         options_from_collection_for_select(@bottlings, "id", "name", :selected => @maturation.bottling_id),
-        :prompt => "Choose a maturation type"
+        :prompt => "Choose a bottling type"
     %>
   </div>
   <div class="field">
-    <%= f.label :period %><br>
-    <%= f.number_field :period %>
+    <%= f.label :description %><br>
+    <%= f.text_field :description %>
   </div>
   <div class="actions">
     <%= f.submit %>

@@ -12,12 +12,11 @@ json.array!(@results) do |wine|
   json.name wine[:name]
   json.vintage wine[:vintage]
   json.single_estate wine[:single_estate]
-  json.vegan wine[:vegan]
-  json.organic wine[:organic]
+
   # Relationships
-  json.types wine[:types]
+  json.type wine[:type]
   json.compositions wine[:compositions]
-  json.notes wine[:notes]
+  json.note wine[:note]
   # Availability
   json.warehouse wine[:warehouse]
   json.agendas wine[:agendas]

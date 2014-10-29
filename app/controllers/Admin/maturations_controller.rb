@@ -1,4 +1,5 @@
 class Admin::MaturationsController < ApplicationController
+  include GenericImporter
   layout "admin"
   before_action :authenticate_user!
   authorize_actions_for SupplierAuthorizer # Triggers user check
@@ -64,6 +65,20 @@ class Admin::MaturationsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to admin_maturations_url, notice: 'Maturation was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def import
+    results = import_data(params[:file], :maturations, %w(maturation_id description bottling_id))
+
+    if results[:success]
+      respond_to do |format|
+        format.html { redirect_to admin_maturations_path, notice: 'Maturations were successfully uploaded.' }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to upload_admin_maturations_path, alert: results[:errors].join(', ') }
+      end
     end
   end
 

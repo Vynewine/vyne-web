@@ -1,0 +1,15 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Method:</strong>
+  <%= @vinification[:method] %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @vinification.name %>
+</p>
+
+
+<%= link_to 'Edit', edit_admin_vinification_path(@vinification) %>
+<%= link_to 'Back', admin_vinifications_path %>

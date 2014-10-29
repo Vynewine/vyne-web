@@ -132,22 +132,16 @@ class Admin::AdvisorsController < ApplicationController
     @search = Wine.search do
       fulltext params[:keywords]
 
-
       with(:warehouse_ids, params[:warehouses].split(","))
 
       unless params[:categories].nil?
-        with(:price_categories, params[:categories])
+        with(:category_ids, params[:categories])
       end
 
       if params[:single]
         with(:single_estate, true)
       end
-      if params[:vegan]
-        with(:vegan, true)
-      end
-      if params[:organic]
-        with(:organic, true)
-      end
+
     end
 
     #Transform Results to order by warehouse that's closest to the client
@@ -167,15 +161,13 @@ class Admin::AdvisorsController < ApplicationController
                 :countryName => wine.producer.country.name,
                 :subregion => wine.subregion.nil? ? '' : wine.subregion.name,
                 :id => wine.id,
-                :appellation => wine.appellation.name,
+                :appellation => wine.appellation.blank? ? '' : wine.appellation.name,
                 :name => wine.name,
-                :vintage => wine.vintage,
+                :vintage => wine.txt_vintage,
                 :single_estate => wine.single_estate,
-                :vegan => wine.vegan,
-                :organic => wine.organic,
-                :types => wine.types.map {|t| t.name},
-                :compositions => wine.compositions.map { |c| { :name => c.grape.name, :quantity => c.quantity }},
-                :notes => wine.notes.map {|n| n.name},
+                :type => wine.type.name,
+                :compositions => wine.composition.composition_grapes.map { |c| { :name => c.grape.name, :percentage => c.percentage }},
+                :note => wine.note,
                 :warehouse => warehouse_id,
                 :agendas => inv.warehouse.agendas,
                 :cost => inv.cost.to_s,
