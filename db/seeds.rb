@@ -567,6 +567,21 @@ Food.create(
     :name => "vanilla & caramel",
   :parent => 8
 )
+Food.create(
+    :id => 45,
+    :name => "duck & game",
+  :parent => 1
+)
+Food.create(
+    :id => 46,
+    :name => "lamb",
+  :parent => 1
+)
+Food.create(
+    :id => 47,
+    :name => "raw",
+  :parent => 1
+)
 
 puts "Foods -------- OK"
 

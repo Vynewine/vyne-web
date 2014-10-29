@@ -57,7 +57,10 @@ $(function() {
 	//Clicking the cart link takes you to the review page
 	$('.cart-link').click(function(e) {
 		e.preventDefault();
-		order.swipeTo(3, 500, false);
+		if($('.order-table .order-bottle').length > 0) {
+			order.swipeTo(3, 500, false);
+		}
+		$('.btn-checkout').show();
 	});
 
 
@@ -132,6 +135,12 @@ $(function() {
 		console.log(err);
 	}
 
+	$('#order input').keypress(function(e) {
+	    if ( e.which == 13 ) {
+	    	e.preventDefault();
+	    }
+	});
+
 
 	/* Bottle array */
 
@@ -156,7 +165,6 @@ $(function() {
 	}
 
 	var wineCount = 0;
-
 
 
 
