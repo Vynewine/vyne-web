@@ -44,5 +44,16 @@ class Admin::ProducersControllerTest < ActionController::TestCase
     assert(flash[:alert] == 'File must be .csv format.')
 
   end
+
+  test 'Will error when file with wrong columns is uploaded' do
+    inventory_file = fixture_file_upload('files/producers_bad.csv','text/csv')
+
+    post :import , {
+        :file => inventory_file
+    }
+
+    assert(flash[:alert] == 'Column missing: note')
+
+  end
 end
 

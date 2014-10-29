@@ -1,5 +1,5 @@
 <p>
-<h1>Upload Producers</h1>
+<h1>Upload Vinifications</h1>
 <p>
 <h3>File Structure</h3>
 <ul>
@@ -8,16 +8,13 @@
   <li>Expected column names:</li>
   <ul>
     <li>
-      <strong>producer_id</strong> : Optional. If id is provided existing producer will be updated.
+      <strong>vinification_id</strong> : Required.
     </li>
     <li>
-      <strong>name</strong> : Required.
+      <strong>method</strong> : Required.
     </li>
     <li>
-      <strong>country_id</strong> : Required.
-    </li>
-    <li>
-      <strong>note</strong> : Optional.
+      <strong>name</strong> : Optional.
     </li>
   </ul>
 </ul>
@@ -30,7 +27,8 @@
   <% end %>
 </p>
 
-  <%= link_to 'Back', admin_producers_path %>
+  <%= link_to 'Back', admin_vinifications_path %>
+
 
 
 

@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @locale.name %>
+</p>
+
+<p>
+  <strong>Region:</strong>
+  <%= @locale.subregion.name %>
+</p>
+
+<%= link_to 'Edit', edit_admin_locale_path(@locale) %>
+<%= link_to 'Back', admin_locales_path %>

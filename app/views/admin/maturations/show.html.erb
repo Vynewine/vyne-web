@@ -1,14 +1,16 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <strong>Maturation type:</strong>
-  <%= @maturation.bottling.name %>
+  <strong>Description:</strong>
+  <%= @maturation.description %>
 </p>
 
 <p>
-  <strong>Period:</strong>
-  <%= @maturation.period %>
+  <strong>Bottling:</strong>
+  <%= @maturation.bottling.blank? ? '' : @maturation.bottling.name %>
 </p>
+
+
 
 <%= link_to 'Edit', edit_admin_maturation_path(@maturation) %>
 <%= link_to 'Back', admin_maturations_path %>

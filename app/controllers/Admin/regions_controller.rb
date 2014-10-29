@@ -69,7 +69,7 @@ class Admin::RegionsController < ApplicationController
   end
 
   def import
-    results = import_data(params[:file], :regions)
+    results = import_data(params[:file], :regions, %w(region_id name country_id))
 
     if results[:success]
       respond_to do |format|

@@ -1,4 +1,5 @@
 class Admin::AppellationsController < ApplicationController
+  include GenericImporter
   layout "admin"
   before_action :authenticate_user!
   authorize_actions_for SupplierAuthorizer # Triggers user check
@@ -7,7 +8,7 @@ class Admin::AppellationsController < ApplicationController
   # GET /appellations
   # GET /appellations.json
   def index
-    @appellations = Appellation.all
+    @appellations = Appellation.all.order(:id)
   end
 
   # GET /appellations/1
@@ -63,6 +64,21 @@ class Admin::AppellationsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  def import
+    results = import_data(params[:file], :appellations, %w(appellation_id name classification region_id))
+
+    if results[:success]
+      respond_to do |format|
+        format.html { redirect_to admin_appellations_path, notice: 'Appellation were successfully uploaded.' }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to upload_admin_appellations_path, alert: results[:errors].join(', ') }
+      end
+    end
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

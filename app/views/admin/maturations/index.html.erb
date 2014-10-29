@@ -1,12 +1,13 @@
 <%= render :partial => "layouts/winemenu" %>
 
-<h1>Listing maturations</h1>
-
+<h1>Listing Maturations</h1>
+<%= link_to 'Upload', controller: 'maturations', action: 'upload' %><br/><br/><br/>
 <table>
   <thead>
     <tr>
+      <th>Id</th>
+      <th>Description</th>
       <th>Bottling</th>
-      <th>Period</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -14,8 +15,10 @@
   <tbody>
     <% @maturations.each do |maturation| %>
       <tr>
-        <td><%= maturation.bottling.name %></td>
-        <td><%= maturation.period %></td>
+        <td><%= maturation.id %></td>
+        <td><%= maturation.description %></td>
+        <td><%= maturation.bottling.blank? ? '' :  maturation.bottling.name %></td>
+
         <td class="button-wrapper">
           <%= link_to admin_maturation_path(maturation) do %>
             <i class="flaticon stroke zoom-1"></i>

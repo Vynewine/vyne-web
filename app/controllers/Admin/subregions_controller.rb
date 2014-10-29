@@ -1,4 +1,5 @@
 class Admin::SubregionsController < ApplicationController
+  include GenericImporter
   layout "admin"
   before_action :authenticate_user!
   authorize_actions_for SupplierAuthorizer # Triggers user check
@@ -7,7 +8,7 @@ class Admin::SubregionsController < ApplicationController
   # GET /subregions
   # GET /subregions.json
   def index
-    @subregions = Subregion.all
+    @subregions = Subregion.all.order(:id)
   end
 
   # GET /subregions/1
@@ -63,6 +64,20 @@ class Admin::SubregionsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to admin_subregions_url, notice: 'Subregion was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def import
+    results = import_data(params[:file], :subregions, %w(subregion_id name region_id))
+
+    if results[:success]
+      respond_to do |format|
+        format.html { redirect_to admin_subregions_path, notice: 'Subregions were successfully uploaded.' }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to upload_admin_subregions_path, alert: results[:errors].join(', ') }
+      end
     end
   end
 
