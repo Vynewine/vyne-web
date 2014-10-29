@@ -97,14 +97,14 @@ Rails.application.routes.draw do
               :maturations,
               :locales,
               :subregions,
-              :wines do
+              :wines,
+              :compositions do
       collection do
         post 'import'
         get 'upload'
       end
     end
     resources :allergies
-    resources :notes
     resources :foods
     resources :occasions
     resources :categories

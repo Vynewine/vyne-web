@@ -23,5 +23,69 @@ class CreateWines < ActiveRecord::Migration
     add_index :wines, :name
     add_index :wines, :vintage
     add_index :wines, :wine_key, :unique => true
+
+    execute <<-SQL
+      ALTER TABLE wines
+        ADD CONSTRAINT fk_wines_producers
+        FOREIGN KEY (producer_id)
+        REFERENCES producers(id)
+    SQL
+
+    execute <<-SQL
+      ALTER TABLE wines
+        ADD CONSTRAINT fk_wines_regions
+        FOREIGN KEY (region_id)
+        REFERENCES regions(id)
+    SQL
+
+    execute <<-SQL
+      ALTER TABLE wines
+        ADD CONSTRAINT fk_wines_subregions
+        FOREIGN KEY (subregion_id)
+        REFERENCES subregions(id)
+    SQL
+
+    execute <<-SQL
+      ALTER TABLE wines
+        ADD CONSTRAINT fk_wines_locales
+        FOREIGN KEY (locale_id)
+        REFERENCES locales(id)
+    SQL
+
+    execute <<-SQL
+      ALTER TABLE wines
+        ADD CONSTRAINT fk_wines_appellations
+        FOREIGN KEY (appellation_id)
+        REFERENCES appellations(id)
+    SQL
+
+    execute <<-SQL
+      ALTER TABLE wines
+        ADD CONSTRAINT fk_wines_maturations
+        FOREIGN KEY (maturation_id)
+        REFERENCES maturations(id)
+    SQL
+
+    execute <<-SQL
+      ALTER TABLE wines
+        ADD CONSTRAINT fk_wines_types
+        FOREIGN KEY (type_id)
+        REFERENCES types(id)
+    SQL
+
+    execute <<-SQL
+      ALTER TABLE wines
+        ADD CONSTRAINT fk_wines_vinifications
+        FOREIGN KEY (vinification_id)
+        REFERENCES vinifications(id)
+    SQL
+
+    execute <<-SQL
+      ALTER TABLE wines
+        ADD CONSTRAINT fk_wines_compositions
+        FOREIGN KEY (composition_id)
+        REFERENCES compositions(id)
+    SQL
+
   end
 end

@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @composition.name %>
+</p>
+
+<p>
+  <strong>Grapes:</strong>
+  <ul>
+    <% @composition.composition_grapes.each do |comp| %>
+        <li><%= comp.grape.name + (comp.percentage.blank? ? '' : ' (' + comp.percentage.to_s + '%)') %></li>
+    <% end %>
+  </ul>
+
+
+</p>
+
+<%= link_to 'Edit', edit_admin_composition_path(@composition) %>
+<%= link_to 'Back', admin_compositions_path %>
