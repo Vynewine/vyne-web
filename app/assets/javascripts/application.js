@@ -155,7 +155,8 @@ $(function() {
 		this.price = '',
 		this.specificWine = '',
 		this.food = [],
-		this.occasion = []
+		this.occasion = 0
+		this.occasions = []
 	}
 
 	//Object to store food details
@@ -231,6 +232,10 @@ $(function() {
 	$(document).on('click', '.prefs-list li a', function(e) {
 		e.preventDefault();
 		$('.order-panel').scrollTop(0);
+
+		if($(this).closest('ul').attr('id') == 'occasion-list') {
+			wines[wineCount].occasion = $(this).parent().attr('id').split('-')[1];
+		}
 	});
 
 	$(document).on('click', '.prefs-list-bottom li a', function(e) {
@@ -253,11 +258,10 @@ $(function() {
 
 				//Add the food to the wine object
 				if($this.closest('ul').attr('id') == 'wine-list') {
-					wines[wineCount].occasion.push( new occasion( id.split('-')[1], name ) );
+					wines[wineCount].occasions.push( new occasion( id.split('-')[1], name ) );
 				} else {
 					wines[wineCount].food.push( new food( id.split('-')[1], name ) );
 				}
-				
 
 				//Add the food to our mini review bar at the bottom
 				$img = $this.find('img').clone();
@@ -650,7 +654,7 @@ function createCartPage(wines, wineCount) {
 							}));
 						});
 						$ul.appendTo($td);
-					} else if(key == 'occasion' && wine['occasion'].length > 0) {
+					} else if(key == 'occasions' && wine['occasions'].length > 0) {
 						$('<span/>', {
 							text: wine[key][0].name
 						}).addClass(key).appendTo($td);

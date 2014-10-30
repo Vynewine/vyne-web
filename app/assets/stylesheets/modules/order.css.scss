@@ -686,7 +686,8 @@
                                     }
 
                                     &.quantity,
-                                    &.category {
+                                    &.category,
+                                    &.occasion {
                                         display: none;
                                     }
 
@@ -694,7 +695,7 @@
                                         text-align: center;
                                     }
 
-                                    &.occasion,
+                                    &.occasions,
                                     &.specificWine {
                                         font-size: 1.4rem;
                                         color: rgba(255,255,255,0.6);
