@@ -7,22 +7,25 @@
     <div id="order-list">
 
           <table border="1">
+            <thead>
+                <tr>
+                  <th>Order Id</th>
+                  <th>Created</th>
+                  <th>Client Name</th>
+                  <th>Mobile</th>
+                  <th>Post Code</th>
+                  <th></th>
+                </tr>
+            </thead>
             <tbody>
             <% @orders.each do |order|  %>
             <tr class="order">
               <td class="client">Order Id: <%= order.id %></td>
+              <td class="client"><%= order.created_at %></td>
               <td class="client"><%= order.client.name %></td>
               <td class="phone"><%= order.client.mobile %></td>
               <td class="postcode"><%= order.address.postcode %></td>
               <td class="actions"><a href="/admin/orders/<%= order.id %>">Advise Order</a></td>
-            </tr>
-            <tr>
-              <td colspan="5">
-                <strong>Order Items:</strong>
-                <% order.order_items.each do |item| %>
-                    <a href="/admin/advise/item/<%= item.id %>" style="margin-right: 20px;"><%= item.id%> - Advise Wine</a>
-                <% end %>
-              </td>
             </tr>
             <% end %>
             </tbody>

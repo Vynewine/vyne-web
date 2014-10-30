@@ -57,13 +57,13 @@ class ShopControllerTest < ActionController::TestCase
     wines = [
             {
                  :quantity => 1,
-                 :food => [10, 20, 33],
+                 :food => [{:id => 10},{:id => 20},{:id => 33}],
                  :category => categories(:house).id
 
             },
              {
                  :quantity => 1,
-                 :food => [10, 20, 33],
+                 :food => [{:id => 10},{:id => 20},{:id => 33}],
                  :category => categories(:reserve).id
              }
     ]
@@ -94,7 +94,7 @@ class ShopControllerTest < ActionController::TestCase
         {
             :quantity => 2,
             :occasion => occasions(:one).id,
-            :type => types(:one).id,
+            :wineType => {:id => types(:one).id},
             :category => categories(:house).id
         }
     ]
@@ -107,6 +107,7 @@ class ShopControllerTest < ActionController::TestCase
 
     assert_redirected_to order
     assert_equal(occasions(:one), order.order_items[0].occasion)
+    assert_equal(types(:one), order.order_items[0].type)
 
   end
 
@@ -129,6 +130,84 @@ class ShopControllerTest < ActionController::TestCase
     assert_equal('Chateauneuf-du-Pape', order.order_items[0].specific_wine)
   end
 
+  test 'will get discount on second bottle' do
+    wines = [
+        {
+            :quantity => 1,
+            :food => [{:id => 10},{:id => 20},{:id => 33}],
+            :category => categories(:house).id
 
+        },
+        {
+            :quantity => 1,
+            :food => [{:id => 10},{:id => 20},{:id => 33}],
+            :category => categories(:house).id
+        }
+    ]
+
+    @request_data[:wines] = wines.to_json
+
+    post :create, @request_data
+
+    order = Order.find_by client: @userOne
+
+    assert(order.order_items.count == 2, 'Order should have 2 order items')
+    assert_equal(25, order.total_price.to_i, 'Order total price should be 25')
+
+  end
+
+  test 'ui post' do
+
+    post :create, post_data
+
+    order = Order.find_by client: @userOne
+
+    puts json: order.order_items
+
+    order.order_items.each { |item| puts json: item.foods }
+
+  end
+
+  def post_data
+    {"utf8"=>"✓",
+     "authenticity_token"=>"q9C5QhmjyfeFd1LbXlSgvc10kAiswGKksYTluQCYTf0=",
+     "email"=>"",
+     "warehouses"=>"{\"warehouses\":[{\"id\":1,
+\"distance\":1.914}]}",
+     "category"=>categories(:house),
+     "specific-wine"=>"",
+     "wines"=>"[{\"quantity\":1,
+\"category\":" + categories(:house).id.to_s + ",
+\"label\":\"House\",
+\"price\":\"£15\",
+\"specificWine\":\"\",
+\"food\":[{\"id\":\"14\",
+\"name\":\"fish\"},
+{\"id\":\"35\",
+\"name\":\"herbs\"},
+{\"id\":\"10\",
+\"name\":\"cured meat\"}],
+\"occasion\":[]},
+{\"quantity\":1,
+\"category\":" + categories(:reserve).id.to_s + ",
+\"label\":\"Reserve\",
+\"price\":\"£20\",
+\"specificWine\":\"\",
+\"food\":[{\"id\":\"14\",
+\"name\":\"fish\"},
+{\"id\":\"18\",
+\"name\":\"hard cheese\"},
+{\"id\":\"38\",
+\"name\":\"pasta\"}],
+\"occasion\":[]}]",
+     "address_s"=>"8a Pickfords Wharf,
+ Wharf Road",
+     "address_d"=>"",
+     "address_id"=> addresses(:one).id,
+     "old_card"=>"0",
+     "new_card"=>"1111",
+     "new_brand"=>"1",
+     "stripeToken"=>"tok_14tFx92eZvKYlo2CxthO99kb"}
+  end
 
 end

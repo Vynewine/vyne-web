@@ -309,6 +309,7 @@ var adminReady = function() {
                             .attr('src', wine.countryFlag)
 
                     ),
+                    $('<td>').addClass('subregion').html(wine.wine),
                     $('<td>').addClass('subregion').html(wine.subregion),
                     $('<td>').addClass('name').html(
                         wine.name + (wine.appellation ? " ("+wine.appellation+")" : '') +
@@ -347,7 +348,8 @@ var adminReady = function() {
                     $('<thead>').append(
                         $('<tr>').append(
                             $('<td>').html(''),
-                            $('<td>').html(''),
+                            $('<td>').html('Region'),
+                            $('<td>').html('Subregion'),
                             $('<td>').html('Name'),
                             $('<td>').html('Type'),
                             $('<td>').html('Cost'),

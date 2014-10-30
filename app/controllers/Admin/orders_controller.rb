@@ -7,7 +7,7 @@ class Admin::OrdersController < ApplicationController
   # GET /orders
   # GET /orders.json
   def index
-    @orders = Order.all.order('status_id ASC')
+    @orders = Order.all.order('status_id ASC, id ASC')
   end
 
   # GET /orders/list.json

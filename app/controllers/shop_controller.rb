@@ -75,9 +75,9 @@ class ShopController < ApplicationController
           :card => token,
           :description => current_user.email
       )
-      payment        = Payment.new
-      payment.user   = current_user
-      payment.brand  = params[:new_brand]
+      payment = Payment.new
+      payment.user = current_user
+      payment.brand = params[:new_brand]
       payment.number = params[:new_card]
       payment.stripe = customer.id
     else
@@ -99,23 +99,37 @@ class ShopController < ApplicationController
     if @order.save
       wines.each { |wine|
 
-        occasion = Occasion.find(wine['occasion']) unless wine['occasion'].nil?
-        wine_type = Type.find(wine['type']) unless wine['type'].nil?
-        foods = Food.where(:id => wine['food']) unless wine['food'].nil?
-        category = Category.find(wine['category']) unless wine['category'].nil?
+        if !wine['occasion'].blank? && wine['occasion'].to_i != 0
+          occasion = Occasion.find(wine['occasion'])
+        end
+
+        if !wine['wineType'].blank? && !wine['wineType']['id'].blank? && wine['wineType']['id'].to_i != 0
+          wine_type = Type.find(wine['wineType']['id'])
+        end
+
+        foods =[]
+        unless wine['food'].nil?
+          wine['food'].each do |food|
+            foods << Food.find(food['id'])
+          end
+        end
+
+        #TODO: Validate params, category is required.
+        category = Category.find(wine['category'])
+
 
         order_item = @order.order_items.create!({
-                                       :specific_wine => wine['specificWine'],
-                                       :quantity => wine['quantity'],
-                                       :category => category
-                                   })
-
+                                                    :specific_wine => wine['specificWine'],
+                                                    :quantity => wine['quantity'],
+                                                    :category => category,
+                                                    :price => category.price
+                                                })
 
         unless foods.nil?
           order_item.foods = foods
         end
 
-        unless occasion.nil?
+        unless occasion.blank?
           order_item.occasion = occasion
         end
 
@@ -131,6 +145,10 @@ class ShopController < ApplicationController
         format.json { render json: @order.errors, status: :unprocessable_entity }
       end
     end
+
+    apply_promotions(@order)
+
+    @order.save
 
     respond_to do |format|
       first_time_ordered current_user
@@ -164,18 +182,18 @@ class ShopController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_order
-      @order = Order.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_order
+    @order = Order.find(params[:id])
+  end
 
-    def user_params
-      params.require(:user).permit(:first_name, :last_name, :email, :mobile, :password, :password_confirmation)
-    end
+  def user_params
+    params.require(:user).permit(:first_name, :last_name, :email, :mobile, :password, :password_confirmation)
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def order_params
-      params.require(:order).permit(
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def order_params
+    params.require(:order).permit(
         # :address_id,
         :warehouse_id,
         :client_id,
@@ -183,7 +201,15 @@ class ShopController < ApplicationController
         :wine_id,
         :quantity,
         address_attributes: [:id, :detail, :street, :postcode],
-      )
+    )
+  end
+
+  def apply_promotions(order)
+    #Second Bottle 5 off promotion
+    if order.order_items.count == 2
+      order.order_items[1].price = (order.order_items[1].price - 5)
+      order.order_items[1].save
     end
+  end
 end
 

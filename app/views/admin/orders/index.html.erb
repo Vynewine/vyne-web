@@ -3,6 +3,8 @@
 <table border="1" class="list-table">
   <thead>
     <tr>
+      <th>Id</th>
+      <th>Created</th>
       <th>Status</th>
       <th>Client</th>
       <th>Address</th>
@@ -15,6 +17,8 @@
   <tbody>
     <% @orders.each do |order| %>
       <tr class="order <%= order.status.label.gsub( " ", "_" ) %>">
+        <td><%= order.id %></td>
+        <td><%= order.created_at %></td>
         <td><%= order.status.label %></td>
         <td><%= order.client_id %> - <%= order.client.name %></td>
         <td><%= order.address.postcode %></td>

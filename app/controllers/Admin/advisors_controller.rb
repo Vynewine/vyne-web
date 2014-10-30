@@ -12,7 +12,7 @@ class Admin::AdvisorsController < ApplicationController
   respond_to :html, :js
 
   def index
-    @orders = Order.where(status_id: [1]) # Ignores delivered and cancelled
+    @orders = Order.where(status_id: [1]).order(:id) # Ignores delivered and cancelled
     @categories = Category.all
   end
 
@@ -20,6 +20,7 @@ class Admin::AdvisorsController < ApplicationController
     @order_item = OrderItem.find(params[:id])
     @order = @order_item.order
     @categories = Category.all
+    @warehouses = Warehouse.where(:id => @order.information['warehouses'].map{ |warehouse| warehouse['id'] })
   end
 
   def update

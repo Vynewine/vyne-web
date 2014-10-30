@@ -6,8 +6,7 @@
 </p>
 
 <p>
-  <strong>Client:</strong>
-  <%= @order.client.name %>
+  <strong>Client:</strong> Name: <%= @order.client.name %>, <strong>Mobile:</strong> <%= @order.client.mobile %>
 </p>
 
 <p>
@@ -50,14 +49,14 @@
   <ul>
     <% @warehouses.each do |warehouse| %>
         <li>
-          <%= warehouse.title + ' - ' + warehouse.address.full %>
+          Id: <%= warehouse.id %>, Name: <%= warehouse.title %>, Address: <%= warehouse.address.full %>
         </li>
     <% end %>
   </ul>
 </p>
 
 <p>
-  <strong>Order Items</strong>
+  <strong>Order Items:</strong>
 <table border="1" class="list-table">
   <thead>
   <tr>
@@ -77,7 +76,7 @@
           <a href="/admin/advise/item/<%= item.id %>">
           <%= item.wine.nil? ? 'Advise' : 'Advised' %></a></td>
         <td>
-          <% if item.foods %>
+          <% unless item.foods.blank? %>
               <p><strong>Food</strong></p>
               <ul>
                 <% item.foods.each do |food| %>
@@ -85,17 +84,17 @@
                 <% end %>
               </ul>
           <% end %>
-          <% if item.occasion %>
+          <% unless item.occasion.blank? %>
               <p><strong>Occasion</strong></p>
               <p><%= item.occasion.name %></p>
           <% end %>
 
-          <% if item.type %>
+          <% unless item.type.blank? %>
               <p><strong>Wine Type</strong></p>
               <p><%= item.type.name %></p>
           <% end %>
 
-          <% if item.specific_wine %>
+          <% unless item.specific_wine.blank? %>
               <p><strong>Specific Wine</strong></p>
               <p><%= item.specific_wine %></p>
           <% end %>

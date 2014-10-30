@@ -1,5 +1,6 @@
-<p><h3>Customer <i><%= @order.client.name %></i> selected:</h3></p>
-<% if @order_item.foods %>
+<p><h3>Customer </h3></p>
+<div><a href="<%= admin_user_path @order.client %>"><%= @order.client.name %></a></div>  (m: <%= @order.client.mobile %>)
+<% unless @order_item.foods.blank? %>
     <p><strong>Food</strong></p>
     <ul>
       <% @order_item.foods.each do |food| %>
@@ -7,22 +8,24 @@
       <% end %>
     </ul>
 <% end %>
-<% if @order_item.occasion %>
+<% unless @order_item.occasion.blank? %>
     <p><strong>Occasion</strong></p>
     <p><%= @order_item.occasion.name %></p>
 <% end %>
 
-<% if @order_item.type %>
+<% unless @order_item.type.blank? %>
     <p><strong>Wine Type</strong></p>
     <p><%= @order_item.type.name %></p>
 <% end %>
 
-<% if @order_item.specific_wine %>
+<% unless @order_item.specific_wine.blank? %>
     <p><strong>Specific Wine</strong></p>
     <p><%= @order_item.specific_wine %></p>
 <% end %>
-
-<p><strong>Warehouses Matched: <%= @order.information['warehouses'].length %></strong></p>
+<p><strong>Warehouses Matched:</strong></p>
+<% @warehouses.each do |warehouse| %>
+    Distance to client: <%= @order.information['warehouses'].detect{ |w| w['id'] == warehouse.id }['distance'] %> mil - <%= warehouse.title %> - <%= warehouse.address.full %>  </br>
+<% end %>
 
 <% if !@order_item.wine.nil? %>
     <p><strong>Already Selected Wine:</strong></p>
