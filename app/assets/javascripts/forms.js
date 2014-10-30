@@ -188,7 +188,7 @@ $(document).ready(function(){
 
                     var currentHour = new Date().getHours();
 
-                    if(currentHour >= 12 && currentHour < 20) {
+                    if(currentHour >= 10 && currentHour < 20) {
 
                         $slideable.removeClass('slideup');
 

@@ -164,6 +164,11 @@ $(function() {
 		this.name = name
 	}
 
+	var occasion = function(id, name) {
+		this.id = id,
+		this.name = name
+	}
+
 	var wineCount = 0;
 
 
@@ -247,7 +252,12 @@ $(function() {
 			} else {
 
 				//Add the food to the wine object
-				wines[wineCount].food.push( new food( id, name ) );
+				if($this.closest('ul').attr('id') == 'wine-list') {
+					wines[wineCount].occasion.push( new occasion( id.split('-')[1], name ) );
+				} else {
+					wines[wineCount].food.push( new food( id.split('-')[1], name ) );
+				}
+				
 
 				//Add the food to our mini review bar at the bottom
 				$img = $this.find('img').clone();
@@ -291,73 +301,13 @@ $(function() {
 		}
 	});
 
-	$('#select-preferences').click(function(e) {
+	$('#specific-wine, #select-preferences').click(function(e) {
 
-		console.log(wines);
-		$('input[name="wines"]').val( JSON.stringify(wines) );
+		e.preventDefault();
 
-		if($('input[name="specific-wine"]').val() != '') {
-			wines[wineCount].specificWine = $('input[name="specific-wine"]').val();
-		}
+		createCartPage(wines, wineCount);
 
-		$('.no-bottles').hide();
-		$('.order-bottle').remove();
-
-		//Creates some html for each to be displayed on the review page
-
-		wines.forEach(function(wine) {
-
-			var $td = $('<td>').attr('id','wine-'+wines.indexOf(wine)).addClass('order-table-bottle wine-bottle-'+wine.price.substr(1,2)).append($('<a/>', { href: '#', text: 'x' }).addClass('delete')).append('<div class="wine-bottle"></div>');
-
-			for (var key in wine) {
-				if (wine.hasOwnProperty(key)) {
-					if(key != 'price') {
-						if(key == 'food') {
-							var foods = wine[key];
-							var $ul = $('<ul/>').addClass('food');
-
-							//sort foods, for aesthetics
-							foods.sort(function(a, b){
-								return a.name.length - b.name.length;
-							});
-
-							foods.forEach(function(food) {
-								$ul.append($('<li/>', {
-									text: food.name
-								}));
-							});
-							$ul.appendTo($td);
-						} else {
-							$('<span/>', {
-								text: wine[key]
-							}).addClass(key).appendTo($td);
-						}
-					}
-				}
-			}
-
-			var $pricetd = $('<td>').addClass('order-table-bottle-price').append($('<span/>', { text: wine['price'] }).addClass('price'));
-
-			$('.add-bottle').before($('<tr>').addClass('order-bottle').append($td).append($pricetd));
-
-			//Reset prefs
-			$('.tab').removeClass('active');
-			$('.prefs-overview, .food-limit, .occasion-limit').hide();
-			$('.prefs-list li').removeClass('selected');
-			$('.prefs-overview-list li a').empty().append('<span>+</span>');;
-			$('.prefs-overview-list li').removeClass('empty').addClass('empty');
-
-		});
-
-		if($('.order-bottle').length == 1) {
-			$('.add-bottle').show();
-		}
-
-		$('.cart-count').show().text(parseInt($('.cart-count').text()) + 1);
-
-		$('.btn-checkout').show();
-
-		calculateTotalCost();
+		order.swipeNext();
 
 	});
 
@@ -665,6 +615,78 @@ var postCodeLookup = function(postcode) {
         });
 }
 
+function createCartPage(wines, wineCount) {
+
+	if($('input[name="specific-wine"]').val() != '') {
+		wines[wineCount].specificWine = $('input[name="specific-wine"]').val();
+	}
+
+	console.log(wines);
+	$('input[name="wines"]').val( JSON.stringify(wines) );
+
+	$('.no-bottles').hide();
+	$('.order-bottle').remove();
+
+	//Creates some html for each to be displayed on the review page
+
+	wines.forEach(function(wine) {
+
+		var $td = $('<td>').attr('id','wine-'+wines.indexOf(wine)).addClass('order-table-bottle wine-bottle-'+wine.price.substr(1,2)).append($('<a/>', { href: '#', text: 'x' }).addClass('delete')).append('<div class="wine-bottle"></div>');
+
+		for (var key in wine) {
+			if (wine.hasOwnProperty(key)) {
+				if(key != 'price') {
+					if(key == 'food' && wine['food'].length > 0) {
+						var foods = wine[key];
+						var $ul = $('<ul/>').addClass('food');
+
+						foods.sort(function(a, b){
+							return a.name.length - b.name.length;
+						});
+
+						foods.forEach(function(food) {
+							$ul.append($('<li/>', {
+								text: food.name
+							}));
+						});
+						$ul.appendTo($td);
+					} else if(key == 'occasion' && wine['occasion'].length > 0) {
+						$('<span/>', {
+							text: wine[key][0].name
+						}).addClass(key).appendTo($td);
+					} else {
+						$('<span/>', {
+							text: wine[key]
+						}).addClass(key).appendTo($td);
+					}
+				}
+			}
+		}
+
+		var $pricetd = $('<td>').addClass('order-table-bottle-price').append($('<span/>', { text: wine['price'] }).addClass('price'));
+
+		$('.add-bottle').before($('<tr>').addClass('order-bottle').append($td).append($pricetd));
+
+		//Reset prefs
+		$('.tab').removeClass('active');
+		$('.prefs-overview, .food-limit, .occasion-limit').hide();
+		$('.prefs-list li').removeClass('selected');
+		$('.prefs-overview-list li a').empty().append('<span>+</span>');;
+		$('.prefs-overview-list li').removeClass('empty').addClass('empty');
+		$('input[name="specific-wine"]').val('');
+
+	});
+
+	if($('.order-bottle').length == 1) {
+		$('.add-bottle').show();
+	}
+
+	$('.cart-count').show().text(parseInt($('.cart-count').text()) + 1);
+
+	$('.btn-checkout').show();
+
+	calculateTotalCost();
+}
 
 function calculateTotalCost() {
 	var totalCost = 0;

@@ -119,7 +119,7 @@
           <div class="specific">
             <label for="specifc-wine">Have a specific wine type in mind?</label>
             <input type="" name="specific-wine" placeholder="e.g Chateauneuf-du-Pape" />
-            <a href="#" class="btn btn__full-width next-slide">Submit wine</a>
+            <a href="#" id="specific-wine" class="btn btn__full-width">Submit wine</a>
           </div>
 
         </div>
@@ -160,7 +160,7 @@
                 <% subFood = @foods.clone.to_a %>
                 <% subFood.keep_if {|f| f.parent==parentFood.id} %>
                 <% subFood.each do |food| %>
-                <li id="<%= food.id %>">
+                <li id="food-<%= food.id %>">
                   <% if [5,9,11,12,13,14,25,26,27,40,41].include? food.id %>
                   <a href="#preparation">
                   <% else %>
