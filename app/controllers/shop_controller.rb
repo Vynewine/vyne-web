@@ -75,6 +75,7 @@ class ShopController < ApplicationController
           :card => token,
           :description => current_user.email
       )
+      puts json: customer
       payment = Payment.new
       payment.user = current_user
       payment.brand = params[:new_brand]

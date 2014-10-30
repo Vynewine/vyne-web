@@ -421,8 +421,6 @@ $(function() {
 
 			var data = "&user[email]="+email+"&user[password]="+password;
 
-			console.log(data);
-
             $.ajax({
                 type: "POST",
                 beforeSend: function (xhr) {
@@ -440,6 +438,8 @@ $(function() {
                 },
                 success: function (data) {
                     if(data.success) {
+                        $('meta[name="csrf-token"]').last().prop( "content", data.csrfToken);
+                        $('input[name="authenticity_token"]').last().val(data.csrfToken);
                         var initialPostCode = $('#filterPostcode').val().toUpperCase().replace(/[^A-Z0-9]/g, "");
                         var foundSavedAddress = false;
                         var $select = $('#order-address');
@@ -458,6 +458,26 @@ $(function() {
                             }
                             if(foundSavedAddress) {
                                 $('#new_delivery_address').fadeOut();
+                            }
+                        }
+                        if(data.payments && data.payments.length > 0) {
+                            var payments = JSON.parse(data.payments);
+                            var $orderCard = $('#orderCard');
+                            for (var i=0; i < payments.length; i++){
+                                var payment = payments[i];
+                                var cardNumber;
+                                if (payment.brand == 3) { // American Express
+                                    cardNumber = '**** ****** ' + payment.number;
+                                } else {
+                                    cardNumber = '**** **** **** ' + payment.number;
+                                }
+
+                                if(i===0) {
+                                    $orderCard.append('<option value=' + payment.id + ' selected="selected">' + cardNumber + '</option>');
+                                    $('#old-card').val(payment.id);
+                                } else {
+                                    $orderCard.append('<option value=' + payment.id + '>' + cardNumber + '</option>');
+                                }
                             }
                         }
 

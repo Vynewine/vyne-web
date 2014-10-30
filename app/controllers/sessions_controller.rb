@@ -17,7 +17,8 @@ class SessionsController < Devise::SessionsController
         render :json => {
             :success => true,
             :addresses => current_user.addresses.order(updated_at: :desc).to_json,
-            :payment => current_user.payments.order(updated_at: :desc).to_json
+            :payments => current_user.payments.order(updated_at: :desc).to_json,
+            :csrfToken => form_authenticity_token
         }
       }
     end

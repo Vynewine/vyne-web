@@ -13,5 +13,41 @@ class CreateOrders < ActiveRecord::Migration
 
       t.timestamps
     end
+
+    execute <<-SQL
+      ALTER TABLE orders
+        ADD CONSTRAINT fk_orders_payments
+        FOREIGN KEY (payment_id)
+        REFERENCES payments(id)
+    SQL
+
+    execute <<-SQL
+      ALTER TABLE orders
+        ADD CONSTRAINT fk_orders_addresses
+        FOREIGN KEY (address_id)
+        REFERENCES addresses(id)
+    SQL
+
+    execute <<-SQL
+      ALTER TABLE orders
+        ADD CONSTRAINT fk_orders_users
+        FOREIGN KEY (client_id)
+        REFERENCES users(id)
+    SQL
+
+    execute <<-SQL
+      ALTER TABLE orders
+        ADD CONSTRAINT fk_orders_advisors
+        FOREIGN KEY (advisor_id)
+        REFERENCES users(id)
+    SQL
+
+    execute <<-SQL
+      ALTER TABLE orders
+        ADD CONSTRAINT fk_orders_statuses
+        FOREIGN KEY (status_id)
+        REFERENCES statuses(id)
+    SQL
+
   end
 end
