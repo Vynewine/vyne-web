@@ -160,7 +160,9 @@ class Admin::AdvisorsController < ApplicationController
             wines << {
                 :countryCode => wine.producer.country.alpha_2,
                 :countryName => wine.producer.country.name,
+                :region => wine.region.blank? ? '' : wine.region.name,
                 :subregion => wine.subregion.nil? ? '' : wine.subregion.name,
+                :locale => wine.locale.blank? ? '' : wine.locale.name,
                 :id => wine.id,
                 :appellation => wine.appellation.blank? ? '' : wine.appellation.name,
                 :name => wine.name,
@@ -175,7 +177,8 @@ class Admin::AdvisorsController < ApplicationController
                 :price => inv.category.price,
                 :quantity => inv.quantity,
                 :category => inv.category.name + ' - £' + inv.category.price.to_s,
-                :warehouse_distance => warehouse['distance']
+                :warehouse_distance => warehouse['distance'],
+                :bottle_size => wine.bottle_size
             }
           end
         }

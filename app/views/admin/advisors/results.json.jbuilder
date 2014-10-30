@@ -5,13 +5,16 @@ json.array!(@results) do |wine|
   json.countryCode wine[:countryCode]
   json.countryFlag asset_path('flags/' + wine[:countryCode] + '.png')
   json.countryName wine[:countryName]
+  json.region wine[:region]
   json.subregion wine[:subregion]
+  json.locale wine[:locale]
   # Wine info
   json.id wine[:id]
   json.appellation wine[:appellation]
   json.name wine[:name]
   json.vintage wine[:vintage]
   json.single_estate wine[:single_estate]
+  json.bottle_size wine[:bottle_size].blank? ? '' : wine[:bottle_size].to_i
 
   # Relationships
   json.type wine[:type]

@@ -156,7 +156,7 @@ var adminReady = function() {
 
         /**
          * Triggered when delivery quote is chosen.
-         * 
+         *
          */
         var chooseDelivery = function(e) {
             e.preventDefault();
@@ -285,13 +285,31 @@ var adminReady = function() {
 
             var compositionArray = [];
             for (var i = 0, composition; composition = wine.compositions[i++];) {
-                compositionArray.push(composition.name + ': ' + composition.percentage + '%');
+                compositionArray.push(composition.name + (composition.percentage ? ': ' + composition.percentage + '%' : ''));
             }
 
             var $se
 
             if (wine.single_estate)
                 $se = $('<span>').addClass('single flaticon solid house-2');
+
+            var region = [];
+
+            if(wine.appellation){
+                region.push('(' + wine.appellation + ')');
+            }
+
+            if(wine.region) {
+               region.push(wine.region);
+            }
+
+            if(wine.subregion) {
+               region.push(wine.subregion);
+            }
+
+            if(wine.locale) {
+                region.push(wine.locale);
+            }
 
             $container.append(
                 $('<tr>')
@@ -309,11 +327,10 @@ var adminReady = function() {
                             .attr('src', wine.countryFlag)
 
                     ),
-                    $('<td>').addClass('subregion').html(wine.wine),
-                    $('<td>').addClass('subregion').html(wine.subregion),
+                    $('<td>').addClass('region').html(region.join(', ')),
                     $('<td>').addClass('name').html(
-                        wine.name + (wine.appellation ? " ("+wine.appellation+")" : '') +
-                        ' ' + wine.vintage
+                        wine.name +
+                        ' ' + wine.vintage + (wine.bottle_size ? ' - ' + wine.bottle_size + 'CL' : '')
                     ),
                     $('<td>').addClass('type').html(
                         wine.type
@@ -349,7 +366,6 @@ var adminReady = function() {
                         $('<tr>').append(
                             $('<td>').html(''),
                             $('<td>').html('Region'),
-                            $('<td>').html('Subregion'),
                             $('<td>').html('Name'),
                             $('<td>').html('Type'),
                             $('<td>').html('Cost'),
@@ -366,7 +382,7 @@ var adminReady = function() {
             for (var i = 0, wine; wine = r[i++];) {
                 renderWine(wine);
             }
-            $container.slideDown(200);                        
+            $container.slideDown(200);
         };
 
         var parseResults = function(r){
@@ -509,7 +525,7 @@ var adminReady = function() {
                     e.preventDefault();
                     adviseActions($adviseAnchor, $this);
                 })
-            );            
+            );
             $('#wine-list').hide();
             $('#wine-filters').hide();
             $('#orders-header').slideDown();
@@ -594,7 +610,7 @@ var adminReady = function() {
             );
             for (var i = 0, order; order = r[i++];) {
                 renderOrder(order);
-            } 
+            }
         };
 
         /**

@@ -45,7 +45,8 @@ class Admin::UsersController < ApplicationController
         format.html { redirect_to [:admin, @user], notice: 'User was successfully created.' }
         format.json { render :show, status: :created, location: @user }
       else
-        format.html { render :new }
+
+        format.html { redirect_to new_admin_user_path, alert: @user.errors.full_messages().join(', ')}
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
@@ -93,6 +94,7 @@ class Admin::UsersController < ApplicationController
         :address_id,
         :active,
         :code,
+        :password,
         role_ids: [],
         addresses_attributes: [:id, :detail, :street, :postcode]
       )
