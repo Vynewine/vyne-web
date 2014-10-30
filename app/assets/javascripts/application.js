@@ -156,16 +156,11 @@ $(function() {
 		this.specificWine = '',
 		this.food = [],
 		this.occasion = 0
-		this.occasions = []
+		this.wineType = { id: 0, name: '' }
 	}
 
 	//Object to store food details
 	var food = function(id, name) {
-		this.id = id,
-		this.name = name
-	}
-
-	var occasion = function(id, name) {
 		this.id = id,
 		this.name = name
 	}
@@ -258,7 +253,8 @@ $(function() {
 
 				//Add the food to the wine object
 				if($this.closest('ul').attr('id') == 'wine-list') {
-					wines[wineCount].occasions.push( new occasion( id.split('-')[1], name ) );
+					wines[wineCount].wineType.id = id.split('-')[1]
+					wines[wineCount].wineType.name = name;
 				} else {
 					wines[wineCount].food.push( new food( id.split('-')[1], name ) );
 				}
@@ -654,9 +650,9 @@ function createCartPage(wines, wineCount) {
 							}));
 						});
 						$ul.appendTo($td);
-					} else if(key == 'occasions' && wine['occasions'].length > 0) {
+					} else if(key == 'wineType') {
 						$('<span/>', {
-							text: wine[key][0].name
+							text: wine[key].name
 						}).addClass(key).appendTo($td);
 					} else {
 						$('<span/>', {
