@@ -3,7 +3,7 @@ require 'sprockets/railtie'
 json.array!(@results) do |wine|
   # Origin info
   json.countryCode wine[:countryCode]
-  json.countryFlag asset_path(wine[:countryCode] + '.png')
+  json.countryFlag asset_path('flags/' + wine[:countryCode] + '.png')
   json.countryName wine[:countryName]
   json.subregion wine[:subregion]
   # Wine info
