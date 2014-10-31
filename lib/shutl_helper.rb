@@ -11,7 +11,7 @@ module ShutlHelper
         'Authorization' => "Bearer #{token}"
     }
     req = Net::HTTP::Get.new(url, headers)
-    connection = Net::HTTP::start(url.hostname, url.port, :use_ssl => uri.scheme == 'https') { |http|
+    connection = Net::HTTP::start(url.hostname, url.port, :use_ssl => url.scheme == 'https') { |http|
       http.request(req)
     }
     JSON.parse(connection.read_body)
@@ -67,7 +67,7 @@ module ShutlHelper
     puts body.to_json
     req = Net::HTTP::Post.new(url, headers)
     req.body = body.to_json
-    connection = Net::HTTP::start(url.hostname, url.port, :use_ssl => uri.scheme == 'https') { |http|
+    connection = Net::HTTP::start(url.hostname, url.port, :use_ssl => url.scheme == 'https') { |http|
       http.request(req)
     }
     response = JSON.parse(connection.read_body)
@@ -121,7 +121,7 @@ module ShutlHelper
     puts body.to_json
     req = Net::HTTP::Put.new(url, headers)
     req.body = body.to_json
-    connection = Net::HTTP::start(url.hostname, url.port, :use_ssl => uri.scheme == 'https') { |http|
+    connection = Net::HTTP::start(url.hostname, url.port, :use_ssl => url.scheme == 'https') { |http|
       http.request(req)
     }
     response = JSON.parse(connection.read_body)
@@ -150,7 +150,7 @@ module ShutlHelper
     }
     reqToken = Net::HTTP::Post.new(url, headers)
     reqToken.form_data = params
-    connection = Net::HTTP::start(url.hostname, url.port, :use_ssl => uri.scheme == 'https') { |http|
+    connection = Net::HTTP::start(url.hostname, url.port, :use_ssl => url.scheme == 'https') { |http|
       http.request(reqToken)
     }
     response = JSON.parse(connection.read_body)
