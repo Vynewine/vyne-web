@@ -252,7 +252,8 @@ class Admin::AdvisorsController < ApplicationController
             :postcode => order.address.postcode
           }
         },
-        :products => products
+        :vehicle => 'bicycle',
+        #:products => products
       }
     }
 

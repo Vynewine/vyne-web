@@ -45,7 +45,6 @@ class Admin::UsersController < ApplicationController
         format.html { redirect_to [:admin, @user], notice: 'User was successfully created.' }
         format.json { render :show, status: :created, location: @user }
       else
-
         format.html { redirect_to new_admin_user_path, alert: @user.errors.full_messages().join(', ')}
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
@@ -57,12 +56,13 @@ class Admin::UsersController < ApplicationController
   def update
     # @roles = Role.all
     params[:user][:role_ids] ||= []
+
     respond_to do |format|
       if @user.update(user_params)
         format.html { redirect_to [:admin, @user], notice: 'User was successfully updated.' }
         format.json { render :show, status: :ok, location: @user }
       else
-        format.html { render :edit }
+        format.html { redirect_to edit_admin_user_path(@user), alert: @user.errors.full_messages().join(', ')}
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end

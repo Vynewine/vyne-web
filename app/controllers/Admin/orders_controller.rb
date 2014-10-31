@@ -82,6 +82,11 @@ class Admin::OrdersController < ApplicationController
   # DELETE /orders/1
   # DELETE /orders/1.json
   def destroy
+
+    @order.order_items.each do |item|
+      item.destroy
+    end
+
     @order.destroy
     respond_to do |format|
       format.html { redirect_to admin_orders_url, notice: 'Order was successfully destroyed.' }
