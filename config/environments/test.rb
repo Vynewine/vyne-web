@@ -48,4 +48,7 @@ Rails.application.configure do
   config.shutl_id = 'HnnFB2UbMlBXdD9h4UzKVQ=='
   config.shutl_secret = 'pKNKPPCejzviiPunGNhnJ95G1JdeAbOYbyAygqIXyfIe4lb73iIDKRqmeZmZWT+ORxTqwMP9PhscJAW7GFmz6A=='
 
+  #Segment IO
+  config.segment_io_write_key =  '0zwU3t4m36'
+
 end
