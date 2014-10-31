@@ -180,6 +180,10 @@ $(document).ready(function(){
             $('#use-postcode').css({ 'display': 'none'});
         } else {
 
+            analytics.track('Postcode-Lookup', {
+                postcode: postcode
+            });
+
             var mapUtil = new MapUtility();
 
             mapUtil.calculateDistanceForAllWarehouses(postcode, function(delivery) {

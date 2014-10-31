@@ -1,9 +1,6 @@
 class HomeController < ApplicationController
 
   def index
-    # require 'pp'
-    # puts PP.pp(request['HTTP_X_MSISDN'],'',80)
-    # redirect_to [:controller => 'home', :action => 'code']
     if user_signed_in?
       redirect_to neworder_path
     end
