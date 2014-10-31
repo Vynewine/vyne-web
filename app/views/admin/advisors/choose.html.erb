@@ -1,7 +1,11 @@
+<h3><div>Order Cost Total: £<%= @order.total_cost%> - Order Price Total £<%= @order.total_price%></div></h3>
 <table border="1" class="list-table">
   <thead>
   <tr>
-    <td>Delivery Time</td>
+    <td>Pickup Start</td>
+    <td>Pickup Finish</td>
+    <td>Delivery Start</td>
+    <td>Delivery Finish</td>
     <td>Offer Valid Until</td>
     <td>Vehicle</td>
     <td>Price</td>
@@ -11,6 +15,9 @@
   <tbody>
   <% @quotes['quote_collection']['quotes'].each do |quote| %>
       <tr>
+        <td><%= Time.parse(quote['pickup_start']).strftime("%d/%m/%Y - %H:%M") %></td>
+        <td><%= Time.parse(quote['pickup_finish']).strftime("%d/%m/%Y - %H:%M") %></td>
+        <td><%= Time.parse(quote['delivery_start']).strftime("%d/%m/%Y - %H:%M") %></td>
         <td><%= Time.parse(quote['delivery_finish']).strftime("%d/%m/%Y - %H:%M") %></td>
         <td><%= Time.parse(quote['valid_until']).strftime("%d/%m/%Y - %H:%M") %></td>
         <td><%= quote['vehicle'] %></td>

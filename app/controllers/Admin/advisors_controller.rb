@@ -84,7 +84,7 @@ class Admin::AdvisorsController < ApplicationController
           order.delivery_status = booking_response
           order.status_id = 4 #pickup
           if order.save
-            @message = 'success'
+            @message = 'Success'
 
             #3 Reduce Inventory Count
 
