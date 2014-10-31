@@ -17,7 +17,7 @@ class Admin::ProducersControllerTest < ActionController::TestCase
   test 'Can import producers' do
     inventory_file = fixture_file_upload('files/producers.csv','text/csv')
 
-    post :import , {
+    post :import, {
         :file => inventory_file
     }
 
@@ -52,7 +52,7 @@ class Admin::ProducersControllerTest < ActionController::TestCase
         :file => inventory_file
     }
 
-    assert(flash[:alert] == 'Column missing: note')
+    assert_equal('Column missing: producer_id', flash[:alert])
 
   end
 end

@@ -37,41 +37,6 @@ class Admin::AdvisorsControllerTest < ActionController::TestCase
     # puts @results
   end
 
-  test 'Filter wine search' do
-
-    wines = [wines(:one), wines(:two)]
-    order_info = { "warehouses" => [{ "id" => warehouses(:one).id, "distance" => 2.123}, { "id" => warehouses(:two).id, "distance" => 1.123}]}
-
-    # warehouse is, wine name, quantity, price
-
-    results_wines = []
-
-    order_info['warehouses'].each{ |warehouse|
-
-      warehouse_id =  warehouse['id']
-
-      wines.each{|wine|
-        wine.inventories.select{ |inv|
-          if inv.warehouse.id == warehouse_id
-            results_wines << {
-                :name => wine.name,
-                :cost => inv.cost.to_s,
-                :category => inv.category.name + ' - £' + inv.category.price.to_s,
-                :warehouse => inv.warehouse.id,
-                :warehouse_distance => warehouse['distance'],
-                :compositions => wine.compositions.map { |c| { :name => c.grape.name, :quantity => c.quantity }}
-            }
-          end
-        }
-      }
-
-    }
-
-    puts json: results_wines
-
-    #puts json: @wines.select{ |wine| wine.vintage == 2007 }
-    # puts @wines.each{ |wine| wine.inventories.each{ |inv| inv.warehouse.id } }
-  end
 
   test 'Should update order item with chosen wine' do
     @order = orders(:order1)
@@ -91,8 +56,6 @@ class Admin::AdvisorsControllerTest < ActionController::TestCase
     assert_equal(@admin, order_item.order.advisor, 'Advisor doesn\'t match')
     assert(!order_item.cost.nil?, 'Wine cost should be present on the order item')
     assert_equal(order_item.cost, inventory.cost, 'Cost for wine should match inventory cost')
-    assert(!order_item.price.nil?, 'Wine price should be present on the order item')
-    assert_equal(order_item.price, order_item.category.price, 'Price should match price from category')
   end
 
 
@@ -147,14 +110,6 @@ class Admin::AdvisorsControllerTest < ActionController::TestCase
 
     assert_equal(15.00.to_s, order_item.price.to_s, 'Price should stay the same after wine selection')
 
-  end
-
-
-  def stub_shutl_token
-    stub_request(:post, 'https://sandbox-v2.shutl.co.uk/token').
-        with(:body => {'client_id' => 'HnnFB2UbMlBXdD9h4UzKVQ==', 'client_secret' => 'pKNKPPCejzviiPunGNhnJ95G1JdeAbOYbyAygqIXyfIe4lb73iIDKRqmeZmZWT+ORxTqwMP9PhscJAW7GFmz6A==', 'grant_type' => 'client_credentials'},
-             :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'Host'=>'sandbox-v2.shutl.co.uk', 'User-Agent'=>'Ruby'}).
-        to_return(:status => 200, :body => '{"access_token":"493nSJPSh9_jUsjJe3S59FNnAx3-jcKBjBBzCFM_BkF9ePKcmRPqf-XqwZ3GWdBc9M4ZH-mUb0Okn1e_WPKrwg","token_type":"bearer","expires_in":788939999}', :headers => {})
   end
 
   def quote_response

@@ -69,6 +69,7 @@ class Admin::ProducersController < ApplicationController
   end
 
   def import
+
     results = import_data(params[:file], :producers, %w(producer_id name country_id note))
 
     if results[:success]

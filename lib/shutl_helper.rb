@@ -4,7 +4,7 @@ module ShutlHelper
 
   # Gets information of booking for a given order.
   def fetch_order_information(address)
-    puts 'Updating order delivery status'
+    puts 'Shutl - Requesting order update'
     url = URI(address)
     token = shutl_token
     headers = {
@@ -155,6 +155,22 @@ module ShutlHelper
     }
     response = JSON.parse(connection.read_body)
     response['access_token']
+  end
+
+  def shutl_status_to_order_status(shutl_status)
+    case shutl_status.to_s.strip
+      when 'confirmed', 'allocated', 'arrived'
+        return 4 #pickup
+      when 'collected'
+        return 5 #delivery
+      when 'delivered'
+        return 6 #delivered
+      when 'cancelled_in_advance', 'cancelled_on_arrival'
+        puts 'Error: Unexpected Shutl Status Received:' + shutl_status
+        return nil
+      else
+        return nil
+    end
   end
 
 end

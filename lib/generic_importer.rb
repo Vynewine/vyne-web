@@ -46,7 +46,6 @@ module GenericImporter
   end
 
   def process_producer_row(row)
-
     id = row['producer_id']
     name = row['name']
     country_id = row['country_id']
@@ -56,7 +55,6 @@ module GenericImporter
     end
 
     producer = Producer.find_by_id(id)
-
 
     if producer.nil?
       Producer.create!(
