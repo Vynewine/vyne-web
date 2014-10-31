@@ -100,45 +100,47 @@ class ShopController < ApplicationController
     if @order.save
       wines.each { |wine|
 
-        if !wine['occasion'].blank? && wine['occasion'].to_i != 0
-          occasion = Occasion.find(wine['occasion'])
-        end
-
-        if !wine['wineType'].blank? && !wine['wineType']['id'].blank? && wine['wineType']['id'].to_i != 0
-          wine_type = Type.find(wine['wineType']['id'])
-        end
-
-        foods =[]
-        unless wine['food'].nil?
-          wine['food'].each do |food|
-            foods << Food.find(food['id'])
+        unless wine.blank?
+          if !wine['occasion'].blank? && wine['occasion'].to_i != 0
+            occasion = Occasion.find(wine['occasion'])
           end
+
+          if !wine['wineType'].blank? && !wine['wineType']['id'].blank? && wine['wineType']['id'].to_i != 0
+            wine_type = Type.find(wine['wineType']['id'])
+          end
+
+          foods =[]
+          unless wine['food'].nil?
+            wine['food'].each do |food|
+              foods << Food.find(food['id'])
+            end
+          end
+
+          #TODO: Validate params, category is required.
+          category = Category.find(wine['category'])
+
+
+          order_item = @order.order_items.create!({
+                                                      :specific_wine => wine['specificWine'],
+                                                      :quantity => wine['quantity'],
+                                                      :category => category,
+                                                      :price => category.price
+                                                  })
+
+          unless foods.nil?
+            order_item.foods = foods
+          end
+
+          unless occasion.blank?
+            order_item.occasion = occasion
+          end
+
+          unless wine_type.nil?
+            order_item.type = wine_type
+          end
+
+          order_item.save
         end
-
-        #TODO: Validate params, category is required.
-        category = Category.find(wine['category'])
-
-
-        order_item = @order.order_items.create!({
-                                                    :specific_wine => wine['specificWine'],
-                                                    :quantity => wine['quantity'],
-                                                    :category => category,
-                                                    :price => category.price
-                                                })
-
-        unless foods.nil?
-          order_item.foods = foods
-        end
-
-        unless occasion.blank?
-          order_item.occasion = occasion
-        end
-
-        unless wine_type.nil?
-          order_item.type = wine_type
-        end
-
-        order_item.save
       }
     else
       respond_to do |format|
