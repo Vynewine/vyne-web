@@ -5,7 +5,7 @@ one:
   category: house
 
 two:
-  quantity: 2
+  quantity: 1
   order: order1
   foods: foods(:one, :two)
   category: house

@@ -35,12 +35,8 @@ class Admin::AdvisorsController < ApplicationController
       redirect_to admin_order_path @order and return
     end
 
-    puts json: @order_item.cost.to_s
-    puts json: inventory.cost.to_s
-
     @order_item.wine = wine
     @order_item.cost = inventory.cost
-    @order_item.price = @order_item.category.price
     @order.warehouse = warehouse
     @order.advisor = current_user
     @order_item.save

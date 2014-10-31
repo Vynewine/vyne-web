@@ -129,6 +129,27 @@ class Admin::AdvisorsControllerTest < ActionController::TestCase
     assert(@response.body.include?(@id2), 'Response should contains id2')
   end
 
+  test 'Should maintain price from original order after advise is made' do
+    @order = orders(:order1)
+    @wine = wines(:three)
+    @warehouse = warehouses(:one)
+    order_item = @order.order_items[0]
+    order_item.category = categories(:reserve)
+
+    #This is Reserve (£20) wine but we're simulating £5 discount
+    order_item.price = 15.00
+    order_item.save
+
+    post :update, {'wine-id' => @wine.id, 'warehouse-id' => @warehouse.id, 'id' => order_item.id }
+
+    order_item = OrderItem.find(@order.order_items[0].id)
+
+
+    assert_equal(15.00.to_s, order_item.price.to_s, 'Price should stay the same after wine selection')
+
+  end
+
+
   def stub_shutl_token
     stub_request(:post, 'https://sandbox-v2.shutl.co.uk/token').
         with(:body => {'client_id' => 'HnnFB2UbMlBXdD9h4UzKVQ==', 'client_secret' => 'pKNKPPCejzviiPunGNhnJ95G1JdeAbOYbyAygqIXyfIe4lb73iIDKRqmeZmZWT+ORxTqwMP9PhscJAW7GFmz6A==', 'grant_type' => 'client_credentials'},

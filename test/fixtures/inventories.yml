@@ -13,3 +13,10 @@ two:
   quantity: 1
   cost: 7
   category: house
+
+three:
+  warehouse: one
+  wine: three
+  quantity: 1
+  cost: 15
+  category: reserve

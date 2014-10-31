@@ -70,7 +70,7 @@
   </tr>
   </thead>
   <tbody>
-  <% @order.order_items.each do |item| %>
+  <% @order.order_items.order(:id).each do |item| %>
       <tr>
         <td>
           <a href="/admin/advise/item/<%= item.id %>">

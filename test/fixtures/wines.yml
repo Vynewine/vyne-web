@@ -15,3 +15,12 @@ two:
   producer: two
   subregion: two
   type: one
+
+three:
+  name: Cálem Reserve
+  vintage: 2008
+  single_estate: false
+  alcohol: 19.5
+  producer: two
+  subregion: two
+  type: one
