@@ -213,7 +213,7 @@ class Admin::AdvisorsController < ApplicationController
 
     url = URI("#{domain}/quote_collections")
 
-    basket_value = ((order.order_items.map { |item| item.cost}).inject(:+)*100).to_i
+    basket_value = (order.total_cost * 100).to_i
 
     products = []
 
