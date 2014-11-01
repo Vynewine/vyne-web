@@ -12,6 +12,16 @@
       window.analytics.load("<%= Rails.application.config.segment_io_write_key %>");
       window.analytics.page();
   </script>
+  <script>
+    <% if @curren_user.blank? %>
+    analytics.identify('123');
+    <% else %>
+    analytics.identify('<%= @curren_user.id.to_s %>', {
+        name: '<%= @curren_user.name %>',
+        email: '<%= @curren_user.email %>'
+    });
+    <% end %>
+  </script>
 </head>
 <body class="<%= params[:controller] %>">
 

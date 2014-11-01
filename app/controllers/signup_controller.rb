@@ -22,6 +22,15 @@ class SignupController < ApplicationController
     address.detail = params[:address_d]
     address.street = params[:address_s]
     address.postcode = params[:address_p].gsub(/[\s|-]/, "").upcase
+
+    if params[:mobile].blank?
+      render :json => {:errors => ['Mobile can\'t be blank']}, :status => 422
+      return
+    else
+      current_user.mobile = params[:mobile]
+      current_user.save
+    end
+
     if address.save
       address_association = AddressesUsers.new
       address_association.user = current_user
@@ -42,7 +51,7 @@ class SignupController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :email, :mobile, :password, :password_confirmation)
+    params.require(:user).permit(:first_name, :email, :password)
   end
 
 end

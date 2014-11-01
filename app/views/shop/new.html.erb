@@ -285,18 +285,11 @@
             <%= text_field :user, :first_name, :placeholder => "First Name" %>
           </div>
           <div>
-            <%= text_field :user, :last_name, :placeholder => "Last Name" %>
-          </div>
-          <div>
             <%= email_field :user, :email,
             :autocomplete => "off",
             :placeholder => "Email" %>
           </div>
-          <div>
-            <%= text_field :user, :mobile,
-            :autocomplete => "off",
-            :placeholder => "Mobile" %>
-          </div>
+
           <%
           passPlaceholder = "Password"
           if @validatable
@@ -311,14 +304,7 @@
               :placeholder => passPlaceholder
               %>
           </div>
-          <div>
-              <%=
-              password_field :user,
-              :password_confirmation,
-              :autocomplete => "off",
-              :placeholder => "Confirm password"
-              %>
-          </div>
+
           <a href="#" id="delivery-details" class="btn">Delivery details</a>
         </div>
       </div>
@@ -357,6 +343,7 @@
           <div><textarea rows="3" disabled="disabled" id="addr-st" name="address_s" placeholder="House Number and Street Name"></textarea>
           </div>
           <div><input type="text" id="addr-pc" name="address_p" placeholder="Postcode" disabled="disabled"/></div>
+          <div><input type="text" id="mobile" name="mobile" placeholder="Mobile Number" /></div>
           <div><input type="hidden" disabled="disabled" id="addr-no" name="address_d" placeholder="No"/></div>
         </div>
         <input type="hidden" id="address-id" name="address_id"/>
