@@ -16,7 +16,7 @@ input[type="submit"] {
     color: white;
     line-height: 1;
     cursor: pointer;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     font-weight: bold;
     padding: 14px 20px;
     border-radius: 3px;
@@ -34,6 +34,11 @@ input[type="submit"] {
     &.btn__small {
         font-size: 1.2rem;
         padding: 8px 10px;
+    }
+
+    &.btn__border {
+        background: none;
+        border: 1px rgba(255,255,255,0.2) solid;
     }
 
     &.order-now {
