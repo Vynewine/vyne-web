@@ -760,16 +760,13 @@
                     }
 
                     .btn-checkout {
-                        position: fixed;
                         bottom: 0;
-                        left: 0;
-                        width: 100%;
+                        z-index: 99;
+                        width: 280px;
                         display: none;
-                        background: rgba(0,0,0,0.9);
-
-                        .wrapper {
-                            padding: 20px;
-                        }
+                        position: fixed;
+                        padding: 2rem 0;
+                        background: rgba(0, 0, 0, 0.9);
 
                         &.ios {
                             position: absolute;
