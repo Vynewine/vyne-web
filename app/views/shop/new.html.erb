@@ -376,7 +376,7 @@
           %>
 
         <%= select_tag "orderCard", options_for_select(paymentCards, @order.payment_id), :prompt => "Choose Card", :name => "" %>
-        <div id="new_card" style="display:none;">
+        <div id="new_card">
           <div><input type="text" id="pmnm" size="20" placeholder="0000 0000 0000 0000" data-stripe="number" /></div>
           <div><input type="text" id="pmcv" size="4"  placeholder="CVC" data-stripe="cvc" /></div>
           <div><input type="text" id="pmxp" size="5"  placeholder="MM/YY" /></div>
