@@ -352,6 +352,17 @@ $(function() {
 		$('.add-bottle, .btn-checkout').hide();
 	});
 
+	$('.add-same-bottle-link').click(function(e) {
+		e.preventDefault();
+		wineCount++;
+
+		wines[wineCount] = wines[wineCount-1];
+
+		createCartPage(wines, wineCount);
+
+		$('.add-bottle').hide();
+	});
+
 
 	$(document).on('click', '#account-link', function(e) {
 		e.preventDefault();
