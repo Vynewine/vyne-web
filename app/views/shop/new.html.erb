@@ -124,7 +124,6 @@
         </div>
 
         <div id="with-food" class="tab preferences-sub-panel">
-
           <div class="food-limit"></div>
           <h3 class="select-category">Select a category</h3>
           <div class="prefs-list-container cf">
@@ -149,6 +148,7 @@
           <% nallFood.each do |parentFood| %>
 
           <div id="<%= parentFood.name.gsub(/(((\s)&?)\s?)/, "_") %>" class="tab preferences-sub-sub-panel">
+            <a href="#" class="back"></a>
             <% if parentFood.id == 4 %>
             <h3>How was it prepared?</h3>
             <% else %>
@@ -160,7 +160,7 @@
                 <% subFood.keep_if {|f| f.parent==parentFood.id} %>
                 <% subFood.each do |food| %>
                 <li id="food-<%= food.id %>">
-                  <% if [5,9,11,12,13,14,25,26,27,40,41].include? food.id %>
+                  <% if [5,9,11,12,13,14,25,26,27,40,41,45,46].include? food.id %>
                   <a href="#preparation">
                   <% else %>
                   <a href="#">
@@ -376,7 +376,7 @@
           %>
 
         <%= select_tag "orderCard", options_for_select(paymentCards, @order.payment_id), :prompt => "Choose Card", :name => "" %>
-        <div id="new_card" style="display:none;">
+        <div id="new_card">
           <div><input type="text" id="pmnm" size="20" placeholder="0000 0000 0000 0000" data-stripe="number" /></div>
           <div><input type="text" id="pmcv" size="4"  placeholder="CVC" data-stripe="cvc" /></div>
           <div><input type="text" id="pmxp" size="5"  placeholder="MM/YY" /></div>

@@ -428,10 +428,22 @@
 
                         .preferences-sub-panel {
                             z-index: 3;
+
+                            .back {
+                                position: absolute;
+                                top: 60px;
+                                left: 20px;
+                                width: 23px;
+                                height: 23px;
+                                z-index: 99;
+                                display: block;
+                                background-image: url(asset-path('icons/back@2x.png'));
+                                background-size: 100%;
+                            }
                         }
 
                         .preferences-sub-sub-panel {
-                            z-index: 4;
+                            z-index: 100;
                         }
 
                         .food-limit,

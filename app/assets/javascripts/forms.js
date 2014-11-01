@@ -363,6 +363,10 @@ $(document).ready(function(){
         }
     });
 
+    if($('body').hasClass('logged-in')) {
+        $('#new_card').hide();
+    }
+
 });
 
 $(window).load(function(e) {

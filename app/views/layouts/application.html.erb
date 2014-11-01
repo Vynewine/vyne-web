@@ -24,7 +24,7 @@
     <% end %>
   </script>
 </head>
-<body class="<%= params[:controller] %>">
+<body class="<%= params[:controller] %><% if user_signed_in? %> logged-in<% end %>">
 
   <div class="container">
 
