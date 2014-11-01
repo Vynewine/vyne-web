@@ -124,7 +124,6 @@
         </div>
 
         <div id="with-food" class="tab preferences-sub-panel">
-
           <div class="food-limit"></div>
           <h3 class="select-category">Select a category</h3>
           <div class="prefs-list-container cf">
@@ -149,6 +148,7 @@
           <% nallFood.each do |parentFood| %>
 
           <div id="<%= parentFood.name.gsub(/(((\s)&?)\s?)/, "_") %>" class="tab preferences-sub-sub-panel">
+            <a href="#" class="back"></a>
             <% if parentFood.id == 4 %>
             <h3>How was it prepared?</h3>
             <% else %>

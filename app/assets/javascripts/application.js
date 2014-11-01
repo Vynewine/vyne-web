@@ -237,6 +237,11 @@ $(function() {
 
 	});
 
+	$('.back').click(function(e) {
+		e.preventDefault();
+		$('.tab.active').last().removeClass('active');
+	});
+
 	$(document).on('click', '.prefs-list li a', function(e) {
 		e.preventDefault();
 		$('.order-panel').scrollTop(0);
@@ -288,7 +293,6 @@ $(function() {
 			if($('.prefs-overview-list .empty').length == 0 && $this.attr('href') != '#preparation') $('.food-limit').show();
 
 			$this.closest('.tab').removeClass('active');
-			$('.select-category').text('Add another ingredient?');
 
 			if($this.closest('ul').attr('id') == 'wine-list') {
 				$('#select-preferences').click();
