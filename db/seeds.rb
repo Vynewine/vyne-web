@@ -580,7 +580,7 @@ Food.create(
 Food.create(
     :id => 47,
     :name => "raw",
-  :parent => 1
+  :parent => 4
 )
 
 puts "Foods -------- OK"

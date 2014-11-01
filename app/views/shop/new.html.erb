@@ -160,7 +160,7 @@
                 <% subFood.keep_if {|f| f.parent==parentFood.id} %>
                 <% subFood.each do |food| %>
                 <li id="food-<%= food.id %>">
-                  <% if [5,9,11,12,13,14,25,26,27,40,41].include? food.id %>
+                  <% if [5,9,11,12,13,14,25,26,27,40,41,45,46].include? food.id %>
                   <a href="#preparation">
                   <% else %>
                   <a href="#">
