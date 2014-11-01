@@ -180,15 +180,16 @@ $(document).ready(function(){
             $('#use-postcode').css({ 'display': 'none'});
         } else {
 
-            analytics.track('Postcode-Lookup', {
-                postcode: postcode
-            });
-
             var mapUtil = new MapUtility();
 
             mapUtil.calculateDistanceForAllWarehouses(postcode, function(delivery) {
                 // console.log('callback 1', deliverable);
                 if (delivery.available) {
+
+                    analytics.track('postcode-lookup', {
+                        postcode: postcode,
+                        status: 'delivery-available'
+                    });
 
                     var currentHour = new Date().getHours();
 
@@ -271,6 +272,10 @@ $(document).ready(function(){
                     $feedback.hide().addClass('error');
                     $feedback.html("VYNZ does NOT deliver to this area!");
                     $('#use-postcode').css({ 'display': 'none'});
+                    analytics.track('postcode-lookup', {
+                        postcode: postcode,
+                        status: 'delivery-not-available'
+                    });
                 }
             });
         }

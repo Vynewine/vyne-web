@@ -12,14 +12,15 @@
       window.analytics.load("<%= Rails.application.config.segment_io_write_key %>");
       window.analytics.page();
   </script>
+
   <script>
-    <% if @curren_user.blank? %>
-    analytics.identify('123');
+    <% if current_user.blank? %>
+        analytics.identify({});
     <% else %>
-    analytics.identify('<%= @curren_user.id.to_s %>', {
-        name: '<%= @curren_user.name %>',
-        email: '<%= @curren_user.email %>'
-    });
+        analytics.identify('<%= current_user.id.to_s %>', {
+            name: '<%= current_user.name %>',
+            email: '<%= current_user.email %>'
+        });
     <% end %>
   </script>
 </head>

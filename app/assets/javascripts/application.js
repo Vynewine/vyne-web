@@ -29,6 +29,7 @@ var ready = function() {
 
 };
 
+
 $(function() {
 
 	/* iOS Check */
@@ -63,9 +64,6 @@ $(function() {
 		$('.btn-checkout').show();
 	});
 
-
-
-
 	/* Walkthrough */
 
 	//Initialising the walkthrough slider
@@ -88,6 +86,10 @@ $(function() {
 		simulateTouch: false,
 		onlyExternal: true,
         onSlideChangeStart: function(swiper) {
+            analytics.track('slide-changed', {
+                slide: swiper.activeSlide().id
+            });
+
             if (swiper.activeSlide().id == 'delivery-panel')
             {
                 verifyAddress();
@@ -177,6 +179,9 @@ $(function() {
 			$('.bottle-info').removeClass('active');
 			$(this).parent().find('.bottle-info').addClass('active');
 		}
+        analytics.track('bottle-selected', {
+            category: $(this).data('category-id')
+        });
 	});
 
 	$('.order-panel-overlay').css({
@@ -203,7 +208,10 @@ $(function() {
 		wines[wineCount].label = $(this).parent().find('.label').text();
 		wines[wineCount].price = $(this).parent().find('.price').text();
 		wines[wineCount].category = $(this).closest('.bottle-info').data('category-id');
-		console.log(wines);
+
+        analytics.track('bottle-chosen', {
+            category: wines[wineCount].category
+        });
 
 		order.swipeNext();
 	});
@@ -222,6 +230,11 @@ $(function() {
 		$($(this).attr('href')).parent().find('.tab').removeClass('active');
 		$($(this).attr('href')).addClass('active');
 		if($(this).attr('href') == '#with-food') $('.prefs-overview').show();
+
+        analytics.track('matching-wine', {
+            type: $(this).attr('href').replace('#', '')
+        });
+
 	});
 
 	$(document).on('click', '.prefs-list li a', function(e) {
@@ -231,6 +244,10 @@ $(function() {
 		if($(this).closest('ul').attr('id') == 'occasion-list') {
 			wines[wineCount].occasion = $(this).parent().attr('id').split('-')[1];
 		}
+
+        analytics.track('matching-selected', {
+            selection: $(this).parent().attr('id')
+        });
 	});
 
 	$(document).on('click', '.prefs-list-bottom li a', function(e) {
@@ -348,8 +365,12 @@ $(function() {
 	$('.add-bottle-link').click(function(e) {
 		e.preventDefault();
 		wineCount++;
-		order.swipeTo(1, 500, false);
+		order.swipeTo(1, 500);
 		$('.add-bottle, .btn-checkout').hide();
+
+        analytics.track('review-order', {
+            action: 'add-bottle'
+        });
 	});
 
 
@@ -640,6 +661,11 @@ function createCartPage(wines, wineCount) {
 
 	if($('input[name="specific-wine"]').val() != '') {
 		wines[wineCount].specificWine = $('input[name="specific-wine"]').val();
+
+        analytics.track('bottle-selected', {
+            category: 'specific-wine',
+            text: wines[wineCount].specificWine
+        });
 	}
 
 	console.log(wines);
