@@ -60,8 +60,8 @@ $(function() {
 		e.preventDefault();
 		if($('.order-table .order-bottle').length > 0) {
 			order.swipeTo(3, 500, false);
+			$('.btn-checkout').show();
 		}
-		$('.btn-checkout').show();
 	});
 
 	/* Walkthrough */
@@ -116,14 +116,14 @@ $(function() {
 
 	/* Beadcrumbs */
 
-	var $breadcrumbsContainer = $('<div/>').addClass('breadcrumbs-container');
+	/*var $breadcrumbsContainer = $('<div/>').addClass('breadcrumbs-container');
 	var $breadcrumbs = $('<ul/>').addClass('breadcrumbs');
 	$breadcrumbsContainer.append($breadcrumbs);
 	order.slides.forEach(function(slide) {
 		var breadcrumb = slide.id.split('-')[0];
 		$breadcrumbs.append($('<li/>').append($('<a/>', { text: breadcrumb })));
 	});
-	$('.main-header').after($breadcrumbsContainer);
+	$('.main-header').after($breadcrumbsContainer);*/
 
 
 
@@ -254,34 +254,32 @@ $(function() {
 		e.preventDefault();
 
 		var $this = $(this);
-		var id = $this.parent().attr('id');
+		var id = $this.parent().attr('id').split('-')[1];
 		var name = $this.parent().find('span').text();
 
 		if($this.attr('href') == '#preparation') {
-			parentid = $this.parent().attr('id');
+			parentid = $this.parent().attr('id').split('-')[1];
 		}
 
 		if(!$this.parent().hasClass('selected')) {
 
 			if($this.closest('.tab').attr('id') == 'preparation') {
 				$img = $this.find('img').clone();
-				$('#food-'+parentid).after($img.addClass('food-prep').attr('id',parentid));
+				$('#food-item-'+parentid).after($img.addClass('food-prep').attr('id',parentid));
 			} else {
 
 				//Add the food to the wine object
 				if($this.closest('ul').attr('id') == 'wine-list') {
-					wines[wineCount].wineType.id = id.split('-')[1]
+					wines[wineCount].wineType.id = id.split('-')[1];
 					wines[wineCount].wineType.name = name;
-				} else {
-					wines[wineCount].food.push( new food( id.split('-')[1], name ) );
 				}
 
 				//Add the food to our mini review bar at the bottom
 				$img = $this.find('img').clone();
-				$img.attr('id', 'food-'+id);
+				$img.attr('id', 'food-item-'+id);
 				$empty = $('.prefs-overview-list .empty').first();
 				$empty.find('span').replaceWith($img);
-				$empty.removeClass('empty');
+				$empty.append( $('<span/>', { text: name }) ).removeClass('empty');
 
 				$this.parent().addClass('selected');
 
@@ -298,8 +296,8 @@ $(function() {
 
 		} else {
 			$this.parent().removeClass('selected');
-			$('#food-'+$this.parent().attr('id')).closest('li').addClass('empty')
-			$('#food-'+$this.parent().attr('id')).empty().append('<span>+</span>');
+			$('#food-item-'+id).closest('li').addClass('empty').empty().append('<a href=""><span>+</span></a>');
+			$('#food-'+$this.parent().attr('id')).removeClass('selected');
 		}
 
 	});
@@ -311,16 +309,26 @@ $(function() {
 			$('prefs-list-bottom').closest('.tab').removeClass('active');
 		} else {
 			$foodid = $this.find('img').attr('id').split('-');
-			$('#'+$foodid[1]).removeClass('selected');
+			$('#food-'+$foodid[2]).removeClass('selected');
 			$('.food-limit').hide();
-			$this.parent().addClass('empty');
-			$this.empty().append('<span>+</span>');
+			$this.parent().addClass('empty').empty().append('<a href=""><span>+</span></a>');
 		}
 	});
 
 	$('#specific-wine, #select-preferences').click(function(e) {
 
 		e.preventDefault();
+
+		$('.prefs-overview-list li').each(function(i, el) {
+			if(!$(this).hasClass('empty')) {
+				wines[wineCount].food.push( 
+					new food( 
+						$(this).find('img').first().attr('id').split('-')[2], 
+						$(this).find('span').text()
+					) 
+				);
+			}
+		});
 
 		createCartPage(wines, wineCount);
 
@@ -371,6 +379,14 @@ $(function() {
         analytics.track('review-order', {
             action: 'add-bottle'
         });
+	});
+
+	$('.add-same-bottle-link').click(function(e) {
+		e.preventDefault();
+		wineCount++;
+		wines[wineCount] = wines[wineCount-1];
+		createCartPage(wines, wineCount);
+		$('.add-bottle').hide();
 	});
 
 
@@ -718,8 +734,7 @@ function createCartPage(wines, wineCount) {
 		$('.tab').removeClass('active');
 		$('.prefs-overview, .food-limit, .occasion-limit').hide();
 		$('.prefs-list li').removeClass('selected');
-		$('.prefs-overview-list li a').empty().append('<span>+</span>');;
-		$('.prefs-overview-list li').removeClass('empty').addClass('empty');
+		$('.prefs-overview-list li').empty().append('<a href=""><span>+</span></a>').removeClass('empty').addClass('empty');
 		$('input[name="specific-wine"]').val('');
 
 	});
