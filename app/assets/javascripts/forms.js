@@ -185,9 +185,9 @@ $(document).ready(function(){
                 // console.log('callback 1', deliverable);
                 if (delivery.available) {
 
-                    analytics.track('postcode-lookup', {
+                    analytics.track('Postcode lookup', {
                         postcode: postcode,
-                        status: 'delivery-available'
+                        status: 'Delivery available'
                     });
 
                     var currentHour = new Date().getHours();
@@ -271,9 +271,9 @@ $(document).ready(function(){
                     $feedback.hide().addClass('error');
                     $feedback.html("VYNZ does NOT deliver to this area!");
                     $('#use-postcode').css({ 'display': 'none'});
-                    analytics.track('postcode-lookup', {
+                    analytics.track('Postcode lookup', {
                         postcode: postcode,
-                        status: 'delivery-not-available'
+                        status: 'Delivery not available'
                     });
                 }
             });
