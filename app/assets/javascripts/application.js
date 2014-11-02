@@ -49,10 +49,24 @@ $(function() {
 
 	//Hamburger/menu icon animation classes
 	$('.menu-link').click(function(e) {
+
+        if($('.menu-link').hasClass('slide')) {
+            analytics.track('Menu', {
+                action: 'Closed'
+            });
+        } else {
+            analytics.track('Menu', {
+                action: 'Opened'
+            });
+        }
+
 		e.preventDefault();
 		$('.menu-link').toggleClass('slide');
 		$('.container').toggleClass('menu-visible');
 		$('.aside-bar').toggleClass('visible');
+
+
+
 	});
 
 	//Clicking the cart link takes you to the review page
