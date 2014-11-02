@@ -382,8 +382,13 @@ $(document).ready(function(){
         }
     });
 
-    if($('body').hasClass('logged-in') && $('#orderCard').find("option").length > 2) {
+    var orderCard = $('#orderCard');
+    if($('body').hasClass('logged-in') && orderCard.find("option").length > 2) {
         $('#new_card').hide();
+
+        if(orderCard.find("option:selected").val() !== "" && orderCard.find("option:selected").val() !== "-1") {
+            $('#old-card').val(orderCard.find("option:selected").val());
+        }
     }
 
 });
