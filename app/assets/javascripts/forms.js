@@ -55,21 +55,32 @@ $('.clientPostCode').keyup(updatePostcode);
 // Part 2: Order creation:
 
 function stripeResponseHandler(status, response) {
-  var $form = $('#order-form');
+    var $form = $('#order-form');
 
-  if (response.error) {
-    // Show the errors on the form
-    console.error(response.error.message);
-    // $form.find('.payment-errors').text(response.error.message);
-    $form.find('input[type="submit"]').prop('disabled', false);
-  } else {
-    // response contains id and card, which contains additional card details
-    var token = response.id;
-    // Insert the token into the form so it gets submitted to the server
-    $form.append($('<input type="text" name="stripeToken" />').val(token));
-    // and submit
-    $form.get(0).submit();
-  }
+    if (response.error) {
+        var $errorList = $('#payment-errors');
+        $errorList.empty().show();
+        $errorList.append('<li>' + response.error.message + '</li>');
+        $form.find('input[type="submit"]').prop('disabled', false);
+
+        analytics.track('Stripe response', {
+            successfull: false,
+            error: response.error.message
+        });
+
+    } else {
+        // response contains id and card, which contains additional card details
+        var token = response.id;
+        // Insert the token into the form so it gets submitted to the server
+        $form.append($('<input type="text" name="stripeToken" />').val(token));
+
+        analytics.track('Stripe response', {
+            successfull: true
+        });
+
+        // and submit
+        $form.get(0).submit();
+    }
 };
 
 /**
@@ -329,9 +340,18 @@ $(document).ready(function(){
         $form.find('input[type="submit"]').prop('disabled', true);
         // Submits form if there is an old card entry,
         // Creates Stripe token if there is a new card entry.
-        if ($('#old-card').val() !== '0') {
+        var oldCard = $('#old-card');
+        if (oldCard.val() !== '0' && oldCard.val() !== '') {
+            analytics.track('Order placed', {
+                card: 'Old card'
+            });
+
             $form.get(0).submit();
         } else {
+            analytics.track('Order placed', {
+                card: 'New card'
+            });
+
             Stripe.card.createToken($form, stripeResponseHandler);
         }
     });
@@ -362,7 +382,7 @@ $(document).ready(function(){
         }
     });
 
-    if($('body').hasClass('logged-in')) {
+    if($('body').hasClass('logged-in') && $('#orderCard').find("option").length > 2) {
         $('#new_card').hide();
     }
 

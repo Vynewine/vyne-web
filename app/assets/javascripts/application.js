@@ -433,58 +433,63 @@ $(function() {
 		}
 	});
 
-
-
-
-
 	/* Delivery Details */
 
 	$('#delivery-details').click(function(e) {
 
 		e.preventDefault();
 
-		if($('#account-form').hasClass('register-form')) {
+        if ($('#account-form').hasClass('register-form')) {
 
-			//Needs Validation
-			var first_name = $('input[name="user[first_name]"]').val(),
-				last_name = $('input[name="user[last_name]"]').val(),
-				email = $('input[name="user[email]"]').val(),
-				mobile = $('input[name="user[mobile]"]').val(),
-				password = $('input[name="user[password]"]').val(),
-				password_confirmation = $('input[name="user[password_confirmation]"]').val();
+            //Needs Validation
+            var first_name = $('input[name="user[first_name]"]').val(),
+                email = $('input[name="user[email]"]').val(),
+                password = $('input[name="user[password]"]').val();
 
-			var data = "user[first_name]="+first_name+"&user[last_name]="+last_name+"&user[email]="+email+"&user[mobile]="+mobile+"&user[password]="+password+"&user[password_confirmation]="+password_confirmation;
+            var data = "user[first_name]=" + first_name + "&user[email]=" + email + "&user[password]=" + password;
 
-			console.log(data);
+            $.ajax({
+                type: "POST",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').last().attr('content'))
+                },
+                url: '/signup/create',
+                data: data,
+                error: function (data) {
+                    //Response
+                    var error = '';
+                    var errors = data.responseJSON.errors;
+                    if (errors) {
+                        error = errors.join(', ');
+                        var $errorList = $('#sign-in-errors');
+                        $errorList.empty().show();
+                        errors.forEach(function (error) {
+                            $errorList.append('<li>' + error + '</li>');
+                        });
+                    }
 
-			$.ajax({
-				type: "POST",
-				beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').last().attr('content'))},
-				url: '/signup/create',
-				data: data,
-				error: function(data) {
-					//Response
-					console.log(data);
-					var errors = data.responseJSON.errors;
-					if(errors) {
-						var $errorList = $('#sing-in-errors');
-						$errorList.empty().show();
-						errors.forEach(function(error) {
-							$errorList.append('<li>'+error+'</li>');
-						});
-					}
-				},
-				success: function(data) {
-					order.swipeNext();
-				}
-		    });
+                },
+                success: function (data) {
+                    analytics.track('New user', {
+                        name: first_name,
+                        email: email
+                    });
 
-		} else if($('#account-form').hasClass('signin-form')) {
-			//Needs Validation
-			var	email = $('input[name="user[email]"]').val();
-				password = $('input[name="user[password]"]').val();
+                    analytics.identify(data.id, {
+                        name: data.first_name,
+                        email: data.email
+                    });
 
-			var data = "&user[email]="+email+"&user[password]="+password;
+                    order.swipeNext();
+                }
+            });
+
+        } else if ($('#account-form').hasClass('signin-form')) {
+            //Needs Validation
+            var email = $('input[name="user[email]"]').val();
+            password = $('input[name="user[password]"]').val();
+
+            var data = "&user[email]=" + email + "&user[password]=" + password;
 
             $.ajax({
                 type: "POST",
@@ -496,39 +501,40 @@ $(function() {
                 error: function (data) {
                     //TODO: Log this
 
-                    var $errorList = $('#sing-in-errors');
+                    var $errorList = $('#sign-in-errors');
                     $errorList.empty().show();
                     $errorList.append('<li>There was an error communicating with the server. Please try again.</li>');
                     console.log(data);
                 },
                 success: function (data) {
-                    if(data.success) {
-                        $('meta[name="csrf-token"]').last().prop( "content", data.csrfToken);
+                    if (data.success) {
+                        $('meta[name="csrf-token"]').last().prop("content", data.csrfToken);
                         $('input[name="authenticity_token"]').last().val(data.csrfToken);
                         var initialPostCode = $('#filterPostcode').val().toUpperCase().replace(/[^A-Z0-9]/g, "");
                         var foundSavedAddress = false;
                         var $select = $('#order-address');
-                        if(data.addresses && data.addresses.length > 0) {
-                            var addresses = JSON.parse(data.addresses);
-                            for (var i=0; i < addresses.length; i++){
+                        if (data.addresses && data.addresses.length > 0) {
+                            var addresses = data.addresses;
+                            for (var i = 0; i < addresses.length; i++) {
                                 var address = addresses[i];
                                 var fullAddress = address.detail + ' ' + address.street + ' ' + address.postcode;
 
-                                if(address.postcode.match(initialPostCode) && address.postcode.match(initialPostCode).length > 0 && !foundSavedAddress) {
+                                if (address.postcode.match(initialPostCode) && address.postcode.match(initialPostCode).length > 0 && !foundSavedAddress) {
                                     $select.append('<option value=' + address.id + ' selected="selected">' + fullAddress + '</option>');
                                     foundSavedAddress = true;
                                 } else {
                                     $select.append('<option value=' + address.id + '>' + fullAddress + '</option>');
                                 }
                             }
-                            if(foundSavedAddress) {
+                            if (foundSavedAddress) {
                                 $('#new_delivery_address').fadeOut();
                             }
                         }
-                        if(data.payments && data.payments.length > 0) {
-                            var payments = JSON.parse(data.payments);
+                        if (data.payments && data.payments.length > 0) {
+                            var payments = data.payments;
                             var $orderCard = $('#orderCard');
-                            for (var i=0; i < payments.length; i++){
+                            $('#new_card').hide();
+                            for (var i = 0; i < payments.length; i++) {
                                 var payment = payments[i];
                                 var cardNumber;
                                 if (payment.brand == 3) { // American Express
@@ -537,7 +543,7 @@ $(function() {
                                     cardNumber = '**** **** **** ' + payment.number;
                                 }
 
-                                if(i===0) {
+                                if (i === 0) {
                                     $orderCard.append('<option value=' + payment.id + ' selected="selected">' + cardNumber + '</option>');
                                     $('#old-card').val(payment.id);
                                 } else {
@@ -546,21 +552,38 @@ $(function() {
                             }
                         }
 
+                        analytics.track('User sign in', {
+                            status: 'successfull',
+                            email: email
+                        });
+
+                        analytics.identify(data.user.id, {
+                            name: data.user.first_name,
+                            email: data.user.email
+                        });
+
                         order.swipeNext();
                     } else {
+
                         var errors = data.errors;
-                        if(errors) {
-                            var $errorList = $('#sing-in-errors');
+                        if (errors) {
+                            var $errorList = $('#sign-in-errors');
                             $errorList.empty().show();
-                            errors.forEach(function(error) {
-                                $errorList.append('<li>'+error+'</li>');
+                            errors.forEach(function (error) {
+                                $errorList.append('<li>' + error + '</li>');
                             });
                         }
+
+                        analytics.track('User sign in', {
+                            status: 'error',
+                            errors: errors.join(', '),
+                            email: email
+                        });
                     }
 
                 }
             });
-		}
+        }
 
 	});
 
@@ -575,6 +598,11 @@ $(function() {
 		e.preventDefault();
 
         if($('#address-id').val() !== '' && $('#address-id').val() !== '0') {
+
+            analytics.track('Address existing', {
+                id: $('#address-id').val()
+            });
+
             order.swipeNext();
             return;
         }
@@ -603,6 +631,14 @@ $(function() {
 			success: function(data) {
 				console.log(data);
                 $('#address-id').val(data.id);
+
+                analytics.track('Address new', {
+                    address_street: address_s,
+                    address_postcode: address_p,
+                    mobile: mobile,
+                    id: data.id
+                });
+
 				order.swipeNext();
 			}
 		});

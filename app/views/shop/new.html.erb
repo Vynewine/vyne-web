@@ -362,9 +362,14 @@
         <h2>Link Payment</h2>
           <%
           paymentCards = [['New payment card', -1]]
+          selected_card = nil
           if current_user
             current_user.payments.order(updated_at: :desc).each do |a|
               # [ :visa, :master, :american, :discover, :diners, :jcb ]
+              if selected_card.blank?
+                selected_card = a.id
+              end
+
               if a.brand == 3 # American Express
                 cardNumber = "**** ****** #{a.number}"
               else
@@ -375,7 +380,7 @@
           end
           %>
 
-        <%= select_tag "orderCard", options_for_select(paymentCards, @order.payment_id), :prompt => "Choose Card", :name => "" %>
+        <%= select_tag "orderCard", options_for_select(paymentCards, selected_card), :prompt => "Choose Card", :name => "" %>
         <div id="new_card">
           <div><input type="text" id="pmnm" size="20" placeholder="0000 0000 0000 0000" data-stripe="number" /></div>
           <div><input type="text" id="pmcv" size="4"  placeholder="CVC" data-stripe="cvc" /></div>
@@ -387,6 +392,7 @@
         <input type="hidden" id="new-brand" name="new_brand" />
         <input type="hidden" id="expm" data-stripe="exp-month" />
         <input type="hidden" id="expy" data-stripe="exp-year" />
+        <ul class="errors" id="payment-errors"></ul>
         <div>
           <%= f.submit "Submit Order", :class => 'red-button' %>
         </div>
