@@ -133,7 +133,6 @@ $(document).ready(function(){
         var $this = $(this);
         var $category = $('#category');
         var id = $this.data('categoryId');
-        console.log('clicked', id);
         $('.category-details').hide();
         $('.category-details.category-'+id).fadeIn();
         $category.val(id);

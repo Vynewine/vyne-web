@@ -17,8 +17,6 @@ function MapUtility() {
         var filteredCode = postcode.toUpperCase().replace(/[^A-Z0-9]/g, "");
         var key = _this.key;
         var address = "https://maps.googleapis.com/maps/api/geocode/json?address=London+" + filteredCode + "+UK&key=" + key;
-        console.log('Postcode is ' + filteredCode);
-        console.log('Request to google: ', address);
         var lng = 0;
         var lat = 0;
         var errorMethod = function(xhr) {
@@ -33,7 +31,7 @@ function MapUtility() {
                     return;
                 }
             }
-            console.log('success');
+
             lng = data.results[0].geometry.location.lng;
             lat = data.results[0].geometry.location.lat;
             methodParamSuccess({'lng': lng, 'lat': lat});
@@ -71,8 +69,6 @@ function MapUtility() {
 
     _this.calculateDistanceBetween = function(origins, destinations, distances, warehouses, callbackMethod) {
 
-        console.log('origin: ', origins);
-        console.log('destinations: ', destinations);
         var mapUtil = new MapUtility(); // recursive! =D
 
         var service = new google.maps.DistanceMatrixService();
@@ -87,8 +83,6 @@ function MapUtility() {
                avoidTolls: false
         },
         function(response, status) {
-            console.log('status:', status);
-            console.log('response:', response);
             var distanceKm = 0;
             var distanceMi = 0;
             var delivery = {available: false, warehouses: []};
@@ -111,7 +105,6 @@ function MapUtility() {
         var locAddress = "/warehouses/addresses.json";
 
         var warehousesMethod = function(data) {
-            console.log('JSON success:', data);
             var mapUtil = new MapUtility(); // recursive! =D
             var allPostcodes = [];
             var allDistances = [];

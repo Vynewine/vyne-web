@@ -62,6 +62,11 @@ $(function() {
 			order.swipeTo(3, 500, false);
 			$('.btn-checkout').show();
 		}
+
+        analytics.track('review-order', {
+            action: 'cart-link-clicked',
+            cart_count: $('.cart-count').text()
+        });
 	});
 
 	/* Walkthrough */
@@ -226,16 +231,20 @@ $(function() {
 	//Simple tab naviation
 	$('.tab-list li a').click(function(e) {
 		e.preventDefault();
-		console.log('clicked');
 		$($(this).attr('href')).parent().find('.tab').removeClass('active');
 		$($(this).attr('href')).addClass('active');
 		if($(this).attr('href') == '#with-food') $('.prefs-overview').show();
+	});
+
+    $('.tab-list.tab-list__horizontal li a').click(function(e) {
+        e.preventDefault();
+
+        console.log($(this).attr('href'));
 
         analytics.track('matching-wine', {
             type: $(this).attr('href').replace('#', '')
         });
-
-	});
+    });
 
 	$('.back').click(function(e) {
 		e.preventDefault();
@@ -341,6 +350,7 @@ $(function() {
 	});
 
 	$(document).on('click', '.order-table .delete', function(e) {
+        e.preventDefault();
 		$this = $(this);
 		$this.closest('tr').remove();
 		$bottle = $(this).closest('.order-bottle');
@@ -354,7 +364,6 @@ $(function() {
 		}
 		
 		$('.cart-count').show().text(parseInt($('.cart-count').text()) - 1);
-		console.log(wines);
 
 		if(!$('.order-bottle').length) {
 			$('.no-bottles').show();
@@ -372,18 +381,28 @@ $(function() {
 
 		calculateTotalCost();
 
-	});
-
-	$('.add-bottle-link').click(function(e) {
-		e.preventDefault();
-		wineCount++;
-		order.swipeTo(1, 500);
-		$('.add-bottle, .btn-checkout').hide();
-
         analytics.track('review-order', {
-            action: 'add-bottle'
+            action: 'remove-bottle'
         });
+
 	});
+
+    $('.add-bottle-link').click(function (e) {
+        e.preventDefault();
+        wineCount++;
+        order.swipeTo(1, 500);
+        $('.add-bottle, .btn-checkout').hide();
+
+        if ($(this).closest('tr').hasClass('no-bottles')) {
+            analytics.track('review-order', {
+                action: 'add-a-bottle'
+            });
+        } else {
+            analytics.track('review-order', {
+                action: 'add-another-bottle'
+            });
+        }
+    });
 
 	$('.add-same-bottle-link').click(function(e) {
 		e.preventDefault();
@@ -391,6 +410,11 @@ $(function() {
 		wines[wineCount] = wines[wineCount-1];
 		createCartPage(wines, wineCount);
 		$('.add-bottle').hide();
+
+        analytics.track('review-order', {
+            action: 'add-same-bottle'
+        });
+
 	});
 
 
@@ -682,8 +706,8 @@ function createCartPage(wines, wineCount) {
 	if($('input[name="specific-wine"]').val() != '') {
 		wines[wineCount].specificWine = $('input[name="specific-wine"]').val();
 
-        analytics.track('bottle-selected', {
-            category: 'specific-wine',
+        analytics.track('matching-wine', {
+            type: 'specific-wine',
             text: wines[wineCount].specificWine
         });
 	}

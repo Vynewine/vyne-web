@@ -132,7 +132,7 @@
             <% allFood.keep_if {|f| f.parent==0} %>
             <% allFood.each do |parentFood| %>
               <% if parentFood.name != "preparation" %>
-              <li id="<%= parentFood.id %>">
+              <li id="food-<%= parentFood.id %>">
                 <a href="#<%= parentFood.name.gsub(/(((\s)&?)\s?)/, "_")%>">
                   <%= image_tag "icons/food/"+parentFood.name.gsub(" & ", "_")+".png", :alt => "image description", :class => "logo" %>
                   <span><%= parentFood.name %></span>
