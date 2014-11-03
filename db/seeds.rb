@@ -311,7 +311,7 @@ puts "Admin -------- OK"
               :name => "House",
              :price => 15,
   :restaurant_price => "20-40",
-       :description => "<p>Producers with much higher quality than mass-production wines you'll find in supermarkets.</p>",
+       :description => "<p>Producers with much higher quality than mass-produced wines you'll find in supermarkets.</p>",
            :summary => "Entry-point to best wine regions"
 )
 

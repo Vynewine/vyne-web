@@ -4,7 +4,7 @@
 
 	<div class="order-confirmation-content wrapper">
 		<ul class="accordian">
-			<li class="accordian-item active">
+			<li class="accordian-item<% if @order.status_id == 1 %> active<% end %>">
 				<a href="" class="accordian-item-link">
 				<div class="line"></div>
 					<span class="number">1</span>
@@ -17,7 +17,7 @@
 				    <span>(Based on the preferences provided)</span>
 			    </div>
 			</li>
-			<li class="accordian-item">
+			<li class="accordian-item<% if @order.status_id == 2 %> active<% end %>">
 				<a href="" class="accordian-item-link"><span>2.</span> Courier picks up</a>
 				<div class="accordian-item-content">
 					<div class="line"></div>
@@ -26,7 +26,7 @@
 				    <p>Your courier is picking up your bottle of wine</p>
 				</div>
 			</li>
-			<li class="accordian-item">
+			<li class="accordian-item<% if @order.status_id == 3 %> active<% end %>">
 				<a href="" class="accordian-item-link"><span>3.</span> Your bottle is on it's way!</a>
 				<div class="accordian-item-content">
 					<div class="line"></div>
