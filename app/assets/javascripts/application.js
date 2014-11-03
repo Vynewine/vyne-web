@@ -49,10 +49,24 @@ $(function() {
 
 	//Hamburger/menu icon animation classes
 	$('.menu-link').click(function(e) {
+
+        if($('.menu-link').hasClass('slide')) {
+            analytics.track('Menu', {
+                action: 'Closed'
+            });
+        } else {
+            analytics.track('Menu', {
+                action: 'Opened'
+            });
+        }
+
 		e.preventDefault();
 		$('.menu-link').toggleClass('slide');
 		$('.container').toggleClass('menu-visible');
 		$('.aside-bar').toggleClass('visible');
+
+
+
 	});
 
 	//Clicking the cart link takes you to the review page
@@ -62,6 +76,11 @@ $(function() {
 			order.swipeTo(3, 500, false);
 			$('.btn-checkout').show();
 		}
+
+        analytics.track('Review order', {
+            action: 'Cart link clicked',
+            cart_count: $('.cart-count').text()
+        });
 	});
 
 	/* Walkthrough */
@@ -86,7 +105,7 @@ $(function() {
 		simulateTouch: false,
 		onlyExternal: true,
         onSlideChangeStart: function(swiper) {
-            analytics.track('slide-changed', {
+            analytics.track('Slide changed', {
                 slide: swiper.activeSlide().id
             });
 
@@ -179,7 +198,7 @@ $(function() {
 			$('.bottle-info').removeClass('active');
 			$(this).parent().find('.bottle-info').addClass('active');
 		}
-        analytics.track('bottle-selected', {
+        analytics.track('Bottle selected', {
             category: $(this).data('category-id')
         });
 	});
@@ -209,7 +228,7 @@ $(function() {
 		wines[wineCount].price = $(this).parent().find('.price').text();
 		wines[wineCount].category = $(this).closest('.bottle-info').data('category-id');
 
-        analytics.track('bottle-chosen', {
+        analytics.track('Bottle chosen', {
             category: wines[wineCount].category
         });
 
@@ -226,16 +245,20 @@ $(function() {
 	//Simple tab naviation
 	$('.tab-list li a').click(function(e) {
 		e.preventDefault();
-		console.log('clicked');
 		$($(this).attr('href')).parent().find('.tab').removeClass('active');
 		$($(this).attr('href')).addClass('active');
 		if($(this).attr('href') == '#with-food') $('.prefs-overview').show();
+	});
 
-        analytics.track('matching-wine', {
+    $('.tab-list.tab-list__horizontal li a').click(function(e) {
+        e.preventDefault();
+
+        console.log($(this).attr('href'));
+
+        analytics.track('Matching wine', {
             type: $(this).attr('href').replace('#', '')
         });
-
-	});
+    });
 
 	$('.back').click(function(e) {
 		e.preventDefault();
@@ -250,7 +273,7 @@ $(function() {
 			wines[wineCount].occasion = $(this).parent().attr('id').split('-')[1];
 		}
 
-        analytics.track('matching-selected', {
+        analytics.track('Matching selected', {
             selection: $(this).parent().attr('id')
         });
 	});
@@ -341,6 +364,7 @@ $(function() {
 	});
 
 	$(document).on('click', '.order-table .delete', function(e) {
+        e.preventDefault();
 		$this = $(this);
 		$this.closest('tr').remove();
 		$bottle = $(this).closest('.order-bottle');
@@ -354,7 +378,6 @@ $(function() {
 		}
 		
 		$('.cart-count').show().text(parseInt($('.cart-count').text()) - 1);
-		console.log(wines);
 
 		if(!$('.order-bottle').length) {
 			$('.no-bottles').show();
@@ -372,18 +395,28 @@ $(function() {
 
 		calculateTotalCost();
 
-	});
-
-	$('.add-bottle-link').click(function(e) {
-		e.preventDefault();
-		wineCount++;
-		order.swipeTo(1, 500);
-		$('.add-bottle, .btn-checkout').hide();
-
-        analytics.track('review-order', {
-            action: 'add-bottle'
+        analytics.track('Review order', {
+            action: 'Remove bottle'
         });
+
 	});
+
+    $('.add-bottle-link').click(function (e) {
+        e.preventDefault();
+        wineCount++;
+        order.swipeTo(1, 500);
+        $('.add-bottle, .btn-checkout').hide();
+
+        if ($(this).closest('tr').hasClass('no-bottles')) {
+            analytics.track('Review order', {
+                action: 'Add a bottle'
+            });
+        } else {
+            analytics.track('Review order', {
+                action: 'Add another bottle'
+            });
+        }
+    });
 
 	$('.add-same-bottle-link').click(function(e) {
 		e.preventDefault();
@@ -391,6 +424,11 @@ $(function() {
 		wines[wineCount] = wines[wineCount-1];
 		createCartPage(wines, wineCount);
 		$('.add-bottle').hide();
+
+        analytics.track('Review order', {
+            action: 'Add same bottle'
+        });
+
 	});
 
 
@@ -409,58 +447,63 @@ $(function() {
 		}
 	});
 
-
-
-
-
 	/* Delivery Details */
 
 	$('#delivery-details').click(function(e) {
 
 		e.preventDefault();
 
-		if($('#account-form').hasClass('register-form')) {
+        if ($('#account-form').hasClass('register-form')) {
 
-			//Needs Validation
-			var first_name = $('input[name="user[first_name]"]').val(),
-				last_name = $('input[name="user[last_name]"]').val(),
-				email = $('input[name="user[email]"]').val(),
-				mobile = $('input[name="user[mobile]"]').val(),
-				password = $('input[name="user[password]"]').val(),
-				password_confirmation = $('input[name="user[password_confirmation]"]').val();
+            //Needs Validation
+            var first_name = $('input[name="user[first_name]"]').val(),
+                email = $('input[name="user[email]"]').val(),
+                password = $('input[name="user[password]"]').val();
 
-			var data = "user[first_name]="+first_name+"&user[last_name]="+last_name+"&user[email]="+email+"&user[mobile]="+mobile+"&user[password]="+password+"&user[password_confirmation]="+password_confirmation;
+            var data = "user[first_name]=" + first_name + "&user[email]=" + email + "&user[password]=" + password;
 
-			console.log(data);
+            $.ajax({
+                type: "POST",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').last().attr('content'))
+                },
+                url: '/signup/create',
+                data: data,
+                error: function (data) {
+                    //Response
+                    var error = '';
+                    var errors = data.responseJSON.errors;
+                    if (errors) {
+                        error = errors.join(', ');
+                        var $errorList = $('#sign-in-errors');
+                        $errorList.empty().show();
+                        errors.forEach(function (error) {
+                            $errorList.append('<li>' + error + '</li>');
+                        });
+                    }
 
-			$.ajax({
-				type: "POST",
-				beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').last().attr('content'))},
-				url: '/signup/create',
-				data: data,
-				error: function(data) {
-					//Response
-					console.log(data);
-					var errors = data.responseJSON.errors;
-					if(errors) {
-						var $errorList = $('#sing-in-errors');
-						$errorList.empty().show();
-						errors.forEach(function(error) {
-							$errorList.append('<li>'+error+'</li>');
-						});
-					}
-				},
-				success: function(data) {
-					order.swipeNext();
-				}
-		    });
+                },
+                success: function (data) {
+                    analytics.track('New user', {
+                        name: first_name,
+                        email: email
+                    });
 
-		} else if($('#account-form').hasClass('signin-form')) {
-			//Needs Validation
-			var	email = $('input[name="user[email]"]').val();
-				password = $('input[name="user[password]"]').val();
+                    analytics.identify(data.id, {
+                        name: data.first_name,
+                        email: data.email
+                    });
 
-			var data = "&user[email]="+email+"&user[password]="+password;
+                    order.swipeNext();
+                }
+            });
+
+        } else if ($('#account-form').hasClass('signin-form')) {
+            //Needs Validation
+            var email = $('input[name="user[email]"]').val();
+            password = $('input[name="user[password]"]').val();
+
+            var data = "&user[email]=" + email + "&user[password]=" + password;
 
             $.ajax({
                 type: "POST",
@@ -472,39 +515,40 @@ $(function() {
                 error: function (data) {
                     //TODO: Log this
 
-                    var $errorList = $('#sing-in-errors');
+                    var $errorList = $('#sign-in-errors');
                     $errorList.empty().show();
                     $errorList.append('<li>There was an error communicating with the server. Please try again.</li>');
                     console.log(data);
                 },
                 success: function (data) {
-                    if(data.success) {
-                        $('meta[name="csrf-token"]').last().prop( "content", data.csrfToken);
+                    if (data.success) {
+                        $('meta[name="csrf-token"]').last().prop("content", data.csrfToken);
                         $('input[name="authenticity_token"]').last().val(data.csrfToken);
                         var initialPostCode = $('#filterPostcode').val().toUpperCase().replace(/[^A-Z0-9]/g, "");
                         var foundSavedAddress = false;
                         var $select = $('#order-address');
-                        if(data.addresses && data.addresses.length > 0) {
-                            var addresses = JSON.parse(data.addresses);
-                            for (var i=0; i < addresses.length; i++){
+                        if (data.addresses && data.addresses.length > 0) {
+                            var addresses = data.addresses;
+                            for (var i = 0; i < addresses.length; i++) {
                                 var address = addresses[i];
                                 var fullAddress = address.detail + ' ' + address.street + ' ' + address.postcode;
 
-                                if(address.postcode.match(initialPostCode) && address.postcode.match(initialPostCode).length > 0 && !foundSavedAddress) {
+                                if (address.postcode.match(initialPostCode) && address.postcode.match(initialPostCode).length > 0 && !foundSavedAddress) {
                                     $select.append('<option value=' + address.id + ' selected="selected">' + fullAddress + '</option>');
                                     foundSavedAddress = true;
                                 } else {
                                     $select.append('<option value=' + address.id + '>' + fullAddress + '</option>');
                                 }
                             }
-                            if(foundSavedAddress) {
+                            if (foundSavedAddress) {
                                 $('#new_delivery_address').fadeOut();
                             }
                         }
-                        if(data.payments && data.payments.length > 0) {
-                            var payments = JSON.parse(data.payments);
+                        if (data.payments && data.payments.length > 0) {
+                            var payments = data.payments;
                             var $orderCard = $('#orderCard');
-                            for (var i=0; i < payments.length; i++){
+                            $('#new_card').hide();
+                            for (var i = 0; i < payments.length; i++) {
                                 var payment = payments[i];
                                 var cardNumber;
                                 if (payment.brand == 3) { // American Express
@@ -513,7 +557,7 @@ $(function() {
                                     cardNumber = '**** **** **** ' + payment.number;
                                 }
 
-                                if(i===0) {
+                                if (i === 0) {
                                     $orderCard.append('<option value=' + payment.id + ' selected="selected">' + cardNumber + '</option>');
                                     $('#old-card').val(payment.id);
                                 } else {
@@ -522,21 +566,38 @@ $(function() {
                             }
                         }
 
+                        analytics.track('User sign in', {
+                            status: 'successfull',
+                            email: email
+                        });
+
+                        analytics.identify(data.user.id, {
+                            name: data.user.first_name,
+                            email: data.user.email
+                        });
+
                         order.swipeNext();
                     } else {
+
                         var errors = data.errors;
-                        if(errors) {
-                            var $errorList = $('#sing-in-errors');
+                        if (errors) {
+                            var $errorList = $('#sign-in-errors');
                             $errorList.empty().show();
-                            errors.forEach(function(error) {
-                                $errorList.append('<li>'+error+'</li>');
+                            errors.forEach(function (error) {
+                                $errorList.append('<li>' + error + '</li>');
                             });
                         }
+
+                        analytics.track('User sign in', {
+                            status: 'error',
+                            errors: errors.join(', '),
+                            email: email
+                        });
                     }
 
                 }
             });
-		}
+        }
 
 	});
 
@@ -551,6 +612,11 @@ $(function() {
 		e.preventDefault();
 
         if($('#address-id').val() !== '' && $('#address-id').val() !== '0') {
+
+            analytics.track('Address existing', {
+                id: $('#address-id').val()
+            });
+
             order.swipeNext();
             return;
         }
@@ -579,6 +645,14 @@ $(function() {
 			success: function(data) {
 				console.log(data);
                 $('#address-id').val(data.id);
+
+                analytics.track('Address new', {
+                    address_street: address_s,
+                    address_postcode: address_p,
+                    mobile: mobile,
+                    id: data.id
+                });
+
 				order.swipeNext();
 			}
 		});
@@ -682,8 +756,8 @@ function createCartPage(wines, wineCount) {
 	if($('input[name="specific-wine"]').val() != '') {
 		wines[wineCount].specificWine = $('input[name="specific-wine"]').val();
 
-        analytics.track('bottle-selected', {
-            category: 'specific-wine',
+        analytics.track('Matching wine', {
+            type: 'Specific wine',
             text: wines[wineCount].specificWine
         });
 	}

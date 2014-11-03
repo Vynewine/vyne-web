@@ -55,21 +55,32 @@ $('.clientPostCode').keyup(updatePostcode);
 // Part 2: Order creation:
 
 function stripeResponseHandler(status, response) {
-  var $form = $('#order-form');
+    var $form = $('#order-form');
 
-  if (response.error) {
-    // Show the errors on the form
-    console.error(response.error.message);
-    // $form.find('.payment-errors').text(response.error.message);
-    $form.find('input[type="submit"]').prop('disabled', false);
-  } else {
-    // response contains id and card, which contains additional card details
-    var token = response.id;
-    // Insert the token into the form so it gets submitted to the server
-    $form.append($('<input type="text" name="stripeToken" />').val(token));
-    // and submit
-    $form.get(0).submit();
-  }
+    if (response.error) {
+        var $errorList = $('#payment-errors');
+        $errorList.empty().show();
+        $errorList.append('<li>' + response.error.message + '</li>');
+        $form.find('input[type="submit"]').prop('disabled', false);
+
+        analytics.track('Stripe response', {
+            successfull: false,
+            error: response.error.message
+        });
+
+    } else {
+        // response contains id and card, which contains additional card details
+        var token = response.id;
+        // Insert the token into the form so it gets submitted to the server
+        $form.append($('<input type="text" name="stripeToken" />').val(token));
+
+        analytics.track('Stripe response', {
+            successfull: true
+        });
+
+        // and submit
+        $form.get(0).submit();
+    }
 };
 
 /**
@@ -133,7 +144,6 @@ $(document).ready(function(){
         var $this = $(this);
         var $category = $('#category');
         var id = $this.data('categoryId');
-        console.log('clicked', id);
         $('.category-details').hide();
         $('.category-details.category-'+id).fadeIn();
         $category.val(id);
@@ -186,9 +196,9 @@ $(document).ready(function(){
                 // console.log('callback 1', deliverable);
                 if (delivery.available) {
 
-                    analytics.track('postcode-lookup', {
+                    analytics.track('Postcode lookup', {
                         postcode: postcode,
-                        status: 'delivery-available'
+                        status: 'Delivery available'
                     });
 
                     var currentHour = new Date().getHours();
@@ -272,9 +282,9 @@ $(document).ready(function(){
                     $feedback.hide().addClass('error');
                     $feedback.html("VYNZ does NOT deliver to this area!");
                     $('#use-postcode').css({ 'display': 'none'});
-                    analytics.track('postcode-lookup', {
+                    analytics.track('Postcode lookup', {
                         postcode: postcode,
-                        status: 'delivery-not-available'
+                        status: 'Delivery not available'
                     });
                 }
             });
@@ -330,9 +340,18 @@ $(document).ready(function(){
         $form.find('input[type="submit"]').prop('disabled', true);
         // Submits form if there is an old card entry,
         // Creates Stripe token if there is a new card entry.
-        if ($('#old-card').val() !== '0') {
+        var oldCard = $('#old-card');
+        if (oldCard.val() !== '0' && oldCard.val() !== '') {
+            analytics.track('Order placed', {
+                card: 'Old card'
+            });
+
             $form.get(0).submit();
         } else {
+            analytics.track('Order placed', {
+                card: 'New card'
+            });
+
             Stripe.card.createToken($form, stripeResponseHandler);
         }
     });
@@ -363,8 +382,13 @@ $(document).ready(function(){
         }
     });
 
-    if($('body').hasClass('logged-in')) {
+    var orderCard = $('#orderCard');
+    if($('body').hasClass('logged-in') && orderCard.find("option").length > 2) {
         $('#new_card').hide();
+
+        if(orderCard.find("option:selected").val() !== "" && orderCard.find("option:selected").val() !== "-1") {
+            $('#old-card').val(orderCard.find("option:selected").val());
+        }
     }
 
 });
