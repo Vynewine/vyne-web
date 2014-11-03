@@ -181,9 +181,10 @@ $(function() {
 	}
 
 	//Object to store food details
-	var food = function(id, name) {
+	var food = function(id, name, preparation) {
 		this.id = id,
 		this.name = name
+		this.preparation = preparation;
 	}
 
 	var wineCount = 0;
@@ -293,7 +294,9 @@ $(function() {
 
 			if($this.closest('.tab').attr('id') == 'preparation') {
 				$img = $this.find('img').clone();
+				var prepID = $this.closest('li').attr('id').split('-')[1];
 				$('#food-item-'+parentid).after($img.addClass('food-prep').attr('id',parentid));
+				$('#food-item-'+parentid).closest('li').append( $('<span/>', { text: prepID }).addClass('prep-name') );
 			} else {
 
 				//Add the food to the wine object
@@ -307,7 +310,7 @@ $(function() {
 				$img.attr('id', 'food-item-'+id);
 				$empty = $('.prefs-overview-list .empty').first();
 				$empty.find('span').replaceWith($img);
-				$empty.append( $('<span/>', { text: name }) ).removeClass('empty');
+				$empty.append( $('<span/>', { text: name }).addClass('food-name') ).removeClass('empty');
 
 				$this.parent().addClass('selected');
 
@@ -351,7 +354,8 @@ $(function() {
 				wines[wineCount].food.push( 
 					new food( 
 						$(this).find('img').first().attr('id').split('-')[2], 
-						$(this).find('span').text()
+						$(this).find('.food-name').text(),
+						$(this).find('.prep-name').text()
 					) 
 				);
 			}
