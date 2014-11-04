@@ -66,4 +66,8 @@ Push to Heroku (assumin you are logged in to Vynz Heroku account)
 git push heroku master
 ```
 
+Run Migrations if required
+```
+heroku run rake --trace db:migrate
+```
 

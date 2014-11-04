@@ -28,6 +28,45 @@ class UserMailerTest < ActionMailer::TestCase
     assert_equal(results[0]['status'], 'sent', 'Email status from Mandrill should be sent')
   end
 
+  test 'Send order confirmation one bottle occasion medium red' do
+    WebMock.allow_net_connect!
+
+    order_item = order_one_bottle
+
+    order_item.occasion = occasions(:two)
+    order_item.type = types(:two)
+    order_item.save
+
+    results = first_time_ordered(@order)
+
+    assert_equal(results[0]['status'], 'sent', 'Email status from Mandrill should be sent')
+  end
+
+  test 'Send order confirmation one bottle occasion rich white' do
+    WebMock.allow_net_connect!
+
+    order_item = order_one_bottle
+
+    order_item.occasion = occasions(:two)
+    order_item.type = types(:five)
+    order_item.save
+
+    results = first_time_ordered(@order)
+
+    assert_equal(results[0]['status'], 'sent', 'Email status from Mandrill should be sent')
+  end
+
+  test 'template testing' do
+
+    order_item = order_one_bottle
+
+    order_item.occasion = occasions(:two)
+    order_item.type = types(:two)
+    order_item.save
+
+    puts json: test_template(@order)
+  end
+
   test 'Send order confirmation one bottle two food selections' do
     WebMock.allow_net_connect!
 
@@ -35,6 +74,7 @@ class UserMailerTest < ActionMailer::TestCase
 
     FoodItem.create!(:food => foods(:beef), :preparation => preparations(:grill_BBQ), :order_item =>  order_item)
     FoodItem.create!(:food => foods(:lobster_shellfish), :preparation => preparations(:grill_BBQ), :order_item =>  order_item)
+    FoodItem.create!(:food => foods(:pasta), :order_item =>  order_item)
 
     results = first_time_ordered(@order)
 

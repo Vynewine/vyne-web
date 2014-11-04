@@ -1,0 +1,200 @@
+<%
+   price = order.order_items[0].price.to_s
+   wine_1_order = order.order_items[0].category.name + ' wine (£' + price + ')'
+
+   pref_1_wine1 = nil
+   pref_2_wine1 = nil
+   pref_3_wine1 = nil
+
+   pref_1_wine2 = nil
+   pref_2_wine2 = nil
+   pref_3_wine2 = nil
+
+   #If paired with food
+   foods_1 = order.order_items[0].food_items
+   if foods_1.blank?
+     if order.order_items[0].specific_wine.blank? && !order.order_items[0].occasion.blank?
+       #If paired with occastion
+       pref_1_wine1 = order.order_items[0].occasion.name
+       pref_2_wine1 = order.order_items[0].type.name
+     else
+       pref_1_wine1 = order.order_items[0].specific_wine
+     end
+   else
+     unless foods_1[0].blank?
+       pref_1_wine1 = foods_1[0].food.name
+       unless foods_1[0].preparation.blank?
+         pref_1_wine1 += ' (' + foods_1[0].preparation.name + ')'
+       end
+     end
+     unless foods_1[1].blank?
+       pref_2_wine1 = foods_1[1].food.name
+       unless foods_1[1].preparation.blank?
+         pref_2_wine1 += ' (' + foods_1[1].preparation.name + ')'
+       end
+     end
+
+     unless foods_1[2].blank?
+       pref_3_wine1 = foods_1[2].food.name
+       unless foods_1[2].preparation.blank?
+         pref_3_wine1 += ' (' + foods_1[2].preparation.name + ')'
+       end
+     end
+   end
+
+   unless order.order_items[1].blank?
+
+     wine_2_order = order.order_items[1].category.name + ' wine (£' + order.order_items[1].price.to_s + ')'
+
+     foods_2 = order.order_items[1].food_items
+     if foods_2.blank?
+       if order.order_items[0].specific_wine.blank? && !order.order_items[0].occasion.blank?
+         #If paired with occastion
+         pref_1_wine2 = order.order_items[0].occasion.name
+         pref_2_wine2 = order.order_items[0].type.name
+       else
+         pref_1_wine2 = order.order_items[0].specific_wine
+       end
+     else
+
+       unless foods_2[0].blank?
+         pref_1_wine2 = foods_2[0].food.name
+         unless foods_2[0].preparation.blank?
+           pref_1_wine2 += ' (' + foods_2[0].preparation.name + ')'
+         end
+       end
+       unless foods_2[1].blank?
+         pref_2_wine2 = foods_2[1].food.name
+         unless foods_2[1].preparation.blank?
+           pref_2_wine2 += ' (' + foods_2[1].preparation.name + ')'
+         end
+       end
+
+       unless foods_2[2].blank?
+         pref_3_wine2 = foods_2[2].food.name
+         unless foods_2[2].preparation.blank?
+           pref_3_wine2 += ' (' + foods_2[2].preparation.name + ')'
+         end
+       end
+     end
+   end
+
+   def get_wine_color(color)
+     case color
+       when 'Medium Red'
+         '#800000'
+       when 'Bold Red'
+         '#570E15'
+       when 'Light Red'
+         '#950027'
+       when 'Rosé'
+         '#C50039'
+       when 'Rich White'
+         '#EECA56'
+       when 'Dry White'
+         '#DAD790'
+       when 'Sparkling'
+         '#F4E292'
+       when 'Sweet White'
+         '#EABD00'
+       when 'Fortified'
+         '#6B1F2C'
+       else
+         ''
+     end
+   end
+
+   wine_one_color = get_wine_color(pref_2_wine1)
+   wine_one_is_wine = !wine_one_color.blank?
+   
+
+%>
+
+<span style="color:#FFFFFF">You ordered a&nbsp;</span>
+<span style="color:#FFFFFF"><%= wine_1_order %> perfect for your</span>
+<br/>&nbsp;
+<span style="color:#FFFFFF">
+  <span style="font-size:27px"><%= pref_1_wine1 %>&nbsp;</span><br/>
+  <% unless pref_2_wine1.blank? %>
+    <span style="font-size:14px">with&nbsp;</span>
+  <% end %>
+</span>
+<br/>
+
+<% unless pref_2_wine1.blank? %>
+    <% if wine_one_is_wine %>
+        <span style="color:<%= wine_one_color %>">
+  <span style="font-size:27px; line-height:20.7999992370605px; text-align:center"><%= pref_2_wine1 %></span>
+</span>
+    <% else %>
+
+        <span style="color:#FFFFFF">
+  <span style="font-size:27px">&nbsp;<%= pref_2_wine1 %></span>
+  <br/>
+          <% unless pref_3_wine1.blank? %>
+        <span style="font-size:14px">with&nbsp;</span>
+    <% end %>
+</span>
+    <% end %>
+<% end %>
+
+<% unless pref_3_wine1.blank? %>
+    <br/>
+    <span style="color:#FFFFFF">
+  <span style="font-size:27px"><%= pref_3_wine1 %></span>
+</span><br/>
+
+<% end %>
+<%#
+<span style="color:#FFFFFF">
+  <span style="font-size:20px">*|IF:WINEORDER2|*Your second bottle is a *|WINEORDER2|* perfect for your</span><br/>
+    <span style="font-size:27px">*|PREF1WINE2|*&nbsp;</span><br/>
+    <span style="font-size:14px">*|IF:PREF2WINE2|*with*|END:IF|*&nbsp;</span>
+</span><br/>
+
+<span style="color:#800000">
+  <span style="font-size:27px; line-height:20.7999992370605px; text-align:center">*|IF:PREF2WINE2|**|IF:PREF2WINE2=Medium Red|*Medium Red</span>
+</span>
+
+  <span style="color:#570E15">
+    <span style="font-size:27px; line-height:20.7999992370605px; text-align:center">*|ELSEIF:PREF2WINE2=Bold Red|*Bold Red</span>
+  </span>
+
+  <span style="color:#950027">
+  <span style="font-size:27px; line-height:20.7999992370605px; text-align:center">*|ELSEIF:PREF2WINE2=Light Red|*Light Red</span>
+</span>
+
+  <span style="color:#C50039">
+    <span style="font-size:27px; line-height:20.7999992370605px; text-align:center">*|ELSEIF:PREF2WINE2=Ros&eacute;|*Ros&eacute;</span>
+  </span>
+
+  <span style="color:#EECA56">
+    <span style="font-size:27px; line-height:20.7999992370605px; text-align:center">*|ELSEIF:PREF2WINE2=Rich White|*Rich White</span>
+  </span>
+
+  <span style="color:#DAD790">
+    <span style="font-size:27px; line-height:20.7999992370605px; text-align:center">*|ELSEIF:PREF2WINE2=Dry White|*Dry White</span>
+  </span>
+
+  <span style="color:#F4E292">
+    <span style="font-size:27px; line-height:20.7999992370605px; text-align:center">*|ELSEIF:PREF2WINE2=Sparkling|*Sparkling</span>
+  </span>
+
+  <span style="color:#EABD00">
+    <span style="font-size:27px; line-height:20.7999992370605px; text-align:center">*|ELSEIF:PREF2WINE2=Sweet White|*Sweet White</span>
+  </span>
+
+  <span style="color:#6B1F2C">
+    <span style="font-size:27px; line-height:20.7999992370605px; text-align:center">*|ELSEIF:PREF2WINE2=Fortified|*Fortified</span>
+  </span>
+
+  <span style="color:#FFFFFF">
+    <span style="font-size:27px">&nbsp;*|ELSE:|**|PREF2WINE2|**|END:IF|**|END:IF|*<br/>
+<span style="font-size:14px">*|IF:PREF3WINE2|*with&nbsp;</span>
+    </span><br/>
+<span style="color:#FFFFFF">
+  <span style="font-size:27px">*|PREF3WINE2|**|END:IF|*</span>
+</span> *|END:IF|*
+  </span>
+</span>
+%>
