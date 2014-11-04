@@ -41,6 +41,10 @@ Rails.application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
 
+  # Devise mailer:
+  config.action_mailer.default_url_options = { host: 'vine.london' }
+  # In production, :host should be set to the actual host of your application.
+
   # Set to :debug to see everything in the log.
   config.log_level = :info
 
@@ -98,5 +102,7 @@ Rails.application.configure do
   #Segment IO
   config.segment_io_write_key =  '0zwU3t4m36'
 
+  #Sentry
+  config.sentry_dns = 'https://d8178d04a5164db7be5668971be436a3:1bc7da2220874227af68c54d011880ac@app.getsentry.com/32494'
 
 end

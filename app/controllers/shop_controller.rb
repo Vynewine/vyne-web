@@ -154,7 +154,7 @@ class ShopController < ApplicationController
     @order.save
 
     respond_to do |format|
-      first_time_ordered current_user
+      first_time_ordered @order
       format.html { redirect_to @order } #, notice: 'Order was successfully created.' }
       format.json { render :confirmed, status: :created, location: @order }
     end

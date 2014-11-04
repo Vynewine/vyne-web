@@ -64,9 +64,6 @@ $(function() {
 		$('.menu-link').toggleClass('slide');
 		$('.container').toggleClass('menu-visible');
 		$('.aside-bar').toggleClass('visible');
-
-
-
 	});
 
 	//Clicking the cart link takes you to the review page

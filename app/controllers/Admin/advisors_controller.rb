@@ -5,6 +5,8 @@ require 'json'
 
 class Admin::AdvisorsController < ApplicationController
   include ShutlHelper
+  include UserMailer
+
 
   layout 'admin'
   before_action :authenticate_user!
@@ -104,6 +106,10 @@ class Admin::AdvisorsController < ApplicationController
     else
       @message = "error:The payment was not processed. #{charge_details.description}"
       order.status_id = 3 #payment failed
+    end
+
+    if @message == 'Success'
+      order_confirmation(order)
     end
 
     respond_to do |format|

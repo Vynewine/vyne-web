@@ -1,11 +1,12 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
+  first_name: 'John'
+  last_name: 'Doe'
   email: 'test@test.test'
   encrypted_password: 'test'
   roles: client
   addresses: addresses(:three)
-
 
 two:
   email: 'test2@test.test'
@@ -17,3 +18,11 @@ admin:
   encrypted_password: 'test'
   roles: admin
   addresses: addresses(:four)
+
+client:
+  first_name: 'John'
+  last_name: 'Doe'
+  email: 'jakub.borys@gmail.com'
+  encrypted_password: 'test'
+  roles: client
+  addresses: addresses(:three)

@@ -61,4 +61,7 @@ Rails.application.configure do
   #Segment IO
   config.segment_io_write_key =  'gTrenJGlvC'
 
+  #Sentry
+  config.sentry_dns = 'https://8830d38a3ab24cea90a374858941d1f6:70306e5411ca4acea11091a14208176b@app.getsentry.com/32522'
+
 end
