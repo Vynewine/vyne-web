@@ -24,7 +24,7 @@
       <div class="order-panel-content wrapper">
         <div class="slideable">
           <h2 class="title">Availability</h2>
-          <p>We need to check if the wine is available to deliver in your area</p>
+          <p>Check whether we deliver to your location</p>
           <input type="text" id="filterPostcode" placeholder="Enter postcode" autocomplete="off"/>
           <div class="opening-times">
             <span>Opening hours:</span>
@@ -34,14 +34,14 @@
           <a href="" id="use-postcode" class="btn next-slide">Choose wine</a>
           <div class="not-available">
             <div class="outside">
-              <h3>Not available in your area</h3>
+              <h3>Not yet available in your area</h3>
               <p>We're expanding the service throughtout London in the coming weeks.</p>
-              <p>As a thank you for waiting, we'll give you a free bottle with your first order, when we we're available in your postcode.</p>
+              <p>As a thank you for waiting, we'll give you a free bottle with your first order when we we're available in your postcode.</p>
             </div>
             <div class="closed">
-              <h3>Closed but in area</h3>
-              <p>Our cellars are currently closed in your area, come back between 12:00 - 20:15 daily.</p>
-              <p>We're working hard to extend the service in the coming weeks.</p>
+              <h3>We deliver wine in your area, but your local wine cellars are closed</h3>
+              <p>The cellars are currently closed in your area, come back between 12:00 - 20:15 daily.</p>
+              <p>We can drop you an email if the opening hours are extended.</p>
             </div>
             <input type="email" name="email" placeholder="jon@snow.com" />
             <input type="submit" value="Let me know"/>
@@ -60,7 +60,8 @@
     <div id="bottles-panel" class="order-panel swiper-slide noSwipingClass" data-hash="bottles">
       <div class="order-panel-content wrapper wrapper-large">
 
-        <h2>Select your bottle</h2>
+        <h2 class="title">Select your bottle</h2>
+        <h3 class="subttitle">Prices include delivery</h3>
 
         <ul class="bottle-list cf">
       
@@ -244,7 +245,7 @@
           </tr>
           <tr class="no-bottles">
             <td colspan="2">
-              <span>No bottles :(</span>
+              <span>No bottles selected</span>
               <a href="" class="btn btn__small add-bottle-link">Add a bottle</a>
             </td>
           </tr>
@@ -257,7 +258,7 @@
             </td>
           </tr>
           <tr class="total">
-            <td>Total:</td>
+            <td>Total (inc. delivery):</td>
             <td class="total-cost">
               <span>£20</span>
             </td>
@@ -337,13 +338,16 @@
         <div id="new_delivery_address" style="display:none;">
           <div>
             <select id="suggested-addresses">
-              <option value="0">Please select your street address</option>
+              <option value="0">Select your address</option>
             </select>
           </div>
-          <div><textarea rows="3" disabled="disabled" id="addr-st" name="address_s" placeholder="House Number and Street Name"></textarea>
+          <div>
+          <label for="address_s">Enter address if not present above</label>
+          <textarea rows="3" disabled="disabled" id="addr-st" name="address_s" placeholder="House Number and Street Name"></textarea>
           </div>
           <div><input type="text" id="addr-pc" name="address_p" placeholder="Postcode" disabled="disabled"/></div>
           <div><input type="text" id="mobile" name="mobile" placeholder="Mobile Number" /></div>
+          <div><span>We need this to ensure fast delivery</span></div>
           <div><input type="hidden" disabled="disabled" id="addr-no" name="address_d" placeholder="No"/></div>
         </div>
         <input type="hidden" id="address-id" name="address_id"/>
