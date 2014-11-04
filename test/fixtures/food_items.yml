@@ -1,0 +1,4 @@
+one:
+  order_item: order_items(:one)
+  food: (:beef)
+  preparation: (:grill_BBQ)

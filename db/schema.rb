@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141104095710) do
+ActiveRecord::Schema.define(version: 20141104112210) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -116,22 +116,24 @@ ActiveRecord::Schema.define(version: 20141104095710) do
     t.datetime "updated_at"
   end
 
+  create_table "food_items", force: true do |t|
+    t.integer  "order_item_id"
+    t.integer  "food_id"
+    t.integer  "preparation_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "food_items", ["food_id"], name: "index_food_items_on_food_id", using: :btree
+  add_index "food_items", ["order_item_id"], name: "index_food_items_on_order_item_id", using: :btree
+  add_index "food_items", ["preparation_id"], name: "index_food_items_on_preparation_id", using: :btree
+
   create_table "foods", force: true do |t|
     t.string   "name"
     t.integer  "parent"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  create_table "foods_order_items", id: false, force: true do |t|
-    t.integer  "food_id"
-    t.integer  "order_item_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "foods_order_items", ["food_id"], name: "index_foods_order_items_on_food_id", using: :btree
-  add_index "foods_order_items", ["order_item_id"], name: "index_foods_order_items_on_order_item_id", using: :btree
 
   create_table "foods_wines", id: false, force: true do |t|
     t.integer  "food_id",    null: false
@@ -250,6 +252,12 @@ ActiveRecord::Schema.define(version: 20141104095710) do
 
   add_index "payments", ["number"], name: "index_payments_on_number", using: :btree
   add_index "payments", ["user_id"], name: "index_payments_on_user_id", using: :btree
+
+  create_table "preparations", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "producers", force: true do |t|
     t.string   "name"

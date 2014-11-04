@@ -1,26 +1,29 @@
 require 'test_helper'
 require 'sunspot/rails'
 require 'stripe_mock'
-
+require 'mocha/test_unit'
+require 'user_mailer'
 
 class ShopControllerTest < ActionController::TestCase
   include Devise::TestHelpers
+  include UserMailer
 
   def setup
     Sunspot.session = Sunspot::Rails::StubSessionProxy.new(Sunspot.session)
     StripeMock.start
     # Disable mailer
     Excon.defaults[:mock] = true
-    Excon.stub({}, {body: '{}', status: 200}) # stubs any request to return an empty JSON string
+    Excon.stub({}, {body: '{"dupa":"dupa"}', status: 200}) # stubs any request to return an empty JSON string
+
 
     @userOne = User.create!({
-                                 :first_name => 'John',
-                                 :last_name => 'Doe',
-                                 :email => 'john@doe.vn',
-                                 :mobile => '0999999',
-                                 :password => 'password',
-                                 :password_confirmation => 'password'
-                             })
+                                :first_name => 'John',
+                                :last_name => 'Doe',
+                                :email => 'john@doe.vn',
+                                :mobile => '0999999',
+                                :password => 'password',
+                                :password_confirmation => 'password'
+                            })
 
     sign_in(:user, @userOne)
 
@@ -41,7 +44,7 @@ class ShopControllerTest < ActionController::TestCase
         :stripeToken => 'tok_14m18t2eZvKYlo2CHKjAcAVY',
         :new_brand => '1',
         :new_card => '1111',
-        :warehouses => '{"warehouses":[{"id":' + warehouses(:one).id.to_s + ',"distance":1.914},{"id":' + warehouses(:two).id.to_s + ',"distance":2.123}]}',#{ :warehouses => [{ :id => 1, :distance => 2.5 }, { :id => 2, :distance => 1.8}],
+        :warehouses => '{"warehouses":[{"id":' + warehouses(:one).id.to_s + ',"distance":1.914},{"id":' + warehouses(:two).id.to_s + ',"distance":2.123}]}', #{ :warehouses => [{ :id => 1, :distance => 2.5 }, { :id => 2, :distance => 1.8}],
         :wines => nil
     }
 
@@ -55,17 +58,21 @@ class ShopControllerTest < ActionController::TestCase
   test 'should create order for food matching' do
 
     wines = [
-            {
-                 :quantity => 1,
-                 :food => [{:id => 10},{:id => 20},{:id => 33}],
-                 :category => categories(:house).id
+        {
+            :quantity => 1,
+            :food => [
+                {:id => 10, :preparation => preparations(:grill_BBQ).id},
+                {:id => 13, :preparation => preparations(:roasted).id},
+                {:id => 33}
+            ],
+            :category => categories(:house).id
 
-            },
-             {
-                 :quantity => 1,
-                 :food => [{:id => 10},{:id => 20},{:id => 33}],
-                 :category => categories(:reserve).id
-             }
+        },
+        {
+            :quantity => 1,
+            :food => [{:id => 10}, {:id => 13}, {:id => 33}],
+            :category => categories(:reserve).id
+        }
     ]
 
     @request_data[:wines] = wines.to_json
@@ -80,10 +87,10 @@ class ShopControllerTest < ActionController::TestCase
     assert_equal(order.payment, payment)
     assert_equal(order.client, @userOne)
     assert_equal(payment.user, @userOne)
-    expected_information= { "warehouses" => [{ "id" => warehouses(:one).id, "distance" => 1.914 }, { "id" => warehouses(:two).id, "distance" => 2.123}]}
+    expected_information= {"warehouses" => [{"id" => warehouses(:one).id, "distance" => 1.914}, {"id" => warehouses(:two).id, "distance" => 2.123}]}
     assert_equal(expected_information, order.information)
     assert_equal(2, order.order_items.count, 'There should be 2 order items')
-    categories = order.order_items.map { |c| c.category.id}
+    categories = order.order_items.map { |c| c.category.id }
     assert_equal(true, (categories.include? categories(:house).id) && (categories.include? categories(:reserve).id), 'House and Reserve wines should be present on the order.')
     assert(!order.address.nil?, 'Order should have address assigned')
   end
@@ -134,13 +141,13 @@ class ShopControllerTest < ActionController::TestCase
     wines = [
         {
             :quantity => 1,
-            :food => [{:id => 10},{:id => 20},{:id => 33}],
+            :food => [{:id => 10}, {:id => 33}],
             :category => categories(:house).id
 
         },
         {
             :quantity => 1,
-            :food => [{:id => 10},{:id => 20},{:id => 33}],
+            :food => [{:id => 10}, {:id => 33}],
             :category => categories(:house).id
         }
     ]
@@ -164,19 +171,17 @@ class ShopControllerTest < ActionController::TestCase
 
     puts json: order.order_items
 
-    order.order_items.each { |item| puts json: item.foods }
-
   end
 
   def post_data
-    {"utf8"=>"✓",
-     "authenticity_token"=>"q9C5QhmjyfeFd1LbXlSgvc10kAiswGKksYTluQCYTf0=",
-     "email"=>"",
-     "warehouses"=>"{\"warehouses\":[{\"id\":1,
+    {"utf8" => "✓",
+     "authenticity_token" => "q9C5QhmjyfeFd1LbXlSgvc10kAiswGKksYTluQCYTf0=",
+     "email" => "",
+     "warehouses" => "{\"warehouses\":[{\"id\":1,
 \"distance\":1.914}]}",
-     "category"=>categories(:house),
-     "specific-wine"=>"",
-     "wines"=>"[{\"quantity\":1,
+     "category" => categories(:house),
+     "specific-wine" => "",
+     "wines" => "[{\"quantity\":1,
 \"category\":" + categories(:house).id.to_s + ",
 \"label\":\"House\",
 \"price\":\"£15\",
@@ -200,14 +205,14 @@ class ShopControllerTest < ActionController::TestCase
 {\"id\":\"38\",
 \"name\":\"pasta\"}],
 \"occasion\":[]}]",
-     "address_s"=>"8a Pickfords Wharf,
+     "address_s" => "8a Pickfords Wharf,
  Wharf Road",
-     "address_d"=>"",
-     "address_id"=> addresses(:one).id,
-     "old_card"=>"0",
-     "new_card"=>"1111",
-     "new_brand"=>"1",
-     "stripeToken"=>"tok_14tFx92eZvKYlo2CxthO99kb"}
+     "address_d" => "",
+     "address_id" => addresses(:one).id,
+     "old_card" => "0",
+     "new_card" => "1111",
+     "new_brand" => "1",
+     "stripeToken" => "tok_14tFx92eZvKYlo2CxthO99kb"}
   end
 
 end

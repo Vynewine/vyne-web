@@ -17,9 +17,9 @@ module UserMailer
       pref_3_wine2 = nil
 
       #If paired with food
-      foods_1 = order.order_items[0].foods
+      foods_1 = order.order_items[0].food_items
       if foods_1.blank?
-        if order.order_items[0].specific_wine.blank? && !order.order_items[0].occasion
+        if order.order_items[0].specific_wine.blank? && !order.order_items[0].occasion.blank?
           #If paired with occastion
           pref_1_wine1 = order.order_items[0].occasion.name
           pref_2_wine1 = order.order_items[0].type.name
@@ -28,14 +28,23 @@ module UserMailer
         end
       else
         unless foods_1[0].blank?
-          pref_1_wine1 = foods_1[0].name #TODO Add preparation
+          pref_1_wine1 = foods_1[0].food.name
+          unless foods_1[0].preparation.blank?
+            pref_1_wine1 += ' (' + foods_1[0].preparation.name + ')'
+          end
         end
         unless foods_1[1].blank?
-          pref_2_wine1 = foods_1[1].name #TODO Add preparation
+          pref_2_wine1 = foods_1[1].food.name
+          unless foods_1[1].preparation.blank?
+            pref_2_wine1 += ' (' + foods_1[1].preparation.name + ')'
+          end
         end
 
         unless foods_1[2].blank?
-          pref_3_wine1 = foods_1[2].name #TODO Add preparation
+          pref_3_wine1 = foods_1[2].food.name
+          unless foods_1[2].preparation.blank?
+            pref_3_wine1 += ' (' + foods_1[2].preparation.name + ')'
+          end
         end
       end
 
@@ -43,9 +52,9 @@ module UserMailer
 
         wine_2_order = order.order_items[1].category.name + ' wine (£' + order.order_items[1].price.to_s + ')'
 
-        foods_2 = order.order_items[1].foods
+        foods_2 = order.order_items[1].food_items
         if foods_2.blank?
-          if order.order_items[0].specific_wine.blank? && !order.order_items[0].occasion
+          if order.order_items[0].specific_wine.blank? && !order.order_items[0].occasion.blank?
             #If paired with occastion
             pref_1_wine2 = order.order_items[0].occasion.name
             pref_2_wine2 = order.order_items[0].type.name
@@ -53,15 +62,25 @@ module UserMailer
             pref_1_wine2 = order.order_items[0].specific_wine
           end
         else
+
           unless foods_2[0].blank?
-            pref_1_wine2 = foods_2[0].name #TODO Add preparation
+            pref_1_wine2 = foods_2[0].food.name
+            unless foods_2[0].preparation.blank?
+              pref_1_wine2 += ' (' + foods_2[0].preparation.name + ')'
+            end
           end
           unless foods_2[1].blank?
-            pref_2_wine2 = foods_2[1].name #TODO Add preparation
+            pref_2_wine2 = foods_2[1].food.name
+            unless foods_2[1].preparation.blank?
+              pref_2_wine2 += ' (' + foods_2[1].preparation.name + ')'
+            end
           end
 
           unless foods_2[2].blank?
-            pref_3_wine2 = foods_2[2].name #TODO Add preparation
+            pref_3_wine2 = foods_2[2].food.name
+            unless foods_2[2].preparation.blank?
+              pref_3_wine2 += ' (' + foods_2[2].preparation.name + ')'
+            end
           end
         end
       end

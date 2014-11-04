@@ -12,7 +12,8 @@ development: &pg
   encoding: unicode
   username: vynz
   password: 'Valpolicella'
-  database: vynz_development
+  database: vyne_prod
+  #database: vynz_development
   pool: 5
 
 # Warning: The database defined as "test" will be erased and

@@ -177,6 +177,25 @@
 
           <% end %>
 
+
+              <div id="preparation" class="tab preferences-sub-sub-panel">
+                <a href="#" class="back"></a>
+                <h3>How was it prepared?</h3>
+                <div class="prefs-list-container">
+                  <ul id="preparation-list" class="tab-list prefs-list prefs-list-bottom cf">
+                    <% @preparations.each do |preparation| %>
+                    <li id="food-<%= preparation.id %>">
+                      <a href="#">
+                        <%= image_tag "icons/food/"+preparation.name.gsub(/(((\s)&?)\s?)/, "_")+".png", :alt => "image description" %>
+                        <span><%= preparation.name %></span>
+                      </a>
+                    </li>
+                    <% end %>
+                  </ul>
+                </div>
+              </div>
+
+
         </div>
 
         <div id="by-occasion" class="tab preferences-sub-panel">

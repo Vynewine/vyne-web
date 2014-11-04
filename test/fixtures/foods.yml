@@ -94,31 +94,6 @@ hard_cheese:
   name: 'hard cheese'
   parent: 3
 
-grill_BBQ:
-  id: 20
-  name: 'grill & BBQ'
-  parent: 4
-
-roasted:
-  id: 21
-  name: 'roasted'
-  parent: 4
-
-fried_sauteed:
-  id: 22
-  name: 'fried & sautéed'
-  parent: 4
-
-smoke:
-  id: 23
-  name: 'smoke'
-  parent: 4
-
-poached_steamed:
-  id: 24
-  name: 'poached & steamed'
-  parent: 4
-
 onion_garlic:
   id: 25
   name: 'onion & garlic'

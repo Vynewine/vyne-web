@@ -1,0 +1,14 @@
+grill_BBQ:
+  name: 'grill & BBQ'
+
+roasted:
+  name: 'roasted'
+
+fried_sauteed:
+  name: 'fried & sautéed'
+
+smoke:
+  name: 'smoke'
+
+poached_steamed:
+  name: 'poached & steamed'

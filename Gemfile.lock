@@ -84,9 +84,12 @@ GEM
     mandrill-api (1.0.52)
       excon (>= 0.16.0, < 1.0)
       json (>= 1.7.7, < 2.0)
+    metaclass (0.0.4)
     mime-types (1.25.1)
     mini_portile (0.6.0)
     minitest (5.4.0)
+    mocha (1.1.0)
+      metaclass (~> 0.0.1)
     multi_json (1.10.1)
     netrc (0.7.7)
     nokogiri (1.6.3.1)
@@ -201,6 +204,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   mandrill-api
+  mocha
   pg
   progress_bar
   rails (= 4.1.4)

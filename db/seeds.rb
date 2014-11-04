@@ -437,31 +437,7 @@ Food.create(
     :name => "hard cheese",
   :parent => 3
 )
-@food_two = Food.create(
-    :id => 19,
-    :name => "grill & BBQ",
-  :parent => 4
-)
-Food.create(
-    :id => 20,
-    :name => "roasted",
-  :parent => 4
-)
-Food.create(
-    :id => 21,
-    :name => "fried & sautéed",
-  :parent => 4
-)
-Food.create(
-    :id => 22,
-    :name => "smoke",
-  :parent => 4
-)
-Food.create(
-    :id => 23,
-    :name => "poached & steamed",
-  :parent => 4
-)
+
 Food.create(
     :id => 24,
     :name => "onion & garlic",
@@ -584,6 +560,11 @@ Food.create(
 )
 
 puts "Foods -------- OK"
+
+# Preparations created as a part of migration
+@preparation = Preparation.find(1)
+
+puts 'Preparations - OK'
 
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # 5 producers
@@ -2439,7 +2420,9 @@ for i in 0..totalOrders do
 
 
   total_order_items.times do
-    order_items << OrderItem.create({quantity: 1 + rand(2), foods: [@food_one, @food_two], category: category})
+    new_item = OrderItem.create({quantity: 1 + rand(2), category: category})
+    order_items << new_item
+    FoodItem.create!(:food => @food_one, :preparation => @preparation, :order_item => new_item)
   end
 
   client_id = 2+rand(7)

@@ -84,6 +84,9 @@ class Admin::OrdersController < ApplicationController
   def destroy
 
     @order.order_items.each do |item|
+      item.food_items.each do |food_item|
+        food_item.destroy
+      end
       item.destroy
     end
 

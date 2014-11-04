@@ -35,6 +35,7 @@ class ShopController < ApplicationController
     @foods = Food.all
     @occasions = Occasion.all
     @types = Type.all
+    @preparations = Preparation.all
     logger.warn "New order"
   end
 
@@ -109,13 +110,6 @@ class ShopController < ApplicationController
             wine_type = Type.find(wine['wineType']['id'])
           end
 
-          foods =[]
-          unless wine['food'].nil?
-            wine['food'].each do |food|
-              foods << Food.find(food['id'])
-            end
-          end
-
           #TODO: Validate params, category is required.
           category = Category.find(wine['category'])
 
@@ -127,8 +121,12 @@ class ShopController < ApplicationController
                                                       :price => category.price
                                                   })
 
-          unless foods.nil?
-            order_item.foods = foods
+          unless wine['food'].nil?
+            wine['food'].each do |food_choice|
+              food = Food.find(food_choice['id'])
+              preparation = Preparation.find_by_id(food_choice['preparation'])
+              FoodItem.create!(:food => food, :preparation => preparation, :order_item => order_item)
+            end
           end
 
           unless occasion.blank?

@@ -4,27 +4,64 @@ require 'webmock/minitest'
 class UserMailerTest < ActionMailer::TestCase
   include UserMailer
 
-  test 'Send order confirmation one bottle one food selection' do
-    WebMock.allow_net_connect!
-    order = orders(:order3)
-    order.address = addresses(:three)
+  def order_one_bottle
+    @order = orders(:order3)
+    @order.address = addresses(:three)
     order_item = OrderItem.create!(
-        :order => order,
+        :order => @order,
         :wine => wines(:one),
-        :foods => [foods(:beef), foods(:grill_BBQ)],
         :category => categories(:house),
         :price => 15.0,
         :cost => 10.0
     )
+  end
 
-    results = first_time_ordered(order)
+  test 'Send order confirmation one bottle one food selection' do
+    WebMock.allow_net_connect!
+
+    order_item = order_one_bottle
+
+    FoodItem.create!(:food => foods(:beef), :preparation => preparations(:grill_BBQ), :order_item =>  order_item)
+
+    results = first_time_ordered(@order)
 
     assert_equal(results[0]['status'], 'sent', 'Email status from Mandrill should be sent')
   end
 
+  test 'Send order confirmation one bottle two food selections' do
+    WebMock.allow_net_connect!
+
+    order_item = order_one_bottle
+
+    FoodItem.create!(:food => foods(:beef), :preparation => preparations(:grill_BBQ), :order_item =>  order_item)
+    FoodItem.create!(:food => foods(:lobster_shellfish), :preparation => preparations(:grill_BBQ), :order_item =>  order_item)
+
+    results = first_time_ordered(@order)
+
+    assert_equal(results[0]['status'], 'sent', 'Email status from Mandrill should be sent')
+  end
+
+  test 'Send order confirmation one bottle two three selections' do
+    WebMock.allow_net_connect!
+
+    order_item = order_one_bottle
+
+    FoodItem.create!(:food => foods(:beef), :preparation => preparations(:grill_BBQ), :order_item =>  order_item)
+    FoodItem.create!(:food => foods(:lobster_shellfish), :preparation => preparations(:grill_BBQ), :order_item =>  order_item)
+    FoodItem.create!(:food => foods(:vanilla_caramel), :order_item =>  order_item)
+
+    results = first_time_ordered(@order)
+
+    assert_equal(results[0]['status'], 'sent', 'Email status from Mandrill should be sent')
+  end
+
+
   test 'Can send first time order email' do
 
+    WebMock.allow_net_connect!
+
     order = orders(:order1)
+
 
     message = {
         :to => [
@@ -54,6 +91,7 @@ class UserMailerTest < ActionMailer::TestCase
   test 'Will handle error response' do
 
     order = orders(:order1)
+    order.address = addresses(:one)
 
     message = {
         :to => [
@@ -75,6 +113,7 @@ class UserMailerTest < ActionMailer::TestCase
     stub_mandrill('orderplaced-1tochv1', failed_response, message, 500)
 
     results = first_time_ordered(order)
+    puts json: results
     assert(results.blank?, 'Results during error will be blank')
 
   end

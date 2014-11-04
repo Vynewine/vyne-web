@@ -1,10 +1,10 @@
 <p><h3>Customer </h3></p>
 <div><a href="<%= admin_user_path @order.client %>"><%= @order.client.name %></a></div>  (m: <%= @order.client.mobile %>)
-<% unless @order_item.foods.blank? %>
+<% unless @order_item.food_items.blank? %>
     <p><strong>Food</strong></p>
     <ul>
-      <% @order_item.foods.each do |food| %>
-          <li><%= food.name %> </li>
+      <% @order_item.food_items.each do |food_item| %>
+          <li><%= food_item.food.name + (food_item.preparation.blank? ? '' : ' (' + food_item.preparation.name + ')') %> </li>
       <% end %>
     </ul>
 <% end %>

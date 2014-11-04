@@ -81,11 +81,11 @@
         </td>
         <% end %>
         <td>
-          <% unless item.foods.blank? %>
+          <% unless item.food_items.blank? %>
               <p><strong>Food</strong></p>
               <ul>
-                <% item.foods.each do |food| %>
-                    <li><%= food.name %> </li>
+                <% item.food_items.each do |food_item| %>
+                    <li><%= food_item.food.name + (food_item.preparation.blank? ? '' : ' (' + food_item.preparation.name + ')' ) %> </li>
                 <% end %>
               </ul>
           <% end %>
