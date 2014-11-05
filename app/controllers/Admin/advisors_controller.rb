@@ -75,8 +75,13 @@ class Admin::AdvisorsController < ApplicationController
         booking_hash = JSON.parse(booking_response)
         booking_ref = nil
 
-        unless booking_hash.nil?
-          booking_ref = booking_hash['booking']['reference']
+        unless booking_hash.blank?
+          unless booking_hash['booking'].blank?
+            unless booking_hash['booking']['reference'].blank?
+              booking_ref = booking_hash['booking']['reference']
+            end
+          end
+
         end
 
         if booking_ref.nil?

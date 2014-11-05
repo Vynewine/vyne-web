@@ -6,6 +6,7 @@ one:
   quantity: 1
   cost: 6
   category: house
+  vendor_sku: 'one123'
 
 two:
   warehouse: two
@@ -13,6 +14,7 @@ two:
   quantity: 1
   cost: 7
   category: house
+  vendor_sku: 'two123'
 
 three:
   warehouse: one
@@ -20,3 +22,12 @@ three:
   quantity: 1
   cost: 15
   category: reserve
+  vendor_sku: 'three123'
+
+four:
+  warehouse: one
+  wine: two
+  quantity: 1
+  cost: 6
+  category: house
+  vendor_sku: 'four123'

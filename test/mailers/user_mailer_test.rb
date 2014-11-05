@@ -6,6 +6,7 @@ class UserMailerTest < ActionMailer::TestCase
 
   def order_one_bottle
     @order = orders(:order3)
+    @order.warehouse = warehouses(:one)
     @order.address = addresses(:three)
     order_item = OrderItem.create!(
         :order => @order,
@@ -19,6 +20,7 @@ class UserMailerTest < ActionMailer::TestCase
 
   def order_two_bottles
     @order = orders(:order3)
+    @order.warehouse = warehouses(:one)
     @order.address = addresses(:three)
     OrderItem.create!(
         :order => @order,
@@ -30,7 +32,7 @@ class UserMailerTest < ActionMailer::TestCase
 
     OrderItem.create!(
         :order => @order,
-        :wine => wines(:one),
+        :wine => wines(:two),
         :category => categories(:reserve),
         :price => 20.0,
         :cost => 12.0
@@ -51,6 +53,21 @@ class UserMailerTest < ActionMailer::TestCase
     puts json: results
   end
 
+  test 'Merchant order confirmation' do
+    WebMock.allow_net_connect!
+    order_two_bottles
+
+    #Wine 1 Name,_Region,_Producer,_Merchant Name_"ID:"Merchant ID___"("Cost")"
+    # wine1 = @order.order_items[0].wine
+    # inventory_item1 = Inventory.where(wine: wine1, warehouse: @order.warehouse)
+    # puts json: inventory_item1
+
+    result = merchant_order_confirmation(@order)
+    puts json: result
+
+  end
+
+
   test 'Send order confirmation one bottle one food selection' do
     WebMock.allow_net_connect!
 
@@ -58,7 +75,7 @@ class UserMailerTest < ActionMailer::TestCase
 
     order_item = @order.order_items[0]
 
-    FoodItem.create!(:food => foods(:beef), :preparation => preparations(:grill_BBQ), :order_item =>  order_item)
+    FoodItem.create!(:food => foods(:beef), :preparation => preparations(:grill_BBQ), :order_item => order_item)
 
     results = first_time_ordered(@order)
 
@@ -122,9 +139,9 @@ class UserMailerTest < ActionMailer::TestCase
 
     order_item = @order.order_items[0]
 
-    FoodItem.create!(:food => foods(:beef), :preparation => preparations(:grill_BBQ), :order_item =>  order_item)
-    FoodItem.create!(:food => foods(:lobster_shellfish), :preparation => preparations(:grill_BBQ), :order_item =>  order_item)
-    FoodItem.create!(:food => foods(:pasta), :order_item =>  order_item)
+    FoodItem.create!(:food => foods(:beef), :preparation => preparations(:grill_BBQ), :order_item => order_item)
+    FoodItem.create!(:food => foods(:lobster_shellfish), :preparation => preparations(:grill_BBQ), :order_item => order_item)
+    FoodItem.create!(:food => foods(:pasta), :order_item => order_item)
 
     results = first_time_ordered(@order)
 
@@ -139,13 +156,13 @@ class UserMailerTest < ActionMailer::TestCase
     order_item1 = order.order_items[0]
     order_item2 = order.order_items[1]
 
-    FoodItem.create!(:food => foods(:beef), :preparation => preparations(:grill_BBQ), :order_item =>  order_item1)
-    FoodItem.create!(:food => foods(:lobster_shellfish), :preparation => preparations(:grill_BBQ), :order_item =>  order_item1)
-    FoodItem.create!(:food => foods(:vanilla_caramel), :order_item =>  order_item1)
+    FoodItem.create!(:food => foods(:beef), :preparation => preparations(:grill_BBQ), :order_item => order_item1)
+    FoodItem.create!(:food => foods(:lobster_shellfish), :preparation => preparations(:grill_BBQ), :order_item => order_item1)
+    FoodItem.create!(:food => foods(:vanilla_caramel), :order_item => order_item1)
 
-    FoodItem.create!(:food => foods(:beef), :preparation => preparations(:grill_BBQ), :order_item =>  order_item2)
-    FoodItem.create!(:food => foods(:lobster_shellfish), :preparation => preparations(:grill_BBQ), :order_item =>  order_item2)
-    FoodItem.create!(:food => foods(:vanilla_caramel), :order_item =>  order_item2)
+    FoodItem.create!(:food => foods(:beef), :preparation => preparations(:grill_BBQ), :order_item => order_item2)
+    FoodItem.create!(:food => foods(:lobster_shellfish), :preparation => preparations(:grill_BBQ), :order_item => order_item2)
+    FoodItem.create!(:food => foods(:vanilla_caramel), :order_item => order_item2)
 
     results = first_time_ordered(order)
 
