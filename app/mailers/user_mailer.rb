@@ -51,30 +51,53 @@ module UserMailer
 
       mandrill.messages.send_template template_name, nil, message
 
-    rescue Mandrill::Error => e
-      # Mandrill errors are thrown as exceptions
-      puts "A mandrill error occurred: #{e.class} - #{e.message}"
-        #TODO: This needs to go to Sentry!!!
-
-    rescue Mandrill::Error, Excon::Errors::SocketError => e
-      # Mandrill errors are thrown as exceptions
-      message = "A mandrill error occurred: #{e.class} - #{e.message} - for user: #{order.client.email}"
+    rescue Mandrill::Error => exception
+      puts "A Mandrill error occurred first_time_ordered: #{exception.class} - #{exception.message}"
+    rescue Exception => exception
+      message = "Error occurred while sending email first_time_ordered: #{exception.class} - #{exception.message} - for user: #{order.client.email}"
       puts message
       Rails.logger.error message
-      #raise - probably don't want to raise if third party service is down.
     end
   end
 
-  def order_confirmation(order)
+  def order_receipt(order)
 
     begin
+
+      url_opt = Rails.application.config.action_mailer.default_url_options
+
+      order_link = URI::HTTP.build({
+                                       :scheme => url_opt[:scheme],
+                                       :host => url_opt[:host],
+                                       :port => url_opt[:port],
+                                       :path => '/orders/' + order.id.to_s
+                                   })
+
+      if order.payment.brand == 3 # American Express
+        cardNumber = '**** ****** ' + order.payment.number
+      else
+        cardNumber = '**** **** **** ' + order.payment.number
+      end
+
+      wine1 = order.order_items[0].wine
+      wine1_name = "#{wine1.name} #{wine1.txt_vintage}, #{wine1.producer.name}, (#{order.order_items[0].category.name})"
+
+
+      unless order.order_items[1].blank?
+        wine2 = order.order_items[1].wine
+        wine2_name = "#{wine2.name} #{wine2.txt_vintage}, #{wine2.producer.name}, (#{order.order_items[1].category.name})"
+      end
+
       mandrill = Mandrill::API.new Rails.application.config.mandrill
-      template_name = 'orderplaced-1tochv1'
+      template_name = 'receipt-2tftochv1'
       message = {
+          :subject => 'Your Receipt',
+          :from_email => 'checkout@vyne.london',
+          :from_name => 'Vyne Checkout',
           :to => [
               {
                   :email => order.client.email,
-                  :name => order.client.name
+                  :name => order.client.first_name
               }
           ],
           :merge_vars => [
@@ -82,8 +105,45 @@ module UserMailer
                   :rcpt => order.client.email,
                   :vars => [
                       {
-                          :name => 'NAME',
-                          :content => order.client.name
+                          :name => 'FIRSTNAME',
+                          :content => order.client.first_name
+                      },
+                      {
+                          :name => 'SHUTL_LINK',
+                          :content => ''
+
+                      },
+                      {
+                          :name => 'ADDRESSLINE1',
+                          :content => order.address.street
+                      },
+                      {
+                          :name => 'POSTCODE',
+                          :content => order.address.postcode
+                      },
+                      {
+                          :name => 'ORDER_TRACKING_LINK',
+                          :content => order_link.to_s
+                      },
+                      {
+                          :name => 'VYNEORDERID',
+                          :content => order.id.to_s
+                      },
+                      {
+                          :name => 'ORDERTOTAL',
+                          :content => '£' + order.total_price.to_s
+                      },
+                      {
+                          :name => 'CUSTOMERCARD',
+                          :content => cardNumber
+                      },
+                      {
+                          :name => 'FULLWINE1NAME',
+                          :content => wine1_name
+                      },
+                      {
+                          :name => 'FULLWINE2NAME',
+                          :content => wine2_name
                       }
                   ]
               }
@@ -91,14 +151,16 @@ module UserMailer
 
       }
 
+
       mandrill.messages.send_template template_name, nil, message
 
-    rescue Mandrill::Error, Excon::Errors::SocketError => e
-      # Mandrill errors are thrown as exceptions
-      message = "A mandrill error occurred: #{e.class} - #{e.message} - for user: #{order.client.email}"
+    rescue Mandrill::Error => exception
+      puts "A Mandrill error occurred order_receipt: #{exception.class} - #{exception.message}"
+    rescue => exception
+      message = "Error occurred while sending email order_receipt: #{exception.class} - #{exception.message} - for user: #{order.client.email}"
       puts message
+      puts json: exception
       Rails.logger.error message
-      #raise - probably don't want to raise if third party service is down.
     end
   end
 end

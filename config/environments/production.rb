@@ -42,7 +42,7 @@ Rails.application.configure do
   # config.force_ssl = true
 
   # Devise mailer:
-  config.action_mailer.default_url_options = { host: 'vine.london' }
+  config.action_mailer.default_url_options = { host: 'vine.london', scheme: 'http' }
   # In production, :host should be set to the actual host of your application.
 
   # Set to :debug to see everything in the log.

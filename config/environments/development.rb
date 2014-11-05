@@ -36,7 +36,7 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   # Devise mailer:
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3000, scheme: 'http' }
   # In production, :host should be set to the actual host of your application.
 
   # Rails.logger = Logger.new(STDOUT)

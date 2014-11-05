@@ -3,11 +3,11 @@
 one:
   user_id: 1
   brand: 1
-  number: MyString
+  number: 1111
   stripe: MyString
 
 two:
   user_id: 1
   brand: 1
-  number: MyString
+  number: 1111
   stripe: MyString
