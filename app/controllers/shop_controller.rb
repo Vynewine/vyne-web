@@ -121,20 +121,20 @@ class ShopController < ApplicationController
                                                       :price => category.price
                                                   })
 
-          unless wine['food'].nil?
+          if wine['food'].nil?
+            unless occasion.blank?
+              order_item.occasion = occasion
+            end
+
+            unless wine_type.nil?
+              order_item.type = wine_type
+            end
+          else
             wine['food'].each do |food_choice|
               food = Food.find(food_choice['id'])
               preparation = Preparation.find_by_id(food_choice['preparation'])
               FoodItem.create!(:food => food, :preparation => preparation, :order_item => order_item)
             end
-          end
-
-          unless occasion.blank?
-            order_item.occasion = occasion
-          end
-
-          unless wine_type.nil?
-            order_item.type = wine_type
           end
 
           order_item.save

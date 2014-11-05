@@ -1,7 +1,6 @@
 require 'mandrill'
 require 'erb'
 
-
 module UserMailer
 
   def first_time_ordered(order)
@@ -50,35 +49,9 @@ module UserMailer
 
       }
 
-
-      # unless pref_1_wine1.blank?
-      #   message[:merge_vars][0][:vars] << { :name => 'PREF1WINE1', :content => pref_1_wine1 }
-      # end
-      # unless pref_2_wine1.blank?
-      #   message[:merge_vars][0][:vars] << { :name => 'PREF2WINE1', :content => pref_2_wine1 }
-      # end
-      # unless pref_3_wine1.blank?
-      #   message[:merge_vars][0][:vars] << { :name => 'PREF3WINE1', :content => pref_3_wine1 }
-      # end
-      #
-      # unless pref_1_wine2.blank?
-      #   message[:merge_vars][0][:vars] <<  { :name => 'WINEORDER2', :content => wine_2_order }
-      #
-      #   message[:merge_vars][0][:vars] << { :name => 'PREF1WINE2', :content => pref_1_wine2 }
-      # end
-      # unless pref_2_wine2.blank?
-      #   message[:merge_vars][0][:vars] << { :name => 'PREF2WINE2', :content => pref_2_wine2 }
-      # end
-      # unless pref_3_wine2.blank?
-      #   message[:merge_vars][0][:vars] << { :name => 'PREF3WINE2', :content => pref_3_wine2 }
-      # end
-
-      puts json: order_items
-
       mandrill.messages.send_template template_name, nil, message
 
     rescue Mandrill::Error => e
-      Raven.capture_exception(e)
       # Mandrill errors are thrown as exceptions
       puts "A mandrill error occurred: #{e.class} - #{e.message}"
         #TODO: This needs to go to Sentry!!!
