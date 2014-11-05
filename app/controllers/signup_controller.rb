@@ -23,12 +23,21 @@ class SignupController < ApplicationController
     address.street = params[:address_s]
     address.postcode = params[:address_p].gsub(/[\s|-]/, "").upcase
 
+    errors = []
+    if params[:address_s].blank?
+      errors << ['Address can\'t be blank']
+    end
+
     if params[:mobile].blank?
-      render :json => {:errors => ['Mobile can\'t be blank']}, :status => 422
-      return
-    else
+      errors << ['Mobile can\'t be blank']
+    end
+
+    if errors.blank?
       current_user.mobile = params[:mobile]
       current_user.save
+    else
+      render :json => {:errors => errors}, :status => 422
+      return
     end
 
     if address.save

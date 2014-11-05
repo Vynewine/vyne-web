@@ -121,7 +121,7 @@ class ShopController < ApplicationController
                                                       :price => category.price
                                                   })
 
-          if wine['food'].nil?
+          if wine['food'].blank?
             unless occasion.blank?
               order_item.occasion = occasion
             end

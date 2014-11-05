@@ -166,23 +166,24 @@ $(function() {
 
 	//Object to store bottle details
 	var wine = function() {
-		this.id,
-		this.quantity = 0,
-		this.category = 0,
-		this.label = '',
-		this.price = '',
-		this.specificWine = '',
-		this.food = [],
-		this.occasion = 0
-		this.wineType = { id: 0, name: '' }
-	}
+		this.id;
+		this.quantity = 0;
+		this.category = 0;
+		this.label = '';
+		this.price = '';
+		this.specificWine = '';
+		this.food = [];
+		this.occasion = 0;
+        this.occasionName = '';
+		this.wineType = { id: 0, name: '' };
+	};
 
 	//Object to store food details
 	var food = function(id, name, preparation) {
-		this.id = id,
-		this.name = name
+		this.id = id;
+		this.name = name;
 		this.preparation = preparation;
-	}
+	};
 
 	var wineCount = 0;
 
@@ -251,8 +252,6 @@ $(function() {
     $('.tab-list.tab-list__horizontal li a').click(function(e) {
         e.preventDefault();
 
-        console.log($(this).attr('href'));
-
         analytics.track('Matching wine', {
             type: $(this).attr('href').replace('#', '')
         });
@@ -269,6 +268,7 @@ $(function() {
 
 		if($(this).closest('ul').attr('id') == 'occasion-list') {
 			wines[wineCount].occasion = $(this).parent().attr('id').split('-')[1];
+            wines[wineCount].occasionName = $(this).find('span').text()
 		}
 
         analytics.track('Matching selected', {
@@ -289,29 +289,25 @@ $(function() {
 
 		if(!$this.parent().hasClass('selected')) {
 
-			if($this.closest('.tab').attr('id') == 'preparation') {
-				$img = $this.find('img').clone();
-				var prepID = $this.closest('li').attr('id').split('-')[1];
-				$('#food-item-'+parentid).after($img.addClass('food-prep').attr('id',parentid));
-				$('#food-item-'+parentid).closest('li').append( $('<span/>', { text: prepID }).addClass('prep-name') );
-			} else {
+            if ($this.closest('.tab').attr('id') == 'preparation') {
+                $img = $this.find('img').clone();
+                var prepID = $this.closest('li').attr('id').split('-')[1];
+                $('#food-item-' + parentid).after($img.addClass('food-prep').attr('id', parentid));
+                $('#food-item-' + parentid).closest('li').append($('<span/>', { text: prepID }).addClass('prep-name'));
+            } else if ($this.closest('ul').attr('id') == 'wine-list') {
+                //Add the food to the wine object
+                wines[wineCount].wineType.id = id; //.split('-')[1];
+                wines[wineCount].wineType.name = name;
+            } else {
+                //Add the food to our mini review bar at the bottom
+                $img = $this.find('img').clone();
+                $img.attr('id', 'food-item-' + id);
+                $empty = $('.prefs-overview-list .empty').first();
+                $empty.find('span').replaceWith($img);
+                $empty.append($('<span/>', { text: name }).addClass('food-name')).removeClass('empty');
 
-				//Add the food to the wine object
-				if($this.closest('ul').attr('id') == 'wine-list') {
-					wines[wineCount].wineType.id = id.split('-')[1];
-					wines[wineCount].wineType.name = name;
-				}
-
-				//Add the food to our mini review bar at the bottom
-				$img = $this.find('img').clone();
-				$img.attr('id', 'food-item-'+id);
-				$empty = $('.prefs-overview-list .empty').first();
-				$empty.find('span').replaceWith($img);
-				$empty.append( $('<span/>', { text: name }).addClass('food-name') ).removeClass('empty');
-
-				$this.parent().addClass('selected');
-
-			}
+                $this.parent().addClass('selected');
+            }
 
 			if($('.prefs-overview-list .empty').length == 0 && $this.attr('href') != '#preparation') $('.food-limit').show();
 
@@ -348,7 +344,7 @@ $(function() {
 
 		$('.prefs-overview-list li').each(function(i, el) {
 			if(!$(this).hasClass('empty')) {
-				wines[wineCount].food.push( 
+				wines[wineCount].food.push(
 					new food( 
 						$(this).find('img').first().attr('id').split('-')[2], 
 						$(this).find('.food-name').text(),
@@ -638,10 +634,20 @@ $(function() {
 		    url: '/signup/address',
 		    data: data,
 		    error: function(data) {
-				//Response
-				console.log(data);
-                //TODO: Log error to Sentry.
-                //TODO: Display user friendly error.
+                var errors = data.responseJSON.errors;
+                if (errors) {
+                    var $errorList = $('#address-errors');
+                    $errorList.empty().show();
+                    errors.forEach(function (error) {
+                        $errorList.append('<li>' + error + '</li>');
+                    });
+                }
+
+                analytics.track('Address new', {
+                    status: 'error',
+                    errors: errors.join(', '),
+                    email: email
+                });
 			},
 			success: function(data) {
 				console.log(data);
@@ -763,7 +769,6 @@ function createCartPage(wines, wineCount) {
         });
 	}
 
-	console.log(wines);
 	$('input[name="wines"]').val( JSON.stringify(wines) );
 
 	$('.no-bottles').hide();
