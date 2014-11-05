@@ -13,7 +13,7 @@ module UserMailer
       mandrill = Mandrill::API.new Rails.application.config.mandrill
       template_name = 'orderplaced-1tochv1'
       message = {
-          :subject => 'Order Placed with Vyne',
+          :subject => 'Order Placed with Vyne. No: ' + order.id.to_s,
           :from_email => 'checkout@vyne.london',
           :from_name => 'Vyne Checkout',
           :to => [
@@ -91,7 +91,7 @@ module UserMailer
       mandrill = Mandrill::API.new Rails.application.config.mandrill
       template_name = 'receipt-2tftochv1'
       message = {
-          :subject => 'Your Receipt',
+          :subject => 'Your Receipt. Order No: ' + order.id.to_s,
           :from_email => 'checkout@vyne.london',
           :from_name => 'Vyne Checkout',
           :to => [
@@ -194,13 +194,13 @@ module UserMailer
           :from_name => 'Vyne Merchant Team',
           :to => [
               {
-                  :email => order.client.email,
-                  :name => order.client.first_name
+                  :email => order.warehouse.email,
+                  :name => order.warehouse.title
               }
           ],
           :merge_vars => [
               {
-                  :rcpt => order.client.email,
+                  :rcpt => order.warehouse.email,
                   :vars => [
                       {
                           :name => 'VYNEORDERID',
