@@ -86,6 +86,7 @@ class Admin::AdvisorsController < ApplicationController
 
         if booking_ref.nil?
           @message = "error:Couldn't do the booking."
+          puts json: booking_response
         else
           order.delivery_token = booking_ref
           order.delivery_status = booking_response
