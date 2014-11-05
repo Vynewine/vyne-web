@@ -24,7 +24,12 @@
         <td>£<%= '%.2f' % (quote['merchant_price']/100) %></td>
         <td data-id="<%= quote['id'] %>"
             data-price="<%= '%.2f' % (quote['merchant_price']/100) %>"
-            data-vehicle="<%= quote['vehicle'] %>">
+            data-vehicle="<%= quote['vehicle'] %>"
+            data-pickup_start="<%= quote['pickup_start'] %>"
+            data-pickup_finish="<%= quote['pickup_finish'] %>"
+            data-delivery_start="<%= quote['delivery_start'] %>"
+            data-delivery_finish="<%= quote['delivery_finish'] %>"
+            data-valid_until="<%= quote['valid_until'] %>">
           <a href="#" class="choose-quote">Choose</a>
         </td>
       </tr>
@@ -33,8 +38,15 @@
 </table>
 
 <form method="post" action="/admin/advise/complete" id="choose-form">
-  <input type="hidden" id="quote" name="quote"/>
   <input type="hidden" id="order" name="order" value="<%= @order.id %>"/>
+  <input type="hidden" id="quote" name="quote"/>
+  <input type="hidden" id="price" name="price"/>
+  <input type="hidden" id="vehicle" name="vehicle"/>
+  <input type="hidden" id="pickup_start" name="pickup_start"/>
+  <input type="hidden" id="pickup_finish" name="pickup_finish"/>
+  <input type="hidden" id="delivery_start" name="delivery_start"/>
+  <input type="hidden" id="delivery_finish" name="delivery_finish"/>
+  <input type="hidden" id="valid_until" name="valid_until" value="<%= @order.id %>"/>
   <%= hidden_field_tag(request_forgery_protection_token.to_s, form_authenticity_token) %>
 </form>
 
@@ -46,6 +58,13 @@
               '\nWe will charge customer and schedule delivery.');
       if (response == true) {
           $('#quote').val($td.data('id'));
+          $('#price').val($td.data('price'));
+          $('#vehicle').val($td.data('vehicle'));
+          $('#pickup_start').val($td.data('pickup_start'));
+          $('#pickup_finish').val($td.data('pickup_finish'));
+          $('#delivery_start').val($td.data('delivery_start'));
+          $('#delivery_finish').val($td.data('delivery_finish'));
+          $('#valid_until').val($td.data('valid_until'));
           $('#choose-form').submit();
       }
   });

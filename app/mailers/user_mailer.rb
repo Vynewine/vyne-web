@@ -170,7 +170,7 @@ module UserMailer
       wine1 = order.order_items[0].wine
       inventory_item1 = Inventory.where(wine: wine1, warehouse: order.warehouse).take
       wine1_name = "1x #{wine1.name} #{wine1.txt_vintage}, #{wine1.producer.name}"
-      wine1_name += wine1.region.blank? ? '' : ', ' + wine1.region
+      wine1_name += wine1.region.blank? ? '' : ', ' + wine1.region.name
       wine1_name += ", #{order.warehouse.title}, ID: #{inventory_item1.vendor_sku}, (£#{order.order_items[0].cost})"
 
 
@@ -178,9 +178,13 @@ module UserMailer
         wine2 = order.order_items[1].wine
         inventory_item2 = Inventory.where(wine: wine2, warehouse: order.warehouse).take
         wine2_name = "1x #{wine2.name} #{wine2.txt_vintage}, #{wine2.producer.name}"
-        wine2_name += wine2.region.blank? ? '' : ', ' + wine2.region
+        wine2_name += wine2.region.blank? ? '' : ', ' + wine2.region.name
         wine2_name += ", #{order.warehouse.title}, ID: #{inventory_item2.vendor_sku}, (£#{order.order_items[1].cost})"
       end
+
+      shutl_reference = order.delivery_token
+      pickup_start_time = Time.parse(order.delivery_quote['pickup_start']).strftime("%d/%m/%Y - %H:%M")
+      pickup_finish_time = Time.parse(order.delivery_quote['pickup_finish']).strftime("%d/%m/%Y - %H:%M")
 
       mandrill = Mandrill::API.new Rails.application.config.mandrill
       template_name = 'merchant-order-confirmation-5tmsmov1'
@@ -212,15 +216,15 @@ module UserMailer
                       },
                       {
                           :name => 'SHUTLREFNO',
-                          :content => ''
+                          :content => shutl_reference
                       },
                       {
                           :name => 'PICKUPSTART',
-                          :content => ''
+                          :content => pickup_start_time
                       },
                       {
                           :name => 'PICKUPFINISH',
-                          :content => ''
+                          :content => pickup_finish_time
                       }
                   ]
               }

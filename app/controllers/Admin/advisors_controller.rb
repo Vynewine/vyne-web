@@ -59,52 +59,80 @@ class Admin::AdvisorsController < ApplicationController
 
     order = Order.find(params[:order])
 
+    #0 Save Delivery Quote
+    quote = {
+        :id => params[:quote],
+        :price => params[:price],
+        :vehicle => params[:vehicle],
+        :pickup_start => params[:pickup_start],
+        :pickup_finish => params[:pickup_finish],
+        :delivery_start => params[:delivery_start],
+        :delivery_finish => params[:delivery_finish],
+        :valid_until => params[:valid_until]
+    }
+
+    order.delivery_quote = quote
+
     #1 Charge Card
 
     payment_data = order.payment
     stripe_token = payment_data.stripe
     value = (order.total_price * 100).to_i
-    charge_details = charge_card(value, stripe_token)
-    if charge_details.paid
-      order.status_id = 2 # paid
+
+    if order.status_id != 2
+      charge_details = charge_card(value, stripe_token)
+      if charge_details.paid
+        order.status_id = 2 # paid
+      end
+    end
+
+    #2 Schedule Shutl
+
+    if order.status_id == 2
       if order.save
 
-        #2 Schedule Shutl
-
         booking_response = shutl_book(params[:quote], order)
-        booking_hash = JSON.parse(booking_response)
-        booking_ref = nil
 
-        unless booking_hash.blank?
-          unless booking_hash['booking'].blank?
-            unless booking_hash['booking']['reference'].blank?
-              booking_ref = booking_hash['booking']['reference']
+        if booking_response.is_a?(Net::HTTPSuccess)
+
+          booking_hash = JSON.parse(booking_response.read_body)
+          booking_ref = nil
+
+          unless booking_hash.blank?
+            unless booking_hash['booking'].blank?
+              unless booking_hash['booking']['reference'].blank?
+                booking_ref = booking_hash['booking']['reference']
+              end
             end
           end
 
-        end
-
-        if booking_ref.nil?
-          @message = "error:Couldn't do the booking."
-          puts json: booking_response
-        else
-          order.delivery_token = booking_ref
-          order.delivery_status = booking_response
-          order.status_id = 4 #pickup
-          if order.save
-            @message = 'Success'
-
-            #3 Reduce Inventory Count
-
-            order.order_items.each do |item|
-              inventory = Inventory.find_by(:wine => item.wine, :warehouse => order.warehouse)
-              inventory.quantity = inventory.quantity - 1
-              inventory.save #TODO: Handle inventory update failure
-            end
-
+          if booking_ref.nil?
+            @message = "error:Couldn't do the booking."
+            puts json: booking_response
           else
-            @message = "error:Couldn't save order after booking"
+            order.delivery_token = booking_ref
+            order.delivery_status = booking_hash
+            order.status_id = 4 #pickup
+            if order.save
+              @message = 'Success'
+
+              #3 Reduce Inventory Count
+
+              order.order_items.each do |item|
+                inventory = Inventory.find_by(:wine => item.wine, :warehouse => order.warehouse)
+                inventory.quantity = inventory.quantity - 1
+                inventory.save #TODO: Handle inventory update failure
+              end
+
+            else
+              @message = "error:Couldn't save order after booking"
+            end
           end
+        else
+          puts json: booking_response
+          booking_error = JSON.parse(booking_response.read_body)
+          puts booking_error
+          @message = "error:Couldn't do the booking. " + booking_error['errors'].to_json
         end
       else
         @message = "error:Couldn't save order after booking"
@@ -112,14 +140,21 @@ class Admin::AdvisorsController < ApplicationController
     else
       @message = "error:The payment was not processed. #{charge_details.description}"
       order.status_id = 3 #payment failed
+      order.save
     end
 
     if @message == 'Success'
-      order_confirmation(order)
+      order_receipt(order)
+      merchant_order_confirmation(order)
     end
 
     respond_to do |format|
-      flash[:error] = @message
+      if @message == 'Success'
+        flash[:message] = @message
+      else
+        flash[:alert] = @message
+      end
+
       format.html { redirect_to admin_order_path order}
     end
 
@@ -278,6 +313,7 @@ class Admin::AdvisorsController < ApplicationController
       http.request(req)
     }
 
+
     connection.read_body
 
   end
@@ -334,12 +370,11 @@ class Admin::AdvisorsController < ApplicationController
     req = Net::HTTP::Post.new(url, headers)
     # req.form_data = params
     req.body = params.to_json
-    connection = Net::HTTP::start(url.hostname, url.port, :use_ssl => url.scheme == 'https' ) {|http|
+    res = Net::HTTP::start(url.hostname, url.port, :use_ssl => url.scheme == 'https' ) {|http|
       http.request(req)
     }
 
-    connection.read_body
-
+    res
   end
 
 end
