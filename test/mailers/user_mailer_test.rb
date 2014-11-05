@@ -63,8 +63,11 @@ class UserMailerTest < ActionMailer::TestCase
     order_item.occasion = occasions(:two)
     order_item.type = types(:two)
     order_item.save
+    order = @order
 
-    puts json: test_template(@order)
+    template = ERB.new(File.read(Rails.root.join('app', 'views', 'user_mailer', 'order_items.erb')))
+    puts template.result(binding)
+
   end
 
   test 'Send order confirmation one bottle two food selections' do

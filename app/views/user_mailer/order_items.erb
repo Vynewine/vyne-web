@@ -100,51 +100,39 @@
        when 'Fortified'
          '#6B1F2C'
        else
-         ''
+         '#FFFFFF'
      end
    end
 
    wine_one_color = get_wine_color(pref_2_wine1)
    wine_one_is_wine = !wine_one_color.blank?
-   
+
 
 %>
 
-<span style="color:#FFFFFF">You ordered a&nbsp;</span>
-<span style="color:#FFFFFF"><%= wine_1_order %> perfect for your</span>
-<br/>&nbsp;
+<span style="color:#FFFFFF">You ordered a <%= wine_1_order %> perfect for your</span>
+<br/>
 <span style="color:#FFFFFF">
-  <span style="font-size:27px"><%= pref_1_wine1 %>&nbsp;</span><br/>
+  <span style="font-size:27px"><%= pref_1_wine1 %>
   <% unless pref_2_wine1.blank? %>
-    <span style="font-size:14px">with&nbsp;</span>
+    <br/><span style="font-size:14px">with</span><br/>
   <% end %>
 </span>
-<br/>
+</span>
 
 <% unless pref_2_wine1.blank? %>
-    <% if wine_one_is_wine %>
-        <span style="color:<%= wine_one_color %>">
-  <span style="font-size:27px; line-height:20.7999992370605px; text-align:center"><%= pref_2_wine1 %></span>
-</span>
-    <% else %>
-
-        <span style="color:#FFFFFF">
-  <span style="font-size:27px">&nbsp;<%= pref_2_wine1 %></span>
-  <br/>
-          <% unless pref_3_wine1.blank? %>
-        <span style="font-size:14px">with&nbsp;</span>
-    <% end %>
-</span>
+  <span style="color:<%= wine_one_color %>; font-size:27px; line-height:20.7999992370605px; text-align:center"><%= pref_2_wine1 %></span>
+    <% unless pref_3_wine1.blank? %>
+        <br/><span style="font-size:14px">with</span>
     <% end %>
 <% end %>
 
 <% unless pref_3_wine1.blank? %>
-    <br/>
-    <span style="color:#FFFFFF">
-  <span style="font-size:27px"><%= pref_3_wine1 %></span>
-</span><br/>
-
+  <br/>
+    <span style="color:#FFFFFF; font-size:27px"><%= pref_3_wine1 %></span>
+  <br/>
 <% end %>
+
 <%#
 <span style="color:#FFFFFF">
   <span style="font-size:20px">*|IF:WINEORDER2|*Your second bottle is a *|WINEORDER2|* perfect for your</span><br/>
