@@ -107,11 +107,6 @@ class SignupController < ApplicationController
       end
     end
 
-    puts we_deliver
-    puts closed
-
-    puts closed && we_deliver
-
     if closed && we_deliver
       begin
         mailchimp.lists.subscribe('4fe50cdebb',
