@@ -194,6 +194,8 @@ $(document).ready(function(){
 
             mapUtil.calculateDistanceForAllWarehouses(postcode, function(delivery) {
                 // console.log('callback 1', deliverable);
+                $('#initial-postcode-lookup').hide();
+                $('#filterPostcode').show();
                 if (delivery.available) {
 
                     analytics.track('Postcode lookup', {
