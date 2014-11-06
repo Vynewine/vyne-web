@@ -86,10 +86,10 @@ class SignupController < ApplicationController
 
     mailchimp = Mailchimp::API.new(Rails.application.config.mailchimp_key)
 
-    max = 0
+    mim = 0
     unless distances.blank?
       distances_array = JSON.parse(distances)
-      max = distances_array.max_by { |distance| distance['mi'] }
+      mim = distances_array.min_by { |distance| distance['mi'] }
     end
 
     max_future_distance = 15
@@ -97,13 +97,20 @@ class SignupController < ApplicationController
     we_deliver = false
     we_will_deliver = false
 
-    if max != 0 && max['mi'] <= max_current_distance
+    puts mim['mi']
+
+    if mim != 0 && mim['mi'] <= max_current_distance
       we_deliver = true
     else
-      if max != 0 && max['mi'] <= max_future_distance
+      if mim != 0 && mim['mi'] <= max_future_distance
         we_will_deliver = true
       end
     end
+
+    puts we_deliver
+    puts closed
+
+    puts closed && we_deliver
 
     if closed && we_deliver
       begin
