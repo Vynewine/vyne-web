@@ -38,6 +38,7 @@ Authority.configure do |config|
     :list     => 'read',
     :choose   => 'read',
     :item     => 'read',
+    :mailing_list_signup => 'read',
     :complete => 'update',
     :new      => 'create',
     :create   => 'create',

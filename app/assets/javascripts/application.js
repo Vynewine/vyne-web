@@ -159,6 +159,70 @@ $(function() {
 	    }
 	});
 
+    /* Signup for mailing list */
+    $('#sign-up-submit').click(function(e) {
+        e.preventDefault();
+        var email = $('#sign-up-email').val();
+        var postcode = $('#filterPostcode').val();
+        var $errorList = $('#sign-up-errors');
+        var distances = $('#sign-up-distances').val();
+        var closed = $('#sign-up-closed').val();
+        var panel = $('#sign-up-panel-form');
+        var panelThankYou = $('#sign-up-panel-thank-you');
+
+
+        panel.hide();
+        panelThankYou.addClass('loading');
+        panelThankYou.show();
+
+        $.ajax({
+            type: "POST",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').last().attr('content'))
+            },
+            url: '/signup/mailing_list_signup',
+            data: {
+                email: email,
+                list_key: 'coming-soon',
+                postcode: postcode,
+                distances: distances,
+                closed: closed
+            },
+            error: function (data) {
+
+                if(data)
+                {
+                    var errors = data.responseJSON.errors;
+                    if (errors) {
+                        error = errors.join(', ');
+
+                        $errorList.empty().show();
+                        errors.forEach(function (error) {
+                            $errorList.append('<li>' + error + '</li>');
+                        });
+                    }
+                }
+
+                panelThankYou.hide();
+                panel.show();
+
+            },
+            success: function (data) {
+
+                panelThankYou.removeClass('loading');
+                panelThankYou.text('We\'ll be in touch...' )
+
+                $errorList.empty();
+                $('#sign-up-panel-form').hide();
+                $('#sign-up-panel-thank-you').show();
+                analytics.track('User mailing list sing up', {
+                    email: email
+                });
+            }
+        });
+
+    });
+
 
 	/* Bottle array */
 

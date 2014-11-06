@@ -244,4 +244,55 @@ module UserMailer
       #   Rails.logger.error message
     end
   end
+
+  def order_at_your_desk(email)
+
+    mandrill = Mandrill::API.new Rails.application.config.mandrill
+    template_name = 'coverage-apology-order-at-desk-1cnps'
+    message = {
+        :subject => 'Order wine at your desk',
+        :from_email => 'comingsoon@vyne.london',
+        :from_name => 'Vyne Drinkers',
+        :to => [
+            {
+                :email => email,
+                :name => 'Vyne Drinker'
+            }
+        ]
+    }
+
+
+    mandrill.messages.send_template template_name, nil, message
+
+  rescue Mandrill::Error => exception
+    puts "A Mandrill error occurred order_receipt: #{exception.class} - #{exception.message}"
+  rescue => exception
+    message = "Error occurred while sending email order_receipt: #{exception.class} - #{exception.message} - for user: #{order.client.email}"
+    puts json: exception
+  end
+
+  def coming_soon_near_you(email)
+
+    mandrill = Mandrill::API.new Rails.application.config.mandrill
+    template_name = 'coverage-apology-1cpcs'
+    message = {
+        :subject => 'Vyne Coming Soon',
+        :from_email => 'comingsoon@vyne.london',
+        :from_name => 'Vyne Drinkers',
+        :to => [
+            {
+                :email => email,
+                :name => 'Vyne Drinker'
+            }
+        ]
+    }
+
+    mandrill.messages.send_template template_name, nil, message
+
+  rescue Mandrill::Error => exception
+    puts "A Mandrill error occurred order_receipt: #{exception.class} - #{exception.message}"
+  rescue => exception
+    message = "Error occurred while sending email order_receipt: #{exception.class} - #{exception.message} - for user: #{order.client.email}"
+    puts json: exception
+  end
 end

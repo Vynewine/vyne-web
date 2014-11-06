@@ -74,3 +74,6 @@ gem 'roo', '~> 1.13.2'
 
 #Sentry
 gem 'sentry-raven', :require => 'raven', :git => 'https://github.com/getsentry/raven-ruby.git'
+
+#Mailchimp
+gem 'mailchimp-api'

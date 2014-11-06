@@ -85,18 +85,21 @@ function MapUtility() {
         function(response, status) {
             var distanceKm = 0;
             var distanceMi = 0;
+            var dists = [];
             var delivery = {available: false, warehouses: []};
 
             for (var i = 0; i < response.rows[0].elements.length; i++) {
                 if (response.rows[0].elements[i].status === "OK") {
                     distanceKm = parseInt(response.rows[0].elements[i].distance.value);
                     distanceMi = mapUtil.kmToMile(distanceKm/1000);
+                    dists.push({m: distanceKm, mi: distanceMi});
                     if (distanceMi <= parseInt(distances[i])) {
                         delivery.available = true;
                         delivery.warehouses.push({id: warehouses[i], distance: distanceMi });
                     }
                 }
             }
+            $('#sign-up-distances').val(JSON.stringify(dists));
             callbackMethod(delivery);
         });
     };

@@ -43,8 +43,18 @@
               <p>The cellars are currently closed in your area, come back between 12:00 - 20:15 daily.</p>
               <p>We can drop you an email if the opening hours are extended.</p>
             </div>
-            <input type="email" name="email" placeholder="jon@snow.com" />
-            <input type="submit" value="Let me know"/>
+            <div id="sign-up-panel">
+              <div id="sign-up-panel-form">
+                <ul class="errors" id="sign-up-errors"></ul>
+                <input type="hidden" id="sign-up-distances">
+                <input type="email" id="sign-up-email" name="email" placeholder="jon@snow.com" />
+                <input type="hidden" id="sign-up-closed" name="closed" value="false" />
+                <input type="submit" id="sign-up-submit" value="Let me know"/>
+              </div>
+              <div id="sign-up-panel-thank-you" style="display:none; height: 45px" class="opening-times loading">
+
+              </div>
+            </div>
           </div>
         </div>
       </div>

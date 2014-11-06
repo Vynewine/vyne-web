@@ -56,4 +56,61 @@ class SignupControllerTest < ActionController::TestCase
     assert @response.body.include? '8A'
     assert_equal('N17RJ', new_user.addresses[0].postcode, 'User postcode not correct')
   end
+
+  test 'Should create mailing list entry for users not in the area' do
+    WebMock.allow_net_connect!
+
+    post :mailing_list_signup, {
+        :email => 'jakub.borys@gmail.com',
+        :postcode => 'n1 7rj',
+        :distances => '[{"m":11423,"mi":7.098},{"m":15467,"mi":9.611},{"m":11614,"mi":7.217}]',
+        :list_key => 'coming-soon'
+    }
+
+    response = JSON.parse(@response.body)
+
+    subscribers = Subscriber.all
+
+    assert_equal(1, subscribers.length, 'There should only be one subscriber.')
+    assert_equal(response['email'], 'jakub.borys@gmail.com', 'Email of new subscriber should match')
+    assert_equal(subscribers[0].mailing_list, mailing_lists(:coming_soon), 'Subscriber should belong to coming_soon list')
+  end
+
+  test 'Should create Mailchimp subscriber if no distance id provided or wholesalers are closed' do
+    WebMock.allow_net_connect!
+
+    post :mailing_list_signup, {
+        :email => 'jakub.borys@gmail.com',
+        :postcode => 'n1 7rj',
+        :list_key => 'coming-soon',
+        :closed => true
+    }
+
+    response = JSON.parse(@response.body)
+
+    subscribers = Subscriber.all
+
+    assert_equal(1, subscribers.length, 'There should only be one subscriber.')
+    assert_equal(response['email'], 'jakub.borys@gmail.com', 'Email of new subscriber should match')
+    assert_equal(subscribers[0].mailing_list, mailing_lists(:coming_soon), 'Subscriber should belong to coming_soon list')
+  end
+
+  test 'Should validate email' do
+    post :mailing_list_signup, {
+        :email => 'jakub.borys@gmail',
+        :list_key => 'coming-soon'
+    }
+
+    response = JSON.parse(@response.body)
+
+    assert(!response['errors'].blank?, 'Errors should be filled in')
+    assert_equal('Please enter valid email address.', response['errors'][0], 'Should catch bad email.')
+
+  end
+
+  test 'email validation' do
+    value = 'jakub.borys.@gmail.co'
+    assert(value =~ /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, 'Not a valid email')
+  end
+
 end

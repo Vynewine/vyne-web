@@ -58,4 +58,10 @@ Rails.application.configure do
   #Sentry
   config.sentry_dns = 'https://8830d38a3ab24cea90a374858941d1f6:70306e5411ca4acea11091a14208176b@app.getsentry.com/32522'
 
+  #Mailchimp
+  config.mailchimp_key = '218800eead6b63a85a54db6df3eaedc4-us8'
+
+  #Currrent Delivery Distance
+  config.max_delivery_distance = 3
+
 end

@@ -203,7 +203,7 @@ $(document).ready(function(){
 
                     var currentHour = new Date().getHours();
 
-                    if(currentHour >= 9 && currentHour < 22) {
+                    if(currentHour >= 9 && currentHour < 20) {
 
                         $slideable.removeClass('slideup');
 
@@ -267,6 +267,7 @@ $(document).ready(function(){
                         // Coordinates lookup:
                         mapUtil.findCoordinatesAndExecute(postcode, successCallback, errorCallback);
                     } else {
+                        $('#sign-up-closed').val(true);
                         $slideable.addClass('slideup');
                         $('.opening-times').hide();
                         $notavailable.show();

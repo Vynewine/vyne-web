@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141105175343) do
+ActiveRecord::Schema.define(version: 20141106102504) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -176,6 +176,13 @@ ActiveRecord::Schema.define(version: 20141105175343) do
 
   add_index "locales", ["subregion_id"], name: "index_locales_on_subregion_id", using: :btree
 
+  create_table "mailing_lists", force: true do |t|
+    t.string   "name"
+    t.string   "key"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "maturations", force: true do |t|
     t.integer  "bottling_id"
     t.text     "description"
@@ -304,6 +311,16 @@ ActiveRecord::Schema.define(version: 20141105175343) do
   end
 
   add_index "subregions", ["region_id"], name: "index_subregions_on_region_id", using: :btree
+
+  create_table "subscribers", force: true do |t|
+    t.integer  "mailing_list_id"
+    t.string   "email"
+    t.json     "info"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "subscribers", ["mailing_list_id"], name: "index_subscribers_on_mailing_list_id", using: :btree
 
   create_table "types", force: true do |t|
     t.string   "name"

@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   get 'warehouses/addresses' => 'home#warehouses'
   post 'signup/create' => 'signup#create'
   post 'signup/address' => 'signup#address'
+  post 'signup/mailing_list_signup' => 'signup#mailing_list_signup'
 
   # Signed only:
   # get 'welcome' => 'home#welcome'
