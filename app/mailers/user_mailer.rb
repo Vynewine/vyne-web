@@ -237,11 +237,6 @@ module UserMailer
 
     rescue Mandrill::Error => exception
       puts "A Mandrill error occurred order_receipt: #{exception.class} - #{exception.message}"
-      # rescue => exception
-      #   message = "Error occurred while sending email order_receipt: #{exception.class} - #{exception.message} - for user: #{order.client.email}"
-      #   puts message
-      #   puts json: exception
-      #   Rails.logger.error message
     end
   end
 
@@ -267,7 +262,7 @@ module UserMailer
   rescue Mandrill::Error => exception
     puts "A Mandrill error occurred order_receipt: #{exception.class} - #{exception.message}"
   rescue => exception
-    message = "Error occurred while sending email order_receipt: #{exception.class} - #{exception.message} - for user: #{order.client.email}"
+    message = "Error occurred while sending email order_at_your_desk: #{exception.class} - #{exception.message} - for user: #{email}"
     puts json: exception
   end
 
@@ -292,7 +287,7 @@ module UserMailer
   rescue Mandrill::Error => exception
     puts "A Mandrill error occurred order_receipt: #{exception.class} - #{exception.message}"
   rescue => exception
-    message = "Error occurred while sending email order_receipt: #{exception.class} - #{exception.message} - for user: #{order.client.email}"
-    puts json: exception
+    message = "Error occurred while sending email coming_soon_near_you: #{exception.class} - #{exception.message} - for user: #{email}"
+    puts json: message
   end
 end

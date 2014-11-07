@@ -148,7 +148,14 @@ $(function() {
 
 	//Get the postcode form the URL using query params
 	try {
-		$('#filterPostcode').val(getUrlVars()["postcode"].replace('+', ' '));
+        var queryHash = getUrlVars();
+        if(getUrlVars()["postcode"])
+        {
+            $('#filterPostcode').val(getUrlVars()["postcode"].replace('+', ' '));
+        } else {
+            $('#initial-postcode-lookup').hide();
+            $('#filterPostcode').show();
+        }
 	} catch(err) {
 		console.log(err);
 	}
