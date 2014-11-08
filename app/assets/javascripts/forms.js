@@ -15,12 +15,12 @@ var updatePostcode = function(e){
                 console.log('delivers here?', deliverable);
                 if (deliverable) {
                     $('#filterPostcodeMessage').removeClass('error');
-                    $('#filterPostcodeMessage').html("VYNZ delivers to this area.");
+                    $('#filterPostcodeMessage').html("VYNE delivers to this area.");
                     // $buttonDone.removeAttr('disabled');
                     // $buttonDone.removeClass('disabled');
                 } else {
                     $('#filterPostcodeMessage').addClass('error');
-                    $('#filterPostcodeMessage').html("VYNZ does NOT deliver to this area!");
+                    $('#filterPostcodeMessage').html("VYNE does NOT deliver to this area!");
                 }
                 $('#filterPostcodeMessage').fadeIn();
             });
@@ -216,7 +216,7 @@ $(document).ready(function(){
                         $('#use-postcode').css({ 'display': 'inline-block '});
 
                         $feedback.removeClass('error');
-                        $feedback.html("VYNZ delivers to this area.");
+                        $feedback.html("VYNE delivers to this area.");
 
                         $('#warehouses').val('{"warehouses":' + JSON.stringify(delivery.warehouses) + '}');
 
@@ -283,7 +283,7 @@ $(document).ready(function(){
                     $('.outside').show();
                     $('.closed').hide();
                     $feedback.hide().addClass('error');
-                    $feedback.html("VYNZ does NOT deliver to this area!");
+                    $feedback.html("VYNE does NOT deliver to this area!");
                     $('#use-postcode').css({ 'display': 'none'});
                     analytics.track('Postcode lookup', {
                         postcode: postcode,

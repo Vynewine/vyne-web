@@ -10,7 +10,7 @@ Clone the repository
 This system uses PostgreSQL.
 * Download PostgresApp from here: (http://postgresapp.com)
 * Start 'psql'
-* Create user and database for vynz:
+* Create user and database for vyne:
 ```
 CREATE USER vynz WITH PASSWORD 'Valpolicella';
 ALTER USER vynz CREATEDB;
