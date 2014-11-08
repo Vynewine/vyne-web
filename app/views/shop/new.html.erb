@@ -12,11 +12,11 @@
       </ul>
     </div>
   <% end %>
-
   <div id="order" class="swiper-container">
+
+
     <div class="swiper-wrapper">
     <div class="swiper-overlay"></div>
-
 
     <%# ============================ Address check ============================ %>
 
@@ -72,7 +72,7 @@
 
     <div id="bottles-panel" class="order-panel swiper-slide noSwipingClass" data-hash="bottles">
       <div class="order-panel-content wrapper wrapper-large">
-
+        <a href="#" class="back-nav"></a>
         <h2 class="title">Select your bottle</h2>
         <h3 class="subttitle">Prices include delivery</h3>
 
@@ -118,6 +118,7 @@
 
     <div id="preferences-panel" class="step order-panel swiper-slide noSwipingClass" data-hash="preferences">
       <div class="order-panel-content wrapper wrapper-large">
+          <a href="" class="back-nav"></a>
 
         <div id="matching-wine" class="preferences-sub-panel active">
 
@@ -162,7 +163,7 @@
           <% nallFood.each do |parentFood| %>
 
           <div id="<%= parentFood.name.gsub(/(((\s)&?)\s?)/, "_") %>" class="tab preferences-sub-sub-panel">
-            <a href="#" class="back"></a>
+            <!--<a href="#" class="back"></a>-->
             <% if parentFood.id == 4 %>
             <h3>How was it prepared?</h3>
             <% else %>
@@ -192,7 +193,7 @@
 
 
               <div id="preparation" class="tab preferences-sub-sub-panel">
-                <a href="#" class="back"></a>
+                <!--<a href="#" class="back"></a>-->
                 <h3>How was it prepared?</h3>
                 <div class="prefs-list-container">
                   <ul id="preparation-list" class="tab-list prefs-list prefs-list-bottom cf">
@@ -227,7 +228,7 @@
             </ul>
 
             <div id="wine-type" class="tab preferences-sub-sub-panel">
-              <h3>2. What type of Wine would you like?</h3>
+              <h3>What type of Wine<br/> would you like?</h3>
               <div class="prefs-list-container">
                 <ul id="wine-list" class="prefs-list prefs-list-bottom cf">
                   <% @types.each do |type| %>
@@ -251,7 +252,9 @@
         <div class="prefs-overview">
           <div class="prefs-overview-content wrapper wrapper-large">
             <ul class="prefs-overview-list cf">
-              <li class="empty"><a href=""><span>+</span></a></li><li class="empty"><a href=""><span>+</span></a></li><li class="empty"><a href=""><span>+</span></a></li>
+              <li class="empty"><a href=""><span>1</span></a></li>
+              <li class="empty"><a href=""><span>2</span></a></li>
+              <li class="empty"><a href=""><span>3</span></a></li>
             </ul>
             <a href="#" id="select-preferences" class="btn btn__full-width next-slide">Checkout</a>
           </div>
@@ -267,6 +270,7 @@
 
     <div id="review-panel" class="step order-panel swiper-slide noSwipingClass" data-hash="review">
       <div class="order-panel-content wrapper wrapper-large">
+        <a href="" class="back-nav"></a>
         <h2>Review order</h2>
         <p>We need to check if the wine is available to deliver in your area</p>
 
@@ -310,6 +314,7 @@
 
     <div id="register-panel" class="step order-panel swiper-slide noSwipingClass" data-hash="register">
       <div class="order-panel-content wrapper wrapper-large">
+        <a href="" class="back-nav"></a>
         <div id="account-form" class="register-form">
           <h2 class="account-heading">Register</h2>
           <span class="account-message">Have an account? <a href="" id="account-link" class="signin-link">Sign in</a></span>
@@ -349,6 +354,7 @@
 
     <div id="delivery-panel" class="step order-panel swiper-slide noSwipingClass" data-hash="delivery">
       <div class="order-panel-content wrapper wrapper-large">
+        <a href="" class="back-nav"></a>
         <h2>Delivery address</h2>
         <ul class="errors" id="address-errors"></ul>
 
@@ -396,6 +402,7 @@
 
     <div id="payment-panel" class="step order-panel swiper-slide noSwipingClass" data-hash="payment">
       <div class="order-panel-content wrapper wrapper-large">
+        <a href="" class="back-nav"></a>
         <h2>Link Payment</h2>
           <%
           paymentCards = [['New payment card', -1]]
