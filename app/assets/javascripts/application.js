@@ -98,7 +98,18 @@ $(function() {
         }
     };
 
-	/* Order */
+    /* Walkthrough */
+
+    //Initialising the walkthrough slider
+    $('#walkthrough').swiper({
+        mode: 'horizontal',
+        speed: 200,
+        pagination: '.pagination',
+        paginationClickable: true
+    });
+
+
+    /* Order */
 
 	//Initialising order slider
 	var order = $('#order').swiper({
