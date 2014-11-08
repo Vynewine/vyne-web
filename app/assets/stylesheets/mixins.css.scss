@@ -40,3 +40,23 @@
 	-webkit-transform-origin: $origin;
 	transform-origin: $origin;
 }
+
+@mixin errors {
+  display: none;
+  margin: 0 0 0 0;
+  padding: 0;
+  list-style: none;
+  border-radius: 5px;
+  background:rgba(0,0,0,0.2);
+  border: 1px rgba(255,255,255,0.2) solid;
+
+  li {
+    color: #a32438;
+    padding: 8px;
+    border-bottom: 1px rgba(255,255,255,0.1) solid;
+
+    &:last-child {
+      border: 0;
+    }
+  }
+}

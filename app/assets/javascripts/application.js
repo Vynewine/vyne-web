@@ -490,9 +490,14 @@ $(function() {
                 type: 'Specific wine',
                 text: wines[wineCount].specificWine
             });
+
+            createCartPage(wines, wineCount);
+            $('#specific-wine-errors').empty().hide();
+            order.swipeNext();
+        } else {
+            $('#specific-wine-errors').empty().show().append('<li>Please enter wine name</li>');
         }
-        createCartPage(wines, wineCount);
-        order.swipeNext();
+
     });
 
 	$(document).on('click', '.order-table .delete', function(e) {
