@@ -7,7 +7,6 @@ $('#filterPostcode').keyup(function(e){
     $newAddressBlock.show();
     $addressList.val(-1);
     $postcodeField.val(postcode);
-    $('#addr-pc-text').text(postcode);
     $postcodeField.keyup();
 });
 
@@ -265,6 +264,7 @@ $(document).ready(function(){
             } else {
                 $(this).val(validPostcode);
                 $('#filterPostcode').val(validPostcode);
+                $('#addr-pc-text').text(validPostcode);
                 $errorList.empty().hide();
             }
 

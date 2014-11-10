@@ -561,6 +561,8 @@ $(function () {
 
         wines.splice(wineid, 1);
 
+        $('input[name="wines"]').val(JSON.stringify(wines));
+
         if (wineCount > 0) {
             wineCount--;
         }
