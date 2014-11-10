@@ -357,7 +357,6 @@
       <div class="order-panel-content wrapper wrapper-large">
         <a href="" class="back-nav"></a>
         <h2>Delivery address</h2>
-        <ul class="errors" id="address-errors"></ul>
 
         <%# - - - - - -- - - - - - - - - -  Option1 - - - - - -- - - - - - - - - -  %>
 
@@ -376,6 +375,9 @@
         <%# - - - - - -- - - - - - - - - -  Option2 - - - - - -- - - - - - - - - -  %>
 
         <div id="new_delivery_address" style="display:none;">
+          <div style="margin-bottom: 10px; text-align: center">
+            <span>Your Postcode: <span style="text-transform: uppercase;" id="addr-pc-text"></span></span>
+          </div>
           <div>
             <select id="suggested-addresses">
               <option value="0">Select your address</option>
@@ -385,13 +387,18 @@
           <label for="address_s">Enter address if not present above</label>
           <textarea rows="3" disabled="disabled" id="addr-st" name="address_s" placeholder="House Number and Street Name"></textarea>
           </div>
-          <div><input type="text" id="addr-pc" name="address_p" placeholder="Postcode" disabled="disabled"/></div>
+          <div>
+
+            <input type="hidden" id="addr-pc" name="address_p" placeholder="Postcode" disabled="disabled"/>
+          </div>
+          <div><span>Your mobile to ensure fast delivery</span></div>
           <div><input type="text" id="mobile" name="mobile" placeholder="Mobile Number" /></div>
-          <div><span>We need this to ensure fast delivery</span></div>
+
           <div><input type="hidden" disabled="disabled" id="addr-no" name="address_d" placeholder="No"/></div>
         </div>
         <input type="hidden" id="address-id" name="address_id"/>
-
+        <input type="hidden" id="new-address" name="new_address"/>
+        <ul class="errors" id="address-errors"></ul>
         <div>
           <!-- Next step -->
           <a href="#" class="btn" id="address-details">use address</a> <!-- Changes class to 'red-button' -->

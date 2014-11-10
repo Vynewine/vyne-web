@@ -46,6 +46,7 @@ $('#filterPostcode').keyup(function(e){
     $newAddressBlock.show();
     $addressList.val(-1);
     $postcodeField.val(postcode);
+    $('#addr-pc-text').text(postcode);
     $postcodeField.keyup();
     // updatePostcode();
 });
@@ -310,10 +311,16 @@ $(document).ready(function(){
         if (parseInt(value) === -1) {
             $('#address-id').val(0);
             $addrFields.fadeIn();
+            $('#order-address:selected').removeAttr("selected");
             postCodeLookup(initialPostCode);
+            $('#new-address').val(true);
+            $('#addr-st').val('');
+            suggested-addresses
         } else {
             $('#address-id').val(value);
             $addrFields.fadeOut();
+            $('#new-address').val(false);
+            $('#addr-st').val('');
         }
     });
 
