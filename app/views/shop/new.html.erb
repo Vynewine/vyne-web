@@ -411,14 +411,14 @@
     <div id="payment-panel" class="step order-panel swiper-slide noSwipingClass" data-hash="payment">
       <div class="order-panel-content wrapper wrapper-large">
         <a href="" class="back-nav"></a>
-        <h2>Link Payment</h2>
+        <h2>Payment Card</h2>
           <%
           paymentCards = [['New payment card', -1]]
-          selected_card = nil
+          selected_card = -1
           if current_user
             current_user.payments.order(updated_at: :desc).each do |a|
               # [ :visa, :master, :american, :discover, :diners, :jcb ]
-              if selected_card.blank?
+              if selected_card == -1
                 selected_card = a.id
               end
 
@@ -432,7 +432,7 @@
           end
           %>
 
-        <%= select_tag "orderCard", options_for_select(paymentCards, selected_card), :prompt => "Choose Card", :name => "" %>
+        <%= select_tag "orderCard", options_for_select(paymentCards, selected_card), :name => "" %>
         <div id="new_card">
           <div><input type="text" id="pmnm" size="20" placeholder="0000 0000 0000 0000" data-stripe="number" /></div>
           <div><input type="text" id="pmcv" size="4"  placeholder="CVC" data-stripe="cvc" /></div>

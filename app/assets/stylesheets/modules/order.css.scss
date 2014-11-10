@@ -882,6 +882,10 @@
 
                 &#payment-panel {
 
+                    .errors {
+                      @include errors;
+                    }
+
                     .order-panel-content {
                         padding: 60px 20px;
 

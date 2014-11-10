@@ -645,6 +645,8 @@ $(function () {
 
         e.preventDefault();
 
+        var $orderCard = $('#orderCard');
+
         if ($('#account-form').hasClass('register-form')) {
 
             //Needs Validation
@@ -738,7 +740,7 @@ $(function () {
                         }
                         if (data.payments && data.payments.length > 0) {
                             var payments = data.payments;
-                            var $orderCard = $('#orderCard');
+
                             $('#new_card').hide();
                             for (var i = 0; i < payments.length; i++) {
                                 var payment = payments[i];
@@ -756,6 +758,8 @@ $(function () {
                                     $orderCard.append('<option value=' + payment.id + '>' + cardNumber + '</option>');
                                 }
                             }
+                        } else {
+
                         }
 
                         analytics.track('User sign in', {

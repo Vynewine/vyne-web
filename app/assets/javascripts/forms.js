@@ -393,7 +393,7 @@ $(document).ready(function(){
     });
 
     var orderCard = $('#orderCard');
-    if($('body').hasClass('logged-in') && orderCard.find("option").length > 2) {
+    if($('body').hasClass('logged-in') && orderCard.find("option").length > 1) {
         $('#new_card').hide();
 
         if(orderCard.find("option:selected").val() !== "" && orderCard.find("option:selected").val() !== "-1") {
