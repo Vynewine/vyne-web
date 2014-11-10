@@ -8,16 +8,16 @@
         text-align: center;
 
         .accordian-item-link {
-            padding: 1rem;
+            padding: 5px;
             display: block;
             background: black;
             font-size: 1.6rem;
-            color: rgba(255,255,255,0.4);
+            color: rgba(255,255,255,0.5);
         }
 
         .accordian-item-content {
             display: none;
-            padding: 4rem;
+            padding: 15px;
             position: relative;
 
             .line {
@@ -35,7 +35,7 @@
                 z-index: 2;
                 color: white;
                 width: 50px;
-                margin: 20px 0;
+                margin: 10px 0;
                 padding: 10px 0;
                 font-weight: bold;
                 background: black;
@@ -50,9 +50,8 @@
             }
 
             p, span {
-                width: 70%;
                 margin: 0 auto;
-                color: rgba(255,255,255,0.4);
+                color: rgba(255,255,255,0.5);
             }
         }
 

@@ -881,13 +881,6 @@ $(function () {
 
     });
 
-    /* Order Confirmation */
-    $('.accordian-item-link').click(function (e) {
-        e.preventDefault();
-        $('.accordian-item').removeClass('active');
-        $(this).parent().addClass('active');
-    });
-
     /**
      * Lookup valid addresses for a post code
      */

@@ -5,10 +5,8 @@
 	<div class="order-confirmation-content wrapper">
 		<ul class="accordian">
 			<li class="accordian-item<% if @order.status_id == 1 %> active<% end %>">
-				<a href="" class="accordian-item-link">
 				<div class="line"></div>
-					<span class="number">1</span>
-					Order Placed</a>
+					<span class="accordian-item-link">1. Order Placed</span>
 				<div class="accordian-item-content">
 					<div class="line"></div>
 					<span class="number">1</span>
@@ -17,22 +15,25 @@
 				    <span>(Based on the preferences provided)</span>
 			    </div>
 			</li>
-			<li class="accordian-item<% if @order.status_id == 2 %> active<% end %>">
-				<a href="" class="accordian-item-link"><span>2.</span> Courier picks up</a>
+			<li class="accordian-item<% if @order.status_id == 4 %> active<% end %>">
+				<span class="accordian-item-link">2. Courier picks up</span>
 				<div class="accordian-item-content">
 					<div class="line"></div>
 					<span class="number">2</span>
-					<h3>Just getting your bottle</h3>
-				    <p>Your courier is picking up your bottle of wine</p>
+					<h3>Courier en route to wine cellar</h3>
+				    <p>The courier is on the first leg of the journey: to the wine cellar. </p><br />
+                      <p>Check this page in 10-20 minutes to see if the bottle has been collected and on it's way to you.</p>
 				</div>
 			</li>
-			<li class="accordian-item<% if @order.status_id == 3 %> active<% end %>">
-				<a href="" class="accordian-item-link"><span>3.</span> Your bottle is on it's way!</a>
+			<li class="accordian-item<% if @order.status_id == 5 %> active<% end %>">
+				<span class="accordian-item-link">3. Your bottle is on it's way!</span>
 				<div class="accordian-item-content">
 					<div class="line"></div>
 					<span class="number">3</span>
-					<h3>It's on its way!</h3>
-				    <p>Your wine is being delivered and will be with you shortly!</p>
+					<h3>Your bottle is en route to your chosen location.</h3>
+				    <p>Make sure you're available at <%= @order.address.postcode %> for the courier to deliver your bottle. </p><br />
+                      <p>Estimated delivery time: [from status update]</p> <br />
+
 				</div>
 			</li>
 		</ul>
