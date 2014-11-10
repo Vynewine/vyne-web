@@ -1,4 +1,5 @@
 class Wine < ActiveRecord::Base
+  acts_as_paranoid
 
   belongs_to :producer
   belongs_to :subregion

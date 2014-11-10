@@ -1,4 +1,6 @@
 class Warehouse < ActiveRecord::Base
+  acts_as_paranoid
+
   has_many :agendas, :dependent => :destroy
   belongs_to :address
   validates :title, :email, :phone, :address, :presence => true

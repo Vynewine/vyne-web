@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141106102504) do
+ActiveRecord::Schema.define(version: 20141110165529) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,8 +22,10 @@ ActiveRecord::Schema.define(version: 20141106102504) do
     t.string   "postcode"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
+  add_index "addresses", ["deleted_at"], name: "index_addresses_on_deleted_at", using: :btree
   add_index "addresses", ["detail"], name: "index_addresses_on_detail", using: :btree
   add_index "addresses", ["postcode"], name: "index_addresses_on_postcode", using: :btree
 
@@ -32,9 +34,11 @@ ActiveRecord::Schema.define(version: 20141106102504) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
   add_index "addresses_users", ["address_id"], name: "index_addresses_users_on_address_id", using: :btree
+  add_index "addresses_users", ["deleted_at"], name: "index_addresses_users_on_deleted_at", using: :btree
   add_index "addresses_users", ["user_id"], name: "index_addresses_users_on_user_id", using: :btree
 
   create_table "agendas", force: true do |t|
@@ -73,13 +77,19 @@ ActiveRecord::Schema.define(version: 20141106102504) do
     t.integer  "region_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
+
+  add_index "appellations", ["deleted_at"], name: "index_appellations_on_deleted_at", using: :btree
 
   create_table "bottlings", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
+
+  add_index "bottlings", ["deleted_at"], name: "index_bottlings_on_deleted_at", using: :btree
 
   create_table "categories", force: true do |t|
     t.string   "name"
@@ -89,7 +99,10 @@ ActiveRecord::Schema.define(version: 20141106102504) do
     t.text     "summary"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
+
+  add_index "categories", ["deleted_at"], name: "index_categories_on_deleted_at", using: :btree
 
   create_table "composition_grapes", force: true do |t|
     t.integer  "composition_id"
@@ -97,16 +110,21 @@ ActiveRecord::Schema.define(version: 20141106102504) do
     t.integer  "percentage"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
   add_index "composition_grapes", ["composition_id"], name: "index_composition_grapes_on_composition_id", using: :btree
+  add_index "composition_grapes", ["deleted_at"], name: "index_composition_grapes_on_deleted_at", using: :btree
   add_index "composition_grapes", ["grape_id"], name: "index_composition_grapes_on_grape_id", using: :btree
 
   create_table "compositions", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
+
+  add_index "compositions", ["deleted_at"], name: "index_compositions_on_deleted_at", using: :btree
 
   create_table "countries", force: true do |t|
     t.string   "name"
@@ -114,7 +132,10 @@ ActiveRecord::Schema.define(version: 20141106102504) do
     t.string   "alpha_3"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
+
+  add_index "countries", ["deleted_at"], name: "index_countries_on_deleted_at", using: :btree
 
   create_table "food_items", force: true do |t|
     t.integer  "order_item_id"
@@ -122,8 +143,10 @@ ActiveRecord::Schema.define(version: 20141106102504) do
     t.integer  "preparation_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
+  add_index "food_items", ["deleted_at"], name: "index_food_items_on_deleted_at", using: :btree
   add_index "food_items", ["food_id"], name: "index_food_items_on_food_id", using: :btree
   add_index "food_items", ["order_item_id"], name: "index_food_items_on_order_item_id", using: :btree
   add_index "food_items", ["preparation_id"], name: "index_food_items_on_preparation_id", using: :btree
@@ -133,7 +156,10 @@ ActiveRecord::Schema.define(version: 20141106102504) do
     t.integer  "parent"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
+
+  add_index "foods", ["deleted_at"], name: "index_foods_on_deleted_at", using: :btree
 
   create_table "foods_wines", id: false, force: true do |t|
     t.integer  "food_id",    null: false
@@ -149,7 +175,10 @@ ActiveRecord::Schema.define(version: 20141106102504) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
+
+  add_index "grapes", ["deleted_at"], name: "index_grapes_on_deleted_at", using: :btree
 
   create_table "inventories", force: true do |t|
     t.integer  "warehouse_id"
@@ -160,9 +189,11 @@ ActiveRecord::Schema.define(version: 20141106102504) do
     t.string   "vendor_sku"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
   add_index "inventories", ["category_id"], name: "index_inventories_on_category_id", using: :btree
+  add_index "inventories", ["deleted_at"], name: "index_inventories_on_deleted_at", using: :btree
   add_index "inventories", ["warehouse_id"], name: "index_inventories_on_warehouse_id", using: :btree
   add_index "inventories", ["wine_id"], name: "index_inventories_on_wine_id", using: :btree
 
@@ -172,8 +203,10 @@ ActiveRecord::Schema.define(version: 20141106102504) do
     t.text     "note"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
+  add_index "locales", ["deleted_at"], name: "index_locales_on_deleted_at", using: :btree
   add_index "locales", ["subregion_id"], name: "index_locales_on_subregion_id", using: :btree
 
   create_table "mailing_lists", force: true do |t|
@@ -181,22 +214,30 @@ ActiveRecord::Schema.define(version: 20141106102504) do
     t.string   "key"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
+
+  add_index "mailing_lists", ["deleted_at"], name: "index_mailing_lists_on_deleted_at", using: :btree
 
   create_table "maturations", force: true do |t|
     t.integer  "bottling_id"
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
   add_index "maturations", ["bottling_id"], name: "index_maturations_on_bottling_id", using: :btree
+  add_index "maturations", ["deleted_at"], name: "index_maturations_on_deleted_at", using: :btree
 
   create_table "occasions", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
+
+  add_index "occasions", ["deleted_at"], name: "index_occasions_on_deleted_at", using: :btree
 
   create_table "occasions_wines", id: false, force: true do |t|
     t.integer  "occasion_id", null: false
@@ -220,8 +261,10 @@ ActiveRecord::Schema.define(version: 20141106102504) do
     t.decimal  "price"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
+  add_index "order_items", ["deleted_at"], name: "index_order_items_on_deleted_at", using: :btree
   add_index "order_items", ["occasion_id"], name: "index_order_items_on_occasion_id", using: :btree
   add_index "order_items", ["order_id"], name: "index_order_items_on_order_id", using: :btree
   add_index "order_items", ["type_id"], name: "index_order_items_on_type_id", using: :btree
@@ -240,11 +283,13 @@ ActiveRecord::Schema.define(version: 20141106102504) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.json     "delivery_quote"
+    t.datetime "deleted_at"
   end
 
   add_index "orders", ["address_id"], name: "index_orders_on_address_id", using: :btree
   add_index "orders", ["advisor_id"], name: "index_orders_on_advisor_id", using: :btree
   add_index "orders", ["client_id"], name: "index_orders_on_client_id", using: :btree
+  add_index "orders", ["deleted_at"], name: "index_orders_on_deleted_at", using: :btree
   add_index "orders", ["payment_id"], name: "index_orders_on_payment_id", using: :btree
   add_index "orders", ["status_id"], name: "index_orders_on_status_id", using: :btree
   add_index "orders", ["warehouse_id"], name: "index_orders_on_warehouse_id", using: :btree
@@ -256,8 +301,10 @@ ActiveRecord::Schema.define(version: 20141106102504) do
     t.string   "stripe"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
+  add_index "payments", ["deleted_at"], name: "index_payments_on_deleted_at", using: :btree
   add_index "payments", ["number"], name: "index_payments_on_number", using: :btree
   add_index "payments", ["user_id"], name: "index_payments_on_user_id", using: :btree
 
@@ -265,7 +312,10 @@ ActiveRecord::Schema.define(version: 20141106102504) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
+
+  add_index "preparations", ["deleted_at"], name: "index_preparations_on_deleted_at", using: :btree
 
   create_table "producers", force: true do |t|
     t.string   "name"
@@ -273,18 +323,22 @@ ActiveRecord::Schema.define(version: 20141106102504) do
     t.text     "note"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
   add_index "producers", ["country_id"], name: "index_producers_on_country_id", using: :btree
+  add_index "producers", ["deleted_at"], name: "index_producers_on_deleted_at", using: :btree
 
   create_table "regions", force: true do |t|
     t.string   "name"
     t.integer  "country_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
   add_index "regions", ["country_id"], name: "index_regions_on_country_id", using: :btree
+  add_index "regions", ["deleted_at"], name: "index_regions_on_deleted_at", using: :btree
 
   create_table "roles", force: true do |t|
     t.string   "name"
@@ -292,8 +346,10 @@ ActiveRecord::Schema.define(version: 20141106102504) do
     t.string   "resource_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
+  add_index "roles", ["deleted_at"], name: "index_roles_on_deleted_at", using: :btree
   add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
   add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
 
@@ -301,15 +357,20 @@ ActiveRecord::Schema.define(version: 20141106102504) do
     t.string   "label"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
+
+  add_index "statuses", ["deleted_at"], name: "index_statuses_on_deleted_at", using: :btree
 
   create_table "subregions", force: true do |t|
     t.string   "name"
     t.integer  "region_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
+  add_index "subregions", ["deleted_at"], name: "index_subregions_on_deleted_at", using: :btree
   add_index "subregions", ["region_id"], name: "index_subregions_on_region_id", using: :btree
 
   create_table "subscribers", force: true do |t|
@@ -318,15 +379,20 @@ ActiveRecord::Schema.define(version: 20141106102504) do
     t.json     "info"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
+  add_index "subscribers", ["deleted_at"], name: "index_subscribers_on_deleted_at", using: :btree
   add_index "subscribers", ["mailing_list_id"], name: "index_subscribers_on_mailing_list_id", using: :btree
 
   create_table "types", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
+
+  add_index "types", ["deleted_at"], name: "index_types_on_deleted_at", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -347,9 +413,11 @@ ActiveRecord::Schema.define(version: 20141106102504) do
     t.integer  "address_id"
     t.boolean  "active"
     t.string   "code"
+    t.datetime "deleted_at"
   end
 
   add_index "users", ["address_id"], name: "index_users_on_address_id", using: :btree
+  add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
@@ -365,7 +433,10 @@ ActiveRecord::Schema.define(version: 20141106102504) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
+
+  add_index "vinifications", ["deleted_at"], name: "index_vinifications_on_deleted_at", using: :btree
 
   create_table "warehouses", force: true do |t|
     t.string   "title"
@@ -375,9 +446,11 @@ ActiveRecord::Schema.define(version: 20141106102504) do
     t.integer  "address_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
   add_index "warehouses", ["address_id"], name: "index_warehouses_on_address_id", using: :btree
+  add_index "warehouses", ["deleted_at"], name: "index_warehouses_on_deleted_at", using: :btree
 
   create_table "wines", force: true do |t|
     t.string   "name"
@@ -398,10 +471,12 @@ ActiveRecord::Schema.define(version: 20141106102504) do
     t.decimal  "bottle_size"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
   add_index "wines", ["appellation_id"], name: "index_wines_on_appellation_id", using: :btree
   add_index "wines", ["composition_id"], name: "index_wines_on_composition_id", using: :btree
+  add_index "wines", ["deleted_at"], name: "index_wines_on_deleted_at", using: :btree
   add_index "wines", ["locale_id"], name: "index_wines_on_locale_id", using: :btree
   add_index "wines", ["maturation_id"], name: "index_wines_on_maturation_id", using: :btree
   add_index "wines", ["name"], name: "index_wines_on_name", using: :btree

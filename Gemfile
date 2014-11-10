@@ -77,3 +77,6 @@ gem 'sentry-raven', :require => 'raven', :git => 'https://github.com/getsentry/r
 
 #Mailchimp
 gem 'mailchimp-api'
+
+#Prevent from permanently deleting records
+gem 'paranoia', '~> 2.0'
