@@ -1,44 +1,5 @@
-var updatePostcode = function(e){
-    var postcode = $(this).val();
-    // $buttonDone.attr('disabled','disabled');
-    // $buttonDone.addClass('disabled');
-    console.log('updating');
-    console.log($('#filterPostcodeMessage'));
-    if (postcode.length < 5) {
-        $('#filterPostcodeMessage').html('');
-    } else {
-        // console.log('postcode is ' + postcode);
-        var mapUtil = new MapUtility();
-        mapUtil.findCoordinatesAndExecute(postcode, function(coordinates) {
-            console.log('coordinates:', coordinates);
-            mapUtil.calculateDistancesForAllWarehouses(coordinates.lng, coordinates.lat, function(deliverable) {
-                console.log('delivers here?', deliverable);
-                if (deliverable) {
-                    $('#filterPostcodeMessage').removeClass('error');
-                    $('#filterPostcodeMessage').html("VYNE delivers to this area.");
-                    // $buttonDone.removeAttr('disabled');
-                    // $buttonDone.removeClass('disabled');
-                } else {
-                    $('#filterPostcodeMessage').addClass('error');
-                    $('#filterPostcodeMessage').html("VYNE does NOT deliver to this area!");
-                }
-                $('#filterPostcodeMessage').fadeIn();
-            });
-        },
-        function() {
-            console.error("Address error: unknown address");
-            $('#filterPostcodeMessage').html("Unknown address, please try again.");
-            $('#filterPostcodeMessage').fadeIn();
-        });
-        // Fails: SE3 9RQ
-        // Succeeds: W6 9HH
-        // Warehouse 1: SW65HU
-        // Warehouse 2: E62JT
-    }
-};
-
 $('#filterPostcode').keyup(function(e){
-    var postcode = $(this).val();
+    var postcode = $(this).val().toUpperCase().trim();
     var $feedback = $('#filterPostcodeMessage');
     var $addressList = $('#order-address');
     var $postcodeField = $('#addr-pc');
@@ -48,10 +9,7 @@ $('#filterPostcode').keyup(function(e){
     $postcodeField.val(postcode);
     $('#addr-pc-text').text(postcode);
     $postcodeField.keyup();
-    // updatePostcode();
 });
-
-$('.clientPostCode').keyup(updatePostcode);
 
 // Part 2: Order creation:
 
@@ -135,6 +93,20 @@ function CardUtilities() {}
         return 0;
     };
 
+var validatePostcode = function(postcode) {
+    var postcodeRegex = /((N1P|NW1W|SE1P|SW20|SW95|SW99|E1W|(A[BL]|B[ABDHLNRSTX]?|C[ABFHMORTVW]|D[ADEGHLNTY]|E[HNX]?|F[KY]|G[LUY]?|H[ADGPRSUX]|I[GMPV]|JE|K[ATWY]|L[ADELNSU]?|M[EKL]?|N[EGNPRW]?|O[LX]|P[AEHLOR]|R[GHM]|S[AEGKLMNOPRSTY]?|T[ADFNQRSW]|UB|W[ADFNRSV]|YO|ZE)[1-9]?[0-9]|((E|N|NW|SE|SW|W)1|EC[1-4]|WC[12])[A-HJKMNPR-Y]|(SW|W)([2-9]|[1-9][0-9])|EC[1-9][0-9])) [0-9][ABD-HJLNP-UW-Z]{2}/
+    return postcodeRegex.test(postcode);
+};
+
+$('#postcode-check').submit(function (event) {
+    event.preventDefault();
+    if(validatePostcode($('#filterPostcode').val().toUpperCase().trim())) {
+        this.submit();
+    } else {
+        $('#postcode-error').show();
+    }
+});
+
 $(document).ready(function(){
 
     /**
@@ -163,7 +135,7 @@ $(document).ready(function(){
      */
     $('#addr-pc').keyup(function(e){
 
-        var postcode = $(this).val().toUpperCase().replace(/[^A-Z0-9]/g, "");
+        var postcode = $(this).val().toUpperCase().trim();
 
         // Fields:
         var $street = $('#addr-st');
@@ -178,7 +150,7 @@ $(document).ready(function(){
         //Not available
         var $notavailable = $('.not-available');
 
-        if (postcode.length < 5) {
+        if (postcode.length < 6) {
             // Empty fields:
             $street.val('');
             $detail.val('');
@@ -190,6 +162,18 @@ $(document).ready(function(){
             $feedback.css({ 'display': 'none'});
             $('#use-postcode').css({ 'display': 'none'});
         } else {
+
+            var valid = validatePostcode(postcode);
+
+            $errorList = $('#postcode-errors');
+
+            if(!valid) {
+                $errorList.empty().show();
+                $errorList.append('<li>Not a valid postcode</li>');
+                return;
+            } else {
+                $errorList.empty().hide();
+            }
 
             var mapUtil = new MapUtility();
 
@@ -234,7 +218,7 @@ $(document).ready(function(){
 
                             var geocoder = new google.maps.Geocoder();
                             var latlng = new google.maps.LatLng(coordinates.lat, coordinates.lng);
-                            
+
                             /**
                              * Formats readable address and updates interface.
                              */
@@ -307,7 +291,7 @@ $(document).ready(function(){
     $('#order-address').change(function() {
         var value = $(this).val();
         var $addrFields = $('#new_delivery_address');
-        var initialPostCode = $('#addr-pc').val().toUpperCase().replace(/[^A-Z0-9]/g, "");
+        var initialPostCode = $('#addr-pc').val();
         if (parseInt(value) === -1) {
             $('#address-id').val(0);
             $addrFields.fadeIn();

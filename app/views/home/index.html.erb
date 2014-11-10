@@ -41,7 +41,8 @@
 
     <div class="check-availability">
         <div class="wrapper">
-            <form action="/shop/neworder" method="GET">
+          <span style="display:none;" id="postcode-error">Not a valid postcode</span>
+            <form action="/shop/neworder" id="postcode-check" method="GET">
                 <input type="text" id="filterPostcode" placeholder="Enter postcode" name="postcode" autocomplete="off"/>
                 <input type="submit" value="Check Availability" />
             </form>

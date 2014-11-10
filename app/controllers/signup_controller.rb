@@ -52,7 +52,7 @@ class SignupController < ApplicationController
 
       address.detail = params[:address_d]
       address.street = params[:address_s]
-      address.postcode = params[:address_p].gsub(/[\s|-]/, "").upcase
+      address.postcode = params[:address_p].upcase
 
     end
 

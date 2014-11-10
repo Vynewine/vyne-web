@@ -217,7 +217,7 @@ $(function () {
     try {
         var queryHash = getUrlVars();
         if (getUrlVars()["postcode"]) {
-            $('#filterPostcode').val(getUrlVars()["postcode"].replace('+', ' '));
+            $('#filterPostcode').val(getUrlVars()["postcode"].replace('+', ' ').toUpperCase().trim());
         } else {
             $('#initial-postcode-lookup').hide();
             $('#filterPostcode').show();
@@ -718,7 +718,7 @@ $(function () {
                     if (data.success) {
                         $('meta[name="csrf-token"]').last().prop("content", data.csrfToken);
                         $('input[name="authenticity_token"]').last().val(data.csrfToken);
-                        var initialPostCode = $('#filterPostcode').val().toUpperCase().replace(/[^A-Z0-9]/g, "");
+                        var initialPostCode = $('#filterPostcode').val();
                         var foundSavedAddress = false;
                         var $select = $('#order-address');
                         if (data.addresses && data.addresses.length > 0) {
@@ -892,7 +892,7 @@ $(function () {
     var verifyAddress = function () {
 
         if ($('#address-id').val() === 0 || $('#address-id').val() === '') {
-            var initialPostCode = $('#filterPostcode').val().toUpperCase().replace(/[^A-Z0-9]/g, "");
+            var initialPostCode = $('#filterPostcode').val();
 
             //Preselect existing address for logged-in users
             var existingAddresses = $('#order-address').find('option');
