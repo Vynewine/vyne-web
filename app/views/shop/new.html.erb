@@ -439,6 +439,8 @@
           <div><input type="text" id="pmcv" size="4"  placeholder="CVC" data-stripe="cvc" /></div>
           <div><input type="text" id="pmxp" size="5"  placeholder="MM/YY" /></div>
         </div>
+
+
         <!-- Hidden fields -->
         <input type="hidden" id="old-card" name="old_card" />
         <input type="hidden" id="new-card" name="new_card" />
@@ -449,6 +451,10 @@
         <div>
           <%= f.submit "Submit Order", :class => 'red-button' %>
         </div>
+        <div style="text-align: center;margin-top: 20px;">
+          <%= image_tag asset_path('icons/solid-light-stripe.png'), :alt => 'Powered by Stripe' %>
+        </div>
+
       </div>
 
     </div>

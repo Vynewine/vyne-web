@@ -3,6 +3,7 @@
   <div class="order-confirmation-overlay"></div>
 
   <div class="order-confirmation-content wrapper">
+
     <ul class="accordian">
       <li class="accordian-item
         <% if @order.status_id == 1 %> active
@@ -47,14 +48,32 @@
 
           <h3>Your bottle is en route to your chosen location.</h3>
 
-          <p>Make sure you're available at <%= @order.address.postcode %> for the courier to deliver your bottle. </p>
+          <p>Make sure you're available at <%= @order.address.postcode %> for the courier to deliver your
+            bottle. </p>
           <br/>
           <% unless @estimate.blank? %>
-              <p>Estimated delivery time: <%= Time.parse(@estimate).strftime("%H:%M") %></p> <br/>
+              <p>Estimated delivery time: <%= Time.parse(@estimate).strftime("%H:%M") %></p>
           <% end %>
         </div>
       </li>
+      <li class="accordian-item
+        <% if @order.status_id == 6 %> active
+        <% end %>">
+        <span class="accordian-item-link">4. Order Complete</span>
+
+        <div class="accordian-item-content">
+          <div class="line"></div>
+          <span class="number">4</span>
+
+          <h3>Your order has been delivered.</h3>
+            <br/>
+          <p>If you have any problems, get in touch via <br/><a href="https://vyne.zendesk.com/">Vyne Helpdesk</a></p>
+          <br/>
+        </div>
+      </li>
     </ul>
+
+
   </div>
 
 </div>
