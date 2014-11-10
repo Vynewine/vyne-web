@@ -1,43 +1,61 @@
 <div class="order-confirmation">
 
-	<div class="order-confirmation-overlay"></div>
+  <div class="order-confirmation-overlay"></div>
 
-	<div class="order-confirmation-content wrapper">
-		<ul class="accordian">
-			<li class="accordian-item<% if @order.status_id == 1 %> active<% end %>">
-				<div class="line"></div>
-					<span class="accordian-item-link">1. Order Placed</span>
-				<div class="accordian-item-content">
-					<div class="line"></div>
-					<span class="number">1</span>
-					<h3>Thanks for ordering</h3>
-				    <p>Our sommelier is now choosing your wine</p>
-				    <span>(Based on the preferences provided)</span>
-			    </div>
-			</li>
-			<li class="accordian-item<% if @order.status_id == 4 %> active<% end %>">
-				<span class="accordian-item-link">2. Courier picks up</span>
-				<div class="accordian-item-content">
-					<div class="line"></div>
-					<span class="number">2</span>
-					<h3>Courier en route to wine cellar</h3>
-				    <p>The courier is on the first leg of the journey: to the wine cellar. </p><br />
-                      <p>Check this page in 10-20 minutes to see if the bottle has been collected and on it's way to you.</p>
-				</div>
-			</li>
-			<li class="accordian-item<% if @order.status_id == 5 %> active<% end %>">
-				<span class="accordian-item-link">3. Your bottle is on it's way!</span>
-				<div class="accordian-item-content">
-					<div class="line"></div>
-					<span class="number">3</span>
-					<h3>Your bottle is en route to your chosen location.</h3>
-				    <p>Make sure you're available at <%= @order.address.postcode %> for the courier to deliver your bottle. </p><br />
-                      <p>Estimated delivery time: [from status update]</p> <br />
+  <div class="order-confirmation-content wrapper">
+    <ul class="accordian">
+      <li class="accordian-item
+        <% if @order.status_id == 1 %> active
+        <% end %>">
+        <div class="line"></div>
+        <span class="accordian-item-link">1. Order Placed</span>
 
-				</div>
-			</li>
-		</ul>
-	</div>
+        <div class="accordian-item-content">
+          <div class="line"></div>
+          <span class="number">1</span>
+
+          <h3>Thanks for ordering</h3>
+
+          <p>Our sommelier is now choosing your wine</p>
+          <span>(Based on the preferences provided)</span>
+        </div>
+      </li>
+      <li class="accordian-item
+        <% if @order.status_id == 4 %> active
+        <% end %>">
+        <span class="accordian-item-link">2. Courier picks up</span>
+
+        <div class="accordian-item-content">
+          <div class="line"></div>
+          <span class="number">2</span>
+
+          <h3>Courier en route to wine cellar</h3>
+
+          <p>The courier is on the first leg of the journey: to the wine cellar. </p><br/>
+
+          <p>Check this page in 10-20 minutes to see if the bottle has been collected and on it's way to you.</p>
+        </div>
+      </li>
+      <li class="accordian-item
+        <% if @order.status_id == 5 %> active
+        <% end %>">
+        <span class="accordian-item-link">3. Your bottle is on it's way!</span>
+
+        <div class="accordian-item-content">
+          <div class="line"></div>
+          <span class="number">3</span>
+
+          <h3>Your bottle is en route to your chosen location.</h3>
+
+          <p>Make sure you're available at <%= @order.address.postcode %> for the courier to deliver your bottle. </p>
+          <br/>
+          <% unless @estimate.blank? %>
+              <p>Estimated delivery time: <%= Time.parse(@estimate).strftime("%H:%M") %></p> <br/>
+          <% end %>
+        </div>
+      </li>
+    </ul>
+  </div>
 
 </div>
 
