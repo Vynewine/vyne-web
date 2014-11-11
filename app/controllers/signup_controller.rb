@@ -41,7 +41,7 @@ class SignupController < ApplicationController
 
     errors = []
 
-    if params[:new_address] == 'true'
+    if params[:new_address] == 'true' || params[:new_address].blank?
 
       if params[:address_s].blank?
         errors << 'Address can\'t be blank'
