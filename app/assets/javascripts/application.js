@@ -727,7 +727,7 @@ $(function () {
                             var addresses = data.addresses;
                             for (var i = 0; i < addresses.length; i++) {
                                 var address = addresses[i];
-                                var fullAddress = address.detail + ' ' + address.street + ' ' + address.postcode;
+                                var fullAddress = address.street + ' ' + address.postcode;
 
                                 if (address.postcode.match(initialPostCode) && address.postcode.match(initialPostCode).length > 0 && !foundSavedAddress) {
                                     $select.append('<option value=' + address.id + ' selected="selected">' + fullAddress + '</option>');
