@@ -51,6 +51,7 @@ class Admin::AdvisorsController < ApplicationController
   def choose
     @order = Order.find(params[:order])
     quotes = shutl_quotes(@order)
+    puts json: quotes
     @quotes = JSON.parse(quotes) # Hash obj
   end
 
@@ -266,6 +267,8 @@ class Admin::AdvisorsController < ApplicationController
     domain = Rails.application.config.shutl_url
 
     url = URI("#{domain}/quote_collections")
+
+    puts json: url
 
     basket_value = (order.total_cost * 100).to_i
 
