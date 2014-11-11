@@ -18,7 +18,7 @@ class ShopController < ApplicationController
 
   # GET /orders/list
   def list
-    @orders = Order.valid.user_id(current_user.id)
+    @orders = Order.user_id(current_user.id).order('id desc')
   end
 
   # GET /orders/1

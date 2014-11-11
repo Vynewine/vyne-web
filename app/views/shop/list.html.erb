@@ -1,29 +1,22 @@
-<div class="support-box order-box">
-    <div class="support-holder">
-        <h2>My Orders</h2>
-    </div>
-</div>
-<div class="support-block">
-    <p>Your previous wines</p>
-    <ul class="product-list additional">
-        <% @orders.each do |order| %>
-        <li class="active">
-            <div class="block">
-                <span class="type">Arboleda</span>
-                <a href="#" class="item"><%= order.wine.name %> <%= order.wine.vintage %></a>
-                <span class="country-holder">
-                    <span data-picture data-alt="image description">
-                        <!-- <span data-src="images/flag.png" ></span> -->
-                        <!-- <span data-src="images/flag-2x.png" data-media="(-webkit-min-device-pixel-ratio:1.5), (min-resolution:144dpi)" ></span> -->
-                      <%= image_tag "flags/#{order.wine.producer.country.alpha_2}.png", :alt => order.wine.producer.country.name %>
+<div class="wrapper" style="margin-top: 60px">
+  <p>Your previous wines</p>
+  <% @orders.each do |order| %>
+      <div>
+        <div style="font-size: 1.4rem;"><a href="/orders/<%= order.id %>">Id: <%= order.id %>
+          - <%= order.created_at.strftime("%Y %b %d, %H:%M") %></a>
+          <div>Status: <%= order.status.label %></div>
+          <% unless order.order_items.blank? %>
+              <div>Preferences:</div>
+              <% order.order_items.each_with_index do |item, index| %>
+                  <% unless item.preferences.blank? %>
+                      <div>Bottle <%= index + 1 %> - <%= item.preferences.to_sentence({:last_word_connector => ' and '}) %></div>
+                  <% end %>
+              <% end %>
+          <% end %>
 
-                    </span>
+        </div>
 
-                    <span class="country"><%= order.wine.producer.country.name %></span>
-                </span>
-            </div>
-            <!-- <div class="rating">4.0</div> -->
-        </li>
-        <% end %>
-    </ul>
+      </div>
+      <hr style=" border: none; height: 1px; background-color: #626262;"/>
+  <% end %>
 </div>

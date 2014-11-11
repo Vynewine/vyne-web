@@ -11,7 +11,6 @@ class Order < ActiveRecord::Base
 
   accepts_nested_attributes_for :address, :reject_if => :all_blank, :allow_destroy => true
 
-  scope :valid, -> { where.not(:wine_id => nil) }
   scope :user_id, ->(id) { where("client_id = ?", id) }
 
   def total_price
