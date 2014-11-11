@@ -16,27 +16,20 @@ class SignupControllerTest < ActionController::TestCase
   test 'Should create user' do
     post :create, :user => {
         :first_name => 'John',
-        :last_name => 'Doe',
         :email => 'test@vinz.com',
-        :mobile => '099999999999',
-        :password => 'password',
-        :password_confirmation => 'password'
+        :password => 'password'
     }
     assert_response :success
   end
 
-  test 'Should not create user with not matching passwords' do
+  test 'Should not create user with out password' do
     post :create, :user => {
         :first_name => 'John',
-        :last_name => 'Doe',
-        :email => 'test@vinz.com',
-        :mobile => '099999999999',
-        :password => 'password',
-        :password_confirmation => 'password_not_match'
+        :email => 'test@vinz.com'
     }
     assert_response 422
     body = JSON.parse(@response.body)
-    assert_equal("Password confirmation doesn't match Password", body["errors"][0], 'Password validation should fail')
+    assert_equal('Password is required.', body["errors"][0], 'Password validation should fail')
   end
 
   test 'Mobile is required' do
@@ -52,10 +45,12 @@ class SignupControllerTest < ActionController::TestCase
     sign_in(:user, new_user)
 
     post :address, {:address_s => 'Main Street',
-                    :address_p => 'N1 7RJ'}
+                    :address_p => 'N1 7RJ',
+                    :new_address => 'true'
+    }
     assert_response 422
     body = JSON.parse(@response.body)
-    puts body
+
     assert_equal('Mobile can\'t be blank', body["errors"][0], 'Mobile is required')
   end
 
@@ -73,11 +68,11 @@ class SignupControllerTest < ActionController::TestCase
 
     post :address, {:address_s => 'Main Street',
                     :address_p => 'N1 7RJ',
-                    :mobile => '999999'
+                    :mobile => '999999',
+                    :new_address => 'true'
     }
     assert_response 422
     body = JSON.parse(@response.body)
-    puts body
     assert_equal('Mobile number is not valid', body["errors"][0], 'Valid mobile is required')
   end
 
@@ -95,13 +90,15 @@ class SignupControllerTest < ActionController::TestCase
 
     post :address, {:address_s => 'Main Street',
                     :address_p => 'N1 7RJ',
-                    :mobile => '+44 077 1822 5201'}
+                    :mobile => '+44 077 1822 5201',
+                    :new_address => 'true'
+    }
 
     user = User.find(new_user.id)
 
     assert_response :success
     assert @response.body.include? 'Main Street'
-    assert_equal('N17RJ', user.addresses[0].postcode, 'User postcode not correct')
+    assert_equal('N1 7RJ', user.addresses[0].postcode, 'User postcode not correct')
     assert_equal('7718225201', user.mobile, 'User mobile is not correct')
   end
 
@@ -140,7 +137,7 @@ class SignupControllerTest < ActionController::TestCase
 
     assert_response :success
     assert @response.body.include? 'Main Street'
-    assert_equal('N27RJ', user.addresses[0].postcode, 'User postcode not correct')
+    assert_equal('N2 7RJ', user.addresses[0].postcode, 'User postcode not correct')
     assert_equal(1, user.addresses.count, 'User should have only one address')
     assert_equal('7218225201', user.mobile, 'User mobile is not correct')
 
@@ -170,7 +167,7 @@ class SignupControllerTest < ActionController::TestCase
     assert_equal('N17RJ', new_user.addresses[0].postcode, 'User postcode not correct')
 
     post :address, {
-        :address_s => 'Main Street',
+        :address_s => 'Main Street 2',
         :address_p => 'N2 7RJ',
         :mobile => '+44 072 1822 5201',
         :new_address => 'true'
@@ -178,11 +175,47 @@ class SignupControllerTest < ActionController::TestCase
 
     user = User.find(new_user.id)
 
+    new_address = user.addresses.select { |a| a.street == 'Main Street 2' }.first
+
     assert_response :success
-    assert @response.body.include? 'Main Street'
-    assert_equal('N27RJ', user.addresses[1].postcode, 'User postcode not correct')
+    assert @response.body.include? 'Main Street 2'
+    assert_equal('N2 7RJ', new_address.postcode, 'User postcode not correct')
     assert_equal(2, user.addresses.count, 'User should have only one address')
     assert_equal('7218225201', user.mobile, 'User mobile is not correct')
+
+  end
+
+  test 'Should use existing address' do
+    new_user = User.create!({
+                                :first_name => 'John',
+                                :last_name => 'Doe',
+                                :email => 'john@doe.vn',
+                                :password => 'password',
+                                :mobile => '7718225201'
+                            })
+
+    new_address = Address.create!({
+                                      :street => 'Street1',
+                                      :postcode => 'N1 7RJ'
+                                  })
+
+    AddressesUsers.create!({
+                               :user => new_user,
+                               :address => new_address
+                           })
+
+    sign_in(:user, new_user)
+
+    post :address, {
+        :address_id => new_address.id
+    }
+
+    user = User.find(new_user.id)
+
+    assert_equal(user.mobile, '7718225201')
+    assert_equal(user.first_name, 'John')
+    assert_equal(1, user.addresses.count, 'User should have only one address')
+    assert_equal('N1 7RJ', user.addresses[0].postcode, 'User should have only one address')
 
   end
 

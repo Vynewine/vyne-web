@@ -7,6 +7,11 @@ class SignupController < ApplicationController
   # POST /signup/create
   def create
 
+    if params[:user][:password].blank?
+      render :json => {:errors => ['Password is required.']}, :status => 422
+      return
+    end
+
     new_user = User.create(user_params)
 
     if new_user.save
@@ -36,7 +41,7 @@ class SignupController < ApplicationController
 
     errors = []
 
-    if params[:new_address] == 'true' || params[:new_address].blank?
+    if params[:new_address] == 'true'
 
       if params[:address_s].blank?
         errors << 'Address can\'t be blank'
@@ -50,23 +55,22 @@ class SignupController < ApplicationController
         errors << 'Mobile number is not valid'
       end
 
+      if errors.blank?
+        current_user.mobile = validate_uk_phone(params[:mobile])
+        unless current_user.save
+          render :json => {:errors => current_user.errors}, :status => 422
+          return
+        end
+
+      else
+        render :json => {:errors => errors}, :status => 422
+        return
+      end
+
       address.detail = params[:address_d]
       address.street = params[:address_s]
       address.postcode = params[:address_p].upcase
 
-    end
-
-
-    if errors.blank?
-      current_user.mobile = validate_uk_phone(params[:mobile])
-      unless current_user.save
-        render :json => {:errors => current_user.errors}, :status => 422
-        return
-      end
-
-    else
-      render :json => {:errors => errors}, :status => 422
-      return
     end
 
     if address.save
@@ -130,8 +134,6 @@ class SignupController < ApplicationController
     max_current_distance = Rails.application.config.max_delivery_distance
     we_deliver = false
     we_will_deliver = false
-
-    puts mim['mi']
 
     if mim != 0 && mim['mi'] <= max_current_distance
       we_deliver = true
