@@ -75,7 +75,7 @@ module WineImporter
                 :composition_id => row['composition_id']
             )
           else
-            puts 'Duplicate wine key found: ' + key + ' name: ' + existing_wine.name
+            puts 'Duplicate wine key found: ' + new_key + ' name: ' + existing_wine.name + ' - new wine name: ' + row['name']
             return
           end
         end
@@ -91,9 +91,13 @@ module WineImporter
     key.concat('c' + row['composition_id'])
     key.concat('-')
     key.concat(convert_producer_to_key_part(row['producer_id']))
-    key.concat('-')
-    key.concat(convert_region_to_key_part(row['region_id']))
 
+    region = convert_region_to_key_part(row['region_id'])
+
+    if region.length == 2
+      key.concat('-')
+      key.concat(region)
+    end
 
     subregion = convert_subregion_to_key_part(row['subregion_id'])
 

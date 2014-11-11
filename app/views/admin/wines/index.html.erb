@@ -5,6 +5,8 @@
 <table border="1" class="list-table">
   <thead>
     <tr>
+      <th>Id</th>
+      <th>Key</th>
       <th>Origin</th>
       <th>Name</th>
       <th>Vintage</th>
@@ -24,6 +26,8 @@
   <tbody>
     <% @wines.each do |wine| %>
       <tr>
+        <td><%= wine.id %></td>
+        <td><%= wine.wine_key %></td>
         <td>
           <%= image_tag "flags/#{wine.producer.country.alpha_2}.png", :alt => wine.producer.country.name %>
         </td>

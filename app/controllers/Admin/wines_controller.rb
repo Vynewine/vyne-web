@@ -7,7 +7,7 @@ class Admin::WinesController < ApplicationController
   # GET /wines
   # GET /wines.json
   def index
-    @wines = Wine.all.order(:name)
+    @wines = Wine.all.order(:id)
   end
 
   # GET /wines/1
