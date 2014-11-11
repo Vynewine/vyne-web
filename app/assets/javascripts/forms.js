@@ -283,7 +283,7 @@ $(document).ready(function(){
 
                     var currentHour = new Date().getHours();
 
-                    if(currentHour >= 9 && currentHour < 23) {
+                    if(currentHour >= 9 && currentHour <= 23) {
 
                         $slideable.removeClass('slideup');
 
