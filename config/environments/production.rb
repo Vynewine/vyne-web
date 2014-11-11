@@ -90,6 +90,8 @@ Rails.application.configure do
   #Stripe
   config.stripe_key = ENV['STRIPE_KEY']
 
+  config.stripe_key_publishable = ENV['STRIPE_KEY_PUBLISHABLE']
+
   #Shutl
   config.shutl_url = ENV['SHUTL_URL']
 

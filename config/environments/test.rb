@@ -45,7 +45,9 @@ Rails.application.configure do
   config.mandrill = 'ipcLBLgQRHya2q3jvpPQsw'
 
   #Stripe
-  config.stripe_key = 'sk_test_BQokikJOvBiI2HlWgH4olfQ2'
+  config.stripe_key = 'sk_test_AtBOn3YHMmRXJgn0TT9x98Y2'
+
+  config.stripe_key_publishable = 'pk_test_2uUf7eQJy5mj038BJFUtxJfF'
 
   #Shutl
   config.shutl_url = 'https://sandbox-v2.shutl.co.uk'

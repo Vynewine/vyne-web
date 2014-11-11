@@ -76,13 +76,19 @@ class Admin::AdvisorsController < ApplicationController
     #1 Charge Card
 
     payment_data = order.payment
-    stripe_token = payment_data.stripe
+    stripe_card_id = payment_data.stripe_card_id
+    stripe_customer_id = payment_data.user.stripe_id
     value = (order.total_price * 100).to_i
 
     if order.status_id != 2
-      charge_details = charge_card(value, stripe_token)
+      charge_details = charge_card(value, stripe_card_id, stripe_customer_id)
+
       if charge_details.paid
         order.status_id = 2 # paid
+      end
+
+      unless charge_details.id.blank?
+        order.charge_id = charge_details.id
       end
     end
 
@@ -239,13 +245,14 @@ class Admin::AdvisorsController < ApplicationController
   private
 
   #TODO: Capture Response Here!!!!
-  def charge_card(value, stripe_token)
+  def charge_card(value, stripe_card_id, stripe_customer_id)
     puts 'Charging card'
     Stripe.api_key = Rails.application.config.stripe_key
     Stripe::Charge.create(
       :amount   => value, 
       :currency => 'gbp',
-      :customer => stripe_token
+      :customer => stripe_customer_id,
+      :card => stripe_card_id
     )
   end
 

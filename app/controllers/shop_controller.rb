@@ -71,17 +71,27 @@ class ShopController < ApplicationController
       # Get the credit card details submitted by the form
       token = params[:stripeToken]
 
-      # Create a Customer
-      customer = Stripe::Customer.create(
-          :card => token,
-          :description => current_user.email
-      )
-      puts json: customer
+      # Create Stripe Customer if not created
+      if current_user.stripe_id.blank?
+        customer = Stripe::Customer.create(
+            :description => 'Client Id: ' + @order.client.id.to_s,
+            :email => current_user.email
+        )
+        current_user.stripe_id = customer.id
+
+        #TODO: Handle bad save here.
+        current_user.save
+      else
+        customer = Stripe::Customer.retrieve(current_user.stripe_id)
+      end
+
+      card = customer.cards.create(:card => token)
+
       payment = Payment.new
       payment.user = current_user
       payment.brand = params[:new_brand]
       payment.number = params[:new_card]
-      payment.stripe = customer.id
+      payment.stripe_card_id = card.id
     else
       payment = Payment.find_by(:id => cardId, :user => current_user)
     end
