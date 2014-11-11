@@ -40,5 +40,8 @@ class HomeController < ApplicationController
     @warehouses = Warehouse.all
   end
 
+  def terms
+
+  end
 
 end

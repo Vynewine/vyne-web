@@ -375,7 +375,6 @@ class Admin::AdvisorsController < ApplicationController
     }
 
     req = Net::HTTP::Post.new(url, headers)
-    # req.form_data = params
     req.body = params.to_json
     res = Net::HTTP::start(url.hostname, url.port, :use_ssl => url.scheme == 'https' ) {|http|
       http.request(req)

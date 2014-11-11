@@ -4,7 +4,6 @@ class Warehouse < ActiveRecord::Base
   has_many :agendas, :dependent => :destroy
   belongs_to :address
   validates :title, :email, :phone, :address, :presence => true
-  validates_presence_of :shutl, :message => "Shutl server responded with an error. Please try again."
   accepts_nested_attributes_for :address, :reject_if => :all_blank, :allow_destroy => true
   accepts_nested_attributes_for :agendas, :reject_if => :all_blank, :allow_destroy => true
   after_create :set_default_agenda

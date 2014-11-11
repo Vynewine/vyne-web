@@ -1,4 +1,5 @@
 class Admin::OrdersController < ApplicationController
+  include ShutlHelper
   layout "admin"
   before_action :authenticate_user!
   authorize_actions_for SupplierAuthorizer # Triggers user check
@@ -94,6 +95,33 @@ class Admin::OrdersController < ApplicationController
     respond_to do |format|
       format.html { redirect_to admin_orders_url, notice: 'Order was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def cancel
+    @order = Order.find(params[:order_id])
+
+    #Refund any charges associated with the order
+    unless @order.charge_id.blank?
+      stripe_charge = @order.charge_id
+      Stripe.api_key = Rails.application.config.stripe_key
+      charge = Stripe::Charge.retrieve(stripe_charge)
+      refund = charge.refunds.create
+      @order.refund_id = refund.id
+    end
+
+    #Cancel Shutl delivery if already booked
+    unless @order.delivery_token.blank?
+      cancel_booking(@order.delivery_token)
+    end
+
+    @order.status_id = 7
+
+    #TODO Handle save errors
+    @order.save
+
+    respond_to do |format|
+      format.html { redirect_to [:admin, @order], notice: 'Order was successfully cancelled.' }
     end
   end
 

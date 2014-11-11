@@ -31,6 +31,9 @@ Rails.application.routes.draw do
   # get 'orders/list' => 'orders#list'
   # get 'orders/confirmed' => 'orders#confirmed'
 
+  #T&C
+  get '/tc' => 'home#terms'
+
   # Hooks:
   post 'hooks/updateorder'
 
@@ -113,7 +116,9 @@ Rails.application.routes.draw do
     resources :users
     resources :addresses
     resources :warehouses
-    resources :orders
+    resources :orders do
+      post 'cancel'
+    end
     resources :payments
     resources :statuses
     resources :delivery

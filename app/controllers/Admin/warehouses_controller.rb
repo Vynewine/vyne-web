@@ -1,5 +1,4 @@
 class Admin::WarehousesController < ApplicationController
-  include ShutlHelper
   layout "admin"
   before_action :authenticate_user!
   authorize_actions_for SupplierAuthorizer # Triggers user check
@@ -32,7 +31,6 @@ class Admin::WarehousesController < ApplicationController
   # POST /warehouses.json
   def create
     @warehouse = Warehouse.new(warehouse_params)
-    @warehouse.shutl = add_warehouse_to_shutl(@warehouse)
 
     respond_to do |format|
       if @warehouse.save
@@ -48,14 +46,8 @@ class Admin::WarehousesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /warehouses/1
-  # PATCH/PUT /warehouses/1.json
   def update
-    # respond_to do |format|
       @warehouse.update_attributes(warehouse_params)
-      if update_shutl_warehouse(@warehouse) == false
-        redirect_to edit_admin_warehouse_url, :flash => { :notice => "Shutl did not update!" }
-      else
         respond_to do |format|
           if @warehouse.update(warehouse_params)
             format.html { redirect_to [:admin, @warehouse], notice: 'Warehouse was successfully updated.' }
@@ -65,8 +57,6 @@ class Admin::WarehousesController < ApplicationController
             format.json { render json: @warehouse.errors, status: :unprocessable_entity }
           end
         end
-      end
-    # end
   end
 
   # DELETE /warehouses/1

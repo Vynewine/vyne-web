@@ -32,10 +32,6 @@
     <%# f.number_field :address_id %>
     <%= f.fields_for :address do |a| %>
       <div class="field">
-        <%= a.label :detail %><br />
-        <%= a.text_field :detail %>
-      </div>
-      <div class="field">
         <%= a.label :street %><br />
         <%= a.text_field :street %>
       </div>

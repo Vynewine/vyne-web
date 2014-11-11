@@ -44,6 +44,13 @@
 </p>
 
 <p>
+  <strong>Payment:</strong>
+  <% unless @order.client.stripe_id.blank? %>
+  Stripe Customer: <%= @order.client.stripe_id %>
+  <% end %>
+</p>
+
+<p>
   <strong>Warehouses close to client:</strong>
 
   <ul>
@@ -168,3 +175,4 @@
 
 <%= link_to 'Edit', edit_admin_order_path(@order) %>
 <%= link_to 'Back', admin_orders_path %>
+<%= link_to 'Cancel', admin_order_cancel_path(@order), method: :post, data: { confirm: 'Are you sure? Payments will be refunded and Shutl will get cancelled.' } %>
