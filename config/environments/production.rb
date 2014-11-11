@@ -88,15 +88,15 @@ Rails.application.configure do
   config.mandrill = 'ipcLBLgQRHya2q3jvpPQsw'
 
   #Stripe
-  config.stripe_key = 'sk_test_BQokikJOvBiI2HlWgH4olfQ2'
+  config.stripe_key = ENV['STRIPE_KEY']
 
   #Shutl
-  config.shutl_url = 'https://sandbox-v2.shutl.co.uk'
+  config.shutl_url = ENV['SHUTL_URL']
 
-  config.shutl_id = 'HnnFB2UbMlBXdD9h4UzKVQ=='
+  config.shutl_id = ENV['SHUTL_ID']
   # "UOuPfVIAvP4BJWDmXdCiSw==" ??
 
-  config.shutl_secret = 'pKNKPPCejzviiPunGNhnJ95G1JdeAbOYbyAygqIXyfIe4lb73iIDKRqmeZmZWT+ORxTqwMP9PhscJAW7GFmz6A=='
+  config.shutl_secret = ENV['SHUTL_SECRET']
   # "DAiXY/UzTM14g6PAqAHDrm/ILwkJ3fT5mnh7aT15JiPI6YLz5GYN7qLtx4Yac60PFN+rZRuZuFyi0FExri3F6w==" ??
 
   #Segment IO
@@ -109,6 +109,6 @@ Rails.application.configure do
   config.mailchimp_key = '218800eead6b63a85a54db6df3eaedc4-us8'
 
   #Currrent Delivery Distance
-  config.max_delivery_distance = 3
+  config.max_delivery_distance = ENV['MAX_DELIVERY_DISTANCE'].to_f
 
 end
