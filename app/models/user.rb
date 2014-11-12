@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   acts_as_paranoid
 
-  has_many :orders, foreign_key: "client_id"
+  has_many :orders, foreign_key: 'client_id'
   has_many :payments
 
   has_and_belongs_to_many :addresses

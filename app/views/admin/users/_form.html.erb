@@ -32,9 +32,14 @@
       <%= f.text_field :mobile %> *
     </div>
     <div class="field">
-      <%= f.label :password %>
+      <%= f.label :stripe_id %>
       <br>
-      <%= f.password_field :password %> *
+      <%= f.text_field :stripe_id %>
+    </div>
+    <div class="field">
+      <%= f.label :password %> (only if you want to change it)
+      <br>
+      <%= f.password_field :password %>
     </div>
 
     <div class="field">

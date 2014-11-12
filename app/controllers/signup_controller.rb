@@ -12,6 +12,11 @@ class SignupController < ApplicationController
       return
     end
 
+    if params[:user][:password].length < 8
+      render :json => {:errors => ['8 Characters for Password are required.']}, :status => 422
+      return
+    end
+
     new_user = User.create(user_params)
 
     if new_user.save

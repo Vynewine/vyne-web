@@ -20,7 +20,13 @@
         <td><%= order.id %></td>
         <td><%= order.created_at %></td>
         <td><%= order.status.label %></td>
-        <td><%= order.client_id %> - <%= order.client.name %></td>
+        <td>
+          <% if order.client.blank? %>
+          <strong>Client deleted</strong>
+              <% else %>
+          <%= order.client_id %> - <%= order.client.name %>
+              <% end %>
+        </td>
         <td><%= order.address.postcode %></td>
         <td><%= order.warehouse ? order.warehouse.title : '' %></td>
         <td><%= order.advisor ? order.advisor.name : '' %></td>

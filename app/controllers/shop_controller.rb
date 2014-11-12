@@ -50,7 +50,7 @@ class ShopController < ApplicationController
   # POST /shop/create
   # POST /shop/create.json
   def create
-    logger.warn "Create order"
+    logger.warn 'Create order'
 
     # Creates order:
     @order = Order.new
@@ -163,6 +163,7 @@ class ShopController < ApplicationController
 
     respond_to do |format|
       first_time_ordered @order
+      order_notification @order
       format.html { redirect_to @order } #, notice: 'Order was successfully created.' }
       format.json { render :confirmed, status: :created, location: @order }
     end

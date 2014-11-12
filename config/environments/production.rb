@@ -113,4 +113,7 @@ Rails.application.configure do
   #Currrent Delivery Distance
   config.max_delivery_distance = ENV['MAX_DELIVERY_DISTANCE'].to_f
 
+  #Vyne order internal notification email
+  config.order_notification = ENV['ORDER_NOTIFICATION']
+
 end

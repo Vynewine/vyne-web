@@ -6,31 +6,36 @@
 </p>
 
 <p>
-  <strong>Client:</strong> Name: <%= @order.client.name %>, <strong>Mobile:</strong> <%= @order.client.mobile %>
+  <strong>Client:</strong>
+  <% if @order.client.blank? %>
+      <strong>Client Deleted</strong>
+  <% else %>
+      Name: <%= @order.client.name %>, <strong>Mobile:</strong> <%= @order.client.mobile %>
+  <% end %>
 </p>
 
 <p>
   <strong>Address:</strong>
   <% if @order.address %>
-  <%= @order.address.full %>
+      <%= @order.address.full %>
   <% end %>
 </p>
 
 <p>
   <strong>Warehouse:</strong>
   <% if @order.warehouse %>
-  <%= @order.warehouse_id == 0 ? " - " : @order.warehouse.title %>
+      <%= @order.warehouse_id == 0 ? " - " : @order.warehouse.title %>
   <% else %>
-  Not Selected
+      Not Selected
   <% end %>
 </p>
 
 <p>
   <strong>Advisor:</strong>
   <% if @order.advisor %>
-  <%= @order.advisor_id == 0 ? " - " : @order.advisor.name %>
+      <%= @order.advisor_id == 0 ? " - " : @order.advisor.name %>
   <% else %>
-  Not Advised
+      Not Advised
   <% end %>
 </p>
 
@@ -45,21 +50,21 @@
 
 <p>
   <strong>Payment:</strong>
-  <% unless @order.client.stripe_id.blank? %>
-  Stripe Customer: <%= @order.client.stripe_id %>
+  <% unless @order.client.blank? || @order.client.stripe_id.blank? %>
+      Stripe Customer: <%= @order.client.stripe_id %>
   <% end %>
 </p>
 
 <p>
   <strong>Warehouses close to client:</strong>
 
-  <ul>
-    <% @warehouses.each do |warehouse| %>
-        <li>
-          Id: <%= warehouse.id %>, Name: <%= warehouse.title %>, Address: <%= warehouse.address.full %>
-        </li>
-    <% end %>
-  </ul>
+<ul>
+  <% @warehouses.each do |warehouse| %>
+      <li>
+        Id: <%= warehouse.id %>, Name: <%= warehouse.title %>, Address: <%= warehouse.address.full %>
+      </li>
+  <% end %>
+</ul>
 </p>
 
 <p>
@@ -68,7 +73,7 @@
   <thead>
   <tr>
     <% if @order.status_id == 1 %>
-    <th>Advise</th>
+        <th>Advise</th>
     <% end %>
     <th>Customer Selection</th>
     <th>Quantity</th>
@@ -82,32 +87,35 @@
   <% @order.order_items.order(:id).each do |item| %>
       <tr>
         <% if @order.status_id == 1 %>
-        <td>
-          <a href="/admin/advise/item/<%= item.id %>">
-          <%= item.wine.nil? ? 'Advise' : 'Advised' %></a>
-        </td>
+            <td>
+              <a href="/admin/advise/item/<%= item.id %>">
+                <%= item.wine.nil? ? 'Advise' : 'Advised' %></a>
+            </td>
         <% end %>
         <td>
           <% unless item.food_items.blank? %>
               <p><strong>Food</strong></p>
               <ul>
                 <% item.food_items.each do |food_item| %>
-                    <li><%= food_item.food.name + (food_item.preparation.blank? ? '' : ' (' + food_item.preparation.name + ')' ) %> </li>
+                    <li><%= food_item.food.name + (food_item.preparation.blank? ? '' : ' (' + food_item.preparation.name + ')') %> </li>
                 <% end %>
               </ul>
           <% end %>
           <% unless item.occasion.blank? %>
               <p><strong>Occasion</strong></p>
+
               <p><%= item.occasion.name %></p>
           <% end %>
 
           <% unless item.type.blank? %>
               <p><strong>Wine Type</strong></p>
+
               <p><%= item.type.name %></p>
           <% end %>
 
           <% unless item.specific_wine.blank? %>
               <p><strong>Specific Wine</strong></p>
+
               <p><%= item.specific_wine %></p>
           <% end %>
         </td>
@@ -117,7 +125,7 @@
           <%= item.wine.nil? ? 'Not Selected' : item.wine.name %>
         </td>
         <td>
-           £<%= item.cost %>
+          £<%= item.cost %>
         </td>
         <td>
           £<%= item.price %>
@@ -128,27 +136,27 @@
 </table>
 <table>
   <tbody>
-    <tr>
-      <td>
-        <% if !(@order.order_items.map { |item| item.wine}).include?(nil) && @order.delivery_token.blank?%>
-            <form action="/admin/advise/choose" method="post">
-              <input type="hidden" name="order" value="<%= @order.id %>"/>
-              <%= hidden_field_tag(request_forgery_protection_token.to_s, form_authenticity_token) %>
-              <input type="submit" value="Schedule Delivery" class="buttonStyle" />
-            </form>
-        <% end %>
-      </td>
-      <td>
-        <% unless @order.total_cost.nil? %>
-            <strong>Cost Total:</strong> £<%= @order.total_cost %>
-        <% end %>
-      </td>
-      <td>
-        <% unless @order.total_price.nil? %>
-            <strong>Price Total:</strong> £<%= @order.total_price %>
-        <% end %>
-      </td>
-    </tr>
+  <tr>
+    <td>
+      <% if !(@order.order_items.map { |item| item.wine }).include?(nil) && @order.delivery_token.blank? %>
+          <form action="/admin/advise/choose" method="post">
+            <input type="hidden" name="order" value="<%= @order.id %>"/>
+            <%= hidden_field_tag(request_forgery_protection_token.to_s, form_authenticity_token) %>
+            <input type="submit" value="Schedule Delivery" class="buttonStyle"/>
+          </form>
+      <% end %>
+    </td>
+    <td>
+      <% unless @order.total_cost.nil? %>
+          <strong>Cost Total:</strong> £<%= @order.total_cost %>
+      <% end %>
+    </td>
+    <td>
+      <% unless @order.total_price.nil? %>
+          <strong>Price Total:</strong> £<%= @order.total_price %>
+      <% end %>
+    </td>
+  </tr>
   </tbody>
 </table>
 
@@ -160,14 +168,14 @@
     <p>
       <strong>Delivery information: <a href="#" id="refresh-delivery" data-id="<%= @order.id %>">Refresh</a></strong>
     <pre id="delivery-status"><%= @order.delivery_status_json
-             .gsub(/["|\\]/, "")
-             .gsub(/[ ]*\{/, "\{<br /> ")
-             .gsub(/\[/, "\[<br /> ")
-             .gsub(/\}/, "<br />\}")
-             .gsub(/\]/, "<br />\]")
-             .gsub(/\,/, ",<br />")
-             .html_safe
-             # gsub(/["|\\]/, "").gsub(/[\{]/, "\{<br />").gsub(/[\,]/, ",<br />").html_safe
+                                  .gsub(/["|\\]/, "")
+                                  .gsub(/[ ]*\{/, "\{<br /> ")
+                                  .gsub(/\[/, "\[<br /> ")
+                                  .gsub(/\}/, "<br />\}")
+                                  .gsub(/\]/, "<br />\]")
+                                  .gsub(/\,/, ",<br />")
+                                  .html_safe
+                                  # gsub(/["|\\]/, "").gsub(/[\{]/, "\{<br />").gsub(/[\,]/, ",<br />").html_safe
     %></pre>
     </p>
 <% end %>
@@ -175,4 +183,7 @@
 
 <%= link_to 'Edit', edit_admin_order_path(@order) %>
 <%= link_to 'Back', admin_orders_path %>
-<%= link_to 'Cancel', admin_order_cancel_path(@order), method: :post, data: { confirm: 'Are you sure? Payments will be refunded and Shutl will get cancelled.' } %>
+<%= link_to 'Cancel', admin_order_cancel_path(@order), method: :post, data: {confirm: 'Are you sure? Payments will be refunded and Shutl will get cancelled.'} %>
+<%= link_to admin_order_path(@order), method: :delete, data: {confirm: 'Are you sure?'} do %>
+    <i class="flaticon stroke trash-2"></i>
+<% end %>

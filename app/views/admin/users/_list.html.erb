@@ -1,117 +1,59 @@
-<h1>Listing users</h1>
+<h1>Users</h1>
 
-<%
-limboUsers = []
-@users.each do |user|
-  if user.roles.empty?
-    limboUsers.push user
-  end
-end
-%>
-<% if limboUsers.count > 0 %>
-<h2>Limbo! These users have no role!!!</h2>
-  <table border="1" class="list-table">
-    <thead>
-      <tr>
-        <th>Id</th>
-        <th>E-mail</th>
-        <th>Name</th>
-        <th>Mobile</th>
-        <th>Postcode</th>
+<table border="1" class="list-table">
+  <thead>
+  <tr>
+    <th>Id</th>
+    <th>E-mail</th>
+    <th>Name</th>
+    <th>Mobile</th>
+    <th>Stripe Id</th>
+    <th>Roles</th>
+    <% unless params[:show_deleted] %>
         <th colspan="3"></th>
-      </tr>
-    </thead>
+    <% end %>
+  </tr>
+  </thead>
 
-    <tbody>
-      <% limboUsers.each do |user| %>
-        <tr>
-          <td><%= user.id %></td>
-          <td><%= user.email %></td>
-          <td><%= user.name %></td>
-          <td><%= user.mobile %></td>
-          <td>
-            -
-          </td>
-          <td class="button-wrapper">
-            <%= link_to admin_user_path(user) do %>
-              <i class="flaticon stroke zoom-1"></i>
-            <% end %>
-          </td>
-          <td class="button-wrapper">
-            <%= link_to edit_admin_user_path(user) do %>
-              <i class="flaticon stroke pencil-2"></i>
-            <% end %>
-          </td>
-          <td class="button-wrapper">
-            <%= link_to admin_user_path(user), method: :delete, data: { confirm: 'Are you sure?' } do %>
-              <i class="flaticon stroke trash-2"></i>
-            <% end %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <hr />
-<% end %>
-
-
-<% @roles.each do |role| %>
-<%
-if role == "superadmin"
-  unless current_user.has_role?(:superadmin)
-    next
-  end
-end
-%>
-
-  <h2><%= role.name.capitalize %> users</h2>
-<% if role.users.count > 0 %>
-  <table border="1" class="list-table">
-    <thead>
+  <tbody>
+  <% @users.each do |user| %>
       <tr>
-        <th>Id</th>
-        <th>E-mail</th>
-        <th>Name</th>
-        <th>Mobile</th>
-        <th>Postcode</th>
-        <th colspan="3"></th>
+        <td><%= user.id %></td>
+        <td><%= user.email %></td>
+        <td><%= user.name %></td>
+        <td><%= user.mobile %></td>
+        <td><%= user.stripe_id %></td>
+        <td>
+          <% if user.roles.blank? %>
+              Limbo
+          <% else %>
+              <%= user.roles.map { |role| role.name }.join(',') %>
+          <% end %>
+        </td>
+        <% unless params[:show_deleted] %>
+            <td class="button-wrapper">
+              <%= link_to admin_user_path(user) do %>
+                  <i class="flaticon stroke zoom-1"></i>
+              <% end %>
+            </td>
+            <td class="button-wrapper">
+              <%= link_to edit_admin_user_path(user) do %>
+                  <i class="flaticon stroke pencil-2"></i>
+              <% end %>
+            </td>
+            <td class="button-wrapper">
+              <%= link_to admin_user_path(user), method: :delete, data: {confirm: 'Are you sure?'} do %>
+                  <i class="flaticon stroke trash-2"></i>
+              <% end %>
+            </td>
+        <% end %>
       </tr>
-    </thead>
-
-    <tbody>
-      <% role.users.each do |user| %>
-        <tr>
-          <td><%= user.id %></td>
-          <td><%= user.email %></td>
-          <td><%= user.name %></td>
-          <td><%= user.mobile %></td>
-          <td>
-            -
-          </td>
-          <td class="button-wrapper">
-            <%= link_to admin_user_path(user) do %>
-              <i class="flaticon stroke zoom-1"></i>
-            <% end %>
-          </td>
-          <td class="button-wrapper">
-            <%= link_to edit_admin_user_path(user) do %>
-              <i class="flaticon stroke pencil-2"></i>
-            <% end %>
-          </td>
-          <td class="button-wrapper">
-            <%= link_to admin_user_path(user), method: :delete, data: { confirm: 'Are you sure?' } do %>
-              <i class="flaticon stroke trash-2"></i>
-            <% end %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% end %>
-  <hr />
-<% end %>
-
+  <% end %>
+  </tbody>
+</table>
 
 <br>
 
 <%= link_to 'New User', new_admin_user_path %>
+
+<%= link_to 'Show Deleted Users', admin_users_url(:show_deleted => true) %>

@@ -72,4 +72,7 @@ Rails.application.configure do
   #Currrent Delivery Distance
   config.max_delivery_distance = 3
 
+  #Vyne order internal notification email
+  config.order_notification = 'jakub@vyne.london'
+
 end

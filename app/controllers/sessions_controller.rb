@@ -2,6 +2,7 @@ require 'json'
 
 class SessionsController < Devise::SessionsController
   def create
+    params[:user].merge!(remember_me: '1')
     resource = warden.authenticate!(:scope => resource_name, :recall => "#{controller_path}#failure")
     sign_in_and_redirect(resource_name, resource)
   end

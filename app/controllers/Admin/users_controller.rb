@@ -7,15 +7,18 @@ class Admin::UsersController < ApplicationController
   # GET /users
   # GET /users.json
   def index
-    @roles = Role.all
     if params[:s]
       @search = User.search do
-        fulltext "*#{params[:s]}*"
+        fulltext "#{params[:s]}"
       end
       @users = @search.results
     else
     # @admUsers = User.all.includes(:roles).where(id: [1,2])
-      @users = User.all
+      if params[:show_deleted]
+        @users = User.only_deleted.order(:id)
+      else
+        @users = User.all.order(:id)
+      end
     end
   end
 
@@ -56,7 +59,7 @@ class Admin::UsersController < ApplicationController
   def update
     # @roles = Role.all
     params[:user][:role_ids] ||= []
-
+    puts json: user_params
     respond_to do |format|
       if @user.update(user_params)
         format.html { redirect_to [:admin, @user], notice: 'User was successfully updated.' }
@@ -71,6 +74,23 @@ class Admin::UsersController < ApplicationController
   # DELETE /users/1
   # DELETE /users/1.json
   def destroy
+
+    if @user.has_role? :superadmin
+      respond_to do |format|
+        format.html { redirect_to admin_users_url, alert: 'Can\'t destroy superadmin users.' }
+        format.json { render json: 'Can\'t destroy superadmin users.', status: :unprocessable_entity }
+      end
+      return
+    end
+
+    @user.email = @user.email + '_deleted_' + @user.id.to_s
+    unless @user.save
+      respond_to do |format|
+        format.html { redirect_to admin_users_url, alert: @user.errors.full_messages().join(', ') }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
+      return
+    end
     @user.destroy
     respond_to do |format|
       format.html { redirect_to admin_users_url, notice: 'User was successfully destroyed.' }
@@ -95,6 +115,7 @@ class Admin::UsersController < ApplicationController
         :active,
         :code,
         :password,
+        :stripe_id,
         role_ids: [],
         addresses_attributes: [:id, :detail, :street, :postcode]
       )
