@@ -21,9 +21,9 @@
         <td><%= Time.parse(quote['delivery_finish']).strftime("%d/%m/%Y - %H:%M") %></td>
         <td><%= Time.parse(quote['valid_until']).strftime("%d/%m/%Y - %H:%M") %></td>
         <td><%= quote['vehicle'] %></td>
-        <td>£<%= '%.2f' % (quote['merchant_price']/100) %></td>
+        <td>£<%= (quote['merchant_price'].to_f / 100) %></td>
         <td data-id="<%= quote['id'] %>"
-            data-price="<%= '%.2f' % (quote['merchant_price']/100) %>"
+            data-price="<%= (quote['merchant_price'].to_f / 100) %>"
             data-vehicle="<%= quote['vehicle'] %>"
             data-pickup_start="<%= quote['pickup_start'] %>"
             data-pickup_finish="<%= quote['pickup_finish'] %>"
