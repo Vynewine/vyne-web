@@ -14,11 +14,6 @@
       <th>Sub-region</th>
       <th>Appellation</th>
       <th>Type</th>
-      <th>Grapes</th>
-      <th>Single estate</th>
-       <th>Alcohol</th>
-       <th>Note</th>
-       <th>Maturation</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -37,12 +32,6 @@
         <td><%= if wine.subregion.nil? then ' - ' else wine.subregion.name end %></td>
         <td><%= if wine.appellation.nil? then ' - ' else wine.appellation.name end %></td>
         <td><%= wine.type.name %></td>
-        <td><%= wine.composition.composition_grapes.map { |comp| comp.grape.name}.join(', ') %></td>
-
-        <td><%= wine.single_estate %></td>
-        <td><%= wine.alcohol %></td>
-        <td><%= wine.note %></td>
-        <td><%= if wine.maturation.nil? then ' - ' else wine.maturation.description end %></td>
 
         <td class="button-wrapper">
           <%= link_to admin_wine_path(wine) do %>

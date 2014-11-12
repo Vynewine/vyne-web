@@ -37,7 +37,7 @@ class HomeController < ApplicationController
   end
 
   def warehouses
-    @warehouses = Warehouse.all
+    @warehouses = Warehouse.where(:active => true)
   end
 
   def terms

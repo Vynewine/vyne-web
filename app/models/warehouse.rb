@@ -31,11 +31,8 @@ class Warehouse < ActiveRecord::Base
     end
   end
 
-  def shutl_id
-    n = title.gsub(/\s+/, "").upcase
-    d = created_at || Time.new
-    t = d.to_time.strftime("%H%M_%d%m%y")
-    "Warehouse_#{n}_#{t}"
+  def short_name
+      "#{title} (active: #{active})"
   end
 
 end

@@ -7,7 +7,7 @@ class Admin::WarehousesController < ApplicationController
   # GET /warehouses
   # GET /warehouses.json
   def index
-    @warehouses = Warehouse.all
+    @warehouses = Warehouse.all.order('active desc, id')
   end
 
   # GET /warehouses/1
@@ -81,6 +81,7 @@ class Admin::WarehousesController < ApplicationController
         :title,
         :email,
         :phone,
+        :active,
         address_attributes: [:id, :detail, :street, :postcode],
         agendas_attributes: [:id, :day, :opening, :closing]
       )

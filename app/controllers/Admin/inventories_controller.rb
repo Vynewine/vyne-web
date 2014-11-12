@@ -9,7 +9,16 @@ class Admin::InventoriesController < ApplicationController
   # GET /inventories
   # GET /inventories.json
   def index
-    @inventories = Inventory.joins(:warehouse, :wine).order('warehouses.title', 'wines.name')
+    @warehouses = Warehouse.all.order('active desc, id')
+    if params[:warehouse_id].blank?
+      @inventories = []
+    else
+      @inventories = Inventory
+      .joins(:warehouse, :wine)
+      .order('warehouses.title', 'wines.name')
+      .where(:warehouse_id => params[:warehouse_id])
+      @warehouse = Warehouse.find(params[:warehouse_id])
+    end
   end
 
   # GET /inventories/1
@@ -70,7 +79,7 @@ class Admin::InventoriesController < ApplicationController
   end
 
   def upload
-    @warehouses = Warehouse.all
+    @warehouses = Warehouse.all.order('active desc, id')
   end
 
   def import
@@ -104,7 +113,7 @@ class Admin::InventoriesController < ApplicationController
       return
     end
 
-    file_path = Rails.root.join('public', 'uploads', [Time.now.strftime('%Y-%m-%d-%H%M%S'),file_name].join('_'))
+    file_path = Rails.root.join('public', 'uploads', [Time.now.strftime('%Y-%m-%d-%H%M%S'), file_name].join('_'))
 
     File.open(file_path, 'wb') do |file|
       file.write(uploaded_file.read)
@@ -118,13 +127,13 @@ class Admin::InventoriesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_inventory
-      @inventory = Inventory.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_inventory
+    @inventory = Inventory.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def inventory_params
-      params.require(:inventory).permit(:warehouse_id, :wine_id, :quantity, :category_id)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def inventory_params
+    params.require(:inventory).permit(:warehouse_id, :wine_id, :quantity, :category_id)
+  end
 end
