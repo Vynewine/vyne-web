@@ -80,3 +80,6 @@ gem 'mailchimp-api'
 
 #Prevent from permanently deleting records
 gem 'paranoia', '~> 2.0'
+
+#Add some damn pagination yeah!
+gem 'will_paginate', '~> 3.0'

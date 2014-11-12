@@ -1,7 +1,14 @@
 <%= render :partial => "layouts/winemenu" %>
 
-<h1>Listing wines</h1>
-<%= link_to 'Upload', controller: 'wines', action: 'upload' %>
+<h1>Wines a.k.a. delicious!</h1>
+<table>
+  <tr>
+    <td style="vertical-align: bottom"><%= will_paginate @wines, :class => 'digg_pagination' %></td>
+    <td></td>
+  </tr>
+</table>
+
+
 <table border="1" class="list-table">
   <thead>
     <tr>
@@ -11,6 +18,7 @@
       <th>Name</th>
       <th>Vintage</th>
       <th>Producer</th>
+      <th>Region</th>
       <th>Sub-region</th>
       <th>Appellation</th>
       <th>Type</th>
@@ -29,6 +37,7 @@
         <td><%= wine.name %></td>
         <td><%= wine.vintage %></td>
         <td><%= if wine.producer.nil? then ' - ' else wine.producer.name end %></td>
+        <td><%= if wine.region.nil? then ' - ' else wine.region.name end %></td>
         <td><%= if wine.subregion.nil? then ' - ' else wine.subregion.name end %></td>
         <td><%= if wine.appellation.nil? then ' - ' else wine.appellation.name end %></td>
         <td><%= wine.type.name %></td>
@@ -56,3 +65,4 @@
 <br>
 
 <%= link_to 'New Wine', new_admin_wine_path %>
+<%= link_to 'Upload more wine!', { :controller => 'wines', :action => 'upload' }, :class => 'buttonStyle'  %>

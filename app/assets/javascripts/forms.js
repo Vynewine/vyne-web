@@ -281,9 +281,14 @@ $(document).ready(function(){
                         status: 'Delivery available'
                     });
 
-                    var currentHour = new Date().getHours();
+                    var storeOpeningTime = new Date('01/01/2000 09:00');
+                    var storeClosingTime = new Date('01/01/2000 20:30');
+                    var clientTime = new Date();
+                    clientTime.setFullYear(2000);
+                    clientTime.setMonth(0);
+                    clientTime.setDate(1);
 
-                    if(currentHour >= 9 && currentHour <= 23) {
+                    if(clientTime >= storeOpeningTime && clientTime <= storeClosingTime) {
 
                         $slideable.removeClass('slideup');
 
