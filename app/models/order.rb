@@ -21,7 +21,7 @@ class Order < ActiveRecord::Base
     end
   end
 
-  def total_cost
+  def total_wine_cost
     if (order_items.map { |item| item.cost }).include?(nil)
       nil
     else
@@ -29,10 +29,19 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def total_cost
+    cost = total_wine_cost
+    if cost.blank? || delivery_cost.blank?
+      nil
+    else
+      cost += delivery_cost
+    end
+  end
+
   def delivery_status_json
     d = delivery_status.to_s
     require 'pp'
-    PP.pp(d,'',80)
+    PP.pp(d, '', 80)
   end
 
 end

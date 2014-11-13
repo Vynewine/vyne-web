@@ -10,7 +10,8 @@
   <% if @order.client.blank? %>
       <strong>Client Deleted</strong>
   <% else %>
-      Name: <a href="/admin/users/<%= @order.client.id %>"><%= @order.client.name %></a>, <strong>Mobile:</strong> <%= @order.client.mobile %>
+      Name: <a href="/admin/users/<%= @order.client.id %>"><%= @order.client.name %></a>,
+      <strong>Mobile:</strong> <%= @order.client.mobile %>
   <% end %>
 </p>
 
@@ -42,23 +43,28 @@
 <p>
   <strong>Delivery token:</strong>
   <% if @order.delivery_token.blank? %>
-      Delivery not scheduled
+      <span style="color: red">Delivery not scheduled</span>
   <% else %>
       <%= @order.delivery_token %>
+  <% end %>
+  <% unless @order.delivery_cost.blank? %>
+      (£<%= @order.delivery_cost %>)
   <% end %>
 </p>
 
 <p>
   <strong>Payment:</strong>
   <% unless @order.client.blank? || @order.client.stripe_id.blank? %>
-      <div>Stripe Customer Id: <%= @order.client.stripe_id %></div>
-  <% end %>
-  <% unless @order.charge_id.blank? %>
-      <div>Stripe Charge Id: <%= @order.charge_id %></div>
-  <% end %>
-  <% unless @order.refund_id.blank? %>
-      <div>Stripe Refund Id: <%= @order.refund_id %></div>
-  <% end %>
+    <div>Stripe Customer Id: <%= @order.client.stripe_id %></div>
+<% end %>
+<% if @order.charge_id.blank? %>
+    <span style="color: red">Payment not processed</span>
+<% else %>
+    <div>Stripe Charge Id: <%= @order.charge_id %></div>
+<% end %>
+<% unless @order.refund_id.blank? %>
+    <div>Stripe Refund Id: <%= @order.refund_id %></div>
+<% end %>
 </p>
 
 <p>
@@ -144,18 +150,32 @@
   <tbody>
   <tr>
     <td>
-      <% if !(@order.order_items.map { |item| item.wine }).include?(nil) && @order.delivery_token.blank? %>
-          <%= link_to 'Schedule Delivery', admin_advise_choose_path(:order => @order.id), {:class => 'buttonStyle'} %>
+      <%# Allow to charge or schedule if orders is in pending (1) or payment failed (3) status and all wines are advised%>
+      <% if !(@order.order_items.map { |item| item.wine }).include?(nil) && [1, 3].include?(@order.status.id) %>
+          <%= link_to 'Charge Only', admin_order_charge_path(@order), {
+                  :class => 'buttonStyle',
+                  :method => :post,
+                  :data => {:confirm => 'Are you sure? This customer will be charged £' + @order.total_price.to_s}
+          } %>
+          <%= link_to 'Get Delivery Quotes', admin_advise_choose_path(:order => @order.id), {:class => 'buttonStyle'} %>
+      <% end %>
+      <% if [4,5,6].include?(@order.status.id) %>
+          <%= link_to 'Send Order Receipt', admin_order_send_receipt_path(@order), {
+                  :class => 'buttonStyle',
+                  :method => :post,
+                  :data => {:confirm => 'This will email order receipt to the client and a merchant.'}
+          } %>
       <% end %>
     </td>
     <td>
       <% unless @order.total_cost.nil? %>
-          <strong>Cost Total:</strong> £<%= @order.total_cost %>
+          <strong>Cost Total: </strong>£<%= @order.total_cost %> (wine: £<%= @order.total_wine_cost %>, delivery:
+          £<%= @order.delivery_cost %>)
       <% end %>
     </td>
     <td>
       <% unless @order.total_price.nil? %>
-          <strong>Price Total:</strong> £<%= @order.total_price %>
+          <strong>Customer Price Total:</strong> £<%= @order.total_price %>
       <% end %>
     </td>
   </tr>
@@ -165,10 +185,15 @@
 </p>
 
 
-<% if !@order.delivery_status.nil? %>
-
-    <p>
+<% unless @order.delivery_token.blank? %>
+    <div>
       <strong>Delivery information: <a href="#" id="refresh-delivery" data-id="<%= @order.id %>">Refresh</a></strong>
+    </div>
+<% end %>
+
+<% if !@order.delivery_status.nil? %>
+    <div>
+      <p>
     <pre id="delivery-status"><%= @order.delivery_status_json
                                   .gsub(/["|\\]/, "")
                                   .gsub(/[ ]*\{/, "\{<br /> ")
@@ -179,13 +204,11 @@
                                   .html_safe
                                   # gsub(/["|\\]/, "").gsub(/[\{]/, "\{<br />").gsub(/[\,]/, ",<br />").html_safe
     %></pre>
-    </p>
+      </p>
+    </div>
 <% end %>
 
 
 <%= link_to 'Edit', edit_admin_order_path(@order) %>
 <%= link_to 'Back', admin_orders_path %>
 <%= link_to 'Cancel', admin_order_cancel_path(@order), method: :post, data: {confirm: 'Are you sure? Payments will be refunded and Shutl will get cancelled.'} %>
-<%= link_to admin_order_path(@order), method: :delete, data: {confirm: 'Are you sure?'} do %>
-    <i class="flaticon stroke trash-2"></i>
-<% end %>

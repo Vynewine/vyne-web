@@ -4,10 +4,10 @@ one:
   user_id: 1
   brand: 1
   number: 1111
-  stripe: MyString
+  stripe_card_id: MyString
 
 two:
   user_id: 1
   brand: 1
   number: 1111
-  stripe: MyString
+  stripe_card_id: MyString

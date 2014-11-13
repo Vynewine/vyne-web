@@ -118,6 +118,8 @@ Rails.application.routes.draw do
     resources :warehouses
     resources :orders do
       post 'cancel'
+      post 'charge'
+      post 'send_receipt'
     end
     resources :payments
     resources :statuses

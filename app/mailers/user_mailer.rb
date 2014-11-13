@@ -239,8 +239,14 @@ module UserMailer
       end
 
       shutl_reference = order.delivery_token
-      pickup_start_time = Time.parse(order.delivery_quote['pickup_start']).strftime("%d/%m/%Y - %H:%M")
-      pickup_finish_time = Time.parse(order.delivery_quote['pickup_finish']).strftime("%d/%m/%Y - %H:%M")
+
+      pickup_start_time = 'unknown'
+      pickup_finish_time = 'unknown'
+      unless order.delivery_quote.blank?
+        pickup_start_time = Time.parse(order.delivery_quote['pickup_start']).strftime("%d/%m/%Y - %H:%M")
+        pickup_finish_time = Time.parse(order.delivery_quote['pickup_finish']).strftime("%d/%m/%Y - %H:%M")
+      end
+
 
       mandrill = Mandrill::API.new Rails.application.config.mandrill
       template_name = 'merchant-order-confirmation-5tmsmov1'

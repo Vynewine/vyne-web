@@ -47,7 +47,9 @@ Authority.configure do |config|
     :destroy  => 'delete',
     :import   => 'create',
     :upload   => 'create',
-    :cancel   => 'update'
+    :cancel   => 'update',
+    :charge   => 'create',
+    :send_receipt => 'update'
   }
 
   # ABILITIES

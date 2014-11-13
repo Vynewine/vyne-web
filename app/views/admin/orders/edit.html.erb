@@ -3,4 +3,7 @@
 <%= render 'form' %>
 
 <%= link_to 'Show', [:admin, @order] %>
-<%= link_to 'Back', admin_orders_path %>
+<%= link_to 'Back', admin_order_path(@order) %>
+<%= link_to admin_order_path(@order), method: :delete, data: {confirm: 'Are you sure?'} do %>
+    <i class="flaticon stroke trash-2"></i>
+<% end %>

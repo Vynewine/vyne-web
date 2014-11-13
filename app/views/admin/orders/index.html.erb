@@ -3,22 +3,27 @@
 <table border="1" class="list-table">
   <thead>
     <tr>
+      <th></th>
       <th>Id</th>
-      <th>Created</th>
       <th>Status</th>
       <th>Client</th>
       <th>Address</th>
-      <th>Warehouse</th>
+      <th>Created</th>
       <th>Advisor</th>
-      <th colspan="2"></th>
+
     </tr>
   </thead>
 
   <tbody>
     <% @orders.each do |order| %>
       <tr class="order <%= order.status.label.gsub( " ", "_" ) %>">
+        <td class="button-wrapper">
+          <%= link_to admin_order_path(order) do %>
+              <i class="flaticon stroke zoom-1"></i>
+          <% end %>
+        </td>
         <td><%= order.id %></td>
-        <td><%= order.created_at %></td>
+
         <td><%= order.status.label %></td>
         <td>
           <% if order.client.blank? %>
@@ -28,18 +33,9 @@
               <% end %>
         </td>
         <td><%= order.address.postcode %></td>
-        <td><%= order.warehouse ? order.warehouse.title : '' %></td>
+        <td><%= order.created_at %></td>
         <td><%= order.advisor ? order.advisor.name : '' %></td>
-        <td class="button-wrapper">
-          <%= link_to admin_order_path(order) do %>
-            <i class="flaticon stroke zoom-1"></i>
-          <% end %>
-        </td>
-        <td class="button-wrapper">
-          <%= link_to edit_admin_order_path(order) do %>
-            <i class="flaticon stroke pencil-2"></i>
-          <% end %>
-        </td>
+
 
       </tr>
     <% end %>

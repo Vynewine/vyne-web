@@ -1,6 +1,9 @@
 class Admin::OrdersController < ApplicationController
   include ShutlHelper
-  layout "admin"
+  include StripeHelper
+  include UserMailer
+
+  layout 'admin'
   before_action :authenticate_user!
   authorize_actions_for SupplierAuthorizer # Triggers user check
   before_action :set_order, only: [:show, :edit, :update, :destroy]
@@ -17,7 +20,7 @@ class Admin::OrdersController < ApplicationController
     puts '--------------------------'
     logger.warn "Orders request"
 
-    puts PP.pp(params[:status],'',80)
+    puts PP.pp(params[:status], '', 80)
 
     @orders = Order.where(:status => params[:status])
 
@@ -29,7 +32,7 @@ class Admin::OrdersController < ApplicationController
   # GET /orders/1
   # GET /orders/1.json
   def show
-    @warehouses = Warehouse.find(@order.information['warehouses'].map { |warehouse| warehouse['id']})
+    @warehouses = Warehouse.find(@order.information['warehouses'].map { |warehouse| warehouse['id'] })
   end
 
   # GET /orders/new
@@ -47,7 +50,7 @@ class Admin::OrdersController < ApplicationController
 
   # GET /orders/1/edit
   def edit
-    @statuses = Status.all
+    @statuses = Status.all.order(:id)
   end
 
   # POST /orders
@@ -127,15 +130,40 @@ class Admin::OrdersController < ApplicationController
     end
   end
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_order
-      @order = Order.find(params[:id])
+  def charge
+    @order = Order.find(params[:order_id])
+    results = StripeHelper.charge(@order)
+    if results
+      respond_to do |format|
+        format.html { redirect_to [:admin, @order], notice: 'Order was successfully charged.' }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to [:admin, @order], alert: @order.errors.full_messages().join(', ') }
+      end
+    end
+  end
+
+  def send_receipt
+    @order = Order.find(params[:order_id])
+    order_receipt(@order)
+    merchant_order_confirmation(@order)
+
+    respond_to do |format|
+      format.html { redirect_to [:admin, @order], notice: 'Receipt for order sent successfully' }
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def order_params
-      params.require(:order).permit(
+  end
+
+  private
+  # Use callbacks to share common setup or constraints between actions.
+  def set_order
+    @order = Order.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def order_params
+    params.require(:order).permit(
         :status_id,
         :client_id,
         :address_id,
@@ -147,7 +175,8 @@ class Admin::OrdersController < ApplicationController
         :delivery_token,
         :information,
         :delivery_status,
+        :delivery_cost,
         address_attributes: [:id, :detail, :street, :postcode]
-      )
-    end
+    )
+  end
 end
