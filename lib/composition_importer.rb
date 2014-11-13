@@ -1,5 +1,5 @@
 module CompositionImporter
-  def import_data(file_part, columns)
+  def import_compositions(file_part, columns)
 
     results = process_file(file_part)
 

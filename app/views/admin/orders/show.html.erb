@@ -1,8 +1,8 @@
-<p id="notice"><%= notice %></p>
-
 <p>
   <strong>Status:</strong>
-  <%= @order.status.label %>
+  <%= @order.status.label.capitalize %>
+  <strong>Created:</strong>
+  <%= @order.created_at %>
 </p>
 
 <p>
@@ -10,7 +10,7 @@
   <% if @order.client.blank? %>
       <strong>Client Deleted</strong>
   <% else %>
-      Name: <%= @order.client.name %>, <strong>Mobile:</strong> <%= @order.client.mobile %>
+      Name: <a href="/admin/users/<%= @order.client.id %>"><%= @order.client.name %></a>, <strong>Mobile:</strong> <%= @order.client.mobile %>
   <% end %>
 </p>
 
@@ -51,7 +51,13 @@
 <p>
   <strong>Payment:</strong>
   <% unless @order.client.blank? || @order.client.stripe_id.blank? %>
-      Stripe Customer: <%= @order.client.stripe_id %>
+      <div>Stripe Customer Id: <%= @order.client.stripe_id %></div>
+  <% end %>
+  <% unless @order.charge_id.blank? %>
+      <div>Stripe Charge Id: <%= @order.charge_id %></div>
+  <% end %>
+  <% unless @order.refund_id.blank? %>
+      <div>Stripe Refund Id: <%= @order.refund_id %></div>
   <% end %>
 </p>
 
@@ -139,11 +145,7 @@
   <tr>
     <td>
       <% if !(@order.order_items.map { |item| item.wine }).include?(nil) && @order.delivery_token.blank? %>
-          <form action="/admin/advise/choose" method="post">
-            <input type="hidden" name="order" value="<%= @order.id %>"/>
-            <%= hidden_field_tag(request_forgery_protection_token.to_s, form_authenticity_token) %>
-            <input type="submit" value="Schedule Delivery" class="buttonStyle"/>
-          </form>
+          <%= link_to 'Schedule Delivery', admin_advise_choose_path(:order => @order.id), {:class => 'buttonStyle'} %>
       <% end %>
     </td>
     <td>

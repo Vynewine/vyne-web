@@ -26,11 +26,11 @@
 
 <p>
   <strong>Addresses:</strong>
-  <ul>
-<% @user.addresses.each do |address| %>
-    <li><%= address.postcode %></li>
-<% end %>
-  </ul>
+<ul>
+  <% @user.addresses.each do |address| %>
+      <li><%= address.postcode %></li>
+  <% end %>
+</ul>
 </p>
 
 <p>
@@ -40,7 +40,33 @@
 
 <p>
   <strong>Stripe Id:</strong>
-  <%= @user.stripe_id%>
+  <%= @user.stripe_id %>
+</p>
+
+<p>
+  <strong>
+    Stripe Cards:
+  </strong>
+  <% unless @user.payments.blank? %>
+    <table border="1" class="list-table">
+      <thead>
+      <tr>
+        <th>Stripe Id</th>
+        <th>Last 4</th>
+        <th>Create Date</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @user.payments.each do |payment| %>
+          <tr>
+            <td><%= payment.stripe_card_id %></td>
+            <td><%= payment.number %></td>
+            <td><%= payment.created_at.strftime("%Y %b %d - %H:%M") %></td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+<% end %>
 </p>
 
 <%= link_to 'Edit', edit_admin_user_path(@user) %>

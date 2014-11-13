@@ -31,11 +31,11 @@ class ShopController < ApplicationController
     puts params[:controller]
     # current_user.has_role?(:superadmin)
     @order = Order.new
-    @categories = Category.all
-    @foods = Food.all
-    @occasions = Occasion.all
-    @types = Type.all
-    @preparations = Preparation.all
+    @categories = Category.all.order(:id)
+    @foods = Food.all.order(:id)
+    @occasions = Occasion.all.order(:id)
+    @types = Type.all.order(:id)
+    @preparations = Preparation.all.order(:id)
     logger.warn "New order"
   end
 

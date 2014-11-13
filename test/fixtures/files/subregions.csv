@@ -1,0 +1,84 @@
+subregion_id,name,region_id
+1,Cima Corgo,1
+2,Coonawara,5
+3,Barolo ,7
+4,Salento ,9
+5,Alba,7
+6,Morellino di Scansano.,11
+7,Colli Orientali,12
+8,Côte de Nuits ,13
+9,Stellenbosch,14
+10,Worcester,15
+11,Wairau Valley,16
+12,St Hilare d'Ozilhan,17
+13,Gavi ,7
+14,Chablis,13
+15,Tarcal,19
+16,Rivadavia,20
+17,Bouzy,4
+18,Asti,7
+19,Hautes-Côtes de Nuits,13
+20,Touraine,21
+21,Treviso,22
+22,Roschtiz,2
+23,Northern Sonoma,23
+24,Rioja Alavesa,25
+25,Côte de Beaune,13
+26,Baja Montaña,26
+27,Sancerre,21
+28,Willamette Valley,28
+29,Ribeauville ,18
+30,Beaujolais,13
+31,Châteauneuf-du-Pape,17
+32,Chianti ,11
+33,Sauternes and Barsac,31
+34,Jerez,32
+35,Muscadet Sèvre-et-Maine,21
+36,Vouvray and Montlouis-sur-Loire,21
+37,Samur ,21
+38,St-Chinain,27
+39,Chinon,21
+40,Anjou,21
+41,Pouilly-Fumé,21
+42,Nîmes,17
+43,Côte Chalonnaise,13
+44,Mâconnais,13
+45,Blaye,31
+46,Elgin,36
+47,Collioure,38
+48,Neusiedlersee,39
+49,Epernay,4
+50,Central Mendoza,20
+51,Margaret River,40
+52,St-Émillion satellites,31
+53,Guadalupe Valley,41
+54,Soave ,24
+55,Curicó,44
+56,Côte des Bar ,4
+57,San Joaquin Valley,23
+58,Haut-Médoc,31
+59,Lalande-de-Pomerol,31
+60,Val do Salnés,45
+61,San Rafael,20
+62,McLaren Vale,5
+63,Hunter Valley,46
+64,Yarra Valley,47
+65,Clare Valley,5
+66,Tamar Valley,48
+67,Pyrenees,47
+68,Mornington Peninsula,47
+69,Hilltops,46
+70,King Valley,47
+71,Barossa Valley,5
+72,Gippsland,47
+73,Eden Valley,5
+74,Neusiedlersee-Hügelland,39
+75,Krems,49
+76,Eastern Wachau,50
+77,Cahors,53
+78,Côtes du Roussillon,38
+79,Gigondas,17
+80,Madiran,53
+81,Menetou-Salon,21
+82,Rasteau,17
+83,Crozes-Hermitage,17

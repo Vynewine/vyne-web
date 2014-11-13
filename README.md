@@ -12,12 +12,13 @@ This system uses PostgreSQL.
 * Start 'psql'
 * Create user and database for vyne:
 ```
-CREATE USER vynz WITH PASSWORD 'Valpolicella';
-ALTER USER vynz CREATEDB;
+CREATE USER vyne WITH PASSWORD 'Valpolicella';
+ALTER USER vyne CREATEDB;
+CREATE DATABASE vyne_development WITH OWNER = vyne;
 ```
 
 ### Step 4:
-* Browse to vynz dir using the console and start it up:
+* Browse to vyne dir using the console and start it up:
 ```
 bundle install
 rake db:drop && rake db:create (drop if already existent)
@@ -61,7 +62,7 @@ git add .
 git commit -a -m "Adding precompiled assets"
 ```
 
-Push to Heroku (assumin you are logged in to Vynz Heroku account)
+Push to Heroku (assumin you are logged in to Vyne Heroku account)
 ```
 git push heroku master
 ```

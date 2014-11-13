@@ -1,0 +1,53 @@
+region_id,name,country_id
+1,Douro Valley,178
+2,Weinviertel,15
+3,Hampshire,250
+4,Champagne,76
+5,Limestone Coast (South Australia) ,14
+6,La Mancha ,209
+7,Piemonte ,110
+8,Sicily,110
+9,Puglia,110
+10,Madeira,178
+11,Tuscany,110
+12,Friuli,110
+13,Burgundy,76
+14,Costal Region (Western Cape),206
+15,Breede River Valley,206
+16,Malborough ,159
+17,Rhône Valley ,76
+18,Alsace,76
+19,Tokaj,101
+20,Mendoza,11
+21,Loire Valley,76
+22,Veneto,110
+23,California,236
+24,Verona,110
+25,Rioja,209
+26,Navarra,209
+27,Languedoc,76
+28,Oregon ,236
+29,East Sussex,250
+30,Catalunya ,209
+31,Bordeaux,76
+32,Andalucía,209
+34,Abruzzo,110
+35,Emilia-Romagna,110
+36,Cape South Coast,206
+37,Kent,250
+38,Roussillon,76
+39,Burgenland,15
+40,Western Australia,14
+41,Baja California,144
+42,Páros,86
+43,West Sussex,250
+44,Central Valley,45
+45,Rías Baixas,209
+46,New South Wales,14
+47,Victoria,14
+48,Tasmania,14
+49,Kremstal,15
+50,Wachau,15
+51,Maule,45
+52,Aconcagua,45
+53,South West France,76

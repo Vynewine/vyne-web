@@ -1,5 +1,5 @@
 task :kill_postgres_connections => :environment do
-  db_name = "#{File.basename(Rails.root)}_#{Rails.env}"
+  db_name = Rails.configuration.database_configuration[Rails.env]["database"]
   sh = <<EOF
 ps xa \
   | grep postgres: \

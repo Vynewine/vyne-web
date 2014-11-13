@@ -1,19 +1,18 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  username: vynz
+  username: vyne
   password: 'Valpolicella'
-  database: vynz_development
+  database: vyne_development
   pool: 5
 
 development: &pg
   host: localhost
   adapter: postgresql
   encoding: unicode
-  username: vynz
+  username: vyne
   password: 'Valpolicella'
-  database: vyne_prod
-  #database: vynz_development
+  database: vyne_development
   pool: 5
 
 # Warning: The database defined as "test" will be erased and
@@ -21,7 +20,7 @@ development: &pg
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: vynz_testing
+  database: vyne_testing
 
 production:
   <<: *default

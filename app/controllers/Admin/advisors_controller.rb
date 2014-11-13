@@ -33,7 +33,7 @@ class Admin::AdvisorsController < ApplicationController
     inventory = Inventory.find_by(:warehouse => warehouse, :wine => wine)
 
     if !@order.warehouse.nil? && @order.warehouse.id.to_s != params['warehouse-id']
-      flash[:error] = 'Warehouse doesn\'t match warehouse chosen for previous wine'
+      flash[:alert] = 'Warehouse doesn\'t match warehouse chosen for previous wine'
       redirect_to admin_order_path @order and return
     end
 
@@ -51,7 +51,6 @@ class Admin::AdvisorsController < ApplicationController
   def choose
     @order = Order.find(params[:order])
     quotes = shutl_quotes(@order)
-    puts json: quotes
     @quotes = JSON.parse(quotes) # Hash obj
   end
 
@@ -157,7 +156,7 @@ class Admin::AdvisorsController < ApplicationController
 
     respond_to do |format|
       if @message == 'Success'
-        flash[:message] = @message
+        flash[:notice] = @message
       else
         flash[:alert] = @message
       end

@@ -106,6 +106,8 @@ class Admin::OrdersController < ApplicationController
       stripe_charge = @order.charge_id
       Stripe.api_key = Rails.application.config.stripe_key
       charge = Stripe::Charge.retrieve(stripe_charge)
+      puts json: charge
+      puts charge.refunds
       refund = charge.refunds.create
       @order.refund_id = refund.id
     end

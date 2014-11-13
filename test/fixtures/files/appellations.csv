@@ -1,0 +1,77 @@
+appellation_id,name,classification,region_id
+1,Douro Valley ,DOC,1
+2,Weinviertel,DAC,2
+3,Champagne,AOC,4
+4,Coonawara,,5
+5,La Mancha ,DO,6
+6,Barolo ,DOCG,7
+7,Barbera D'Alba,DOC,7
+8,Sicilia,IGT,8
+9,Salento ,IGT,8
+10,Madeira,DOP,10
+11,Morellino di Scansano.,DOCG,11
+12,Toscana ,IGT,11
+13,Colli Orientali del Friuli,DOC,12
+14,Côte de Nuits Villages,AOC,13
+15,Schioppettino,DOC,12
+16,Côtes du Rhône,AOC,17
+17,Gavi di Gavi ,DOCG,7
+18,Alsace ,AOC,18
+19,Chablis,AOC,13
+20,Tokaji,PDO,19
+21,Gevrey-Chambertin,AOC,13
+22,Barbera D'Asti,DOCG,7
+23,Hautes-Côtes de Nuits,AOC,13
+24,Touraine,AOC,21
+25,Prosecco,DOC,22
+26,Nuits-Saint-Georges Premier Cru Clos des Grandes Vins,AOC,13
+27,Rioja,DOC,25
+28,Chassagne-Montrachet Premier Cru,AOC,13
+29,Pays d'Oc,IGP,27
+30,Sancerre,AOC,21
+31,Chablis Premier Cru,AOC,13
+32,Kirchberg Grand Cru ,AOC,18
+33,Meursault ,AOC,13
+34,Moulin-à-Vent,AOC,13
+35,Châteauneuf-du-Pape,AOC,17
+36,Chianti Classico ,DOCG,11
+37,Sauternes,AOC,31
+38,Chianti,DOCG,11
+39,Jerez,DOP,32
+40,Muscadet Sèvre-et-Maine,AOC,21
+41,Dolcetto d'Alba,DOC,7
+42,Vouvray,AOC,21
+43,Crémant de Loire,AOC,21
+44,St-Chinian ,AOC,27
+45,Chinon ,AOC,21
+46,Samur-Champigny,AOC,21
+47,Rosé d'Anjou,AOC,21
+48,Pouilly-Fumé,AOC,21
+49,Costières de Nimes,AOC,17
+50,Coteaux du Layon,AOC,21
+51,Bianco di Pitigliano,DOC,11
+52,Lambrusco di Sorbara,DOC,35
+53,Fleurie,AOC,13
+54,Mercurey,AOC,13
+55,Rully,AOC,13
+56,Beaune Premier Cru,AOC,13
+57,Savigny-lès-Beaune,AOC,13
+58,Langhe Bianco,DOC,7
+59,Morgon,AOC,13
+60,Beaujolais ,AOC,13
+61,Mâcon-Villages,AOC,13
+62,Bordeaux,AOC,31
+63,Collioure,AOC,38
+64,Côtes Catalanes,IGP,38
+65,Côte du Roussillon,AOC,38
+66,St-Georges-St-Émillion,AOC,31
+67,Cremant de Bourgogne ,AOC,13
+68,Vin de Pays du Val de Loire,IGP,21
+69,Cru Bourgeois Haut-Médoc,AOC,31
+70,Lalande-de-Pomerol,AOC,31
+71,Rías Baixas,DO,45
+72,Pays d'Hérault,IGP,27
+73,Cahors,AOC,53
+74,Vin de Pays du Sud,,27
+75,Menetou Salon,AOC,21
+76,Rasteau,AOC,17
