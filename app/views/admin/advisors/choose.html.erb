@@ -1,4 +1,51 @@
-<h3><div>Wine Cost Total: £<%= @order.total_wine_cost%> - Order Price Total £<%= @order.total_price%></div></h3>
+<h3>
+  <div>Wine Cost Total: £<%= @order.total_wine_cost %> - Order Price Total £<%= @order.total_price %></div>
+</h3>
+
+<% best_quote = @quotes['quote_collection']['best_quote']
+   unless best_quote.blank? %>
+    <h4>Best Quote</h4>
+    <table border="1" class="list-table">
+      <thead>
+      <tr>
+        <td>Pickup Start</td>
+        <td>Pickup Finish</td>
+        <td>Delivery Start</td>
+        <td>Delivery Finish</td>
+        <td>Offer Valid Until</td>
+        <td>Vehicle</td>
+        <td>Promise</td>
+        <td>Price (merchant/customer)</td>
+        <td></td>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td><%= Time.parse(best_quote['pickup_start']).strftime("%d/%m/%Y - %H:%M") %></td>
+        <td><%= Time.parse(best_quote['pickup_finish']).strftime("%d/%m/%Y - %H:%M") %></td>
+        <td><%= Time.parse(best_quote['delivery_start']).strftime("%d/%m/%Y - %H:%M") %></td>
+        <td><%= Time.parse(best_quote['delivery_finish']).strftime("%d/%m/%Y - %H:%M") %></td>
+        <td><%= Time.parse(best_quote['valid_until']).strftime("%d/%m/%Y - %H:%M") %></td>
+        <td><%= best_quote['vehicle'] %></td>
+        <td><%= best_quote['delivery_promise_text'] %></td>
+        <td>£<%= (best_quote['merchant_price'].to_f / 100) %>/£<%= (best_quote['customer_price'].to_f / 100) %></td>
+        <td data-id="<%= best_quote['id'] %>"
+            data-price="<%= (best_quote['merchant_price'].to_f / 100) %>"
+            data-vehicle="<%= best_quote['vehicle'] %>"
+            data-pickup_start="<%= best_quote['pickup_start'] %>"
+            data-pickup_finish="<%= best_quote['pickup_finish'] %>"
+            data-delivery_start="<%= best_quote['delivery_start'] %>"
+            data-delivery_finish="<%= best_quote['delivery_finish'] %>"
+            data-valid_until="<%= best_quote['valid_until'] %>"
+            data-delivery_promise="<%= best_quote['delivery_promise'] %>">
+          <a href="#" class="choose-quote">Choose</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+<% end %>
+<h4>Quotes</h4>
 <table border="1" class="list-table">
   <thead>
   <tr>
@@ -8,7 +55,7 @@
     <td>Delivery Finish</td>
     <td>Offer Valid Until</td>
     <td>Vehicle</td>
-    <td>Price</td>
+    <td>Price (merchant)</td>
     <td></td>
   </tr>
   </thead>
@@ -29,7 +76,8 @@
             data-pickup_finish="<%= quote['pickup_finish'] %>"
             data-delivery_start="<%= quote['delivery_start'] %>"
             data-delivery_finish="<%= quote['delivery_finish'] %>"
-            data-valid_until="<%= quote['valid_until'] %>">
+            data-valid_until="<%= quote['valid_until'] %>"
+            >
           <a href="#" class="choose-quote">Choose</a>
         </td>
       </tr>
@@ -46,26 +94,28 @@
   <input type="hidden" id="pickup_finish" name="pickup_finish"/>
   <input type="hidden" id="delivery_start" name="delivery_start"/>
   <input type="hidden" id="delivery_finish" name="delivery_finish"/>
+  <input type="hidden" id="delivery_promise" name="delivery_promise"/>
   <input type="hidden" id="valid_until" name="valid_until" value="<%= @order.id %>"/>
   <%= hidden_field_tag(request_forgery_protection_token.to_s, form_authenticity_token) %>
 </form>
 
 <script>
-  $('.choose-quote').click(function() {
-      var $a = $(event.target);
-      var $td = $a.parent();
-      var response = confirm("You chose to schedule: " + $td.data('vehicle') + ' - for: ' + $td.data('price') +
-              '\nWe will charge customer and schedule delivery.');
-      if (response == true) {
-          $('#quote').val($td.data('id'));
-          $('#price').val($td.data('price'));
-          $('#vehicle').val($td.data('vehicle'));
-          $('#pickup_start').val($td.data('pickup_start'));
-          $('#pickup_finish').val($td.data('pickup_finish'));
-          $('#delivery_start').val($td.data('delivery_start'));
-          $('#delivery_finish').val($td.data('delivery_finish'));
-          $('#valid_until').val($td.data('valid_until'));
-          $('#choose-form').submit();
-      }
-  });
+    $('.choose-quote').click(function () {
+        var $a = $(event.target);
+        var $td = $a.parent();
+        var response = confirm("You chose to schedule: " + $td.data('vehicle') + ' - for: ' + $td.data('price') +
+                '\nWe will charge customer and schedule delivery.');
+        if (response == true) {
+            $('#quote').val($td.data('id'));
+            $('#price').val($td.data('price'));
+            $('#vehicle').val($td.data('vehicle'));
+            $('#pickup_start').val($td.data('pickup_start'));
+            $('#pickup_finish').val($td.data('pickup_finish'));
+            $('#delivery_start').val($td.data('delivery_start'));
+            $('#delivery_finish').val($td.data('delivery_finish'));
+            $('#valid_until').val($td.data('valid_until'));
+            $('#delivery_promise').val($td.data('delivery_promise'));
+            $('#choose-form').submit();
+        }
+    });
 </script>

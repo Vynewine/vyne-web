@@ -51,7 +51,7 @@ class Admin::AdvisorsController < ApplicationController
   def choose
     @order = Order.find(params[:order])
     quotes = shutl_quotes(@order)
-    @quotes = JSON.parse(quotes) # Hash obj
+    @quotes = JSON.parse(quotes)
   end
 
   def complete
@@ -68,7 +68,8 @@ class Admin::AdvisorsController < ApplicationController
         :pickup_finish => params[:pickup_finish],
         :delivery_start => params[:delivery_start],
         :delivery_finish => params[:delivery_finish],
-        :valid_until => params[:valid_until]
+        :valid_until => params[:valid_until],
+        :delivery_promise => params[:delivery_promise]
     }
 
     order.delivery_quote = quote
@@ -321,7 +322,6 @@ class Admin::AdvisorsController < ApplicationController
     connection = Net::HTTP::start(url.hostname, url.port, :use_ssl => url.scheme == 'https' ) {|http|
       http.request(req)
     }
-
 
     connection.read_body
 
