@@ -14,10 +14,11 @@ group :test do
   gem 'mocha'
 end
 
-group :production do
-  # Recommended by Heroku
-  gem 'rails_12factor'
-end
+
+# Recommended by Heroku
+# Takes care of sending logs to STDOUT and Serving Static Assets
+gem 'rails_12factor'
+
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.3'

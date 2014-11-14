@@ -269,7 +269,7 @@ class Admin::AdvisorsController < ApplicationController
 
     puts json: url
 
-    basket_value = 2000 #(order.total_cost * 100).to_i
+    basket_value = (order.total_wine_cost * 100).to_i
 
     products = []
 

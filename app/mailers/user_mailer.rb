@@ -52,11 +52,11 @@ module UserMailer
       mandrill.messages.send_template template_name, nil, message
 
     rescue Mandrill::Error => exception
-      puts "A Mandrill error occurred first_time_ordered: #{exception.class} - #{exception.message}"
+      Rails.logger.error "A Mandrill error occurred first_time_ordered: #{exception.class} - #{exception.message}"
     rescue Exception => exception
       message = "Error occurred while sending email first_time_ordered: #{exception.class} - #{exception.message} - for user: #{order.client.email}"
-      puts message
       Rails.logger.error message
+      Rails.logger.error exception.backtrace
     end
   end
 
@@ -108,11 +108,11 @@ module UserMailer
       mandrill.messages.send_template template_name, nil, message
 
     rescue Mandrill::Error => exception
-      puts "A Mandrill error occurred first_time_ordered: #{exception.class} - #{exception.message}"
+      Rails.logger.error "A Mandrill error occurred first_time_ordered: #{exception.class} - #{exception.message}"
     rescue Exception => exception
       message = "Error occurred while sending email first_time_ordered: #{exception.class} - #{exception.message} - for user: #{order.client.email}"
-      puts message
       Rails.logger.error message
+      Rails.logger.error exception.backtrace
     end
   end
 
@@ -211,12 +211,11 @@ module UserMailer
       mandrill.messages.send_template template_name, nil, message
 
     rescue Mandrill::Error => exception
-      puts "A Mandrill error occurred order_receipt: #{exception.class} - #{exception.message}"
+      Rails.logger.error "A Mandrill error occurred order_receipt: #{exception.class} - #{exception.message}"
     rescue => exception
       message = "Error occurred while sending email order_receipt: #{exception.class} - #{exception.message} - for user: #{order.client.email}"
-      puts message
-      puts json: exception
       Rails.logger.error message
+      Rails.logger.error exception.backtrace
     end
   end
 
@@ -298,7 +297,8 @@ module UserMailer
       mandrill.messages.send_template template_name, nil, message
 
     rescue Mandrill::Error => exception
-      puts "A Mandrill error occurred order_receipt: #{exception.class} - #{exception.message}"
+      Rails.logger.error "A Mandrill error occurred order_receipt: #{exception.class} - #{exception.message}"
+      Rails.logger.error exception.backtrace
     end
   end
 
@@ -322,10 +322,11 @@ module UserMailer
     mandrill.messages.send_template template_name, nil, message
 
   rescue Mandrill::Error => exception
-    puts "A Mandrill error occurred order_receipt: #{exception.class} - #{exception.message}"
+    Rails.logger.error "A Mandrill error occurred order_receipt: #{exception.class} - #{exception.message}"
   rescue => exception
     message = "Error occurred while sending email order_at_your_desk: #{exception.class} - #{exception.message} - for user: #{email}"
-    puts json: exception
+    Rails.logger.error message
+    Rails.logger.error exception.backtrace
   end
 
   def coming_soon_near_you(email)
@@ -347,9 +348,10 @@ module UserMailer
     mandrill.messages.send_template template_name, nil, message
 
   rescue Mandrill::Error => exception
-    puts "A Mandrill error occurred order_receipt: #{exception.class} - #{exception.message}"
+    Rails.logger.error "A Mandrill error occurred order_receipt: #{exception.class} - #{exception.message}"
   rescue => exception
     message = "Error occurred while sending email coming_soon_near_you: #{exception.class} - #{exception.message} - for user: #{email}"
-    puts json: message
+    Rails.logger.error message
+    Rails.logger.error exception.backtrace
   end
 end

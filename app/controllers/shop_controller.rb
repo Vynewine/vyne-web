@@ -28,7 +28,6 @@ class ShopController < ApplicationController
 
   # GET /shop/neworder
   def new
-    puts params[:controller]
     # current_user.has_role?(:superadmin)
     @order = Order.new
     @categories = Category.all.order(:id)
@@ -36,7 +35,6 @@ class ShopController < ApplicationController
     @occasions = Occasion.all.order(:id)
     @types = Type.all.order(:id)
     @preparations = Preparation.all.order(:id)
-    logger.warn "New order"
   end
 
   # GET /orders/confirmed
@@ -50,7 +48,7 @@ class ShopController < ApplicationController
   # POST /shop/create
   # POST /shop/create.json
   def create
-    logger.warn 'Create order'
+    logger.info 'Creating New Order'
 
     # Creates order:
     @order = Order.new

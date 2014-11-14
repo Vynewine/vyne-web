@@ -3,7 +3,6 @@ class HooksController < ApplicationController
   protect_from_forgery :except => [:updateorder]
 
   def updateorder
-    puts 'Hook from Shuttle received with params: ' + params.to_s
     notification = params[:notification]
     token = ''
     if notification[:type] == 'booking_update'

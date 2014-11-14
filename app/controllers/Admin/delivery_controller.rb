@@ -8,7 +8,7 @@ class Admin::DeliveryController < ApplicationController
     if !response['booking'].nil? && response['booking']['reference'] == order.delivery_token
       order.delivery_status = response
 
-      unless response['booking']['booking_status']
+      unless response['booking']['booking_status'].blank?
         status = response['booking']['booking_status']
         unless status.blank?
           new_order_status = shutl_status_to_order_status(status)
