@@ -28,8 +28,13 @@ class Admin::InventoriesController < ApplicationController
 
   # GET /inventories/new
   def new
+    fetch_data
+  end
+
+  def fetch_data
     @inventory = Inventory.new
     @categories = Category.all
+    @warehouses = Warehouse.all.order(:id)
   end
 
   # GET /inventories/1/edit
@@ -40,6 +45,15 @@ class Admin::InventoriesController < ApplicationController
   # POST /inventories
   # POST /inventories.json
   def create
+
+    if params[:inventory][:warehouse_id].empty? || params[:inventory][:wine_id].empty? || params[:inventory][:vendor_sku].empty? ||
+        params[:inventory][:category_id].empty?
+      fetch_data
+      flash.now[:alert] = 'Warehouse, wine, vendor sku and category are required'
+      render :new
+      return
+    end
+
     @inventory = Inventory.new(inventory_params)
 
     respond_to do |format|
@@ -134,6 +148,6 @@ class Admin::InventoriesController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def inventory_params
-    params.require(:inventory).permit(:warehouse_id, :wine_id, :quantity, :category_id)
+    params.require(:inventory).permit(:warehouse_id, :wine_id, :quantity, :category_id, :cost, :vendor_sku)
   end
 end

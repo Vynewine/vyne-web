@@ -86,7 +86,9 @@ class Wine < ActiveRecord::Base
     end
 
     text :type do
-      type.name
+      unless type.blank?
+        type.name
+      end
     end
 
     text :grapes do

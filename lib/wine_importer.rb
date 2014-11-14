@@ -83,6 +83,44 @@ module WineImporter
     end
   end
 
+  #TODO: Move to model
+  def create_wine_key_from_wine(wine)
+    key = convert_name_to_key_part(wine.name)
+    key.concat('-')
+    key.concat(convert_vintage_to_key_part(convert_vintage(wine.vintage)))
+
+    unless wine.composition_id.blank?
+      key.concat('-')
+      key.concat('c' + wine.composition_id)
+      key.concat('-')
+    end
+
+    key.concat(convert_producer_to_key_part(wine.producer_id))
+
+    region = convert_region_to_key_part(wine.region_id)
+
+    if region.length == 2
+      key.concat('-')
+      key.concat(region)
+    end
+
+    subregion = convert_subregion_to_key_part(wine.subregion_id)
+
+    if subregion.length == 2
+      key.concat('-')
+      key.concat(subregion)
+    end
+
+    bottle = convert_bottle_size_to_key_part(wine.bottle_size)
+
+    if bottle.length > 0
+      key.concat('-')
+      key.concat(bottle)
+    end
+
+    key
+  end
+
   def create_wine_key(row)
     key = convert_name_to_key_part(row['name'])
     key.concat('-')
