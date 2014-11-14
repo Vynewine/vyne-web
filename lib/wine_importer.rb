@@ -91,7 +91,7 @@ module WineImporter
 
     unless wine.composition_id.blank?
       key.concat('-')
-      key.concat('c' + wine.composition_id)
+      key.concat('c' + wine.composition_id.to_s)
       key.concat('-')
     end
 

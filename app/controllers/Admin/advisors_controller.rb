@@ -219,7 +219,7 @@ class Admin::AdvisorsController < ApplicationController
                 :vintage => wine.txt_vintage,
                 :single_estate => wine.single_estate,
                 :type => wine.type.name,
-                :compositions => wine.composition.composition_grapes.map { |c| { :name => c.grape.name, :percentage => c.percentage }},
+                :compositions => wine.composition.blank? ? '' : wine.composition.composition_grapes.map { |c| { :name => c.grape.name, :percentage => c.percentage }},
                 :note => wine.note,
                 :warehouse => warehouse_id,
                 :agendas => inv.warehouse.agendas,

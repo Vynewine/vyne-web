@@ -28,18 +28,19 @@ class Admin::InventoriesController < ApplicationController
 
   # GET /inventories/new
   def new
+    @inventory = Inventory.new
     fetch_data
   end
 
   def fetch_data
-    @inventory = Inventory.new
     @categories = Category.all
     @warehouses = Warehouse.all.order(:id)
   end
 
   # GET /inventories/1/edit
   def edit
-    @categories = Category.all
+    @inventory = Inventory.find(params[:id])
+    fetch_data
   end
 
   # POST /inventories

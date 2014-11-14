@@ -9,6 +9,11 @@
 </p>
 
 <p>
+  <strong>Vendor SKU:</strong>
+  <%= @inventory.vendor_sku %>
+</p>
+
+<p>
   <strong>Quantity:</strong>
   <%= @inventory.quantity %>
 </p>
@@ -16,6 +21,11 @@
 <p>
   <strong>Cost:</strong>
 &pound;<%= "%.2f" % @inventory.cost %>
+</p>
+
+<p>
+  <strong>Category:</strong>
+  <%= @inventory.category.name %>
 </p>
 
 <%= link_to 'Edit', edit_admin_inventory_path(@inventory) %>
