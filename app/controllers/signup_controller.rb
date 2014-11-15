@@ -105,7 +105,7 @@ class SignupController < ApplicationController
 
   def mailing_list_signup
 
-    unless params[:email] =~ /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
+    unless validate_email(params[:email])
       render :json => {:errors => ['Please enter valid email address.']}, :status => 422
       return
     end
@@ -217,6 +217,10 @@ class SignupController < ApplicationController
 
     number
 
+  end
+
+  def validate_email(email)
+    email =~ /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
   end
 
 end
