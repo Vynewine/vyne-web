@@ -49,7 +49,6 @@ module StripeHelper
     puts "Status is: #{e.http_status}"
     puts "Type is: #{err[:type]}"
     puts "Code is: #{err[:code]}"
-    # param is '' in this case
     puts "Param is: #{err[:param]}"
     puts "Message is: #{err[:message]}"
   rescue Stripe::InvalidRequestError => e

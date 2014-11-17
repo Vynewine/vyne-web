@@ -532,87 +532,6 @@ var adminReady = function() {
             $siblings.slideDown();
         };
 
-
-        /**
-         * Draws single orders
-         */
-        var renderOrder = function(order) {
-            console.log(order);
-            var $container = $('#order-list>table>tbody');
-            var $adviseAnchor = $('<a>').attr('href', '#').text('Advise');
-            var $orderRecoverAnchor = $('<a>').attr('href', '#').text('Return');
-            var customerName = order.client.first_name + ' ' + order.client.last_name;
-            var fullAddress = order.address.detail + ', ' + order.address.street + ', ' + order.address.postcode;
-
-
-            var $adviseAnchorOrder = $('<a>').attr('href', '/admin/orders/' + order.id).text('AdviseOrder');
-
-            var info;
-            if (order.information) {
-                info = order.information;
-            }
-            var warehousesIds = [];
-
-            if (info == null)
-                info = {};
-
-            if (info.warehouses !== undefined) {
-                for (var i = 0, warehouse; warehouse = info.warehouses[i++];) {
-                    warehousesIds.push(warehouse.id);
-                }
-            }
-
-            $adviseAnchor.click(function(e){
-                e.preventDefault();
-                adviseActions($(this), $orderRecoverAnchor);
-            });
-
-            $orderRecoverAnchor.click(function(e){
-                e.preventDefault();
-                recoverActions($(this), $adviseAnchor);
-            });
-
-            $container.append(
-                $('<tr>')
-                  .addClass('order')
-                  .attr("data-warehouses", info.warehouses ? info.warehouses.join(',') : '')
-                  .attr("id", "order-" + order.id)
-                  .attr("data-id", order.id)
-                  .attr("data-info", order.info)
-                  .attr("data-customer", customerName)
-                  .attr("data-address", fullAddress)
-                  .append(
-                      $('<td>').addClass('client').text(
-                          order.client.first_name + ' ' + order.client.last_name
-                      ),
-                      $('<td>').addClass('phone').text(
-                          order.client.mobile
-                      ),
-                      $('<td>').addClass('postcode').text(
-                          order.address.postcode
-                      ),
-                      $('<td>').addClass('actions').append($adviseAnchor),
-                    $('<td>').addClass('actions').append($adviseAnchorOrder)
-
-                )
-            );
-        };
-
-        /**
-         * Creates table of orders and draws all items
-         */
-        var renderOrders = function(r) {
-            var $container = $('#order-list');
-            $container.append(
-                $('<table>').attr('border','1').append(
-                    $('<tbody>')
-                )
-            );
-            for (var i = 0, order; order = r[i++];) {
-                renderOrder(order);
-            }
-        };
-
         /**
          * Search field:
          */
@@ -629,15 +548,6 @@ var adminReady = function() {
 
         $('#tick-sing').change(function() {
             sortKeyWords();
-        });
-
-        /**
-         * Reload data
-         */
-        $('#reload-orders').click(function(e){
-            e.preventDefault();
-            $('#order-list').html('');
-            postJSON('../orders/list.json', token, {'status':[1]}, renderOrders, errorMethod);
         });
 
         $('#confirm').click(confirm);

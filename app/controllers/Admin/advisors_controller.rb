@@ -292,8 +292,8 @@ class Admin::AdvisorsController < ApplicationController
     params = {
       :quote_collection => {
         :channel => 'mobile',
-        :page => 'product',
-        :session_id => 'example123',
+        :page => 'checkout',
+        :session_id => 'vyne_session_' + order.id.to_s,
         :basket_value => basket_value,
         :pickup_location => {
           :address => {

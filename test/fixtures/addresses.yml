@@ -1,21 +1,17 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  street: Street1
-  detail: Detail1
+  line_1: Street1
   postcode: EC3V1LR
 
 two:
-  street: Street1
-  detail: Detail1
+  line_1: Street1
   postcode: NW107ST
 
 three:
-  street: Street1
-  detail: Detail1
+  line_1: Street1
   postcode: N17RJ
 
 four:
-  street: Street1
-  detail: Detail1
+  line_1: Street1
   postcode: N11QP

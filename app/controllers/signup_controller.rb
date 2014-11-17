@@ -72,8 +72,9 @@ class SignupController < ApplicationController
         return
       end
 
-      address.detail = params[:address_d]
-      address.street = params[:address_s]
+      address.line_1 = params[:address_s]
+      #TODO: Get Line 2 from UI!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      address.line_2 = params[:address_line_2]
       address.postcode = params[:address_p].upcase
 
     end

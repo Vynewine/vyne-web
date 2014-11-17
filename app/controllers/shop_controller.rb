@@ -210,7 +210,7 @@ class ShopController < ApplicationController
         :advisor_id,
         :wine_id,
         :quantity,
-        address_attributes: [:id, :detail, :street, :postcode],
+        address_attributes: [:id, :line_1, :line_2, :company_name, :postcode],
     )
   end
 

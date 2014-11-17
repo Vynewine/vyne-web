@@ -112,7 +112,7 @@ class SignupControllerTest < ActionController::TestCase
                             })
 
     new_address = Address.create!({
-                                      :street => 'Street1',
+                                      :line_1 => 'Street1',
                                       :postcode => 'N17RJ'
                                   })
 
@@ -153,7 +153,7 @@ class SignupControllerTest < ActionController::TestCase
                             })
 
     new_address = Address.create!({
-                                      :street => 'Street1',
+                                      :line_1 => 'Street1',
                                       :postcode => 'N17RJ'
                                   })
 
@@ -175,7 +175,7 @@ class SignupControllerTest < ActionController::TestCase
 
     user = User.find(new_user.id)
 
-    new_address = user.addresses.select { |a| a.street == 'Main Street 2' }.first
+    new_address = user.addresses.select { |a| a.line_1 == 'Main Street 2' }.first
 
     assert_response :success
     assert @response.body.include? 'Main Street 2'
@@ -195,7 +195,7 @@ class SignupControllerTest < ActionController::TestCase
                             })
 
     new_address = Address.create!({
-                                      :street => 'Street1',
+                                      :line_1 => 'Street1',
                                       :postcode => 'N1 7RJ'
                                   })
 

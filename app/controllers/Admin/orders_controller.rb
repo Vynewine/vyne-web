@@ -176,7 +176,7 @@ class Admin::OrdersController < ApplicationController
         :information,
         :delivery_status,
         :delivery_cost,
-        address_attributes: [:id, :detail, :street, :postcode]
+        address_attributes: [:id, :line_1, :postcode, :line_2, :company_name]
     )
   end
 end

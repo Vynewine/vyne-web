@@ -281,7 +281,7 @@ $(document).ready(function(){
                         status: 'Delivery available'
                     });
 
-                    var storeOpeningTime = new Date('01/01/2000 09:00');
+                    var storeOpeningTime = new Date('01/01/2000 12:00');
                     var storeClosingTime = new Date('01/01/2000 20:30');
                     var clientTime = new Date();
                     clientTime.setFullYear(2000);

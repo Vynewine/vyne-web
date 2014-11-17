@@ -20,19 +20,32 @@
 
 <p>
   <strong>Address:</strong>
-  <%= @warehouse.address.detail %>
-  <%= @warehouse.address.street %>
+  <%= @warehouse.address.line_1 %>
+  <%= @warehouse.address.line_2 %>
   <%= @warehouse.address.postcode %>
+  <% unless @warehouse.address.coordinates.blank? %>
+  (<%= 'lat/lng: ' + @warehouse.address.latitude.to_s + ', ' + @warehouse.address.longitude.to_s %>)
+  <% end %>
 </p>
 
 <p>
   <strong>Agenda:</strong>
   <% @agendas.each do |agenda| %>
     <dl>
-        <dt><%= agenda.day_name %></dt>
-        <dd><%= agenda.opening_time %> - <%= agenda.closing_time %></dd>
+      <dt><%= agenda.day_name %></dt>
+      <dd><%= agenda.opening_time %> - <%= agenda.closing_time %></dd>
     </dl>
+<% end %>
+</p>
+
+<p>
+  <strong>Shutl Info</strong>
+  <% if @warehouse.registered_with_shutl %>
+      <%= @shutl_info %>
+  <% else %>
+      Not Registered with Shutl. Update Warehouse to geister it.
   <% end %>
+
 </p>
 
 <%= link_to 'Edit', edit_admin_warehouse_path(@warehouse) %>

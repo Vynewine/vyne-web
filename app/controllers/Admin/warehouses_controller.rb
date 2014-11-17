@@ -1,4 +1,6 @@
 class Admin::WarehousesController < ApplicationController
+  include ShutlHelper
+
   layout "admin"
   before_action :authenticate_user!
   authorize_actions_for SupplierAuthorizer # Triggers user check
@@ -14,17 +16,28 @@ class Admin::WarehousesController < ApplicationController
   # GET /warehouses/1.json
   def show
     @agendas = @warehouse.agendas.order('day ASC')
+    if @warehouse.registered_with_shutl
+      shutl_info = get_warehouse_info_from_shutl(@warehouse)
+      if shutl_info[:errors].blank?
+        @shutl_info = shutl_info[:data]
+      else
+        @shutl_info = shutl_info[:errors].join(', ')
+      end
+    end
   end
 
   # GET /warehouses/new
   def new
     @warehouse = Warehouse.new
-    @warehouse.build_address
+    @warehouse.address = Address.new
   end
 
   # GET /warehouses/1/edit
   def edit
     @agendas = @warehouse.agendas.order('day ASC')
+    if @warehouse.address.blank?
+      @warehouse.address = Address.new
+    end
   end
 
   # POST /warehouses
@@ -32,31 +45,57 @@ class Admin::WarehousesController < ApplicationController
   def create
     @warehouse = Warehouse.new(warehouse_params)
 
-    respond_to do |format|
-      if @warehouse.save
-        format.html { redirect_to [:admin, @warehouse], notice: 'Warehouse was successfully created.' }
-        format.json { render :show, status: :created, location: @warehouse }
-      else
-        format.html {
-          @warehouse.build_address
-          render :new
-        }
-        format.json { render json: @warehouse.errors, status: :unprocessable_entity }
+    unless @warehouse.save
+      redirect_to new_admin_warehouse_path, alert: @warehouse.errors.full_messages().join(', ')
+      return
+    end
+
+    shutl_errors = add_warehouse_to_shutl(@warehouse)
+
+    if shutl_errors.blank?
+      @warehouse.registered_with_shutl = true
+      unless @warehouse.save
+        redirect_to new_admin_warehouse_path, alert: @warehouse.errors.full_messages().join(', ')
+        return
       end
+    else
+      redirect_to edit_admin_warehouse_path(@warehouse), alert: shutl_errors.join(', ')
+      return
+    end
+
+    respond_to do |format|
+      format.html { redirect_to [:admin, @warehouse], notice: 'Warehouse was successfully created.' }
+      format.json { render :show, status: :created, location: @warehouse }
     end
   end
 
   def update
-      @warehouse.update_attributes(warehouse_params)
-        respond_to do |format|
-          if @warehouse.update(warehouse_params)
-            format.html { redirect_to [:admin, @warehouse], notice: 'Warehouse was successfully updated.' }
-            format.json { render :show, status: :ok, location: @warehouse }
-          else
-            format.html { render :edit }
-            format.json { render json: @warehouse.errors, status: :unprocessable_entity }
-          end
-        end
+    @warehouse.update_attributes(warehouse_params)
+
+    unless @warehouse.update(warehouse_params)
+      redirect_to edit_admin_warehouse_path(@warehouse), alert: @warehouse.errors.full_messages().join(', ')
+      return
+    end
+
+    if @warehouse.registered_with_shutl
+      shutl_errors = update_shutl_warehouse(@warehouse)
+    else
+      shutl_errors = add_warehouse_to_shutl(@warehouse)
+    end
+
+    if shutl_errors.blank?
+      @warehouse.registered_with_shutl = true
+      unless @warehouse.save
+        redirect_to edit_admin_warehouse_path(@warehouse), alert: @warehouse.errors.full_messages().join(', ')
+        return
+      end
+    else
+      redirect_to edit_admin_warehouse_path(@warehouse), alert: shutl_errors.join(', ')
+      return
+    end
+
+    redirect_to [:admin, @warehouse], notice: 'Warehouse was successfully updated.'
+
   end
 
   # DELETE /warehouses/1
@@ -70,21 +109,21 @@ class Admin::WarehousesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_warehouse
-      @warehouse = Warehouse.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_warehouse
+    @warehouse = Warehouse.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def warehouse_params
-      params.require(:warehouse).permit(
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def warehouse_params
+    params.require(:warehouse).permit(
         :title,
         :email,
         :phone,
         :active,
-        address_attributes: [:id, :detail, :street, :postcode],
+        address_attributes: [:id, :line_1, :postcode, :line_2, :company_name, :longitude, :latitude],
         agendas_attributes: [:id, :day, :opening, :closing]
-      )
-    end
+    )
+  end
 
 end

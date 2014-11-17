@@ -84,3 +84,6 @@ gem 'paranoia', '~> 2.0'
 
 #Add some damn pagination yeah!
 gem 'will_paginate', '~> 3.0'
+
+#PostGIS Spatial Capabilities
+gem 'activerecord-postgis-adapter'

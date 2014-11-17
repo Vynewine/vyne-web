@@ -34,7 +34,8 @@ Payment.create!({
                 })
 
 user_address = Address.create!(
-    :street => '8a Pickfords Wharf, Wharf Road',
+    :line_1 => '8a Pickfords Wharf',
+    :line_2 => 'Wharf Road',
     :postcode => 'N1 7RJ'
 )
 
@@ -640,8 +641,9 @@ import_wines(wine_path)
 puts 'Wines - OK'
 
 warehouse_address1 = Address.create!(
-    :street => '7-19 Leadenhall Market',
-    :postcode => 'EC3V 1LR'
+    :line_1 => '7-19 Leadenhall Market',
+    :postcode => 'EC3V 1LR',
+    :coordinates => 'POINT(-0.0833929593813316 51.5126800326757)'
 )
 
 warehouse_one = Warehouse.create!(
@@ -654,8 +656,10 @@ warehouse_one = Warehouse.create!(
 )
 
 warehouse_address2 = Address.create!(
-    :street => 'Hammer House, 113-117 Wardour Street',
-    :postcode => 'W1F 0UN'
+    :line_1 => 'Hammer House',
+    :line_2 => '113-117 Wardour Street',
+    :postcode => 'W1F 0UN',
+    :coordinates => 'POINT(-0.134273349439967 51.5132307523215)'
 )
 
 warehouse_two = Warehouse.create!(
@@ -668,8 +672,9 @@ warehouse_two = Warehouse.create!(
 )
 
 warehouse_address3 = Address.create!(
-    :street => '203 Brompton Road,',
-    :postcode => 'SW3 1LA'
+    :line_1 => '203 Brompton Road',
+    :postcode => 'SW3 1LA',
+    :coordinates => 'POINT(-0.166813218038706 51.4974944810043)'
 )
 
 warehouse_three = Warehouse.create!(

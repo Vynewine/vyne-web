@@ -28,8 +28,8 @@ class ShopControllerTest < ActionController::TestCase
     sign_in(:user, @userOne)
 
     @address = Address.create!({
-                                   :detail => '8A',
-                                   :street => 'Pickfords Whard',
+                                   :line_1 => 'Pickfords Whard',
+                                   :line_2 => 'Wharf Road',
                                    :postcode => 'N1 7RJ'
                                })
 

@@ -37,7 +37,7 @@ module UserMailer
                       },
                       {
                           :name => 'ADDRESSLINE1',
-                          :content => order.address.street
+                          :content => order.address.line_1
                       },
                       {
                           :name => 'POSTCODE',
@@ -93,7 +93,7 @@ module UserMailer
                       },
                       {
                           :name => 'ADDRESSLINE1',
-                          :content => order.address.street
+                          :content => order.address.line_1
                       },
                       {
                           :name => 'POSTCODE',
@@ -171,7 +171,7 @@ module UserMailer
                       },
                       {
                           :name => 'ADDRESSLINE1',
-                          :content => order.address.street
+                          :content => order.address.line_1
                       },
                       {
                           :name => 'POSTCODE',

@@ -27,9 +27,8 @@ module Vyne
 
     config.autoload_paths << Rails.root.join('lib')
 
+    # add custom validators path
+    config.autoload_paths += %W["#{config.root}/app/validators/"]
+
   end
 end
-# If you are deploying on Heroku with Rails 3.2 only, you may want to set:
-#    config.assets.initialize_on_precompile = false
-#  On config/application.rb forcing your application to not access the DB
-#  or load models when precompiling your assets.

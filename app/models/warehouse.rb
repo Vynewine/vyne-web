@@ -35,4 +35,7 @@ class Warehouse < ActiveRecord::Base
       "#{title} (active: #{active})"
   end
 
+  def shutl_id
+    "vyne_store_#{id}"
+  end
 end

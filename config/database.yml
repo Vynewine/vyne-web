@@ -8,10 +8,11 @@ default: &default
 
 development: &pg
   host: localhost
-  adapter: postgresql
+  adapter: postgis
   encoding: unicode
   username: vyne
   password: 'Valpolicella'
+  #database: vyne_prod
   database: vyne_development
   pool: 5
 
@@ -21,6 +22,8 @@ development: &pg
 test:
   <<: *default
   database: vyne_testing
+  adapter: postgis
 
 production:
   <<: *default
+  adapter: postgis

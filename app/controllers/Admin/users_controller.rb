@@ -117,7 +117,7 @@ class Admin::UsersController < ApplicationController
         :password,
         :stripe_id,
         role_ids: [],
-        addresses_attributes: [:id, :detail, :street, :postcode]
+        addresses_attributes: [:id, :line_1, :postcode, :line_2, :company_name]
       )
     end
 end
