@@ -807,7 +807,9 @@ $(function () {
 
         e.preventDefault();
 
-        var address_s = $('#addr-line-1').val(),
+        var address_line_1 = $('#addr-line-1').val(),
+            address_line_2 = $('#addr-line-2').val(),
+            company_name = $('#addr-company-name').val(),
             address_p = $('#addr-pc').val(),
             mobile = $('#mobile').val(),
             address_id = $('#address-id').val(),
@@ -822,7 +824,9 @@ $(function () {
             },
             url: '/signup/address',
             data: {
-                address_s: address_s,
+                address_line_1: address_line_1,
+                address_line_2: address_line_2,
+                company_name: company_name,
                 address_p: address_p,
                 mobile: mobile,
                 address_id: address_id,
@@ -861,14 +865,14 @@ $(function () {
 
                 if (address_id !== '' && address_id !== '0') {
                     analytics.track('Address updated', {
-                        address_street: address_s,
+                        address_street: address_line_1,
                         address_postcode: address_p,
                         mobile: mobile,
                         id: data.id
                     });
                 } else {
                     analytics.track('Address created', {
-                        address_street: address_s,
+                        address_street: address_line_1,
                         address_postcode: address_p,
                         mobile: mobile,
                         id: data.id

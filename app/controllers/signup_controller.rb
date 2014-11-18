@@ -48,7 +48,7 @@ class SignupController < ApplicationController
 
     if params[:new_address] == 'true' || params[:new_address].blank?
 
-      if params[:address_s].blank?
+      if params[:address_line_1].blank?
         errors << 'Address can\'t be blank'
       end
 
@@ -72,9 +72,9 @@ class SignupController < ApplicationController
         return
       end
 
-      address.line_1 = params[:address_s]
-      #TODO: Get Line 2 from UI!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      address.line_1 = params[:address_line_1]
       address.line_2 = params[:address_line_2]
+      address.company_name = params[:company_name]
       address.postcode = params[:address_p].upcase
 
     end
