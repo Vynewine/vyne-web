@@ -51,6 +51,7 @@ class Address < ActiveRecord::Base
     end
 
     unless @latitude.blank? && @longitude.blank?
+      puts 'HERERERRE'
       self.coordinates = 'POINT(' + @longitude.to_s + ' ' + @latitude.to_s + ')'
     end
   end
