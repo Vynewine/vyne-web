@@ -226,10 +226,6 @@ $(document).ready(function(){
 
         var postcode = $(this).val().toUpperCase().trim();
 
-        // Fields:
-        var $street = $('#addr-st');
-        var $detail = $('#addr-no');
-
         // Postcode sliable panel
         var $slideable = $('#postcode-panel .slideable');
 
@@ -240,12 +236,6 @@ $(document).ready(function(){
         var $notavailable = $('.not-available');
 
         if (postcode.length < 5) {
-            // Empty fields:
-            $street.val('');
-            $detail.val('');
-            // Disable fields:
-            $street.attr('disabled','disabled');
-            $detail.attr('disabled','disabled');
             // Feedback from beginning:
             $feedback.html('');
             $feedback.css({ 'display': 'none'});
@@ -281,7 +271,7 @@ $(document).ready(function(){
                         status: 'Delivery available'
                     });
 
-                    var storeOpeningTime = new Date('01/01/2000 12:00');
+                    var storeOpeningTime = new Date('01/01/2000 10:00');
                     var storeClosingTime = new Date('01/01/2000 20:30');
                     var clientTime = new Date();
                     clientTime.setFullYear(2000);
@@ -303,54 +293,6 @@ $(document).ready(function(){
 
                         $('#warehouses').val('{"warehouses":' + JSON.stringify(delivery.warehouses) + '}');
 
-                        // Google API cannot find the street name based on the postcode!
-                        // This is why we must first find the damn longitude and latitude first.
-                        // So this is a 2-step process, don't be alarmed.
-
-                        /**
-                         * Callback for when the coordinates are returned from Google.
-                         * This will request a geocode lookup to fetch the address.
-                         */
-                        var successCallback = function(coordinates) {
-                            // console.log('okie', coordinates.lng, coordinates.lat);
-
-                            var geocoder = new google.maps.Geocoder();
-                            var latlng = new google.maps.LatLng(coordinates.lat, coordinates.lng);
-
-                            /**
-                             * Formats readable address and updates interface.
-                             */
-                            var successAddressCallback = function(results, status) {
-                                if (status == google.maps.GeocoderStatus.OK) {
-                                    // console.log(results[0].formatted_address);
-                                    var fullAddress = results[0].formatted_address;
-                                    var simpleAddress = fullAddress.split(',')[0];
-                                    var street = simpleAddress.replace(/[\d]+\s/, "");
-                                    var detail = simpleAddress.match(/[\d]+/)[0];
-                                    $street.removeAttr('disabled');
-                                    $detail.removeAttr('disabled');
-                                } else {
-                                    console.error("Geocode was not successful for the following reason: " + status);
-                                }
-                            };
-
-                            // Address lookup:
-                            geocoder.geocode( { 'latLng': latlng}, successAddressCallback);
-                        };
-
-                        /**
-                         * Error callback method for the coordinates lookup.
-                         * The postcode is already considered to be "deliverable", so it enables the fields anyway.
-                         */
-                        var errorCallback = function() {
-                            console.error('Could not find coordinates for this postcode!');
-                            $street.removeAttr('disabled');
-                            $detail.removeAttr('disabled');
-                            $feedback.html("Unknown address, please try again.");
-                        };
-
-                        // Coordinates lookup:
-                        mapUtil.findCoordinatesAndExecute(postcode, successCallback, errorCallback);
                     } else {
                         $('#sign-up-closed').val(true);
                         $slideable.addClass('slideup');
@@ -396,13 +338,12 @@ $(document).ready(function(){
             $('#order-address:selected').removeAttr("selected");
             postCodeLookup(initialPostCode);
             $('#new-address').val(true);
-            $('#addr-st').val('');
-            suggested-addresses
+            $('#addr-line-1').val('');
         } else {
             $('#address-id').val(value);
             $addrFields.fadeOut();
             $('#new-address').val(false);
-            $('#addr-st').val('');
+            $('#addr-line-1').val('');
         }
     });
 
