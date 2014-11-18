@@ -15,11 +15,15 @@ class Address < ActiveRecord::Base
   end
 
   def longitude=(lon)
-    @longitude = lon.to_f
+    unless lon.blank?
+      @longitude = lon.to_f
+    end
   end
 
   def latitude=(lat)
-    @latitude = lat.to_f
+    unless lat.blank?
+      @latitude = lat.to_f
+    end
   end
 
   def longitude
@@ -42,10 +46,11 @@ class Address < ActiveRecord::Base
 
   def set_coordinates
 
-    if (@longitude.blank? || @longitude == 0) && (!@latitude.blank? && @latitude != 0) ||
-        (@latitude.blank? || @latitude == 0) && (!@longitude.blank? && @longitude != 0)
+    if (@longitude.blank? && !@latitude.blank?)  || (@latitude.blank? && !@longitude.blank?)
       errors.add(:coordinates, 'longitude and latitude are required')
-    else
+    end
+
+    unless @latitude.blank? && @longitude.blank?
       self.coordinates = 'POINT(' + @longitude.to_s + ' ' + @latitude.to_s + ')'
     end
   end
