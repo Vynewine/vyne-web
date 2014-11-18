@@ -42,7 +42,7 @@ Rails.application.configure do
   # config.force_ssl = true
 
   # Devise mailer:
-  config.action_mailer.default_url_options = { host: 'vine.london', scheme: 'http' }
+  config.action_mailer.default_url_options = { host: 'vyneapp.herokuapp.com', scheme: 'http' }
   # In production, :host should be set to the actual host of your application.
 
   # Prepend all log lines with the following tags.
