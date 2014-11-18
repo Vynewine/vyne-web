@@ -24,7 +24,7 @@
       <li class="accordian-item
         <% if @order.status_id == 4 %> active
         <% end %>">
-        <span class="accordian-item-link">2. Courier picks up</span>
+        <span class="accordian-item-link">2. Courier collects from cellar</span>
 
         <div class="accordian-item-content">
           <div class="line"></div>
@@ -34,19 +34,19 @@
 
           <p>The courier is on the first leg of the journey: to the wine cellar. </p><br/>
 
-          <p>Check this page in 10-20 minutes to see if the bottle has been collected and on it's way to you.</p>
+          <p>Check this page in 10-20 minutes to see if the bottle has been collected and on its way to you.</p>
         </div>
       </li>
       <li class="accordian-item
         <% if @order.status_id == 5 %> active
         <% end %>">
-        <span class="accordian-item-link">3. Your bottle is on it's way!</span>
+        <span class="accordian-item-link">3. Your bottle is on its way!</span>
 
         <div class="accordian-item-content">
           <div class="line"></div>
           <span class="number">3</span>
 
-          <h3>Your bottle is en route to your chosen location.</h3>
+          <h3>Your bottle is en-route to your chosen location.</h3>
 
           <p>Make sure you're available at <%= @order.address.postcode %> for the courier to deliver your
             bottle. </p>
@@ -59,7 +59,7 @@
       <li class="accordian-item
         <% if @order.status_id == 6 %> active
         <% end %>">
-        <span class="accordian-item-link">4. Order Complete</span>
+        <span class="accordian-item-link">4. Delivery Complete</span>
 
         <div class="accordian-item-content">
           <div class="line"></div>
@@ -67,7 +67,7 @@
 
           <h3>Your order has been delivered.</h3>
             <br/>
-          <p>If you have any problems, get in touch via <br/><a href="https://vyne.zendesk.com/">Vyne Helpdesk</a></p>
+          <p>If you have any problems, get in touch via <br/><a href="https://vyne.zendesk.com/hc">Vyne Helpdesk</a></p>
           <br/>
         </div>
       </li>
