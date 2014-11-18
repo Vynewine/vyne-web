@@ -50,8 +50,7 @@ class Address < ActiveRecord::Base
       errors.add(:coordinates, 'longitude and latitude are required')
     end
 
-    unless @latitude.blank? && @longitude.blank?
-      puts 'HERERERRE'
+    unless @latitude.blank? || @longitude.blank?
       self.coordinates = 'POINT(' + @longitude.to_s + ' ' + @latitude.to_s + ')'
     end
   end
