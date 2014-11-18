@@ -33,7 +33,7 @@ class SignupController < ApplicationController
   def address
 
     if params[:address_id].blank? || params[:address_id] == '0'
-      address = Address.create
+      address = Address.new
     else
       address = Address.find(params[:address_id])
     end
@@ -61,7 +61,7 @@ class SignupController < ApplicationController
       end
 
       if errors.blank?
-        current_user.mobile = validate_uk_phone(params[:mobile])
+        current_user.mobile = params[:mobile]
         unless current_user.save
           render :json => {:errors => current_user.errors}, :status => 422
           return
@@ -179,7 +179,7 @@ class SignupController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:first_name, :email, :password)
+    params.require(:user).permit(:first_name, :last_name, :email, :password)
   end
 
   def validate_uk_phone(number)

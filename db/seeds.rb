@@ -11,7 +11,7 @@ Role.create(:name => 'superadmin')
 puts 'Roles - OK'
 
 # Default user:
-User.create!({
+@first_user = User.create!({
                  :first_name => 'Jakub',
                  :last_name => 'Borys',
                  :email => 'jakub.borys@gmail.com',
@@ -21,13 +21,13 @@ User.create!({
                  :stripe_id => 'cus_58fCEwXl68Xknn'
              })
 
-default_user = User.find_by(id: 1)
-default_user.add_role(:superadmin)
-default_user.active = true
-default_user.save
+@first_user
+@first_user.add_role(:superadmin)
+@first_user.active = true
+@first_user.save
 
 Payment.create!({
-                    :user => default_user,
+                    :user => @first_user,
                     :brand => 1,
                     :number => '1111',
                     :stripe_card_id => 'card_14yNrx242nQKOZxvq4IBG6qB'
@@ -40,7 +40,7 @@ user_address = Address.create!(
 )
 
 AddressesUsers.create!(
-    :user => default_user,
+    :user => @first_user,
     :address => user_address
 )
 

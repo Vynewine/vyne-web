@@ -649,14 +649,12 @@ $(function () {
 
         var $orderCard = $('#orderCard');
 
+        var first_name = $('input[name="user[first_name]"]').val();
+        var last_name = $('input[name="user[last_name]"]').val();
+        var email = $('input[name="user[email]"]').val();
+        var password = $('input[name="user[password]"]').val();
+
         if ($('#account-form').hasClass('register-form')) {
-
-            //Needs Validation
-            var first_name = $('input[name="user[first_name]"]').val(),
-                email = $('input[name="user[email]"]').val(),
-                password = $('input[name="user[password]"]').val();
-
-            var data = "user[first_name]=" + first_name + "&user[email]=" + email + "&user[password]=" + password;
 
             $.ajax({
                 type: "POST",
@@ -664,7 +662,12 @@ $(function () {
                     xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').last().attr('content'))
                 },
                 url: '/signup/create',
-                data: data,
+                data: {
+                    'user[first_name]': first_name,
+                    'user[last_name]': last_name,
+                    'user[email]': email,
+                    'user[password]': password
+                },
                 error: function (data) {
                     //Response
                     var error = '';
@@ -695,11 +698,6 @@ $(function () {
             });
 
         } else if ($('#account-form').hasClass('signin-form')) {
-            //Needs Validation
-            var email = $('input[name="user[email]"]').val();
-            password = $('input[name="user[password]"]').val();
-
-            var data = "&user[email]=" + email + "&user[password]=" + password;
 
             $.ajax({
                 type: "POST",
@@ -707,7 +705,10 @@ $(function () {
                     xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').last().attr('content'))
                 },
                 url: '/users/sign_in.json',
-                data: data,
+                data: {
+                    'user[email]': email,
+                    'user[password]': password
+                },
                 error: function (data) {
                     //TODO: Log this
 
@@ -806,7 +807,7 @@ $(function () {
 
         e.preventDefault();
 
-        var address_s = $('#addr-st').val(),
+        var address_s = $('#addr-line-1').val(),
             address_p = $('#addr-pc').val(),
             mobile = $('#mobile').val(),
             address_id = $('#address-id').val(),
@@ -900,7 +901,7 @@ $(function () {
                         $('#new_delivery_address').fadeOut();
                         $('#order-address').show();
                         $('#new-address').val(false);
-                        $('#addr-st').val('');
+                        $('#addr-line-1').val('');
                         return true;
                     }
                 }).prop('selected', true);
@@ -918,6 +919,8 @@ $(function () {
 
 });
 
+var matchedAddresses = {};
+
 var postCodeLookup = function (postcode) {
 
     $('#suggested-addresses').val(0);
@@ -926,7 +929,9 @@ var postCodeLookup = function (postcode) {
         return;
     }
 
-    var $street = $('#addr-st');
+    var line_1 = $('#addr-line-1');
+    var line_2 = $('#addr-line-2');
+    var companyName = $('#addr-company-name');
 
     var apiUrl = 'https://api.ideal-postcodes.co.uk/v1/postcodes/' + postcode;
 
@@ -936,9 +941,10 @@ var postCodeLookup = function (postcode) {
         },
         function (data) {
             if (data.code === 2000) {
-                console.log(data.result)
 
-                $.each(data.result, function (key, value) {
+                matchedAddresses = data.result;
+
+                $.each(matchedAddresses, function (key, value) {
 
                     var address = value.line_1;
 
@@ -952,16 +958,42 @@ var postCodeLookup = function (postcode) {
 
                     $('#suggested-addresses')
                         .append($("<option></option>")
-                            .attr("value", address)
+                            .attr("value", value.udprn)
                             .text(address));
                 });
 
                 $('#suggested-addresses').change(function () {
                     $("#suggested-addresses").find("option:selected").each(function () {
-                        if (this.value !== '0') {
-                            $street.val($(this).text());
+
+                        var udprn = this.value;
+                        var idealAddress;
+
+                        for (var i = 0; i < matchedAddresses.length; i++) {
+                            if (matchedAddresses[i].udprn.toString() === udprn) {
+                                idealAddress = matchedAddresses[i];
+                                break;
+                            }
+                        }
+
+                        if (idealAddress) {
+
+                            if(idealAddress.organisation_name.trim().toLowerCase() == idealAddress.line_1.trim().toLowerCase()) {
+                                companyName.val(idealAddress.organisation_name);
+                                line_1.val(idealAddress.line_2);
+                                line_2.val(idealAddress.line_3);
+                            } else {
+                                line_1.val(idealAddress.line_1);
+                                var line2 = idealAddress.line_2;
+                                if(idealAddress.line_3.length > 0) {
+                                    line2 += ', ' + idealAddress.line_3;
+                                }
+                                line_2.val(line2);
+                            }
+
                         } else {
-                            $street.val('');
+                            line_1.val('');
+                            line_2.val('');
+                            companyName.val('');
                         }
                     });
                 });

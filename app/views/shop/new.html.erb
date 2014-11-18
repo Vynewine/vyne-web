@@ -322,7 +322,8 @@
           <span class="account-message">Have an account? <a href="" id="account-link" class="signin-link">Sign in</a></span>
           <ul class="errors" id="sign-in-errors"></ul>
           <div>
-            <%= text_field :user, :first_name, :placeholder => "First Name" %>
+            <%= text_field :user, :first_name, :placeholder => 'First Name' %>
+            <%= text_field :user, :last_name, :placeholder => 'Last Name' %>
           </div>
           <div>
             <%= email_field :user, :email,
@@ -386,10 +387,11 @@
           </div>
           <div>
           <label for="address_s">Enter address if not present above</label>
-          <textarea rows="3" disabled="disabled" id="addr-st" name="address_s" placeholder="House Number and Street Name"></textarea>
+          <input id="addr-line-1" name="address_line_1" placeholder="Address Line 1"/>
+          <input id="addr-line-2" name="address_line_2" placeholder="Address Line 2"/>
+          <input id="addr-company-name" name="address_company_name" placeholder="Company Name"/>
           </div>
           <div>
-
             <input type="hidden" id="addr-pc" name="address_p" placeholder="Postcode" disabled="disabled"/>
           </div>
           <div><span>Your mobile to ensure fast delivery</span></div>
@@ -417,7 +419,9 @@
           paymentCards = [['New payment card', -1]]
           selected_card = -1
           if current_user
+            has_saved_cards = false
             current_user.payments.order(updated_at: :desc).each do |a|
+              has_saved_cards = true
               # [ :visa, :master, :american, :discover, :diners, :jcb ]
               if selected_card == -1
                 selected_card = a.id
@@ -432,8 +436,9 @@
             end
           end
           %>
-
+        <% if has_saved_cards == true %>
         <%= select_tag "orderCard", options_for_select(paymentCards, selected_card), :name => "" %>
+        <% end %>
         <div id="new_card">
           <div><input type="text" id="pmnm" size="20" placeholder="0000 0000 0000 0000" data-stripe="number" /></div>
           <div><input type="text" id="pmcv" size="4"  placeholder="CVC" data-stripe="cvc" /></div>
