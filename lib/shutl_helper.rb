@@ -389,6 +389,7 @@ module ShutlHelper
 
     body = {
         :store => {
+            :id => warehouse.shutl_id,
             :brand_name => warehouse.title,
             :name => "#{warehouse.title} #{warehouse.address.postcode}",
             :address_line_1 => warehouse.address.line_1,
