@@ -19,19 +19,26 @@ class HooksController < ApplicationController
         puts "Couldn't find order for token: #{token}"
       else
         puts "Order found - id = #{order.id}"
-        response = fetch_order_information(uri)
-        order.delivery_status = response
 
-        unless response['booking'].blank? || response['booking']['booking_status'].blank?
-          status = response['booking']['booking_status']
-          unless status.blank?
-            new_order_status = shutl_status_to_order_status(status)
-            unless new_order_status.blank?
-              order.status_id = new_order_status
+        #TODO: This is not DRY - Repeated on DeliveryController.update
+        response = fetch_order_information(uri)
+
+        if response[:errors].blank?
+          data = response[:data]
+
+          order.delivery_status = data
+
+          unless data['booking'].blank? || data['booking']['booking_status'].blank?
+            status = data['booking']['booking_status']
+            unless status.blank?
+              new_order_status = shutl_status_to_order_status(status)
+              unless new_order_status.blank?
+                order.status_id = new_order_status
+              end
             end
           end
+          order.save
         end
-        order.save
       end
     end
     render :text => 'OK'

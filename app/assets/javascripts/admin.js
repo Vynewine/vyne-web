@@ -568,6 +568,7 @@ var adminReady = function() {
                 },
                 error: function(err) {
                     console.log(err);
+                    alert(err.responseJSON.errors)
                 }
             });
 

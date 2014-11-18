@@ -6,8 +6,9 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+# This whole shabang to use postgis
 class ActiveRecordOverrideRailtie < Rails::Railtie
-  initializer "active_record.initialize_database.override" do |app|
+  initializer 'active_record.initialize_database.override' do |app|
 
     ActiveSupport.on_load(:active_record) do
       if url = ENV['DATABASE_URL']
@@ -28,6 +29,7 @@ class ActiveRecordOverrideRailtie < Rails::Railtie
   end
 end
 
+# Regular app initialization here
 module Vyne
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.

@@ -50,16 +50,16 @@ class Admin::WarehousesController < ApplicationController
       return
     end
 
-    shutl_errors = add_warehouse_to_shutl(@warehouse)
+    response = add_warehouse_to_shutl(@warehouse)
 
-    if shutl_errors.blank?
+    if response[:errors].blank?
       @warehouse.registered_with_shutl = true
       unless @warehouse.save
         redirect_to new_admin_warehouse_path, alert: @warehouse.errors.full_messages().join(', ')
         return
       end
     else
-      redirect_to edit_admin_warehouse_path(@warehouse), alert: shutl_errors.join(', ')
+      redirect_to edit_admin_warehouse_path(@warehouse), alert: response[:errors].join(', ')
       return
     end
 
@@ -78,19 +78,21 @@ class Admin::WarehousesController < ApplicationController
     end
 
     if @warehouse.registered_with_shutl
-      shutl_errors = update_shutl_warehouse(@warehouse)
+      response = update_shutl_warehouse(@warehouse)
     else
-      shutl_errors = add_warehouse_to_shutl(@warehouse)
+      response = add_warehouse_to_shutl(@warehouse)
     end
 
-    if shutl_errors.blank?
+    puts json: response
+
+    if response[:errors].blank?
       @warehouse.registered_with_shutl = true
       unless @warehouse.save
         redirect_to edit_admin_warehouse_path(@warehouse), alert: @warehouse.errors.full_messages().join(', ')
         return
       end
     else
-      redirect_to edit_admin_warehouse_path(@warehouse), alert: shutl_errors.join(', ')
+      redirect_to edit_admin_warehouse_path(@warehouse), alert: response[:errors].join(', ')
       return
     end
 
