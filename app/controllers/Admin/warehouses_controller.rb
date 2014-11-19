@@ -83,8 +83,6 @@ class Admin::WarehousesController < ApplicationController
       response = add_warehouse_to_shutl(@warehouse)
     end
 
-    puts json: response
-
     if response[:errors].blank?
       @warehouse.registered_with_shutl = true
       unless @warehouse.save

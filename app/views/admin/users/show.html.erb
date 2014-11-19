@@ -28,7 +28,7 @@
   <strong>Addresses:</strong>
 <ul>
   <% @user.addresses.each do |address| %>
-      <li><%= address.postcode %></li>
+      <li><%= link_to address.line_1 + ' - ' + address.postcode, admin_address_url(address) %></li>
   <% end %>
 </ul>
 </p>

@@ -18,5 +18,12 @@
   <%= @address.postcode %>
 </p>
 
+<p>
+  <strong>Coordinates:</strong>
+  <% unless @address.coordinates.blank? %>
+      lat: <%= @address.latitude %>, lng: <%= @address.longitude %>
+  <% end %>
+</p>
+
 <%= link_to 'Edit', edit_admin_address_path(@address) %>
 <%= link_to 'Back', admin_addresses_path %>

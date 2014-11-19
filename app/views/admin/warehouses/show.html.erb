@@ -40,13 +40,20 @@
 
 <p>
   <strong>Shutl Info</strong>
-  <% if @warehouse.registered_with_shutl %>
-      <%= @shutl_info %>
-  <% else %>
-      Not Registered with Shutl. Update Warehouse to register it.
-  <% end %>
+<p>
+  Registered with Shutl: <%= @warehouse.registered_with_shutl == true%>
+</p>
+  <p>
+    <% if @warehouse.registered_with_shutl %>
+        <%= @shutl_info.to_json %>
+    <% else %>
+        Not Registered with Shutl. Update Warehouse to register it.
+    <% end %>
+  </p>
+
 
 </p>
+
 
 <%= link_to 'Edit', edit_admin_warehouse_path(@warehouse) %>
 <%= link_to 'Back', admin_warehouses_path %>
