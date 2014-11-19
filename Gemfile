@@ -87,3 +87,6 @@ gem 'will_paginate', '~> 3.0'
 
 #PostGIS Spatial Capabilities
 gem 'activerecord-postgis-adapter'
+
+#Timezon fun
+gem 'tzinfo'

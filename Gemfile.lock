@@ -249,6 +249,7 @@ DEPENDENCIES
   sunspot_rails
   sunspot_solr
   turbolinks
+  tzinfo
   uglifier (>= 1.3.0)
   webmock (= 1.19.0)
   will_paginate (~> 3.0)
