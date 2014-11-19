@@ -93,4 +93,21 @@ class AddressTest < ActiveSupport::TestCase
     # assert_equal(0, address.latitude)
     # assert_equal(0, address.longitude)
   end
+
+  test 'something aint right' do
+    Address.create!(
+        {
+            :company_name => 'Company 1',
+            :line_1 => 'Street 1',
+            :line_2 => 'Street 2',
+            :postcode => 'N1 7RL',
+            #:coordinates => 'POINT(0.0 0.0)' #'POINT(-0.108105959289054 51.5200685165148)'
+            :latitude => -0.108105959289054,
+            :longitude => ''
+        }
+    )
+
+
+  end
+
 end

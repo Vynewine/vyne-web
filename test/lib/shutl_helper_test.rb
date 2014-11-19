@@ -29,7 +29,32 @@ class ShutlHelperTest < ActiveSupport::TestCase
                                    })
 
     results = add_warehouse_to_shutl(@warehouse)
-    puts json: results
+
+    assert(results.include?('Error occurred when registering warehouse with Shutl'))
+    assert(results.include?('phone_number - is not a phone number'))
+    assert(results.include?('email - is not an email'))
+    assert(results.include?('postcode - is not a valid uk postcode'))
+  end
+
+  test 'Can handle store setup blah' do
+
+    @address = Address.create!({
+                                   :line_1 => 'Street 1',
+                                   :line_2 => 'Street 2',
+                                   :postcode => 'bad postcode'
+                               })
+
+    @warehouse = Warehouse.create!({
+                                       :title => 'Store 1',
+                                       :email => 'store',
+                                       :phone => 'bad phone',
+                                       :active => true,
+                                       :address => @address
+                                   })
+
+    results = add_warehouse_to_shutl(@warehouse)
+
+    puts results
 
   end
 
