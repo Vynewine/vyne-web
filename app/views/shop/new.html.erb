@@ -436,9 +436,15 @@
             end
           end
           %>
-        <% if has_saved_cards == true %>
-        <%= select_tag "orderCard", options_for_select(paymentCards, selected_card), :name => "" %>
-        <% end %>
+
+        <% if has_saved_cards
+             select_style = 'display: block;'
+           else
+             select_style = 'display: none;'
+           end
+        %>
+        <%= select_tag "orderCard", options_for_select(paymentCards, selected_card), :name => "", style: select_style %>
+
         <div id="new_card">
           <div><input type="text" id="pmnm" size="20" placeholder="0000 0000 0000 0000" data-stripe="number" /></div>
           <div><input type="text" id="pmcv" size="4"  placeholder="CVC" data-stripe="cvc" /></div>

@@ -743,6 +743,7 @@ $(function () {
                         }
                         if (data.payments && data.payments.length > 0) {
                             var payments = data.payments;
+                            $orderCard.show();
 
                             $('#new_card').hide();
                             for (var i = 0; i < payments.length; i++) {
