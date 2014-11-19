@@ -6,16 +6,8 @@ class HomeController < ApplicationController
     end
   end
 
-
-
   def code
     puts "User code: " + current_user.code
-    # require 'pp'
-    # puts PP.pp(current_user,'',80)
-    # @confirmationCode = rand(9999).to_s.rjust(4, "0")
-    # generate 4-digit code
-    # persist
-    # send sms
   end
 
   def activate

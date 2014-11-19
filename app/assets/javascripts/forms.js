@@ -261,7 +261,6 @@ $(document).ready(function(){
             var mapUtil = new MapUtility();
 
             mapUtil.calculateDistanceForAllWarehouses(postcode, function(delivery) {
-                // console.log('callback 1', deliverable);
                 $('#initial-postcode-lookup').hide();
                 $('#filterPostcode').show();
                 if (delivery.available) {
@@ -271,14 +270,9 @@ $(document).ready(function(){
                         status: 'Delivery available'
                     });
 
-                    var storeOpeningTime = new Date('01/01/2000 10:00');
-                    var storeClosingTime = new Date('01/01/2000 20:30');
-                    var clientTime = new Date();
-                    clientTime.setFullYear(2000);
-                    clientTime.setMonth(0);
-                    clientTime.setDate(1);
+                    var openedWarehouses = delivery.warehouses.filter(function(warehouse) { return warehouse.is_open });
 
-                    if(clientTime >= storeOpeningTime && clientTime <= storeClosingTime) {
+                    if(openedWarehouses.length > 0) {
 
                         $slideable.removeClass('slideup');
 
@@ -291,7 +285,7 @@ $(document).ready(function(){
                         $feedback.removeClass('error');
                         $feedback.html("VYNE delivers to this area.");
 
-                        $('#warehouses').val('{"warehouses":' + JSON.stringify(delivery.warehouses) + '}');
+                        $('#warehouses').val('{"warehouses":' + JSON.stringify(openedWarehouses) + '}');
 
                     } else {
                         $('#sign-up-closed').val(true);

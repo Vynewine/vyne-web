@@ -1,3 +1,5 @@
+require 'tzinfo'
+
 class Warehouse < ActiveRecord::Base
   acts_as_paranoid
 
@@ -6,21 +8,7 @@ class Warehouse < ActiveRecord::Base
   validates :title, :email, :phone, :address, :presence => true
   accepts_nested_attributes_for :address, :reject_if => :all_blank, :allow_destroy => true
   accepts_nested_attributes_for :agendas, :reject_if => :all_blank, :allow_destroy => true
-  after_create :set_default_agenda
 
-  def set_default_agenda
-    if agendas.count == 0
-      for i in 0..6 do
-        Agenda.create(
-          :warehouse_id => self.id,
-                   :day => i,
-               :opening =>  900,
-               :closing => 1800
-        )
-      end
-    end     
-  end
-  
   def agendas_attributes=(agendas_attributes)
     agendas_attributes.values.each do |agenda_attributes|
       agenda_to_update = Agenda.find_by_id(agenda_attributes[:id]) || self.agendas.build
@@ -32,10 +20,48 @@ class Warehouse < ActiveRecord::Base
   end
 
   def short_name
-      "#{title} (active: #{active})"
+    "#{title} (active: #{active})"
   end
 
   def shutl_id
     "vyne_store_#{id}"
+  end
+
+  def is_open
+    if self.agendas.blank?
+      false
+    else
+      #TODO: In the future we'll make time zone identifier configurable
+      time_zone_identifier = 'Europe/London'
+      tz = TZInfo::Timezone.get(time_zone_identifier)
+      # current local time
+      local_time = tz.utc_to_local(Time.now.getutc)
+      # Select agenda for today for a warehouse
+      agenda = self.agendas.select { |agenda| agenda.day == local_time.wday }.first
+      unless agenda.blank?
+        # get date time for agenda
+        # trick is to use current local date and agenda's time
+        agenda_open_time = Time.parse(agenda.opening_time)
+        agenda_open = DateTime.new(local_time.year,
+                                   local_time.month,
+                                   local_time.day,
+                                   agenda_open_time.hour,
+                                   agenda_open_time.min,
+                                   agenda_open_time.sec
+        )
+
+        agenda_close_time = Time.parse(agenda.closing_time)
+        agenda_close = DateTime.new(local_time.year,
+                                    local_time.month,
+                                    local_time.day,
+                                    agenda_close_time.hour,
+                                    agenda_close_time.min,
+                                    agenda_close_time.sec
+        )
+
+        # compare agenda open/close to local time
+        (agenda_open < local_time && agenda_close > local_time)
+      end
+    end
   end
 end
