@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) { |u|
-    	u.permit(:email, :password, :password_confirmation, :first_name, :last_name, :mobile)
+      u.permit(:email, :password, :password_confirmation, :first_name, :last_name, :mobile)
     }
   end
 
@@ -41,10 +41,14 @@ class ApplicationController < ActionController::Base
       end
 
       unless params[:invite_code].blank?
-        cookies[:invite_code] = Rails.application.config.invite_code
-        return
+        if params[:invite_code].strip.downcase == Rails.application.config.invite_code
+          cookies[:invite_code] = Rails.application.config.invite_code
+          return
+        else
+          render '/home/gate'
+          return
+        end
       end
-
     end
   end
 
