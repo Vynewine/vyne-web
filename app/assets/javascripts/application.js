@@ -19,16 +19,6 @@
 //= require vendor/swiper_min
 //= require vendor/idangerous.swiper.hashnav
 
-var ready = function () {
-    // console.log('Doc is apparently ready');
-    if (typeof(admin) !== 'undefined' && admin !== null && admin === true) {
-
-    } else {
-
-    }
-
-};
-
 events = [];
 
 var wines = [];
@@ -57,6 +47,73 @@ var food = function (id, name, preparationId, preparationName) {
 
 var wineCount = 0;
 var secondBottle = false;
+
+
+$('#invite-code').keyup(function (event) {
+    if (event.target.value.length > 0) {
+        $('#submit-invite-code').show();
+        $('#invite-missing').hide();
+    } else {
+        $('#submit-invite-code').hide();
+        $('#invite-missing').show();
+    }
+});
+
+$('#invite-not-available').click(function (e) {
+    e.preventDefault();
+    $('#invite-form').hide();
+    $('#sign-up-home-form').show();
+});
+
+$('#sign-up-home-submit').click(function (e) {
+    e.preventDefault();
+    var email = $('#sign-up-home-email').val();
+    var $error = $('#sign-up-home-errors');
+    var panelThankYou = $('#sign-up-home-thank-you');
+
+    $.ajax({
+        type: "POST",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').last().attr('content'))
+        },
+        url: '/mailing_list_signup',
+        data: {
+            email: email
+        },
+        error: function (data) {
+
+            if (data && data.responseJSON) {
+                var errors = data.responseJSON.errors;
+                if (errors) {
+                    error = errors.join(', ');
+                    $error.text(error);
+                }
+            } else {
+
+                if (data.statusText) {
+                    $error.text(data.statusText);
+                } else {
+                    $error.text('Error');
+                }
+            }
+            $error.show();
+
+        },
+        success: function () {
+
+            panelThankYou.removeClass('loading');
+
+            $error.hide();
+            $('#sign-up-home-form').hide();
+            $('#sign-up-home-thank-you').show();
+
+            analytics.track('User home mailing list sing up', {
+                email: email
+            });
+        }
+    });
+
+});
 
 
 $(function () {
@@ -982,14 +1039,14 @@ var postCodeLookup = function (postcode) {
 
                         if (idealAddress) {
 
-                            if(idealAddress.organisation_name.trim().toLowerCase() == idealAddress.line_1.trim().toLowerCase()) {
+                            if (idealAddress.organisation_name.trim().toLowerCase() == idealAddress.line_1.trim().toLowerCase()) {
                                 companyName.val(idealAddress.organisation_name);
                                 line_1.val(idealAddress.line_2);
                                 line_2.val(idealAddress.line_3);
                             } else {
                                 line_1.val(idealAddress.line_1);
                                 var line2 = idealAddress.line_2;
-                                if(idealAddress.line_3.length > 0) {
+                                if (idealAddress.line_3.length > 0) {
                                     line2 += ', ' + idealAddress.line_3;
                                 }
                                 line_2.val(line2);

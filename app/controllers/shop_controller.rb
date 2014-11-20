@@ -5,6 +5,7 @@ class ShopController < ApplicationController
   before_action :authenticate_user!, :except => [:new, :create]
   authorize_actions_for UserAuthorizer, :except => [:new, :create] # Triggers user check
   before_action :set_order, only: [:show, :edit, :update, :destroy]
+  before_action :check_the_gate
 
   # GET /welcome
   def welcome

@@ -17,19 +17,14 @@ Rails.application.routes.draw do
 
   # Index:
   get 'home/index'
+  post '/' => 'home#index'
+  post '/mailing_list_signup' => 'home#mailing_list_signup'
 
   # Sign up:
   get 'warehouses/addresses' => 'home#warehouses'
   post 'signup/create' => 'signup#create'
   post 'signup/address' => 'signup#address'
   post 'signup/mailing_list_signup' => 'signup#mailing_list_signup'
-
-  # Signed only:
-  # get 'welcome' => 'home#welcome'
-
-  # Orders:
-  # get 'orders/list' => 'orders#list'
-  # get 'orders/confirmed' => 'orders#confirmed'
 
   #T&C
   get '/tc' => 'home#terms'
@@ -75,12 +70,6 @@ Rails.application.routes.draw do
     get 'update' => 'shop#update'
     get 'destroy' => 'shop#destroy'
 
-
-    # get 'welcome' => 'shop#welcome'
-    # get 'order' => 'shop#new'
-    # get 'mywines' => 'shop#index'
-
-    # get 'confirmed' => 'shop#confirmed'
   end
 
 

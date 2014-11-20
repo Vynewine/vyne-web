@@ -27,4 +27,25 @@ class ApplicationController < ActionController::Base
     entercode_path
   end
 
+  #Used to check for invitation code
+  def check_the_gate
+
+    unless Rails.application.config.enable_invite_code == 'false'
+      if cookies[:invite_code] == Rails.application.config.invite_code
+        return
+      end
+
+      if params[:invite_code].blank?
+        render '/home/gate'
+        return
+      end
+
+      unless params[:invite_code].blank?
+        cookies[:invite_code] = Rails.application.config.invite_code
+        return
+      end
+
+    end
+  end
+
 end

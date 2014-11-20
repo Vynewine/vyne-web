@@ -113,4 +113,8 @@ Rails.application.configure do
   #Vyne order internal notification email
   config.order_notification = ENV['ORDER_NOTIFICATION']
 
+  #Require invitation code to access the site.
+  config.enable_invite_code = ENV['ENABLE_INVITE_CODE']
+  config.invite_code = ENV['INVITE_CODE']
+
 end

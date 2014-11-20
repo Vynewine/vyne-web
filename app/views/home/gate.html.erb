@@ -1,0 +1,57 @@
+<div id="walkthrough" class="swiper-container">
+  <div class="swiper-wrapper">
+
+    <div id="one" class="swiper-slide walkthrough-panel">
+      <div class="walkthrough-panel-bg"></div>
+      <div class="walkthrough-panel-overlay"></div>
+      <div class="inner wrapper wrapper-large">
+        <h3>Matching great wines for any occasion</h3>
+
+        <p>Restaurant quality wine delivered on-demand</p>
+      </div>
+    </div>
+
+    <div id="two" class="swiper-slide walkthrough-panel">
+      <div class="walkthrough-panel-bg"></div>
+      <div class="walkthrough-panel-overlay"></div>
+      <div class="inner wrapper wrapper-large">
+        <h3>From London's best wine cellars</h3>
+
+        <p>Only producers from the best vineyards in the world</p>
+      </div>
+    </div>
+
+    <div id="three" class="swiper-slide walkthrough-panel">
+      <div class="walkthrough-panel-bg"></div>
+      <div class="walkthrough-panel-overlay"></div>
+      <div class="inner wrapper wrapper-large">
+        <h3>Your digital sommelier</h3>
+
+        <p>Select the occasion or meal you’re having with your wine.</p>
+
+        <p>We’ll find a match for you.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="pagination"></div>
+
+  <div class="check-availability">
+    <div class="wrapper">
+      <%= form_tag('/', method: 'post', id: 'invite-form') do %>
+          <input type="text" id="invite-code" placeholder="Invite Code" name="invite_code" autocomplete="off"/>
+          <input type="submit" value="Enter Vyne" id="submit-invite-code" style="display:none;"/>
+          <div style="height: 41px; padding-top: 10px;" id="invite-missing" class="opening-times loading">
+            <a href="#" id="invite-not-available" style="color: #bbbbbb;">Don't have invite code?</a>
+          </div>
+      <% end %>
+      <span id="sign-up-home-errors" style="display:none;"></span>
+      <%= form_tag('/mailing_list_signup', method: 'post', id: 'sign-up-home-form', style: 'display:none;') do %>
+          <input type="email" id="sign-up-home-email" placeholder="Email me about launch" name="email" autocomplete="off"/>
+          <input type="submit" id="sign-up-home-submit" value="Let me know"/>
+      <% end %>
+      <div id="sign-up-home-thank-you" style="display:none; padding-bottom: 40px;">Thank you</div>
+    </div>
+  </div>
+</div>
