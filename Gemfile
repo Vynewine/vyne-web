@@ -91,3 +91,6 @@ gem 'activerecord-postgis-adapter'
 
 #Timezon fun
 gem 'tzinfo'
+
+#Spatial to JSON
+gem 'rgeo-geojson'

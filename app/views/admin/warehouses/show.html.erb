@@ -1,3 +1,8 @@
+<% content_for :head do %>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<% end %>
+
 <p>
   <strong>Title:</strong>
   <%= @warehouse.title %>
@@ -24,7 +29,7 @@
   <%= @warehouse.address.line_2 %>
   <%= @warehouse.address.postcode %>
   <% unless @warehouse.address.coordinates.blank? %>
-  (<%= 'lat/lng: ' + @warehouse.address.latitude.to_s + ', ' + @warehouse.address.longitude.to_s %>)
+      (<%= 'lat/lng: ' + @warehouse.address.latitude.to_s + ', ' + @warehouse.address.longitude.to_s %>)
   <% end %>
 </p>
 
@@ -39,21 +44,65 @@
 </p>
 
 <p>
-  <strong>Shutl Info</strong>
+  <strong>Delivery Area</strong>
+<div id="map" style="width: 90%; height: 500px;"></div>
+<script>
+    var map = L.map('map').setView([<%= @warehouse.address.latitude %>, <%= @warehouse.address.longitude %>], 14);
+
+    //TODO: Register for mapbox API
+    L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+                '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+        id: 'examples.map-i875mjb7'
+    }).addTo(map);
+
+    var outside = [
+        [0, -90],
+        [0, 90],
+        [90, -90],
+        [90, 90]
+    ];
+
+    L.polygon([ outside , [
+        <% @warehouse.delivery_area.exterior_ring.points.each do |point| %>
+        [<%= point.y %>, <%= point.x %>],
+        <% end %>
+    ]
+    ]).addTo(map).setStyle(
+            {
+                color: '#009ee0',
+                opacity: 0.8,
+                weight: 2,
+                fillColor: '#e8f8ff',
+                fillOpacity: 0.45
+            });
+
+</script>
+</p>
+
 <p>
-  Registered with Shutl: <%= @warehouse.registered_with_shutl == true%>
-</p>
-  <p>
-    <% if @warehouse.registered_with_shutl %>
-        <%= @shutl_info.to_json %>
-    <% else %>
-        Not Registered with Shutl. Update Warehouse to register it.
+  <strong>Shutl Info</strong>
+
+  Registered with Shutl: <%= @warehouse.registered_with_shutl == true %>
+
+  <% if @warehouse.registered_with_shutl %>
+      <% unless @shutl_info.blank? %>
+        <div id="shutl-info" style="white-space: pre; font-family: monospace;"></div>
+        <script>
+            var shutlInfo = JSON.parse('<%= @shutl_info.html_safe %>');
+            console.log(shutlInfo);
+            console.log(JSON.stringify(shutlInfo, null, 4));
+            $('#shutl-info').text(JSON.stringify(shutlInfo, null, 4));
+        </script>
     <% end %>
-  </p>
 
 
+<% else %>
+    Not Registered with Shutl. Update Warehouse to register it.
+<% end %>
 </p>
-
 
 <%= link_to 'Edit', edit_admin_warehouse_path(@warehouse) %>
 <%= link_to 'Back', admin_warehouses_path %>

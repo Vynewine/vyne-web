@@ -64,4 +64,36 @@ class Warehouse < ActiveRecord::Base
       end
     end
   end
+
+  def area=(area)
+
+    if area.blank?
+      coordinates = '[[]]'
+    else
+      coordinates = area
+    end
+
+    area = {
+        :type => 'Polygon',
+        :coordinates => JSON.parse(coordinates)
+    }
+
+    self.delivery_area = RGeo::GeoJSON.decode(area.to_json, :json_parser => :json)
+  end
+
+  def area
+    area = '[['
+    unless delivery_area.blank?
+      delivery_area.exterior_ring.points.each_with_index do |point, index|
+
+        area += '[' + point.x.to_s + ', ' + point.y.to_s + ']'
+
+        if index < (delivery_area.exterior_ring.points.length - 1)
+          area += ', '
+        end
+      end
+    end
+    area += ']]'
+    area
+  end
 end

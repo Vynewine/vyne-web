@@ -154,6 +154,8 @@ GEM
     rgeo-activerecord (1.2.0)
       activerecord (~> 4.0)
       rgeo (~> 0.3)
+    rgeo-geojson (0.3.1)
+      rgeo (~> 0.3)
     rolify (3.4.0)
     roo (1.13.2)
       nokogiri
@@ -237,6 +239,7 @@ DEPENDENCIES
   progress_bar
   rails (= 4.1.4)
   rails_12factor
+  rgeo-geojson
   rolify
   roo (~> 1.13.2)
   sass-rails (~> 4.0.3)

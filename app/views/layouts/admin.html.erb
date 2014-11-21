@@ -8,6 +8,9 @@
   </script>
   <%= javascript_include_tag 'admin', 'jquery.tokeninput', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
+  <% if content_for?(:head) %>
+      <%= yield(:head) %>
+  <% end %>
 </head>
 <body>
 

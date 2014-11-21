@@ -65,12 +65,18 @@
       <% end %>
     </div>
 
-
-
-
-
-
-
+    <div class="field">
+      <%= f.label :delivery_area %>
+      <br/>
+      <textarea id="area" name="warehouse[delivery_area]" cols="50" rows="20"></textarea>
+      <script>
+          var area = '<%= @warehouse.area %>';
+          area = area.replace('[[', '[[\n');
+          area = area.replace(']]]', ']\n]]');
+          area = area.replace(/],/g, '],\n');
+          $('#area').val(area);
+      </script>
+    </div>
 
     <div class="field">
       <%= f.label :agenda %>
@@ -94,10 +100,7 @@
               </div>
               <% agendaCounter += 1 %>
           <% end %>
-
-
       <% else %>
-
           <% for i in 0..6 do %>
               <h4><%= Date::DAYNAMES[i] %></h4>
               <input type="hidden" name="warehouse[agendas_attributes][<%= i %>][day]" value="<%= i %>"/>
@@ -111,16 +114,8 @@
                 <input type="text" name="warehouse[agendas_attributes][<%= i %>][closing]" value="1800"/>
               </div>
           <% end %>
-
-
       <% end %>
-
     </div>
-
-
-
-
-
     <div class="actions">
       <%= f.submit %>
     </div>

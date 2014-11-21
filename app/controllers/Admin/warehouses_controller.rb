@@ -1,3 +1,5 @@
+require 'json'
+
 class Admin::WarehousesController < ApplicationController
   include ShutlHelper
 
@@ -19,7 +21,7 @@ class Admin::WarehousesController < ApplicationController
     if @warehouse.registered_with_shutl
       shutl_info = get_warehouse_info_from_shutl(@warehouse)
       if shutl_info[:errors].blank?
-        @shutl_info = shutl_info[:data]
+        @shutl_info = shutl_info[:data].to_json
       else
         @shutl_info = shutl_info[:errors].join(', ')
       end
@@ -72,7 +74,11 @@ class Admin::WarehousesController < ApplicationController
   def update
     @warehouse.update_attributes(warehouse_params)
 
-    unless @warehouse.update(warehouse_params)
+    delivery_area = params[:warehouse][:delivery_area]
+
+    @warehouse.area = delivery_area
+
+    unless @warehouse.save
       redirect_to edit_admin_warehouse_path(@warehouse), alert: @warehouse.errors.full_messages().join(', ')
       return
     end

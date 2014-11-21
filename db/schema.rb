@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141117180413) do
+ActiveRecord::Schema.define(version: 20141121101511) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -448,7 +448,7 @@ ActiveRecord::Schema.define(version: 20141117180413) do
 
   create_table "warehouses", force: true do |t|
     t.string   "title"
-    t.string   "email",                 default: "", null: false
+    t.string   "email",                                                      default: "", null: false
     t.string   "phone"
     t.boolean  "shutl"
     t.integer  "address_id"
@@ -457,6 +457,7 @@ ActiveRecord::Schema.define(version: 20141117180413) do
     t.datetime "deleted_at"
     t.boolean  "active"
     t.boolean  "registered_with_shutl"
+    t.spatial  "delivery_area",         limit: {:srid=>0, :type=>"polygon"}
   end
 
   add_index "warehouses", ["address_id"], :name => "index_warehouses_on_address_id"

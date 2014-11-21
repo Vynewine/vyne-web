@@ -42,7 +42,7 @@ class ApplicationController < ActionController::Base
 
       unless params[:invite_code].blank?
         if params[:invite_code].strip.downcase == Rails.application.config.invite_code
-          cookies[:invite_code] = Rails.application.config.invite_code
+          cookies[:invite_code] = { :value => Rails.application.config.invite_code, :expires => 3.months.from_now }
           return
         else
           render '/home/gate'
