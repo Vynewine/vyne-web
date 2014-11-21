@@ -45,6 +45,10 @@
 
 <p>
   <strong>Delivery Area</strong>
+
+<% if @warehouse.delivery_area.blank? %>
+  Not Set
+    <% else %>
 <div id="map" style="width: 90%; height: 500px;"></div>
 <script>
     var map = L.map('map').setView([<%= @warehouse.address.latitude %>, <%= @warehouse.address.longitude %>], 14);
@@ -80,6 +84,7 @@
             });
 
 </script>
+    <% end %>
 </p>
 
 <p>
