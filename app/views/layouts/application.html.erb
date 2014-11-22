@@ -29,6 +29,10 @@
       window.analytics.page();
   </script>
 
+  <% if content_for?(:head) %>
+      <%= yield(:head) %>
+  <% end %>
+
   <script>
     <% if current_user.blank? %>
         analytics.identify({});

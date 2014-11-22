@@ -96,4 +96,13 @@ class Warehouse < ActiveRecord::Base
     area += ']]'
     area
   end
+
+  #TODO: Actually take city as a parameter ;)
+  # If you came here to refactor this. Congratulations VYNE made it!
+  def self.delivery_area_by_city
+    results = ActiveRecord::Base.connection.execute('select ST_Union(w.delivery_area) from warehouses w where w.active = true;')
+    #Binary Parser
+    parser = ::RGeo::WKRep::WKBParser.new
+    parser.parse(results.first['st_union'])
+  end
 end
