@@ -21,7 +21,7 @@
               <script>
                   var map = L.map('map', {zoomControl: false}).setView([51.524525, -0.1050393], 13);
 
-                  //map.addControl(L.control.zoom({position: 'bottomleft'}));
+                  map.addControl(L.control.zoom({position: 'topright'}));
 
                   //TODO: Register for mapbox API
                   L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
