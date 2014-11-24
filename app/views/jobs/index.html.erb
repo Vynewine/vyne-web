@@ -1,23 +1,24 @@
 <div style="text-align: center; padding-top: 30px;">
   <h3> Join Vyne </h3>
 </div>
-
-<div id="piktowrapper-embed">
-  <div class="pikto-canvas-wrap default center" style="margin: auto;">
-    <div class="pikto-canvas"></div>
+<div style="width: 100%">
+  <div style="margin: 0 auto">
+    <iframe id="pikchart-frame" width="800" height="3246" frameborder="0" scrolling="no" style="overflow-y:hidden;margin: 0 auto;display:block;" src="https://magic.piktochart.com/embed/3572160-frontend-leader"></iframe>
   </div>
 </div>
 
 <script>
-    (function (d) {
-        var js, id = "pikto-embed-js", ref = d.getElementsByTagName("script")[0];
-        if (d.getElementById(id)) {
-            return;
+    document.addEventListener("DOMContentLoaded", function(event) {
+        var $window = $(window);
+        var $frame = $('#pikchart-frame');
+
+        function checkWidth() {
+            var windowsize = $window.width();
+            if (windowsize < 800) {
+                $frame.width(windowsize);
+            }
         }
-        js = d.createElement("script");
-        js.id = id;
-        js.async = true;
-        js.src = "https://magic.piktochart.com/assets/embedding/embed.js?UID=3572160-frontend-leader";
-        ref.parentNode.insertBefore(js, ref);
-    }(document));
+        checkWidth();
+        $(window).resize(checkWidth);
+    });
 </script>
