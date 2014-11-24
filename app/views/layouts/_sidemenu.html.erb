@@ -1,54 +1,35 @@
 <div class="aside-bar hidden">
   <nav>
     <ul class="nav">
-      <!--<li>
-        <%= link_to 'New Order', neworder_path %>
-      </li>-->
 
       <% if user_signed_in? %>
 
-        <% if current_user.has_role?(:supplier) ||
-              current_user.has_role?(:admin) ||
-              current_user.has_role?(:superadmin)
-        %>
-        <li class="sign-in">
-            <%= link_to 'Admin', admin_root_path %>
-        </li>
-        <% end %>
-
+          <% if current_user.has_role?(:supplier) ||
+                  current_user.has_role?(:admin) ||
+                  current_user.has_role?(:superadmin)
+          %>
+              <li class="sign-in">
+                <%= link_to 'Admin', admin_root_path %>
+              </li>
+          <% end %>
       <% else %>
-      <li class="sign-in">
-          <%= link_to "Sign in", login_path %>
-      </li>
+          <li class="sign-in">
+            <%= link_to "Sign in", login_path %>
+          </li>
       <% end %>
       <li><a href="/" class="promotions">Home</a></li>
-      <!--<li><a href="/promotions" class="promotions">Promotions</a></li>-->
-      <!--<li><a href="share" class="share">Share</a></li>-->
-
-
       <% if user_signed_in? %>
-      <% if current_user.has_role?(:client) %>
-      <li>
-        <%= link_to 'My wines', mywines_path, :class => 'history' %>
-      </li>
+          <li>
+            <%= link_to 'My wines', mywines_path, :class => 'history' %>
+          </li>
       <% end %>
-      <% end %>
-
       <li><a href="/delivery">Coverage Map</a></li>
       <li><a href="https://vyne.zendesk.com/">Help</a></li>
       <li><a href="/tc">Terms</a></li>
       <li><a href="/jobs">Jobs</a></li>
-
-      <!--<li class="hidden"><a href="#" class="share">Share</a></li>-->
     </ul>
   </nav>
-  <!--<nav>
-    <ul class="nav">
-      <li><%= link_to 'Home', root_path %></li>
-      <li><a href="#" class="about">About</a></li>
-      <li><a href="#" class="help">Help</a></li>
-    </ul>
-  </nav>-->
+
   <% if user_signed_in? %>
       <%= link_to "Sign out", logout_path, :method => :delete, :class => "sign-out" %>
   <% end %>
