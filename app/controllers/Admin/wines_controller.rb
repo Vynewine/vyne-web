@@ -37,6 +37,7 @@ class Admin::WinesController < ApplicationController
     if params[:wine][:name].empty? || params[:wine][:vintage].empty? || params[:wine][:producer_id].empty? ||
         params[:wine][:type_id].empty?
       fetch_data
+      @wine = Wine.new
       flash.now[:alert] = 'Wine cannot be saved, please fill name, vintage and producer'
       render :new
     else

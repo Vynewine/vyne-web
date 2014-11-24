@@ -14,14 +14,14 @@ class ActiveRecordOverrideRailtie < Rails::Railtie
       if url = ENV['DATABASE_URL']
         ActiveRecord::Base.connection_pool.disconnect!
         parsed_url = URI.parse(url)
-        config =  {
-            adapter:             'postgis',
-            host:                parsed_url.host,
-            encoding:            'unicode',
-            database:            parsed_url.path.split("/")[-1],
-            port:                parsed_url.port,
-            username:            parsed_url.user,
-            password:            parsed_url.password
+        config = {
+            adapter: 'postgis',
+            host: parsed_url.host,
+            encoding: 'unicode',
+            database: parsed_url.path.split("/")[-1],
+            port: parsed_url.port,
+            username: parsed_url.user,
+            password: parsed_url.password
         }
         establish_connection(config)
       end
@@ -54,5 +54,14 @@ module Vyne
     # add custom validators path
     config.autoload_paths += %W["#{config.root}/app/validators/"]
 
+    initializer 'setup_asset_pipeline', :group => :all do |app|
+      # We don't want the default of everything that isn't js or css, because it pulls too many things in
+      app.config.assets.precompile.shift
+
+      # Explicitly register the extensions we are interested in compiling
+      app.config.assets.precompile.push(Proc.new do |path|
+                                          File.extname(path).in? %w(.html .erb .haml .png .gif .jpg .jpeg .eot .otf .svc .woff .ttf)
+                                        end)
+    end
   end
 end

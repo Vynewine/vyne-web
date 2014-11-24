@@ -3,6 +3,8 @@
 //= require turbolinks
 //= require library
 //= require jquery.typewatch
+//= require vendor/leaflet-0.7.3/leaflet.js
+//= require vendor/leaflet-plugins-1.2.0/layer/tile/Google
 
 var advisor = advisor || null;
 
@@ -582,3 +584,31 @@ var adminReady = function() {
 // // console.log(2);
 $(document).ready(adminReady);
 $(document).on('page:load', adminReady);
+
+$('document').ready(function() {
+    if ($('body.admin_warehouses').length) {
+
+        var map = L.map('map').setView([ warehouseLatitude, warehouseLongitude], 12);
+
+        var gl = new L.Google('ROAD');
+        map.addLayer(gl);
+
+        var outside = [
+            [0, -90],
+            [0, 90],
+            [90, -90],
+            [90, 90]
+        ];
+
+        L.polygon([ outside , deliveryArea ]).addTo(map).setStyle(
+            {
+                color: '#009ee0',
+                opacity: 0.8,
+                weight: 2,
+                fillColor: '#e8f8ff',
+                fillOpacity: 0.45
+            });
+    }
+});
+
+
