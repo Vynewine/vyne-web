@@ -205,13 +205,56 @@ $(function () {
 
     /* Walkthrough */
 
+    var $arrowLeft = $('.arrow-left');
+    var $arrowRight = $('.arrow-right');
+    var $arrowLeftImage = $('.arrow-left-image');
+    var $arrowRightImage = $('.arrow-right-image');
+
     //Initialising the walkthrough slider
-    $('#walkthrough').swiper({
+    var walkThtough = $('#walkthrough').swiper({
         mode: 'horizontal',
         speed: 200,
         pagination: '.pagination',
-        paginationClickable: true
+        paginationClickable: true,
+        onSlideChangeStart: function(){
+            // first Slide
+            switch (walkThtough.activeIndex) {
+                case 0:
+                    $arrowLeft.hide();
+                    $arrowRight.show();
+                    break;
+                case 2:
+                    $arrowLeft.show();
+                    $arrowRight.hide();
+                    break;
+                default:
+                    $arrowLeft.show();
+                    $arrowRight.show();
+            }
+        }
     });
+
+    $arrowLeft.on('click', function(e){
+        e.preventDefault();
+        walkThtough.swipePrev();
+    });
+
+    $arrowRight.on('click', function(e){
+        e.preventDefault();
+        walkThtough.swipeNext();
+    });
+
+    function checkWidth() {
+        var windowsize = $(window).width();
+        if (windowsize <= 414) {
+            $arrowLeftImage.css("width", 10);
+            $arrowLeftImage.css("height", 18);
+            $arrowRightImage.css("width", 10);
+            $arrowRightImage.css("height", 18);
+        }
+    }
+    checkWidth();
+    $(window).resize(checkWidth);
 
 
     /* Order */
