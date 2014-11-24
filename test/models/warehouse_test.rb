@@ -216,6 +216,10 @@ class WarehouseTest < ActiveSupport::TestCase
     end
   end
 
+  test 'Can get delivery area without blowing up' do
+    Warehouse.delivery_area_by_city
+  end
+
   test 'Create polygon around warehouse' do
 
     points = circle_path({:lng => -0.108105959289054, :lat => 51.5200685165148}, 4023, 30, true)
@@ -231,9 +235,9 @@ class WarehouseTest < ActiveSupport::TestCase
     r_e = 6378137.0
     d2r ||= Math::PI/180
     multipliers ||= begin
-      d_Rad = 2*Math::PI/segments
+      rad = 2*Math::PI/segments
       (segments + (complete_path ? 1 : 0)).times.map do |i|
-        rads = d_Rad*i
+        rads = rad*i
         y = Math.sin(rads)
         x = Math.cos(rads)
         [y.abs < 0.01 ? 0.0 : y, x.abs < 0.01 ? 0.0 : x]
@@ -241,8 +245,8 @@ class WarehouseTest < ActiveSupport::TestCase
     end
     center_lat = center[:lat]
     center_lng = center[:lng]
-    d_Lat = radius/(r_e*d2r)
-    d_Lng = radius/(r_e*Math.cos(d2r*center_lat)*d2r)
-    multipliers.map {|m| [center_lat + m[0]*d_Lat, center_lng + m[1]*d_Lng]}
+    lat = radius/(r_e*d2r)
+    lng = radius/(r_e*Math.cos(d2r*center_lat)*d2r)
+    multipliers.map {|m| [center_lat + m[0]*lat, center_lng + m[1]*lng]}
   end
 end
