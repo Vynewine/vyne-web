@@ -1,7 +1,7 @@
 $('document').ready(function() {
     if ($('body.delivery').length) {
 
-        var map = L.map('map', {zoomControl: false}).setView([51.514525, -0.1050393], 13);
+        var map = L.map('map', {zoomControl: false}).setView([51.514525, -0.1050393], 12);
 
         map.addControl(L.control.zoom({position: 'topright'}));
 

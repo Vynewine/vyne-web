@@ -215,4 +215,34 @@ class WarehouseTest < ActiveSupport::TestCase
       end
     end
   end
+
+  test 'Create polygon around warehouse' do
+
+    points = circle_path({:lng => -0.108105959289054, :lat => 51.5200685165148}, 4023, 30, true)
+    points.each do |point|
+      puts '[' + point[1].to_s + ', ' + point[0].to_s + '],'
+    end
+  end
+
+  # Handy radius to polygon function from
+  # https://gist.github.com/straydogstudio/4992733
+  def circle_path(center, radius, segments, complete_path = false)
+    # For increased accuracy, if your data is in a localized area, add the elevation in meters to r_e below:
+    r_e = 6378137.0
+    d2r ||= Math::PI/180
+    multipliers ||= begin
+      d_Rad = 2*Math::PI/segments
+      (segments + (complete_path ? 1 : 0)).times.map do |i|
+        rads = d_Rad*i
+        y = Math.sin(rads)
+        x = Math.cos(rads)
+        [y.abs < 0.01 ? 0.0 : y, x.abs < 0.01 ? 0.0 : x]
+      end
+    end
+    center_lat = center[:lat]
+    center_lng = center[:lng]
+    d_Lat = radius/(r_e*d2r)
+    d_Lng = radius/(r_e*Math.cos(d2r*center_lat)*d2r)
+    multipliers.map {|m| [center_lat + m[0]*d_Lat, center_lng + m[1]*d_Lng]}
+  end
 end
