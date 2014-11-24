@@ -18,6 +18,9 @@
 //= require vendor/maskedinput
 //= require vendor/swiper_min
 //= require vendor/idangerous.swiper.hashnav
+//= require vendor/leaflet-0.7.3/leaflet.js
+//= require vendor/leaflet-plugins-1.2.0/layer/tile/Google
+//= require delivery
 
 events = [];
 
