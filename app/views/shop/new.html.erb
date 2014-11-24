@@ -58,6 +58,9 @@
               <div id="sign-up-panel-thank-you" style="display:none; height: 45px" class="opening-times loading">
 
               </div>
+              <div style="padding-top: 10px; color: #959595">
+                <%= link_to 'Coverage Map', delivery_index_path, { style: 'color: gray' } %>
+              </div>
             </div>
           </div>
         </div>
@@ -177,11 +180,7 @@
                 <% subFood.keep_if {|f| f.parent==parentFood.id} %>
                 <% subFood.each do |food| %>
                 <li id="food-<%= food.id %>">
-                  <% if [5,9,11,12,13,14,25,26,27,40,41,45,46].include? food.id %>
-                  <a href="#preparation">
-                  <% else %>
-                  <a href="#">
-                  <% end %>
+                  <a <% if [5,9,11,12,13,14,25,26,27,40,41,45,46].include? food.id %> href="#preparation" <% else %> href="#" <% end %> >
                     <%= image_tag "icons/food/"+food.name.gsub(/(((\s)&?)\s?)/, "_")+".png", :alt => "image description" %>
                     <span><%= food.name %></span>
                   </a>
@@ -190,9 +189,7 @@
               </ul>
             </div>
           </div>
-
           <% end %>
-
 
               <div id="preparation" class="tab preferences-sub-sub-panel">
                 <!--<a href="#" class="back"></a>-->
