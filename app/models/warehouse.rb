@@ -103,6 +103,8 @@ class Warehouse < ActiveRecord::Base
     results = ActiveRecord::Base.connection.execute('select ST_Union(w.delivery_area) from warehouses w where w.active = true;')
     #Binary Parser
     parser = ::RGeo::WKRep::WKBParser.new
-    parser.parse(results.first['st_union'])
+    unless results.first.blank? || results.first['st_union'].blank?
+      parser.parse(results.first['st_union'])
+    end
   end
 end
