@@ -22,7 +22,7 @@
 //= require vendor/leaflet-plugins-1.2.0/layer/tile/Google
 //= require delivery
 
-events = [];
+var events = [];
 
 var wines = [];
 
@@ -50,6 +50,7 @@ var food = function (id, name, preparationId, preparationName) {
 
 var wineCount = 0;
 var secondBottle = false;
+var orderSwiper;
 
 
 $('#invite-code').keyup(function (event) {
@@ -169,7 +170,7 @@ $(function () {
 
             resetEventsForCart();
 
-            order.swipeTo(3, 500, false);
+            orderSwiper.swipeTo(3, 500, false);
             $('.btn-checkout').show();
 
         }
@@ -261,7 +262,7 @@ $(function () {
     /* Order */
 
     //Initialising order slider
-    var order = $('#order').swiper({
+    orderSwiper = $('#order').swiper({
         mode: 'horizontal',
         speed: 200,
         //hashNav: true,
@@ -278,19 +279,28 @@ $(function () {
                     verifyAddress();
                 }
             }
-
         },
-        onSlideNext: function () {
-            events.push({
-                type: 'slideChange'
-            });
+        onSlideNext: function (swiper) {
+            //Dont register new event if last panel was registration panel. We will be removing it.
+            if (swiper.getSlide(swiper.previousIndex).id !== 'register-panel') {
+                events.push({
+                    type: 'slideChange'
+                });
+            }
+        },
+        onSlideChangeEnd: function (swiper) {
+            //Remove registration panel. User successfully registered or signed by this point.
+            if (swiper.getSlide(swiper.previousIndex).id === 'register-panel') {
+                swiper.removeSlide(swiper.previousIndex);
+                swiper.swipeTo(swiper.activeIndex - 1, 0, false);
+            }
         }
     });
 
     //A class for navigating to the next slide
     $('.next-slide').click(function (e) {
         e.preventDefault();
-        order.swipeNext();
+        orderSwiper.swipeNext();
     });
 
     $('.back-nav').click(function (e) {
@@ -300,9 +310,9 @@ $(function () {
             switch (event.type) {
                 case 'slideChange':
                     if (event.name) {
-                        order.swipeTo(event.name, 500);
+                        orderSwiper.swipeTo(event.name, 500);
                     } else {
-                        order.swipePrev();
+                        orderSwiper.swipePrev();
                     }
                     break;
                 case 'matchingWine':
@@ -447,7 +457,7 @@ $(function () {
             category: wines[wineCount].category
         });
 
-        order.swipeNext();
+        orderSwiper.swipeNext();
     });
 
 
@@ -596,7 +606,7 @@ $(function () {
 
             if ($this.closest('ul').attr('id') == 'wine-list') {
                 //$('#select-preferences').click();
-                order.swipeNext();
+                orderSwiper.swipeNext();
                 createCartPage(wines, wineCount);
             }
 
@@ -648,7 +658,7 @@ $(function () {
 
             createCartPage(wines, wineCount);
             $('#specific-wine-errors').empty().hide();
-            order.swipeNext();
+            orderSwiper.swipeNext();
         } else {
             $('#specific-wine-errors').empty().show().append('<li>Please enter wine name</li>');
         }
@@ -702,7 +712,7 @@ $(function () {
     $('.add-bottle-link').click(function (e) {
         e.preventDefault();
 
-        order.swipeTo(1, 500);
+        orderSwiper.swipeTo(1, 500);
         $('.add-bottle, .btn-checkout').hide();
 
         if ($(this).closest('tr').hasClass('no-bottles')) {
@@ -797,7 +807,7 @@ $(function () {
                         email: data.email
                     });
 
-                    order.swipeNext();
+                    orderSwiper.swipeNext();
                 }
             });
 
@@ -880,7 +890,7 @@ $(function () {
                             email: data.user.email
                         });
 
-                        order.swipeNext();
+                        orderSwiper.swipeNext();
                     } else {
 
                         var errors = data.errors;
@@ -985,7 +995,7 @@ $(function () {
                 }
                 $('#address-id').val(data.id);
 
-                order.swipeNext();
+                orderSwiper.swipeNext();
             }
         });
     });
