@@ -177,8 +177,12 @@ class ShopController < ApplicationController
       apply_promotions(@order)
 
       if @order.save
-        first_time_ordered @order
-        order_notification @order
+
+        Thread.new do
+          first_time_ordered @order
+          order_notification @order
+        end
+
         render :json => @order.to_json
       else
         render json: @order.errors, status: :unprocessable_entity
