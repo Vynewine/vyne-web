@@ -173,46 +173,45 @@ class ShopControllerTest < ActionController::TestCase
 
   end
 
+  test 'Will handle stripe errors' do
+    StripeMock.stop
+    stripe_key = Rails.application.config.stripe_key
+    Rails.application.config.stripe_key = nil
+
+    post :create, post_data
+
+    assert_equal('Error occurred while creating customer with Stripe', JSON.parse(response.body)[0])
+    assert_equal("Stripe::AuthenticationError - No API key provided. Set your API key using \"Stripe.api_key = \u003cAPI-KEY\u003e\". You can generate API keys from the Stripe web interface. See https://stripe.com/api for details, or email support@stripe.com if you have any questions.", JSON.parse(response.body)[1])
+
+    #Reset Stripe Key for all other tests.
+    Rails.application.config.stripe_key = stripe_key
+    StripeMock.start
+  end
+
+
   def post_data
-    {"utf8" => "✓",
-     "authenticity_token" => "q9C5QhmjyfeFd1LbXlSgvc10kAiswGKksYTluQCYTf0=",
-     "email" => "",
-     "warehouses" => "{\"warehouses\":[{\"id\":1,
-\"distance\":1.914}]}",
-     "category" => categories(:house),
-     "specific-wine" => "",
-     "wines" => "[{\"quantity\":1,
-\"category\":" + categories(:house).id.to_s + ",
-\"label\":\"House\",
-\"price\":\"£15\",
-\"specificWine\":\"\",
-\"food\":[{\"id\":\"14\",
-\"name\":\"fish\"},
-{\"id\":\"35\",
-\"name\":\"herbs\"},
-{\"id\":\"10\",
-\"name\":\"cured meat\"}],
-\"occasion\":[]},
-{\"quantity\":1,
-\"category\":" + categories(:reserve).id.to_s + ",
-\"label\":\"Reserve\",
-\"price\":\"£20\",
-\"specificWine\":\"\",
-\"food\":[{\"id\":\"14\",
-\"name\":\"fish\"},
-{\"id\":\"18\",
-\"name\":\"hard cheese\"},
-{\"id\":\"38\",
-\"name\":\"pasta\"}],
-\"occasion\":[]}]",
-     "address_s" => "8a Pickfords Wharf,
- Wharf Road",
-     "address_d" => "",
-     "address_id" => addresses(:one).id,
-     "old_card" => "0",
-     "new_card" => "1111",
-     "new_brand" => "1",
-     "stripeToken" => "tok_14tFx92eZvKYlo2CxthO99kb"}
+    {
+        'email' => '',
+        'warehouses' => '{"warehouses":[{"id":1,"distance":1.914}]}',
+        'wines' => '[
+      {
+        "quantity":1, "category":"' + categories(:house).id.to_s + '",
+        "label":"House", "price":"£15", "specificWine":"",
+        "food":[{"id":"14","name":"fish"}, {"id":"35", "name":"herbs"}, {"id":"10", "name":"cured meat"} ],"occasion":[]
+      },
+      {
+        "quantity":1, "category":"' + categories(:reserve).id.to_s + '",
+        "label":"Reserve","price":"£20", "specificWine":"",
+        "food":[{"id":"14", "name":"fish"}, {"id":"18","name":"hard cheese"},{"id":"38","name":"pasta"}], "occasion":[]
+      }]',
+        'address_s' => '',
+        'address_d' => '',
+        'address_id' => addresses(:one).id,
+        'old_card' => '0',
+        'new_card' => '1111',
+        'new_brand' => '1',
+        'stripeToken' => 'tok_14tFx92eZvKYlo2CxthO99kb'
+    }
   end
 
 end

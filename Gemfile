@@ -12,6 +12,7 @@ group :test do
   gem 'stripe-ruby-mock', '~> 1.10.1.7'
   gem 'webmock', '1.19.0'
   gem 'mocha'
+  gem 'selenium-webdriver'
 end
 
 

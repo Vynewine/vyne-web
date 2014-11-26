@@ -29,4 +29,42 @@ class StripeHelperTest < ActiveSupport::TestCase
 
   end
 
+  test 'Will handle exceptions when creating customer' do
+    stripe_key = Rails.application.config.stripe_key
+    Rails.application.config.stripe_key = nil
+    client = users(:one)
+    response = StripeHelper.create_customer(client)
+    assert_equal(2, response[:errors].count)
+    assert_equal('Error occurred while creating customer with Stripe', response[:errors][0])
+
+    #Reset Stripe Key for all other tests.
+    Rails.application.config.stripe_key = stripe_key
+  end
+
+  test 'Will handle exceptions when retrieving customer' do
+    stripe_key = Rails.application.config.stripe_key
+    Rails.application.config.stripe_key = nil
+    client = users(:one)
+    response = StripeHelper.get_customer(client)
+    assert_equal(2, response[:errors].count)
+    assert_equal('Error occurred while retrieving customer from Stripe', response[:errors][0])
+
+    #Reset Stripe Key for all other tests.
+    Rails.application.config.stripe_key = stripe_key
+  end
+
+  test 'Will handle exceptions when creating card for customer' do
+    Stripe.api_key = Rails.application.config.stripe_key
+    customer = Stripe::Customer.retrieve('cus_592ZmyKJtx6uJD')
+    stripe_key = Rails.application.config.stripe_key
+    Rails.application.config.stripe_key = nil
+    response = StripeHelper.create_card(customer, '')
+    assert_equal(2, response[:errors].count)
+    assert_equal('Error occurred while creating card for customer', response[:errors][0])
+
+    #Reset Stripe Key for all other tests.
+    Rails.application.config.stripe_key = stripe_key
+  end
+
+
 end

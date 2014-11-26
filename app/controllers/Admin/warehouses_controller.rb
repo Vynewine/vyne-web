@@ -32,6 +32,7 @@ class Admin::WarehousesController < ApplicationController
   def new
     @warehouse = Warehouse.new
     @warehouse.address = Address.new
+    set_default_agenda(@warehouse)
   end
 
   # GET /warehouses/1/edit
@@ -39,6 +40,10 @@ class Admin::WarehousesController < ApplicationController
     @agendas = @warehouse.agendas.order('day ASC')
     if @warehouse.address.blank?
       @warehouse.address = Address.new
+    end
+
+    if @warehouse.agendas.blank?
+      set_default_agenda(@warehouse)
     end
   end
 
@@ -130,6 +135,19 @@ class Admin::WarehousesController < ApplicationController
         address_attributes: [:id, :line_1, :postcode, :line_2, :company_name, :longitude, :latitude],
         agendas_attributes: [:id, :day, :opening, :closing]
     )
+  end
+
+  def set_default_agenda(warehouse)
+    if warehouse.agendas.count == 0
+      (0..6).each { |i|
+        Agenda.create(
+            :warehouse_id => warehouse.id,
+            :day => i,
+            :opening => 900,
+            :closing => 1800
+        )
+      }
+    end
   end
 
 end

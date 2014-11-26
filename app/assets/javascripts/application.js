@@ -36,7 +36,7 @@ var wine = function () {
     this.food = [];
     this.occasion = 0;
     this.occasionName = '';
-    this.wineType = { id: 0, name: '' };
+    this.wineType = {id: 0, name: ''};
     this.complete = false;
 };
 
@@ -126,11 +126,11 @@ $(function () {
         $('.prefs-overview, .btn-checkout').addClass('ios');
 
         $('#preferences-panel').scroll(function (e) {
-            $('.prefs-overview').css({ 'bottom': -$(this).scrollTop() });
+            $('.prefs-overview').css({'bottom': -$(this).scrollTop()});
         });
 
         $('#review-panel').scroll(function (e) {
-            $('.btn-checkout').css({ 'bottom': -$(this).scrollTop() });
+            $('.btn-checkout').css({'bottom': -$(this).scrollTop()});
         });
     }
 
@@ -216,7 +216,7 @@ $(function () {
         speed: 200,
         pagination: '.pagination',
         paginationClickable: true,
-        onSlideChangeStart: function(){
+        onSlideChangeStart: function () {
             // first Slide
             switch (walkThtough.activeIndex) {
                 case 0:
@@ -234,12 +234,12 @@ $(function () {
         }
     });
 
-    $arrowLeft.on('click', function(e){
+    $arrowLeft.on('click', function (e) {
         e.preventDefault();
         walkThtough.swipePrev();
     });
 
-    $arrowRight.on('click', function(e){
+    $arrowRight.on('click', function (e) {
         e.preventDefault();
         walkThtough.swipeNext();
     });
@@ -253,6 +253,7 @@ $(function () {
             $arrowRightImage.css("height", 18);
         }
     }
+
     checkWidth();
     $(window).resize(checkWidth);
 
@@ -572,8 +573,8 @@ $(function () {
                 var prepID = $this.closest('li').attr('id').split('-')[1];
                 var prepName = $(this).find('span').text();
                 $('#food-item-' + parentid).after($img.addClass('food-prep').attr('id', parentid));
-                $('#food-item-' + parentid).closest('li').append($('<span/>', { text: prepID }).addClass('prep-name'));
-                $('#food-item-' + parentid).closest('li').append($('<span/>', { text: prepName }).addClass('prep-name-text'));
+                $('#food-item-' + parentid).closest('li').append($('<span/>', {text: prepID}).addClass('prep-name'));
+                $('#food-item-' + parentid).closest('li').append($('<span/>', {text: prepName}).addClass('prep-name-text'));
             } else if ($this.closest('ul').attr('id') == 'wine-list') {
                 //Add the food to the wine object
                 wines[wineCount].wineType.id = id; //.split('-')[1];
@@ -584,7 +585,7 @@ $(function () {
                 $img.attr('id', 'food-item-' + id);
                 $empty = $('.prefs-overview-list .empty').first();
                 $empty.find('span').replaceWith($img);
-                $empty.append($('<span/>', { text: name }).addClass('food-name')).removeClass('empty');
+                $empty.append($('<span/>', {text: name}).addClass('food-name')).removeClass('empty');
 
                 $this.parent().addClass('selected');
             }
@@ -987,7 +988,6 @@ $(function () {
                 order.swipeNext();
             }
         });
-
     });
 
     /**
@@ -1127,7 +1127,7 @@ function createCartPage(wines, wineCount) {
         var $td = $('<td>')
             .attr('id', 'wine-' + wines.indexOf(wine))
             .addClass('order-table-bottle wine-bottle-' + wine.price.substr(1, 2))
-            .append($('<a/>', { href: '#', text: 'x' }).addClass('delete'))
+            .append($('<a/>', {href: '#', text: 'x'}).addClass('delete'))
             .append('<div class="wine-bottle"></div>');
 
         for (var key in wine) {
@@ -1172,7 +1172,7 @@ function createCartPage(wines, wineCount) {
             }
         }
 
-        var $pricetd = $('<td>').addClass('order-table-bottle-price').append($('<span/>', { text: wine['price'] }).addClass('price'));
+        var $pricetd = $('<td>').addClass('order-table-bottle-price').append($('<span/>', {text: wine['price']}).addClass('price'));
 
         $('.add-bottle').before($('<tr>').addClass('order-bottle').append($td).append($pricetd));
 
@@ -1235,7 +1235,7 @@ function calculateTotalCost() {
             var discountedPrice = parseInt($price.text().substr(1, 2)) - 5;
             totalCost += discountedPrice;
             $price.wrap('<del></del>');
-            $price.parent().after($('<span/>', { text: '£' + discountedPrice }).addClass('price'));
+            $price.parent().after($('<span/>', {text: '£' + discountedPrice}).addClass('price'));
         } else {
             totalCost += parseInt($price.text().substr(1, 2));
         }

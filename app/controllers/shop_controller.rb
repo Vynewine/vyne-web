@@ -2,6 +2,7 @@ require 'json'
 
 class ShopController < ApplicationController
   include UserMailer
+  include StripeHelper
   before_action :authenticate_user!, :except => [:new, :create]
   authorize_actions_for UserAuthorizer, :except => [:new, :create] # Triggers user check
   before_action :set_order, only: [:show, :edit, :update, :destroy]
@@ -51,120 +52,139 @@ class ShopController < ApplicationController
   def create
     logger.info 'Creating New Order'
 
-    # Creates order:
-    @order = Order.new
-    @order.client = current_user
+    begin
+      # Creates order:
+      @order = Order.new
+      @order.client = current_user
 
-    # Manages address:
-    order_address = params[:address_id].to_i
-    address = Address.find(order_address)
-    @order.address = address
+      # Manages address:
+      order_address = params[:address_id].to_i
+      address = Address.find(order_address)
+      @order.address = address
 
-    # Manages card details:
-    cardId = params[:old_card].to_i
-    if cardId == 0 # New card
-      # Set your secret key: remember to change this to your live secret key in production
-      # See your keys here https://dashboard.stripe.com/account
-      Stripe.api_key = Rails.application.config.stripe_key
+      # Manages card details:
+      card_id = params[:old_card].to_i
+      if card_id == 0 # New card
 
-      # Get the credit card details submitted by the form
-      token = params[:stripeToken]
+        # Create Stripe Customer if not created
+        if current_user.stripe_id.blank?
 
-      # Create Stripe Customer if not created
-      if current_user.stripe_id.blank?
-        customer = Stripe::Customer.create(
-            :description => 'Client Id: ' + @order.client.id.to_s,
-            :email => current_user.email
-        )
-        current_user.stripe_id = customer.id
+          response = StripeHelper.create_customer(@order.client)
 
-        #TODO: Handle bad save here.
-        current_user.save
-      else
-        customer = Stripe::Customer.retrieve(current_user.stripe_id)
-      end
-
-      card = customer.cards.create(:card => token)
-
-      payment = Payment.new
-      payment.user = current_user
-      payment.brand = params[:new_brand]
-      payment.number = params[:new_card]
-      payment.stripe_card_id = card.id
-    else
-      payment = Payment.find_by(:id => cardId, :user => current_user)
-    end
-
-    @order.payment = payment
-    @order.status_id = 1 #pending
-
-    warehouses = ''
-    if params.has_key?(:warehouses)
-      warehouses = params[:warehouses]
-    end
-
-    wines = JSON.parse params[:wines]
-
-    @order.information = warehouses
-
-    if @order.save
-      wines.each { |wine|
-
-        unless wine.blank?
-          if !wine['occasion'].blank? && wine['occasion'].to_i != 0
-            occasion = Occasion.find(wine['occasion'])
-          end
-
-          if !wine['wineType'].blank? && !wine['wineType']['id'].blank? && wine['wineType']['id'].to_i != 0
-            wine_type = Type.find(wine['wineType']['id'])
-          end
-
-          #TODO: Validate params, category is required.
-          category = Category.find(wine['category'])
-
-
-          order_item = @order.order_items.create!({
-                                                      :specific_wine => wine['specificWine'],
-                                                      :quantity => wine['quantity'],
-                                                      :category => category,
-                                                      :price => category.price
-                                                  })
-
-          if wine['food'].blank?
-            unless occasion.blank?
-              order_item.occasion = occasion
-            end
-
-            unless wine_type.nil?
-              order_item.type = wine_type
-            end
+          if response[:errors].blank?
+            customer = response[:data]
+            current_user.stripe_id = customer.id
           else
-            wine['food'].each do |food_choice|
-              food = Food.find(food_choice['id'])
-              preparation = Preparation.find_by_id(food_choice['preparation'])
-              FoodItem.create!(:food => food, :preparation => preparation, :order_item => order_item)
-            end
+            render json: response[:errors], status: :unprocessable_entity
+            return
           end
 
-          order_item.save
+          unless current_user.save
+            render json: current_user.errors, status: :unprocessable_entity
+            return
+          end
+        else
+          response = StripeHelper.get_customer(current_user)
+          if response[:errors].blank?
+            customer = response[:data]
+          else
+            render json: response[:errors], status: :unprocessable_entity
+            return
+          end
         end
-      }
-    else
-      respond_to do |format|
-        format.html { render :new }
-        format.json { render json: @order.errors, status: :unprocessable_entity }
+
+        token = params[:stripe_token]
+
+        response = StripeHelper.create_card(customer, token)
+
+        if response[:errors].blank?
+          card = response[:data]
+        else
+          render json: response[:errors], status: :unprocessable_entity
+          return
+        end
+
+        payment = Payment.new
+        payment.user = current_user
+        payment.brand = params[:new_brand]
+        payment.number = params[:new_card]
+        payment.stripe_card_id = card.id
+      else
+        payment = Payment.find_by(:id => card_id, :user => current_user)
       end
-    end
 
-    apply_promotions(@order)
+      @order.payment = payment
+      @order.status_id = 1 #pending
 
-    @order.save
+      warehouses = ''
+      if params.has_key?(:warehouses)
+        warehouses = params[:warehouses]
+      end
 
-    respond_to do |format|
-      first_time_ordered @order
-      order_notification @order
-      format.html { redirect_to @order } #, notice: 'Order was successfully created.' }
-      format.json { render :confirmed, status: :created, location: @order }
+      wines = JSON.parse params[:wines]
+
+      @order.information = warehouses
+
+      if @order.save
+        wines.each { |wine|
+
+          unless wine.blank?
+            if !wine['occasion'].blank? && wine['occasion'].to_i != 0
+              occasion = Occasion.find(wine['occasion'])
+            end
+
+            if !wine['wineType'].blank? && !wine['wineType']['id'].blank? && wine['wineType']['id'].to_i != 0
+              wine_type = Type.find(wine['wineType']['id'])
+            end
+
+            #TODO: Validate params, category is required.
+            category = Category.find(wine['category'])
+
+            order_item = @order.order_items.new({
+                                                    :specific_wine => wine['specificWine'],
+                                                    :quantity => wine['quantity'],
+                                                    :category => category,
+                                                    :price => category.price
+                                                })
+
+            if wine['food'].blank?
+              unless occasion.blank?
+                order_item.occasion = occasion
+              end
+
+              unless wine_type.nil?
+                order_item.type = wine_type
+              end
+            else
+              wine['food'].each do |food_choice|
+                food = Food.find(food_choice['id'])
+                preparation = Preparation.find_by_id(food_choice['preparation'])
+                FoodItem.create!(:food => food, :preparation => preparation, :order_item => order_item)
+              end
+            end
+
+            unless order_item.save
+              render json: order_item.errors, status: :unprocessable_entity
+              return
+            end
+          end
+        }
+      else
+        render json: @order.errors, status: :unprocessable_entity
+        return
+      end
+
+      apply_promotions(@order)
+
+      if @order.save
+        first_time_ordered @order
+        order_notification @order
+        render :json => @order.to_json
+      else
+        render json: @order.errors, status: :unprocessable_entity
+      end
+    rescue => exception
+      render json: ['We\re sorry by there was a server error.', exception.message], status: :internal_server_error
     end
   end
 

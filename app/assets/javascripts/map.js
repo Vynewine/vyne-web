@@ -108,20 +108,24 @@ function MapUtility() {
         var locAddress = "/warehouses/addresses.json";
 
         var warehousesMethod = function (data) {
-            var mapUtil = new MapUtility(); // recursive! =D
-            var allPostcodes = [];
-            var allDistances = [];
-            var warehouses = [];
-            for (var i = 0; i < data.warehouses.length; i++) {
-                warehouses.push({
-                    id: data.warehouses[i].id,
-                    is_open: data.warehouses[i].is_open
-                });
-                allDistances.push(data.warehouses[i].distance);
-                allPostcodes.push(data.warehouses[i].address);
-            }
-            mapUtil.calculateDistanceBetween([postcode], allPostcodes, allDistances, warehouses, callbackMethod);
 
+            if (data.warehouses.length > 0) {
+                var mapUtil = new MapUtility(); // recursive! =D
+                var allPostcodes = [];
+                var allDistances = [];
+                var warehouses = [];
+                for (var i = 0; i < data.warehouses.length; i++) {
+                    warehouses.push({
+                        id: data.warehouses[i].id,
+                        is_open: data.warehouses[i].is_open
+                    });
+                    allDistances.push(data.warehouses[i].distance);
+                    allPostcodes.push(data.warehouses[i].address);
+                }
+                mapUtil.calculateDistanceBetween([postcode], allPostcodes, allDistances, warehouses, callbackMethod);
+            } else {
+                callbackMethod({available: false, warehouses: []});
+            }
         };
 
         var errorMethod = function (xhr) {

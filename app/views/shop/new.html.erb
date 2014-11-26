@@ -455,9 +455,10 @@
         <input type="hidden" id="new-brand" name="new_brand" />
         <input type="hidden" id="expm" data-stripe="exp-month" />
         <input type="hidden" id="expy" data-stripe="exp-year" />
+        <input type="hidden" id="stripe-token" name="stripe_token" />
         <ul class="errors" id="payment-errors"></ul>
         <div>
-          <%= f.submit "Submit Order", :class => 'red-button' %>
+          <%= f.submit "Submit Order", :id => 'submit-order' ,  :class => 'red-button' %>
         </div>
         <div style="text-align: center;margin-top: 20px; ">
           <%= image_tag asset_path('icons/solid-light-stripe.png'), :alt => 'Powered by Stripe' %>

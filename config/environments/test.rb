@@ -71,4 +71,8 @@ Rails.application.configure do
   #Vyne order internal notification email
   config.order_notification = 'jakub@vyne.london'
 
+  #Require invitation code to access the site.
+  config.enable_invite_code = 'true'
+  config.invite_code = 'timeforvyne'
+
 end
