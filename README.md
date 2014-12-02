@@ -13,7 +13,7 @@ This system uses PostgreSQL.
 * Create user and database for vyne:
 ```
 CREATE USER vyne WITH PASSWORD 'Valpolicella';
-ALTER USER vyne CREATEDB;
+ALTER USER vyne SUPERUSER;
 CREATE DATABASE vyne_development WITH OWNER = vyne;
 ```
 

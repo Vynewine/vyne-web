@@ -5,6 +5,8 @@ class Warehouse < ActiveRecord::Base
 
   has_many :agendas, :dependent => :destroy
   belongs_to :address
+  has_and_belongs_to_many :users, :join_table => :users_warehouses
+  has_and_belongs_to_many :devices, :join_table => :devices_warehouses
   validates :title, :email, :phone, :address, :presence => true
   accepts_nested_attributes_for :address, :reject_if => :all_blank, :allow_destroy => true
   accepts_nested_attributes_for :agendas, :reject_if => :all_blank, :allow_destroy => true

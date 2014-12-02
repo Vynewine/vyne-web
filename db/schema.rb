@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141121101511) do
+ActiveRecord::Schema.define(version: 20141202105509) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -140,6 +140,23 @@ ActiveRecord::Schema.define(version: 20141121101511) do
   end
 
   add_index "countries", ["deleted_at"], :name => "index_countries_on_deleted_at"
+
+  create_table "devices", force: true do |t|
+    t.string   "key"
+    t.text     "registration_id"
+    t.datetime "deleted_at"
+  end
+
+  add_index "devices", ["deleted_at"], :name => "index_devices_on_deleted_at"
+  add_index "devices", ["key"], :name => "index_devices_on_key", :unique => true
+
+  create_table "devices_warehouses", id: false, force: true do |t|
+    t.integer  "device_id"
+    t.integer  "warehouse_id"
+    t.datetime "deleted_at"
+  end
+
+  add_index "devices_warehouses", ["deleted_at"], :name => "index_devices_warehouses_on_deleted_at"
 
   create_table "food_items", force: true do |t|
     t.integer  "order_item_id"
@@ -436,6 +453,15 @@ ActiveRecord::Schema.define(version: 20141121101511) do
 
   add_index "users_roles", ["user_id", "role_id"], :name => "index_users_roles_on_user_id_and_role_id"
 
+  create_table "users_warehouses", id: false, force: true do |t|
+    t.integer  "user_id"
+    t.integer  "warehouse_id"
+    t.datetime "deleted_at"
+  end
+
+  add_index "users_warehouses", ["deleted_at"], :name => "index_users_warehouses_on_deleted_at"
+  add_index "users_warehouses", ["user_id", "warehouse_id"], :name => "index_users_warehouses_on_user_id_and_warehouse_id"
+
   create_table "vinifications", force: true do |t|
     t.text     "method"
     t.string   "name"
@@ -458,6 +484,7 @@ ActiveRecord::Schema.define(version: 20141121101511) do
     t.boolean  "active"
     t.boolean  "registered_with_shutl"
     t.spatial  "delivery_area",         limit: {:srid=>0, :type=>"polygon"}
+    t.string   "key"
   end
 
   add_index "warehouses", ["address_id"], :name => "index_warehouses_on_address_id"

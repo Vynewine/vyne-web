@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
   has_many :payments
 
   has_and_belongs_to_many :addresses
+  has_and_belongs_to_many :warehouses
   accepts_nested_attributes_for :addresses, :reject_if => :all_blank, :allow_destroy => true
   
   after_create :assign_code

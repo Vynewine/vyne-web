@@ -104,7 +104,9 @@ Rails.application.routes.draw do
     resources :roles
     resources :users
     resources :addresses
-    resources :warehouses
+    resources :warehouses do
+      post :remove_user
+    end
     resources :orders do
       post 'cancel'
       post 'charge'
@@ -113,6 +115,7 @@ Rails.application.routes.draw do
     resources :payments
     resources :statuses
     resources :delivery
+    resources :devices
     post '/orders/list' => 'orders#list'
     get 'advise/index' => 'advisors#index'
     get 'advise/choose' => 'advisors#choose'

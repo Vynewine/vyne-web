@@ -1,0 +1,35 @@
+<%= form_for([:admin, @device]) do |f| %>
+    <% if @device.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@grape.errors.count, 'error') %> prohibited this device from being saved:</h2>
+
+          <ul>
+            <% @grape.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+    <% end %>
+
+    <div class="field">
+      <%= f.label :key %><br>
+      <%= f.text_field :key %>
+    </div>
+    <div class="field">
+      Warehouse<br>
+      <% current_warehouse = 0
+         unless @device.warehouses[0].blank?
+           current_warehouse = @device.warehouses[0].id
+         end
+
+      %>
+      <%= select_tag 'warehouse_id',
+                   options_from_collection_for_select(@warehouses, 'id', 'short_name', :selected => current_warehouse),
+                   :prompt => 'Choose a Warehouse'
+      %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+<% end %>

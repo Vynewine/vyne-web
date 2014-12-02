@@ -1,0 +1,26 @@
+<p>
+  <strong>Key:</strong>
+  <%= @device.key %>
+</p>
+
+<p>
+  <strong>GCM Registration ID:</strong>
+  <% if @device.registration_id.blank? %>
+      Not registered
+  <% else %>
+      <%= @device.registration_id %>
+  <% end %>
+
+</p>
+
+<p>
+  <strong>Warehouse</strong>
+  <% if @device.warehouses.blank? %>
+      Not assigned
+  <% else %>
+      <%= @device.warehouses[0].title + ', ' + @device.warehouses[0].address.full %>
+  <% end %>
+</p>
+
+<%= link_to 'Edit', edit_admin_device_path(@device) %>
+<%= link_to 'Back', admin_devices_path %>

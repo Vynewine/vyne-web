@@ -95,3 +95,6 @@ gem 'tzinfo'
 
 #Spatial to JSON
 gem 'rgeo-geojson'
+
+#Google GCM
+gem 'gcm'

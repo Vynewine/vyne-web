@@ -33,6 +33,17 @@
 </p>
 
 <p>
+  <strong>Users:</strong><br/>
+  <% if @warehouse.users.blank? %>
+      No users assigned to this warehouse
+  <% else %>
+      <% @warehouse.users.each do |user| %>
+        <%= user.name %> - <%= user.email %>
+      <% end %>
+  <% end %>
+</p>
+
+<p>
   <strong>Agenda:</strong>
   <% @agendas.each do |agenda| %>
     <dl>
@@ -45,16 +56,16 @@
 <p>
   <strong>Delivery Area</strong>
 
-<% if @warehouse.delivery_area.blank? %>
-  Not Set
-    <% else %>
-<div id="map" style="width: 90%; height: 500px;"></div>
-<script>
-  var warehouseLatitude = <%= @warehouse.address.latitude %>;
-  var warehouseLongitude = <%= @warehouse.address.longitude %>;
-  var deliveryArea = [ <% @warehouse.delivery_area.exterior_ring.points.each do |point| %> [<%= point.y %>, <%= point.x %>],<% end %> ];
-</script>
-    <% end %>
+  <% if @warehouse.delivery_area.blank? %>
+      Not Set
+  <% else %>
+    <div id="map" style="width: 90%; height: 500px;"></div>
+    <script>
+        var warehouseLatitude = <%= @warehouse.address.latitude %>;
+        var warehouseLongitude = <%= @warehouse.address.longitude %>;
+        var deliveryArea = [<% @warehouse.delivery_area.exterior_ring.points.each do |point| %> [<%= point.y %>, <%= point.x %>], <% end %>];
+    </script>
+<% end %>
 </p>
 
 <p>

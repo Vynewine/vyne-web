@@ -37,14 +37,7 @@ class Admin::WarehousesController < ApplicationController
 
   # GET /warehouses/1/edit
   def edit
-    @agendas = @warehouse.agendas.order('day ASC')
-    if @warehouse.address.blank?
-      @warehouse.address = Address.new
-    end
-
-    if @warehouse.agendas.blank?
-      set_default_agenda(@warehouse)
-    end
+    data_for_edit
   end
 
   # POST /warehouses
@@ -57,7 +50,11 @@ class Admin::WarehousesController < ApplicationController
       return
     end
 
-    response = add_warehouse_to_shutl(@warehouse)
+    if params[:update_shutl] == '1'
+      response = add_warehouse_to_shutl(@warehouse)
+    else
+      response = {}
+    end
 
     if response[:errors].blank?
       @warehouse.registered_with_shutl = true
@@ -88,14 +85,22 @@ class Admin::WarehousesController < ApplicationController
       return
     end
 
-    if @warehouse.registered_with_shutl
-      response = update_shutl_warehouse(@warehouse)
+    if params[:update_shutl] == '1'
+      if @warehouse.registered_with_shutl
+        response = update_shutl_warehouse(@warehouse)
+      else
+        response = add_warehouse_to_shutl(@warehouse)
+      end
+      @warehouse.registered_with_shutl = true
     else
-      response = add_warehouse_to_shutl(@warehouse)
+      response = {}
+    end
+
+    unless params[:user_id].blank?
+      @warehouse.users << User.find(params[:user_id])
     end
 
     if response[:errors].blank?
-      @warehouse.registered_with_shutl = true
       unless @warehouse.save
         redirect_to edit_admin_warehouse_path(@warehouse), alert: @warehouse.errors.full_messages().join(', ')
         return
@@ -104,9 +109,7 @@ class Admin::WarehousesController < ApplicationController
       redirect_to edit_admin_warehouse_path(@warehouse), alert: response[:errors].join(', ')
       return
     end
-
     redirect_to [:admin, @warehouse], notice: 'Warehouse was successfully updated.'
-
   end
 
   # DELETE /warehouses/1
@@ -117,6 +120,15 @@ class Admin::WarehousesController < ApplicationController
       format.html { redirect_to admin_warehouses_url, notice: 'Warehouse was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def remove_user
+    @warehouse = Warehouse.find(params[:warehouse_id])
+    user = User.find_by_id(params[:user_id])
+    unless user.blank?
+      @warehouse.users.delete(user)
+    end
+    redirect_to edit_admin_warehouse_path(@warehouse)
   end
 
   private
@@ -148,6 +160,19 @@ class Admin::WarehousesController < ApplicationController
         )
       }
     end
+  end
+
+  def data_for_edit
+    @agendas = @warehouse.agendas.order('day ASC')
+    if @warehouse.address.blank?
+      @warehouse.address = Address.new
+    end
+
+    if @warehouse.agendas.blank?
+      set_default_agenda(@warehouse)
+    end
+
+    @users = User.with_role(:supplier)
   end
 
 end

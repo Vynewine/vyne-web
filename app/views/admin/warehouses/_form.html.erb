@@ -66,6 +66,53 @@
     </div>
 
     <div class="field">
+      Users
+
+      <% unless @warehouse.users.blank? %>
+          <table border="1" class="list-table">
+            <thead>
+            <tr>
+              <th>Id</th>
+              <th>E-mail</th>
+              <th>Name</th>
+              <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <% @warehouse.users.each do |user| %>
+                <tr>
+                  <td><%= user.id %></td>
+                  <td><%= user.email %></td>
+                  <td><%= user.name %></td>
+                  <td class="button-wrapper">
+                    <%= link_to admin_warehouse_remove_user_path(@warehouse, :user_id => user.id), method: :post, data: {confirm: 'Are you sure you want to disassociate user:' + user.name + ' from this warehouse?'} do %>
+                        <i class="flaticon stroke trash-2"></i>
+                    <% end %>
+                  </td>
+                </tr>
+            <% end %>
+            </tbody>
+          </table>
+      <% end %>
+
+      <p>
+        Assign user to this warehouse<br/>
+
+        <%
+           users_options = []
+           if @users
+             @users.each do |user|
+               users_options.push([user.name + ' - ' + user.email, user.id])
+             end
+           end
+        %>
+        <%= select_tag 'user_id', options_for_select(users_options), :prompt => 'Assign User' %>
+
+      </p>
+    </div>
+
+    <div class="field">
       <%= f.label :delivery_area %>
       <br/>
       <textarea id="area" name="warehouse[delivery_area]" cols="50" rows="20"></textarea>
@@ -115,6 +162,12 @@
               </div>
           <% end %>
       <% end %>
+    </div>
+    <div>
+      <p>
+        Update Shutl Record
+        <%= check_box_tag 'update_shutl' %>
+      </p>
     </div>
     <div class="actions">
       <%= f.submit %>
