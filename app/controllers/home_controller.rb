@@ -5,12 +5,29 @@ class HomeController < ApplicationController
 
   def index
     if user_signed_in?
-      redirect_to neworder_path
+
+      if user_can_access_device
+        if @device.registration_id.blank?
+          render 'device_registration'
+          return
+        else
+          redirect_to admin_orders_path
+          return
+        end
+      end
+
+      if cookies[:device]
+        sign_out current_user
+        redirect_to login_path, alert: 'Please contact Vyne to setup this device'
+        return
+      else
+        redirect_to neworder_path
+      end
     end
   end
 
   def code
-    puts "User code: " + current_user.code
+    puts 'User code: ' + current_user.code
   end
 
   def activate
@@ -61,6 +78,31 @@ class HomeController < ApplicationController
     end
 
     render :json => {:success => true}
+  end
+
+  private
+
+  def user_can_access_device
+
+    if cookies[:device].blank?
+      return false
+    end
+
+    unless current_user.has_role? :supplier
+      return false
+    end
+
+    @device = Device.find_by_key(cookies[:device])
+
+    if @device.blank? || @device.warehouses.blank? || current_user.warehouses.blank?
+      return false
+    end
+
+    (@device.warehouses & current_user.warehouses).each do
+      return true
+    end
+
+    false
   end
 
 end
