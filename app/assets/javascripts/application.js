@@ -21,6 +21,7 @@
 //= require vendor/leaflet-0.7.3/leaflet.js
 //= require vendor/leaflet-plugins-1.2.0/layer/tile/Google
 //= require delivery
+//= require device
 
 var events = [];
 

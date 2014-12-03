@@ -115,7 +115,11 @@ Rails.application.routes.draw do
     resources :payments
     resources :statuses
     resources :delivery
-    resources :devices
+    resources :devices do
+      collection do
+        post 'register'
+      end
+    end
     post '/orders/list' => 'orders#list'
     get 'advise/index' => 'advisors#index'
     get 'advise/choose' => 'advisors#choose'

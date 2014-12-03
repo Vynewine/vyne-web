@@ -14,18 +14,18 @@ class ApplicationController < ActionController::Base
   end
 
   # Devise overrides for signing in
-  def after_sign_in_path_for(resource_or_scope)
-    if current_user.active?
-      neworder_path
-    else
-      entercode_path
-    end
-  end
+  # def after_sign_in_path_for(resource_or_scope)
+  #   if current_user.active?
+  #     neworder_path
+  #   else
+  #     entercode_path
+  #   end
+  # end
 
   # Devise overrides for signing up
-  def after_sign_up_path_for(resource)
-    entercode_path
-  end
+  # def after_sign_up_path_for(resource)
+  #   entercode_path
+  # end
 
   #Used to check for invitation code
   def check_the_gate

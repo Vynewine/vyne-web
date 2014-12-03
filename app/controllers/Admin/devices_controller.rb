@@ -1,5 +1,8 @@
 class Admin::DevicesController < ApplicationController
   layout 'admin'
+  authorize_actions_for AdminAuthorizer, :except => :register
+  authorize_actions_for SupplierAuthorizer, :only => :register
+  authority_actions :register => 'update'
   before_action :authenticate_user!
 
   def index
@@ -71,6 +74,23 @@ class Admin::DevicesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to admin_devices_url, notice: 'Device was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def register
+    @device = Device.find_by_key(params[:key])
+
+    if @device.blank?
+      render json: ['Device not found'], status: :unprocessable_entity
+    else
+      @device.registration_id = params[:registration_id]
+      if @device.save
+        render json: @device, status: :ok
+        return
+      else
+        render json: @device.errors, status: :unprocessable_entity
+        return
+      end
     end
   end
 
