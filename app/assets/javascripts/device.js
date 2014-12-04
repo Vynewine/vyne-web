@@ -55,6 +55,7 @@ $('document').ready(function () {
                 },
                 success: function (data) {
                     $message.text(JSON.stringify(data));
+                    $('#next-step').show();
                     $error.hide();
                 }
             });

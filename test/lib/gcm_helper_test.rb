@@ -24,5 +24,4 @@ class GoogleGcmlHelperTest < ActiveSupport::TestCase
     response = gcm.send(registration_ids, options)
     puts json: response
   end
-
 end

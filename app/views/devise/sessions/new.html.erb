@@ -25,11 +25,6 @@
                   <%= content_tag :div, msg, class: name %>
               <% end -%>
 
-          <%
-            unless params['device'].blank?
-              cookies[:device] = { :value => params['device'], :expires => 3.years.from_now }
-            end
-          %>
             <%= f.submit "Sign In" %>
         </fieldset>
     <% end %>

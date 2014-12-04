@@ -4,6 +4,15 @@ class HomeController < ApplicationController
   before_action :check_the_gate, :except => [:mailing_list_signup]
 
   def index
+
+    unless params['device'].blank?
+      cookies[:device] = { :value => params['device'], :expires => 3.years.from_now }
+    end
+
+    if !cookies[:device].blank? && !user_signed_in?
+      redirect_to login_path, alert: 'Please contact Vyne to setup this device'
+    end
+
     if user_signed_in?
 
       if user_can_access_device
