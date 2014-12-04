@@ -125,6 +125,8 @@ class ShopController < ApplicationController
 
       @order.information = warehouses
 
+      @order.warehouse = assign_warehouse(warehouses)
+
       if @order.save
         wines.each { |wine|
 
@@ -245,6 +247,27 @@ class ShopController < ApplicationController
       order.order_items[1].price = (order.order_items[1].price - 5)
       order.order_items[1].save
     end
+  end
+
+  def assign_warehouse(warehouses)
+    final_warehouse = nil
+    distance = nil
+    (JSON.parse warehouses)['warehouses'].each do |warehouse|
+      near_warehouse = Warehouse.find_by_id(warehouse['id'])
+      current_distance = warehouse['distance'].to_f
+      unless near_warehouse.blank?
+        if final_warehouse.blank?
+          final_warehouse = near_warehouse
+          distance = current_distance
+        else
+           if distance > current_distance
+             final_warehouse = near_warehouse
+             distance = current_distance
+           end
+        end
+      end
+    end
+    final_warehouse
   end
 end
 

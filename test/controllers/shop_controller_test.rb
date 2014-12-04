@@ -188,6 +188,22 @@ class ShopControllerTest < ActionController::TestCase
     StripeMock.start
   end
 
+  test 'Will assign closest warehouse to the order' do
+    order = orders(:order1)
+
+    warehouse_one = warehouses(:one)
+    warehouse_two = warehouses(:two)
+
+
+    warehouses = '{"warehouses":[{"id":' + warehouse_one.id.to_s + ',"distance":2.369,"is_open":true},
+    {"id":' + warehouse_two.id.to_s + ',"distance":1.369,"is_open":true}]}'
+
+    order.warehouse = @controller.send(:assign_warehouse, warehouses)
+    order.save
+    saved_order = Order.find(order)
+    assert_equal(warehouse_two, saved_order.warehouse)
+  end
+
 
   def post_data
     {
