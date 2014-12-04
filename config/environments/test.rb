@@ -75,4 +75,7 @@ Rails.application.configure do
   config.enable_invite_code = 'true'
   config.invite_code = 'timeforvyne'
 
+  #Googe GCM
+  config.google_gcm_public_api_key = 'AIzaSyCUuUzZOMAKS1n6kA396bI8FBUWpvdwyWk'
+
 end

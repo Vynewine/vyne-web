@@ -27,4 +27,13 @@ class UserTest < ActiveSupport::TestCase
     assert(key1 != key2)
 
   end
+
+  test 'Converty registration' do
+    warehouse = warehouses(:one)
+    warehouse.devices << [devices(:one), devices(:two)]
+
+    saved_warehouse = Warehouse.find(warehouse)
+    puts json: saved_warehouse.devices.map{ |device| device.registration_id }
+
+  end
 end

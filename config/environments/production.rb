@@ -117,4 +117,7 @@ Rails.application.configure do
   config.enable_invite_code = ENV['ENABLE_INVITE_CODE']
   config.invite_code = ENV['INVITE_CODE']
 
+  #Googe GCM
+  config.google_gcm_public_api_key = 'AIzaSyCUuUzZOMAKS1n6kA396bI8FBUWpvdwyWk'
+
 end

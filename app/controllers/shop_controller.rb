@@ -3,6 +3,8 @@ require 'json'
 class ShopController < ApplicationController
   include UserMailer
   include StripeHelper
+  include GcmHelper
+
   before_action :authenticate_user!, :except => [:new, :create]
   authorize_actions_for UserAuthorizer, :except => [:new, :create] # Triggers user check
   before_action :set_order, only: [:show, :edit, :update, :destroy]
@@ -183,6 +185,7 @@ class ShopController < ApplicationController
         Thread.new do
           first_time_ordered @order
           order_notification @order
+          send_notification @order
         end
 
         render :json => @order.to_json
