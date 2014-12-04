@@ -67,6 +67,11 @@ Push to Heroku (assumin you are logged in to Vyne Heroku account)
 git push heroku master
 ```
 
+Push branch to Heroku:
+```
+git push heroku yourbranch:master
+```
+
 Run Migrations if required
 ```
 heroku run rake --trace db:migrate
