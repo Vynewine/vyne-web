@@ -1,6 +1,9 @@
 module GcmHelper
   def send_notification(order)
 
+    Rails.logger.info 'Sending notification for order:'
+    Rails.logger.info json: order
+
     registration_ids = []
 
     response = {
@@ -14,6 +17,10 @@ module GcmHelper
     end
 
     unless registration_ids.blank?
+
+      Rails.logger.info 'Sending notification to devices'
+      Rails.logger.info registration_ids
+
       gcm = GCM.new(Rails.application.config.google_gcm_public_api_key)
 
       options = {
@@ -30,6 +37,7 @@ module GcmHelper
 
       if response_body['failure'] > 0
         response[:errors] = response_body['results'].map { |result| result['error'] }
+        Rails.logger.error response[:errors]
       end
     end
 
