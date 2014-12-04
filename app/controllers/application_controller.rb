@@ -32,10 +32,12 @@ class ApplicationController < ActionController::Base
 
     unless Rails.application.config.enable_invite_code == 'false'
       if cookies[:invite_code] == Rails.application.config.invite_code
+        @can_use_the_site = true
         return
       end
 
       if params[:invite_code].blank?
+        @can_use_the_site = false
         render '/home/gate'
         return
       end
@@ -43,8 +45,10 @@ class ApplicationController < ActionController::Base
       unless params[:invite_code].blank?
         if params[:invite_code].strip.downcase == Rails.application.config.invite_code
           cookies[:invite_code] = { :value => Rails.application.config.invite_code, :expires => 3.months.from_now }
+          @can_use_the_site = true
           return
         else
+          @can_use_the_site = false
           render '/home/gate'
           return
         end

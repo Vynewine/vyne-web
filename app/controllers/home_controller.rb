@@ -10,7 +10,7 @@ class HomeController < ApplicationController
   end
 
   def code
-    puts "User code: " + current_user.code
+    puts 'User code: ' + current_user.code
   end
 
   def activate

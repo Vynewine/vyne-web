@@ -1,24 +1,68 @@
-<div style="text-align: center; padding-top: 30px;">
-  <h3> Join Vyne </h3>
-</div>
-<div style="width: 100%">
-  <div style="margin: 0 auto">
-    <iframe id="pikchart-frame" width="800" height="4260" frameborder="0" scrolling="no" style="overflow-y:hidden;margin: 0 auto;display:block;" src="https://magic.piktochart.com/embed/3572160-frontend-leader"></iframe>
-  </div>
+
+<div id="jobs">
+  <% if params[:job].blank? %>
+      <div style="text-align: center; padding-top: 30px;">
+        <h3> Join Vyne </h3>
+      </div>
+      <div style="width: 300px;margin:0 auto;text-align: center">
+        <a href="?job=1">
+          <div class="job-link">
+            <div>Front-end Leader</div>
+            <div class="see-more">See More</div>
+          </div>
+        </a>
+        <a href="?job=2">
+          <div class="job-link">
+            <div>Full-stack Engineer & Leader</div>
+            <div class="see-more">See More</div>
+          </div>
+        </a>
+        <a href="?job=3">
+          <div class="job-link">
+            <div>Native App Engineer & Leader</div>
+            <div class="see-more">See More</div>
+          </div>
+        </a>
+      </div>
+  <% else %>
+      <div style="text-align: center; padding-top: 30px;">
+        <div style="width: 100px;margin: 0 auto">
+          <h3><a href="/jobs" style="color: #e7e7e7"> Back </a></h3>
+        </div>
+
+      </div>
+      <div style="width: 100%">
+        <div style="margin: 0 auto">
+          <% case params[:job]
+             when '1' %>
+              <iframe id="pikchart-frame" width="800" height="4260" frameborder="0" scrolling="no" style="overflow-y:hidden;margin: 0 auto;display:block;" src="https://magic.piktochart.com/embed/3572160-frontend-leader"></iframe>
+          <% when '2' %>
+              <iframe id="pikchart-frame" width="800" height="4260" frameborder="0" scrolling="no" style="overflow-y:hidden;margin: 0 auto;display:block;" src="https://magic.piktochart.com/embed/3740110-full-stack-engineer-leader"></iframe>
+          <% when '3' %>
+              <iframe id="pikchart-frame" width="800" height="4260" frameborder="0" scrolling="no" style="overflow-y:hidden;margin: 0 auto;display:block;" src="https://magic.piktochart.com/embed/3740433-native-app-engineer-leader"></iframe>
+          <% end %>
+
+        </div>
+      </div>
+
+      <script>
+          document.addEventListener("DOMContentLoaded", function() {
+              var $window = $(window);
+              var $frame = $('#pikchart-frame');
+
+              function checkWidth() {
+                  var windowsize = $window.width();
+                  if (windowsize < 800) {
+                      $frame.width(windowsize);
+                  }
+              }
+              checkWidth();
+              $(window).resize(checkWidth);
+          });
+      </script>
+  <% end %>
 </div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var $window = $(window);
-        var $frame = $('#pikchart-frame');
 
-        function checkWidth() {
-            var windowsize = $window.width();
-            if (windowsize < 800) {
-                $frame.width(windowsize);
-            }
-        }
-        checkWidth();
-        $(window).resize(checkWidth);
-    });
-</script>
+
+
