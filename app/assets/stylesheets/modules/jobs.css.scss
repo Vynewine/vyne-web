@@ -1,0 +1,27 @@
+#jobs {
+  .job-link {
+    margin: 2rem 0 0;
+    padding: 1rem;
+    border-radius: 3px;
+    border: 1px rgba(255, 255, 255, 0.1) solid;
+    color: #ffffff;
+
+    .see-more {
+      color: #a32438;
+    }
+  }
+
+  .back-nav {
+    position: absolute;
+    top: 60px;
+    width: 23px;
+    height: 23px;
+    z-index: 99;
+    display: block;
+    background-image: url(asset-path('icons/back@2x.png'));
+    background-size: 100%;
+  }
+}
+
+
+
