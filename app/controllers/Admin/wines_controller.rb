@@ -3,6 +3,7 @@ class Admin::WinesController < ApplicationController
 
   layout "admin"
   before_filter :authenticate_user!
+  authorize_actions_for AdminAuthorizer
   before_action :set_wine, only: [:show, :edit, :update, :destroy]
 
   # GET /wines

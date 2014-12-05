@@ -1,7 +1,6 @@
 class Admin::DevicesController < ApplicationController
   layout 'admin'
   authorize_actions_for AdminAuthorizer, :except => :register
-  authorize_actions_for SupplierAuthorizer, :only => :register
   authority_actions :register => 'update'
   before_action :authenticate_user!
 
@@ -78,6 +77,10 @@ class Admin::DevicesController < ApplicationController
   end
 
   def register
+    unless (current_user.has_role? :supplier) || (current_user.has_role? :admin)
+      return head :forbidden
+    end
+
     @device = Device.find_by_key(params[:key])
 
     if @device.blank?

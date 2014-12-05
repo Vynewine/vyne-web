@@ -10,6 +10,7 @@ $('document').ready(function () {
         var $message = $('#message');
 
         var initiateDeviceRegistration = function () {
+            //AndroidFunction is function injected by Android Device
             if (typeof(AndroidFunction) !== 'undefined') {
                 AndroidFunction.registerDevice();
             } else {
@@ -17,9 +18,10 @@ $('document').ready(function () {
             }
         };
 
+        initiateDeviceRegistration();
+
         //Called from Vyne POS Android app upon completing registration.
         //Call authenticated on the server.
-
         confirmRegistration = function (device_key, registrationId) {
 
             var $error = $('#device-registration-errors');
@@ -53,22 +55,10 @@ $('document').ready(function () {
                     }
                     $error.show();
                 },
-                success: function (data) {
-                    $message.text(JSON.stringify(data));
-                    $('#next-step').show();
-                    $error.hide();
+                success: function () {
+                    location.reload();
                 }
             });
         };
-
-        $('#register-device-link').click(function(e) {
-            e.preventDefault();
-            initiateDeviceRegistration();
-        });
-
-        $('#register-device-test').click(function(e) {
-            e.preventDefault();
-            confirmRegistration('u34kd6ob', 'test_registration_id');
-        });
     }
 });
