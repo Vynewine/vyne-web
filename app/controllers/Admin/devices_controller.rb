@@ -1,8 +1,10 @@
 class Admin::DevicesController < ApplicationController
   layout 'admin'
+
+  before_action :authenticate_user!
   authorize_actions_for AdminAuthorizer, :except => :register
   authority_actions :register => 'update'
-  before_action :authenticate_user!
+
 
   def index
     @devices = Device.all.order(:id)

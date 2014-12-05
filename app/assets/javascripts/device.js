@@ -56,7 +56,7 @@ $('document').ready(function () {
                     $error.show();
                 },
                 success: function () {
-                    location.reload();
+                    window.location.replace("/admin/orders");
                 }
             });
         };

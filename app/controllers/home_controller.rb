@@ -16,13 +16,8 @@ class HomeController < ApplicationController
     if user_signed_in?
 
       if user_can_access_device
-        if @device.registration_id.blank?
-          render 'device_registration'
-          return
-        else
-          redirect_to admin_orders_path
-          return
-        end
+        render 'device_registration'
+        return
       end
 
       if cookies[:device]
