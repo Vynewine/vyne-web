@@ -30,6 +30,10 @@ class ApplicationController < ActionController::Base
   #Used to check for invitation code
   def check_the_gate
 
+    unless params['device'].blank?
+      cookies[:device] = { :value => params['device'], :expires => 3.years.from_now }
+    end
+
     unless Rails.application.config.enable_invite_code == 'false'
       if cookies[:invite_code] == Rails.application.config.invite_code
         @can_use_the_site = true
