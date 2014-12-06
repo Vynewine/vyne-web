@@ -2,9 +2,9 @@
 <html>
 <head>
   <title>Vyne</title>
-  <%= stylesheet_link_tag    'admin', 'token-input-facebook', media: 'all' %>
+  <%= stylesheet_link_tag 'admin', 'token-input-facebook', media: 'all' %>
   <script>
-    var admin = true;
+      var admin = true;
   </script>
   <%= javascript_include_tag 'admin', 'jquery.tokeninput', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
@@ -12,61 +12,61 @@
       <%= yield(:head) %>
   <% end %>
 </head>
-<body class="<%= params[:controller].gsub('/','_') %>" >
+<body class="<%= params[:controller].gsub('/', '_') %>">
 
 <%
-if current_user.has_role?(:advisor)
-  adv = true
-end
-if current_user.has_role?(:supplier)
-  sup = true
-end
-if current_user.has_role?(:admin)
-  adv = true
-  sup = true
-  adm = true
-end
-if current_user.has_role?(:superadmin)
-  adv = true
-  sup = true
-  adm = true
-  sup = true
-end
+   if current_user.has_role?(:advisor)
+     adv = true
+   end
+   if current_user.has_role?(:supplier)
+     supl = true
+   end
+   if current_user.has_role?(:admin)
+     adv = true
+     supl = true
+     adm = true
+   end
+   if current_user.has_role?(:superadmin)
+     adv = true
+     supl = true
+     adm = true
+     supa = true
+   end
 %>
 
 <header>
   <ul class="top-menu left">
     <li><span>VYNE Admin</span></li>
-  <% if user_signed_in? %>
-    <li><span><%= current_user.email %></span></li>
-  <% end %>
+    <% if user_signed_in? %>
+        <li><span><%= current_user.email %></span></li>
+    <% end %>
   </ul>
   <ul class="top-menu right">
-  <% if user_signed_in? %>
-    <li><%= link_to "Sign out", logout_path, :method => :delete %></li>
-  <% end %>
+    <% if user_signed_in? %>
+        <li><%= link_to 'Sign out', logout_path, :method => :delete %></li>
+    <% end %>
     <li><%= link_to 'Home', home_index_path %></li>
   </ul>
   <ul class="main-menu">
-  <% if sup %>
-    <li class="supplier"><%= link_to 'Wines', admin_wines_path %></li>
-    <li class="supplier"><%= link_to 'Inventories', admin_inventories_path %></li>
-  <% end %>
-  <% if adv %>
-    <li class="advisor"><%= link_to 'Advise', admin_advise_index_path %></li>
-  <% end %>
-  <% if adm %>
-    <li class="admin"><%= link_to 'Categories', admin_categories_path %></li>
-    <li class="admin"><%= link_to 'Orders', admin_orders_path %></li>
-    <li class="admin"><%= link_to 'Users', admin_users_path %></li>
-    <li class="admin"><%= link_to 'Warehouses', admin_warehouses_path %></li>
-    <li class="admin"><%= link_to 'Addresses', admin_addresses_path %></li>
-    <li class="admin"><%= link_to 'Devices', admin_devices_path %></li>
-  <% end %>
-  <% if sup %>
-    <li class="superadmin"><%= link_to 'Statuses', admin_statuses_path %></li>
-    <li class="superadmin"><%= link_to 'Roles', admin_roles_path %></li>
-  <% end %>
+
+    <% if supl %>
+        <li class="supplier"><%= link_to 'Inventories', admin_inventories_path %></li>
+        <li class="advisor"><%= link_to 'Advise', admin_advise_index_path %></li>
+        <li class="admin"><%= link_to 'Orders', admin_orders_path %></li>
+    <% end %>
+
+    <% if adm %>
+        <li class="supplier"><%= link_to 'Wines', admin_wines_path %></li>
+        <li class="admin"><%= link_to 'Categories', admin_categories_path %></li>
+        <li class="admin"><%= link_to 'Users', admin_users_path %></li>
+        <li class="admin"><%= link_to 'Warehouses', admin_warehouses_path %></li>
+        <li class="admin"><%= link_to 'Addresses', admin_addresses_path %></li>
+        <li class="admin"><%= link_to 'Devices', admin_devices_path %></li>
+    <% end %>
+    <% if supa %>
+        <li class="superadmin"><%= link_to 'Statuses', admin_statuses_path %></li>
+        <li class="superadmin"><%= link_to 'Roles', admin_roles_path %></li>
+    <% end %>
   </ul>
 </header>
 <% flash.each do |name, msg| -%>
@@ -75,15 +75,17 @@ end
 
 <div class="main-wrapper">
   <div class="main">
-<%= yield %>
+    <%= yield %>
   </div>
 </div>
 <% if current_user.has_role?(:superadmin) %>
-<footer>
-  <p>user signed_in?: <%= debug user_signed_in? %></p>
-  <p>current_user: <%= debug current_user%></p>
-  <p>user_session: <%= debug user_session%></p>
-</footer>
+    <footer>
+      <p>user signed_in?: <%= debug user_signed_in? %></p>
+
+      <p>current_user: <%= debug current_user %></p>
+
+      <p>user_session: <%= debug user_session %></p>
+    </footer>
 <% end %>
 
 </body>

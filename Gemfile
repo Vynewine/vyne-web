@@ -98,3 +98,9 @@ gem 'rgeo-geojson'
 
 #Google GCM
 gem 'gcm'
+
+#Let's get some Bootstrap goodness
+gem 'bootstrap-sass', '~> 3.3.1'
+
+#More Magic
+gem 'autoprefixer-rails'

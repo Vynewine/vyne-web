@@ -1,6 +1,10 @@
 @import 'fonts/flaticons';
 @import 'vendor/leaflet';
 
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+
 html, body {
     margin: 0;
     padding: 0;
