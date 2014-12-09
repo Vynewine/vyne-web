@@ -1,3 +1,38 @@
+<div class="row">
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Order Summary</h3>
+      </div>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-xs-6">
+              <strong>Status:</strong> <%= @order.status.label.capitalize %>
+            </div>
+            <div class="col-xs-6 text-right">
+              <strong>Created:</strong> <%= local_time(@order.created_at, '%b %d, %Y %l:%M %p' ) %>
+            </div>
+          </div>
+        </li>
+        <li class="list-group-item">
+         <strong>Merchant:</strong> <%= @order.warehouse.title %>, Address: <%= @order.warehouse.address.full %>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Customer Info</h3>
+      </div>
+      <div class="panel-body">
+        Panel content
+      </div>
+    </div>
+  </div>
+</div>
+
 <p>
   <strong>Status:</strong>
   <%= @order.status.label.capitalize %>

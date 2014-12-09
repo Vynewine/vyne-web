@@ -11,16 +11,23 @@ class Admin::OrdersController < ApplicationController
   # GET /orders
   # GET /orders.json
   def index
-    @orders = Order.all.order('status_id ASC, id ASC')
+
+    @orders = Order.order('id ASC')
+
+    if params[:status].blank?
+      @orders = @orders.where(:status => Status.statuses[:pending])
+    else
+      @orders = @orders.where(:status => params[:status])
+    end
+
+    unless current_user.has_role?(:admin) || current_user.has_role?(:superadmin)
+      @orders = @orders.where(:warehouse => current_user.warehouses)
+    end
+
   end
 
   # GET /orders/list.json
   def list
-    require 'pp'
-    puts '--------------------------'
-    logger.warn "Orders request"
-
-    puts PP.pp(params[:status], '', 80)
 
     @orders = Order.where(:status => params[:status])
 

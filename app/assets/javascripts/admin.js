@@ -6,6 +6,7 @@
 //= require vendor/leaflet-0.7.3/leaflet.js
 //= require vendor/leaflet-plugins-1.2.0/layer/tile/Google
 //= require bootstrap-sprockets
+//= require local_time
 
 var advisor = advisor || null;
 
@@ -28,7 +29,7 @@ var addNestedField = function($anchorNode, parentEntity, nestedEntity, fieldName
 };
 
 var adminReady = function() {
-    console.log('ADMIN JS');
+
     // // console.log('Doc is apparently ready');
     if (typeof(admin) !== 'undefined' && admin !== null && admin === true) {
         var tokenFields = ["occasion", "food", "note"];

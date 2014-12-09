@@ -39,6 +39,29 @@ class UserNewOrderTest < ActiveSupport::TestCase
     @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Thanks for ordering')]").displayed? }
   end
 
+  test 'New user two bottles' do
+
+    email = Time.now.strftime('%Y%m%d%H%M%S') + '@vyne.london'
+    password = 'password'
+
+    @driver.get(@base_url + '/')
+
+    enter_promo_code
+    enter_postcode_first_page('n17rj')
+    select_bottle_for_category(2)
+    select_wine_by_occasion
+    select_second_bottle
+    select_bottle_for_category(2)
+    select_wine_by_food
+    confirm_order_selection
+    register_new_user(email, password)
+    register_new_address
+    register_new_credit_card
+    submit_order
+
+    @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Thanks for ordering')]").displayed? }
+  end
+
   test 'Existing user one bottle' do
 
     email = Time.now.strftime('%Y%m%d%H%M%S') + '@vyne.london'
@@ -120,6 +143,30 @@ class UserNewOrderTest < ActiveSupport::TestCase
     @wait.until { @driver.find_element(:css, '#occasion-3 > a > img[alt=\'image description\']') }
     @driver.find_element(:css, '#occasion-3 > a > img[alt=\'image description\']').click
     @driver.find_element(:css, '#winetype-3 > a > img[alt=\'image description\']').click
+  end
+
+  def select_second_bottle
+    puts 'Selecting second bottle'
+    @wait.until { @driver.find_element(:css, '#review-panel').displayed? }
+    #@wait.until { @driver.find_element(:link, '#add-another-bottle').displayed? }
+    @driver.find_element(:id, 'add-another-bottle').click
+  end
+
+  def select_wine_by_food
+    puts 'Selecting wine by food'
+    @wait.until { @driver.find_element(:link, 'With food').displayed? }
+    @driver.find_element(:link, 'With food').click
+    @wait.until { @driver.find_element(:css, '#food-1 > a > span').displayed? }
+    @driver.find_element(:css, '#food-1 > a > span').click
+    @driver.find_element(:css, '#food-9 > a > span').click
+    @driver.find_element(:css, '#preparation-list > #food-1 > a > span').click
+    @driver.find_element(:css, '#food-5 > a > img.logo').click
+    @driver.find_element(:css, '#food-25 > a > img[alt=\'image description\']').click
+    @driver.find_element(:css, '#preparation-list > #food-2 > a > img[alt=\'image description\']').click
+    @driver.find_element(:css, '#food-7 > a > img.logo').click
+    @driver.find_element(:css, '#food-38 > a > img[alt=\'image description\']').click
+    @driver.find_element(:id, 'select-preferences').click
+
   end
 
   def confirm_order_selection

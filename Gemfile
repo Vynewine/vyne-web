@@ -104,3 +104,6 @@ gem 'bootstrap-sass', '~> 3.3.1'
 
 #More Magic
 gem 'autoprefixer-rails'
+
+#Time conversion for UI
+gem 'local_time'
