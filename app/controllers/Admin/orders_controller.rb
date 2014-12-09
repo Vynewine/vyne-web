@@ -7,6 +7,7 @@ class Admin::OrdersController < ApplicationController
   before_action :authenticate_user!
   authorize_actions_for SupplierAuthorizer
   before_action :set_order, only: [:show, :edit, :update, :destroy]
+  authority_actions :mark_ready => 'update'
 
   # GET /orders
   # GET /orders.json
@@ -160,6 +161,16 @@ class Admin::OrdersController < ApplicationController
       format.html { redirect_to [:admin, @order], notice: 'Receipt for order sent successfully' }
     end
 
+  end
+
+  def mark_ready
+    @order = Order.find(params[:order_id])
+    @order.status_id = Status.statuses[:packing]
+    if @order.save
+      redirect_to admin_orders_url(:status => @order.status_id), :flash => { :notice => 'Order marked for packing.' }
+    else
+      redirect_to [:admin, @order], :flash => { :error => @order.errors.full_messages().join(', ') }
+    end
   end
 
   private

@@ -69,7 +69,7 @@
                             <td><%= order.id %></td>
                         <% end %>
 
-                        <td><%= order_item.preferences.join(', ').capitalize %>.</td>
+                        <td><%= order_item.preferences.to_sentence(last_word_connector: ' and ').capitalize %>.</td>
                         <td>
                           <a href="/admin/advise/item/<%= order_item.id %>">
                             <%= order_item.wine.nil? ? 'Advise' : 'Advised' %>

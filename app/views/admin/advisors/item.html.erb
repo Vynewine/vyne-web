@@ -1,65 +1,101 @@
-<p><h3>Customer </h3></p>
-<div><a href="<%= admin_user_path @order.client %>"><%= @order.client.name %></a></div>  (m: <%= @order.client.mobile %>)
-<% unless @order_item.food_items.blank? %>
-    <p><strong>Food</strong></p>
-    <ul>
-      <% @order_item.food_items.each do |food_item| %>
-          <li><%= food_item.food.name + (food_item.preparation.blank? ? '' : ' (' + food_item.preparation.name + ')') %> </li>
-      <% end %>
-    </ul>
-<% end %>
-<% unless @order_item.occasion.blank? %>
-    <p><strong>Occasion</strong></p>
-    <p><%= @order_item.occasion.name %></p>
-<% end %>
-
-<% unless @order_item.type.blank? %>
-    <p><strong>Wine Type</strong></p>
-    <p><%= @order_item.type.name %></p>
-<% end %>
-
-<% unless @order_item.specific_wine.blank? %>
-    <p><strong>Specific Wine</strong></p>
-    <p><%= @order_item.specific_wine %></p>
-<% end %>
-<p><strong>Warehouses Matched:</strong></p>
-<% @warehouses.each do |warehouse| %>
-    Distance to client: <%= @order.information['warehouses'].detect{ |w| w['id'] == warehouse.id }['distance'] %> mil - <%= warehouse.title %> - <%= warehouse.address.full %>  </br>
-<% end %>
-
-<% if !@order_item.wine.nil? %>
-    <p><strong>Already Selected Wine:</strong></p>
-    <p>Name: <%= @order_item.wine.name %> - Cost: £<%= @order_item.cost %></p>
-<% end %>
-
-<p>
-  <input type="hidden" id="warehouses-ids" value="<%= (@order.information['warehouses'].map { |w| w['id'] }).join(",") %>"/>
-  <input type="hidden" id="order-id" name="order-id" value="<%= @order.id %>"/>
-<div class="advisor-area">
-  <div id="wine-filters">
-    <input type="text" id="search" autocomplete="off" placeholder="Search wines..."/>
-    <input type="checkbox" id="tick-sing" name="single"/><label for="single"> Single estate</label>
-
-    <div style="float:right">
-      <% @categories.each do |category| %>
-          <input type="checkbox" class="tick-category" name="tick-cat-<%= category.id %>"
-                 <% if @order_item.category.id == category.id %>
-                 checked="checked"
-                 <% end %>
-                 />
-          <label for="tick-cat-<%= category.name %>">
-            &pound;<%= category.price %>
-            (<%= category.name.capitalize %>)
-          </label>
-      <% end %>
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Customer Preferences Selection</h3>
+      </div>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-xs-12">
+              Category: &pound;<%= @order_item.category.price %>
+              (<%= @order_item.category.name.capitalize %>)
+              <%= @order_item.preferences.to_sentence(last_word_connector: ' and ').capitalize %>.
+            </div>
+          </div>
+        </li>
+      </ul>
     </div>
   </div>
-  <div id="wine-list"></div>
 </div>
-</p>
+
+<% if !@order_item.wine.nil? %>
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Already Selected Wine</h3>
+      </div>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-xs-12">
+              <%= @order_item.wine.name %> - <%= @order_item.wine.txt_vintage %> - <%= @order_item.wine.producer.name %> - Cost: £<%= @order_item.cost %>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<% end %>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Search by wine name, vintage, producer etc...</h3>
+      </div>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="input-group">
+                <input type="text" id="search-wine" autocomplete="off" placeholder="Search wines..." class="form-control">
+                <span class="input-group-addon">
+                    <input type="checkbox" id="tick-sing" name="single"> Single estate
+                  </span>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-xs-12 text-right">
+              <% @categories.each do |category| %>
+                  <input type="checkbox" class="tick-category" name="tick-cat-<%= category.id %>"
+                         <% if @order_item.category.id == category.id %>
+                         checked="checked"
+                         <% end %>
+                         />
+                  <label for="tick-cat-<%= category.name %>">
+                    &pound;<%= category.price %>
+                    (<%= category.name.capitalize %>)
+                  </label>
+              <% end %>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Search Results</h3>
+  </div>
+  <table id="wine-list" class="table table-bordered">
+
+  </table>
+</div>
+
+<input type="hidden" id="order-id" name="order-id" value="<%= @order.id %>"/>
+
 <form method="post" action="/admin/advise/item/<%= @order_item.id %>" id="update-form">
   <input type="hidden" id="wine-id" name="wine-id"/>
   <input type="hidden" id="warehouse-id" name="warehouse-id"/>
   <%= hidden_field_tag(request_forgery_protection_token.to_s, form_authenticity_token) %>
 </form>
-<%= link_to 'Order Details', admin_order_path(@order) %>
+
+<%= link_to 'Back to order details', admin_order_path(@order), :class => 'btn btn-primary' %>

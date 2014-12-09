@@ -111,6 +111,7 @@ Rails.application.routes.draw do
       post 'cancel'
       post 'charge'
       post 'send_receipt'
+      post 'mark_ready'
     end
     resources :payments
     resources :statuses

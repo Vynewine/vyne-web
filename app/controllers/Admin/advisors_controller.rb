@@ -22,29 +22,24 @@ class Admin::AdvisorsController < ApplicationController
     @order_item = OrderItem.find(params[:id])
     @order = @order_item.order
     @categories = Category.all
-    @warehouses = Warehouse.where(:id => @order.information['warehouses'].map{ |warehouse| warehouse['id'] })
+    @warehouses = Warehouse.where(:id => @order.information['warehouses'].map { |warehouse| warehouse['id'] })
   end
 
   def update
     @order_item = OrderItem.find(params[:id])
     @order = @order_item.order
     wine = Wine.find(params['wine-id'])
-    warehouse = Warehouse.find(params['warehouse-id'])
-    inventory = Inventory.find_by(:warehouse => warehouse, :wine => wine)
 
-    if !@order.warehouse.nil? && @order.warehouse.id.to_s != params['warehouse-id']
-      flash[:alert] = 'Warehouse doesn\'t match warehouse chosen for previous wine'
-      redirect_to admin_order_path @order and return
-    end
+    inventory = Inventory.find_by(:warehouse => @order.warehouse, :wine => wine)
 
     @order_item.wine = wine
     @order_item.cost = inventory.cost
-    @order.warehouse = warehouse
+
     @order.advisor = current_user
     @order_item.save
     @order.save
     respond_to do |format|
-      format.html { redirect_to admin_order_path @order}
+      format.html { redirect_to admin_order_path @order }
     end
   end
 
@@ -162,7 +157,7 @@ class Admin::AdvisorsController < ApplicationController
         flash[:alert] = @message
       end
 
-      format.html { redirect_to admin_order_path order}
+      format.html { redirect_to admin_order_path order }
     end
 
   end
@@ -171,14 +166,12 @@ class Admin::AdvisorsController < ApplicationController
 
     order = Order.find(params[:order_id])
 
-    warehouses = order.information['warehouses'].sort! { |a,b| a['distance'] <=> b['distance'] }
-
     # Solr search
 
     @search = Wine.search do
       fulltext params[:keywords]
 
-      with(:warehouse_ids, params[:warehouses].split(","))
+      with(:warehouse_ids, order.warehouse_id)
 
       unless params[:categories].nil?
         with(:category_ids, params[:categories])
@@ -190,48 +183,35 @@ class Admin::AdvisorsController < ApplicationController
 
     end
 
-    #Transform Results to order by warehouse that's closest to the client
-
     wines = []
 
-    warehouses.each{ |warehouse|
+    @search.results.each do |wine|
 
-      warehouse_id =  warehouse['id']
+      inventory = wine.inventories.select{ |inv| inv.warehouse == order.warehouse }.first
 
-      @search.results.each{|wine|
-        wine.inventories.each{ |inv|
-
-          if inv.warehouse.id.to_s == warehouse_id.to_s
-            wines << {
-                :countryCode => wine.producer.country.alpha_2,
-                :countryName => wine.producer.country.name,
-                :region => wine.region.blank? ? '' : wine.region.name,
-                :subregion => wine.subregion.nil? ? '' : wine.subregion.name,
-                :locale => wine.locale.blank? ? '' : wine.locale.name,
-                :id => wine.id,
-                :appellation => wine.appellation.blank? ? '' : wine.appellation.name,
-                :name => wine.name,
-                :vintage => wine.txt_vintage,
-                :single_estate => wine.single_estate,
-                :type => wine.type.name,
-                :compositions => wine.composition.blank? ? '' : wine.composition.composition_grapes.map { |c| { :name => c.grape.name, :percentage => c.percentage }},
-                :note => wine.note,
-                :warehouse => warehouse_id,
-                :agendas => inv.warehouse.agendas,
-                :cost => inv.cost.to_s,
-                :price => inv.category.price,
-                :quantity => inv.quantity,
-                :category => inv.category.name + ' - £' + inv.category.price.to_s,
-                :warehouse_distance => warehouse['distance'],
-                :bottle_size => wine.bottle_size
-            }
-          end
-        }
+      wines << {
+          :countryCode => wine.producer.country.alpha_2,
+          :countryName => wine.producer.country.name,
+          :region => wine.region.blank? ? '' : wine.region.name,
+          :subregion => wine.subregion.nil? ? '' : wine.subregion.name,
+          :locale => wine.locale.blank? ? '' : wine.locale.name,
+          :id => wine.id,
+          :appellation => wine.appellation.blank? ? '' : wine.appellation.name,
+          :name => wine.name,
+          :vintage => wine.txt_vintage,
+          :single_estate => wine.single_estate,
+          :type => wine.type.name,
+          :compositions => wine.composition.blank? ? '' : wine.composition.composition_grapes.map { |c| {:name => c.grape.name, :percentage => c.percentage} },
+          :note => wine.note,
+          :cost => inventory.cost.to_s,
+          :price => inventory.category.price,
+          :quantity => inventory.quantity,
+          :category => inventory.category.name + ' - £' + inventory.category.price.to_s,
+          :bottle_size => wine.bottle_size
       }
-    }
+    end
 
     @results = wines
-
 
     respond_to do |format|
       format.json
@@ -245,10 +225,10 @@ class Admin::AdvisorsController < ApplicationController
     puts 'Charging card'
     Stripe.api_key = Rails.application.config.stripe_key
     Stripe::Charge.create(
-      :amount   => value, 
-      :currency => 'gbp',
-      :customer => stripe_customer_id,
-      :card => stripe_card_id
+        :amount => value,
+        :currency => 'gbp',
+        :customer => stripe_customer_id,
+        :card => stripe_card_id
     )
   end
 

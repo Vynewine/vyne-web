@@ -64,7 +64,7 @@ var adminReady = function() {
 
         // "Global" vars:
         var foods = {};
-        var $searchField = $('.advisor-area>#wine-filters>#search');
+        var $searchField = $('#search-wine');
         token = $('meta[name="csrf-token"]').attr('content');
 
         //----------------------------------------------------------------------
@@ -272,16 +272,13 @@ var adminReady = function() {
          * Renders wine entry into interface
          */
         var renderWine = function(wine) {
-            // console.log('rendering wine', wine);
-            // debugger;
-            var $container = $('#wine-list>table>tbody');
+
+            var $container = $('#wine-list>tbody');
             var basePrice = wine.price;
             var basePriceWarehouse = wine.warehouse; //redundant
             var basePriceQuantity = wine.quantity;
-            //var multiplePrices = wine.availability.length > 1 ? '+' : ''
-            var warehouses = $('#warehouses-ids').val().split(',');
-            //TODO:Check if warehouses are open
-            //var warehousesOpen = parseWarehouseStatuses(wine.availability);
+
+
             var warehouseOpen = true;
             var cost = wine.cost;
 
@@ -325,17 +322,20 @@ var adminReady = function() {
                 .addClass( warehouseOpen ? 'warehouse-open' : 'warehouse-closed')
                 .addClass('wine')
                     .append(
+                    $('<td>').addClass('actions').append(
+                        $('<a>').attr('href', '#').html('Choose').click(chooseWine)
+                    ),
                     $('<td>').addClass('flag').append(
                         $('<img>')
                             .attr('alt', wine.countryName)
                             .attr('src', wine.countryFlag)
 
                     ),
-                    $('<td>').addClass('region').html(region.join(', ')),
                     $('<td>').addClass('name').html(
                         wine.name +
                         ' ' + wine.vintage + (wine.bottle_size ? ' - ' + wine.bottle_size + 'CL' : '')
                     ),
+                    $('<td>').addClass('region').html(region.join(', ')),
                     $('<td>').addClass('type').html(
                         wine.type
                     ),
@@ -350,38 +350,30 @@ var adminReady = function() {
                     ),
                     $('<td>').addClass('flags').append(
                         $se
-                    ),
-                    $('<td>').html(
-                            wine.warehouse_distance
-                    ),
-                    $('<td>').addClass('actions').append(
-                        $('<a>').attr('href', '#').html('Choose').click(chooseWine)
                     )
+
                 )
             );
         };
 
-        var renderItems = function(r) {
+        var renderItems = function (r) {
             var $container = $('#wine-list');
             $container.html('');
             $container.append(
-                $('<table>').attr('border','1').append(
-                    $('<thead>').append(
-                        $('<tr>').append(
-                            $('<td>').html(''),
-                            $('<td>').html('Region'),
-                            $('<td>').html('Name'),
-                            $('<td>').html('Type'),
-                            $('<td>').html('Cost'),
-                            $('<td>').html('Category'),
-                            $('<td>').html('Composition'),
-                            $('<td>').html('Estate'),
-                            $('<td>').html('Distance'),
-                            $('<td>').html('')
-                        )
-                    ),
-                    $('<tbody>')
-                )
+                $('<thead>').append(
+                    $('<tr>').append(
+                        $('<th>').html(''),
+                        $('<th>').html(''),
+                        $('<th>').html('Name'),
+                        $('<th>').html('Region'),
+                        $('<th>').html('Type'),
+                        $('<th>').html('Cost'),
+                        $('<th>').html('Category'),
+                        $('<th>').html('Composition'),
+                        $('<th>').html('Estate')
+                    )
+                ),
+                $('<tbody>')
             );
             for (var i = 0, wine; wine = r[i++];) {
                 renderWine(wine);
@@ -389,11 +381,6 @@ var adminReady = function() {
             $container.slideDown(200);
         };
 
-        var parseResults = function(r){
-            // console.log('okay');
-            // console.log(r);
-            renderItems(r);
-        };
         var errorMethod = function(e){
             // console.log('not okay');
         };
@@ -405,16 +392,14 @@ var adminReady = function() {
                     categories.push(parseInt(this.name.split('-')[2]));
             });
             var data = {
-                  'keywords': keywords,
+                'keywords': keywords,
                 'warehouses': $('#warehouses-ids').val(),
-                    'single': $('#tick-sing').is(':checked'),
-                     'vegan': $('#tick-vegn').is(':checked'),
-                   'organic': $('#tick-orgc').is(':checked'),
+                'single': $('#tick-sing').is(':checked'),
                 'categories': categories,
-                  'order_id': $('#order-id').val()
+                'order_id': $('#order-id').val()
             };
             // console.log('data', data);
-            postJSON('/admin/advise/results.json', token, data, parseResults, errorMethod);
+            postJSON('/admin/advise/results.json', token, data, renderItems, errorMethod);
         };
 
         var sortKeyWords = function(e){

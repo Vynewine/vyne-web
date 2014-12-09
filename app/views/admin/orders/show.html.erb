@@ -128,7 +128,9 @@
 
 
 <div class="panel panel-default">
-  <div class="panel-heading">Order Items</div>
+  <div class="panel-heading">
+    <h3 class="panel-title">Order Items</h3>
+  </div>
 
   <table class="table table-bordered">
     <thead>
@@ -149,38 +151,15 @@
         <tr>
           <% if @order.status_id == 1 %>
               <td>
-                <a href="/admin/advise/item/<%= item.id %>">
-                  <%= item.wine.nil? ? 'Advise' : 'Advised' %></a>
+                <a href="/admin/advise/item/<%= item.id %>" class="btn btn-default">
+                  <span class="glyphicon glyphicon-glass" aria-hidden="true"></span> <%= item.wine.nil? ? 'Advise' : 'Advised' %>
+                </a>
               </td>
           <% end %>
           <td>
-            <% unless item.food_items.blank? %>
-                <p><strong>Food</strong></p>
-                <ul>
-                  <% item.food_items.each do |food_item| %>
-                      <li><%= food_item.food.name + (food_item.preparation.blank? ? '' : ' (' + food_item.preparation.name + ')') %> </li>
-                  <% end %>
-                </ul>
-            <% end %>
-            <% unless item.occasion.blank? %>
-                <p><strong>Occasion</strong></p>
-
-                <p><%= item.occasion.name %></p>
-            <% end %>
-
-            <% unless item.type.blank? %>
-                <p><strong>Wine Type</strong></p>
-
-                <p><%= item.type.name %></p>
-            <% end %>
-
-            <% unless item.specific_wine.blank? %>
-                <p><strong>Specific Wine</strong></p>
-
-                <p><%= item.specific_wine %></p>
-            <% end %>
+            <%= item.preferences.to_sentence(last_word_connector: ' and ').capitalize %>.
           </td>
-          <td><%= item.quantity %></td>
+          <td>x<%= item.quantity %></td>
           <td><%= item.category.name %></td>
           <td>
             <%= item.wine.nil? ? 'Not Selected' : item.wine.name %>
@@ -195,44 +174,65 @@
     <% end %>
     </tbody>
   </table>
-</div>
-
-<div class="row">
-  <div class="col-md-12 text-right">
-    <% unless @order.total_cost.nil? %>
-        <strong>Cost Total: </strong>£<%= @order.total_cost %> (wine: £<%= @order.total_wine_cost %>, delivery:
-        £<%= @order.delivery_cost %>)
-    <% end %>
-    <% unless @order.total_price.nil? %>
-        <strong>Customer Price Total:</strong> £<%= @order.total_price %>
-    <% end %>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-xs-6">
+        <%= link_to 'Back', admin_orders_path, :class => 'btn btn-primary' %>
+        <% if @order.advisory_complete %>
+            <%= link_to 'Mark Ready', admin_order_mark_ready_path(@order), {
+                                            :class => 'btn btn-success',
+                                            :method => :post
+                                    } %>
+        <% end %>
+      </div>
+      <div class="col-xs-6 text-right">
+        <% unless @order.total_cost.nil? %>
+            <strong>Cost Total: </strong>£<%= @order.total_cost %> (wine: £<%= @order.total_wine_cost %>, delivery:
+            £<%= @order.delivery_cost %>)
+        <% end %>
+        <% unless @order.total_price.nil? %>
+            <strong>Customer Price Total:</strong> £<%= @order.total_price %>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>
 
+
+
 <% if current_user.has_role?(:admin) || current_user.has_role?(:superadmin) %>
-    <div class="row">
-      <div class="col-xs-12">
-        <%# Allow to charge or schedule if orders is in pending (1) or payment failed (3) status and all wines are advised%>
-        <% if !(@order.order_items.map { |item| item.wine }).include?(nil) && [1, 3].include?(@order.status.id) %>
-            <%= link_to 'Charge Only', admin_order_charge_path(@order), {
-                                             :class => 'btn btn-primary',
-                                             :method => :post,
-                                             :data => {:confirm => 'Are you sure? This customer will be charged £' + @order.total_price.to_s}
-                                     } %>
-            <%= link_to 'Get Delivery Quotes', admin_advise_choose_path(:order => @order.id), {:class => 'btn btn-primary'} %>
-        <% end %>
-        <% if [4, 5, 6].include?(@order.status.id) %>
-            <%= link_to 'Send Order Receipt', admin_order_send_receipt_path(@order), {
-                                                    :class => 'buttonStyle',
-                                                    :method => :post,
-                                                    :data => {:confirm => 'This will email order receipt to the client and a merchant.'}
-                                            } %>
-        <% end %>
-        <%= link_to 'Edit', edit_admin_order_path(@order), :class => 'btn btn-primary' %>
-        <%= link_to 'Back', admin_orders_path, :class => 'btn btn-primary' %>
-        <%= link_to 'Cancel', admin_order_cancel_path(@order), method: :post, data: {confirm: 'Are you sure? Payments will be refunded and Shutl will get cancelled.'}, :class => 'btn btn-warning' %>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Admin Only</h3>
       </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12">
+            <%# Allow to charge or schedule if orders is in pending (1), payment failed (3), packing (8) status and all wines are advised%>
+            <% if !(@order.order_items.map { |item| item.wine }).include?(nil) && [1, 3, 8].include?(@order.status.id) %>
+                <%= link_to 'Charge Only', admin_order_charge_path(@order), {
+                                                 :class => 'btn btn-primary',
+                                                 :method => :post,
+                                                 :data => {:confirm => 'Are you sure? This customer will be charged £' + @order.total_price.to_s}
+                                         } %>
+                <%= link_to 'Get Delivery Quotes', admin_advise_choose_path(:order => @order.id), {:class => 'btn btn-primary'} %>
+            <% end %>
+            <% if [4, 5, 6].include?(@order.status.id) %>
+                <%= link_to 'Send Order Receipt', admin_order_send_receipt_path(@order), {
+                                                        :class => 'buttonStyle',
+                                                        :method => :post,
+                                                        :data => {:confirm => 'This will email order receipt to the client and a merchant.'}
+                                                } %>
+            <% end %>
+            <%= link_to 'Edit', edit_admin_order_path(@order), :class => 'btn btn-primary' %>
+
+            <%= link_to 'Cancel', admin_order_cancel_path(@order), method: :post, data: {confirm: 'Are you sure? Payments will be refunded and Shutl will get cancelled.'}, :class => 'btn btn-warning' %>
+          </div>
+        </div>
+      </div>
+
     </div>
+
     <% unless @order.delivery_token.blank? %>
         <div class="row">
           <div class="col-md-12">

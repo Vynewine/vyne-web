@@ -44,4 +44,17 @@ class Order < ActiveRecord::Base
     PP.pp(d, '', 80)
   end
 
+  def advisory_complete
+    if order_items.blank?
+      return false
+    else
+      if order_items.select { |item| item.wine.blank? }.count > 0
+        return false
+      else
+        return true
+      end
+    end
+
+  end
+
 end
