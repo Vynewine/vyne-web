@@ -1,234 +1,250 @@
 <div class="row">
-  <div class="col-md-6">
+
+  <div
+  <% if current_user.has_role?(:admin) || current_user.has_role?(:superadmin) %>
+  class="col-md-6"
+  <% else %>
+  class="col-md-12"
+  <% end %>
+  >
+
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title">Order Summary</h3>
+        <h3 class="panel-title">Summary</h3>
       </div>
       <ul class="list-group">
         <li class="list-group-item">
           <div class="row">
-            <div class="col-xs-6">
+            <div class="col-xs-3">
+              <strong>Order Id: </strong><%= @order.id %>
+            </div>
+            <div class="col-xs-4">
               <strong>Status:</strong> <%= @order.status.label.capitalize %>
             </div>
-            <div class="col-xs-6 text-right">
-              <strong>Created:</strong> <%= local_time(@order.created_at, '%b %d, %Y %l:%M %p' ) %>
+            <div class="col-xs-5">
+              <strong>Created:</strong> <%= local_time(@order.created_at, '%b %d, %Y %l:%M %p') %>
             </div>
           </div>
         </li>
         <li class="list-group-item">
-         <strong>Merchant:</strong> <%= @order.warehouse.title %>, Address: <%= @order.warehouse.address.full %>
+          <div class="row">
+            <div class="col-xs-7">
+              <strong>Merchant:</strong> <%= @order.warehouse.title %>, Address: <%= @order.warehouse.address.full %>
+            </div>
+            <div class="col-xs-5">
+              <strong>Advisor:</strong>
+              <% if @order.advisor %>
+                  <%= @order.advisor.name %>
+              <% else %>
+                  <span class="to-do"> Not Advised </span>
+              <% end %>
+            </div>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-xs-12">
+              <strong>Delivery:</strong>
+              <% if @order.delivery_token.blank? %>
+                  <span class="to-do">Delivery not scheduled</span>
+              <% else %>
+                  <%= @order.delivery_token %>
+              <% end %>
+              <% unless @order.delivery_cost.blank? %>
+                  (£<%= @order.delivery_cost %>)
+              <% end %>
+            </div>
+          </div>
         </li>
       </ul>
     </div>
   </div>
-  <div class="col-md-6">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">Customer Info</h3>
+
+  <% if current_user.has_role?(:admin) || current_user.has_role?(:superadmin) %>
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Customer Info</h3>
+          </div>
+          <ul class="list-group">
+
+            <% if @order.client.blank? %>
+
+                <li class="list-group-item">
+                  <div class="row">
+                    <div class="col-xs-12">
+                      <strong>Client Deleted</strong>
+                    </div>
+                  </div>
+                </li>
+
+            <% else %>
+
+                <li class="list-group-item">
+                  <div class="row">
+                    <div class="col-xs-6">
+                      <strong>Name:</strong>
+                      <a href="/admin/users/<%= @order.client.id %>"><%= @order.client.name %></a>
+                    </div>
+                    <div class="col-xs-6">
+                      <strong>Mobile:</strong> <%= @order.client.mobile %>
+                    </div>
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <div class="row">
+                    <div class="col-xs-6">
+                      <strong>Address:</strong>
+                      <% if @order.address %>
+                          <%= @order.address.full %>
+                      <% end %>
+                    </div>
+                    <div class="col-xs-6">
+                      <strong>Email:</strong> <%= @order.client.email %>
+                    </div>
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <div class="row">
+                    <div class="col-xs-12">
+                      <strong>Payment:</strong>
+                      <% if @order.charge_id.blank? %>
+                          <span class="to-do">Payment not processed</span>
+                      <% else %>
+                          <div>Stripe Charge Id: <%= @order.charge_id %></div>
+                      <% end %>
+                      <% unless @order.refund_id.blank? %>
+                          <div>Stripe Refund Id: <%= @order.refund_id %></div>
+                      <% end %>
+                    </div>
+                  </div>
+                </li>
+            <% end %>
+          </ul>
+        </div>
       </div>
-      <div class="panel-body">
-        Panel content
-      </div>
-    </div>
+  <% end %>
+</div>
+
+
+<div class="panel panel-default">
+  <div class="panel-heading">Order Items</div>
+
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <% if @order.status_id == 1 %>
+          <th>Advise</th>
+      <% end %>
+      <th>Customer Selection</th>
+      <th>Quantity</th>
+      <th>Category</th>
+      <th>Wine</th>
+      <th>Cost</th>
+      <th>Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @order.order_items.order(:id).each do |item| %>
+        <tr>
+          <% if @order.status_id == 1 %>
+              <td>
+                <a href="/admin/advise/item/<%= item.id %>">
+                  <%= item.wine.nil? ? 'Advise' : 'Advised' %></a>
+              </td>
+          <% end %>
+          <td>
+            <% unless item.food_items.blank? %>
+                <p><strong>Food</strong></p>
+                <ul>
+                  <% item.food_items.each do |food_item| %>
+                      <li><%= food_item.food.name + (food_item.preparation.blank? ? '' : ' (' + food_item.preparation.name + ')') %> </li>
+                  <% end %>
+                </ul>
+            <% end %>
+            <% unless item.occasion.blank? %>
+                <p><strong>Occasion</strong></p>
+
+                <p><%= item.occasion.name %></p>
+            <% end %>
+
+            <% unless item.type.blank? %>
+                <p><strong>Wine Type</strong></p>
+
+                <p><%= item.type.name %></p>
+            <% end %>
+
+            <% unless item.specific_wine.blank? %>
+                <p><strong>Specific Wine</strong></p>
+
+                <p><%= item.specific_wine %></p>
+            <% end %>
+          </td>
+          <td><%= item.quantity %></td>
+          <td><%= item.category.name %></td>
+          <td>
+            <%= item.wine.nil? ? 'Not Selected' : item.wine.name %>
+          </td>
+          <td>
+            £<%= item.cost %>
+          </td>
+          <td>
+            £<%= item.price %>
+          </td>
+        </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="row">
+  <div class="col-md-12 text-right">
+    <% unless @order.total_cost.nil? %>
+        <strong>Cost Total: </strong>£<%= @order.total_cost %> (wine: £<%= @order.total_wine_cost %>, delivery:
+        £<%= @order.delivery_cost %>)
+    <% end %>
+    <% unless @order.total_price.nil? %>
+        <strong>Customer Price Total:</strong> £<%= @order.total_price %>
+    <% end %>
   </div>
 </div>
 
-<p>
-  <strong>Status:</strong>
-  <%= @order.status.label.capitalize %>
-  <strong>Created:</strong>
-  <%= @order.created_at %>
-</p>
-
-<p>
-  <strong>Client:</strong>
-  <% if @order.client.blank? %>
-      <strong>Client Deleted</strong>
-  <% else %>
-      Name: <a href="/admin/users/<%= @order.client.id %>"><%= @order.client.name %></a>,
-      <strong>Mobile:</strong> <%= @order.client.mobile %>
-  <% end %>
-</p>
-
-<p>
-  <strong>Address:</strong>
-  <% if @order.address %>
-      <%= @order.address.full %>
-  <% end %>
-</p>
-
-<p>
-  <strong>Warehouse:</strong>
-  <% if @order.warehouse %>
-      <%= @order.warehouse_id == 0 ? " - " : @order.warehouse.title %>
-  <% else %>
-      Not Selected
-  <% end %>
-</p>
-
-<p>
-  <strong>Advisor:</strong>
-  <% if @order.advisor %>
-      <%= @order.advisor_id == 0 ? " - " : @order.advisor.name %>
-  <% else %>
-      Not Advised
-  <% end %>
-</p>
-
-<p>
-  <strong>Delivery token:</strong>
-  <% if @order.delivery_token.blank? %>
-      <span style="color: red">Delivery not scheduled</span>
-  <% else %>
-      <%= @order.delivery_token %>
-  <% end %>
-  <% unless @order.delivery_cost.blank? %>
-      (£<%= @order.delivery_cost %>)
-  <% end %>
-</p>
-
-<p>
-  <strong>Payment:</strong>
-  <% unless @order.client.blank? || @order.client.stripe_id.blank? %>
-    <div>Stripe Customer Id: <%= @order.client.stripe_id %></div>
-<% end %>
-<% if @order.charge_id.blank? %>
-    <span style="color: red">Payment not processed</span>
-<% else %>
-    <div>Stripe Charge Id: <%= @order.charge_id %></div>
-<% end %>
-<% unless @order.refund_id.blank? %>
-    <div>Stripe Refund Id: <%= @order.refund_id %></div>
-<% end %>
-</p>
-
-<p>
-  <strong>Warehouses close to client:</strong>
-
-<ul>
-  <% @warehouses.each do |warehouse| %>
-      <li>
-        Id: <%= warehouse.id %>, Name: <%= warehouse.title %>, Address: <%= warehouse.address.full %>
-      </li>
-  <% end %>
-</ul>
-</p>
-
-<p>
-  <strong>Order Items:</strong>
-<table border="1" class="list-table">
-  <thead>
-  <tr>
-    <% if @order.status_id == 1 %>
-        <th>Advise</th>
-    <% end %>
-    <th>Customer Selection</th>
-    <th>Quantity</th>
-    <th>Category</th>
-    <th>Wine</th>
-    <th>Cost</th>
-    <th>Price</th>
-  </tr>
-  </thead>
-  <tbody>
-  <% @order.order_items.order(:id).each do |item| %>
-      <tr>
-        <% if @order.status_id == 1 %>
-            <td>
-              <a href="/admin/advise/item/<%= item.id %>">
-                <%= item.wine.nil? ? 'Advise' : 'Advised' %></a>
-            </td>
+<% if current_user.has_role?(:admin) || current_user.has_role?(:superadmin) %>
+    <div class="row">
+      <div class="col-xs-12">
+        <%# Allow to charge or schedule if orders is in pending (1) or payment failed (3) status and all wines are advised%>
+        <% if !(@order.order_items.map { |item| item.wine }).include?(nil) && [1, 3].include?(@order.status.id) %>
+            <%= link_to 'Charge Only', admin_order_charge_path(@order), {
+                                             :class => 'btn btn-primary',
+                                             :method => :post,
+                                             :data => {:confirm => 'Are you sure? This customer will be charged £' + @order.total_price.to_s}
+                                     } %>
+            <%= link_to 'Get Delivery Quotes', admin_advise_choose_path(:order => @order.id), {:class => 'btn btn-primary'} %>
         <% end %>
-        <td>
-          <% unless item.food_items.blank? %>
-              <p><strong>Food</strong></p>
-              <ul>
-                <% item.food_items.each do |food_item| %>
-                    <li><%= food_item.food.name + (food_item.preparation.blank? ? '' : ' (' + food_item.preparation.name + ')') %> </li>
-                <% end %>
-              </ul>
-          <% end %>
-          <% unless item.occasion.blank? %>
-              <p><strong>Occasion</strong></p>
-
-              <p><%= item.occasion.name %></p>
-          <% end %>
-
-          <% unless item.type.blank? %>
-              <p><strong>Wine Type</strong></p>
-
-              <p><%= item.type.name %></p>
-          <% end %>
-
-          <% unless item.specific_wine.blank? %>
-              <p><strong>Specific Wine</strong></p>
-
-              <p><%= item.specific_wine %></p>
-          <% end %>
-        </td>
-        <td><%= item.quantity %></td>
-        <td><%= item.category.name %></td>
-        <td>
-          <%= item.wine.nil? ? 'Not Selected' : item.wine.name %>
-        </td>
-        <td>
-          £<%= item.cost %>
-        </td>
-        <td>
-          £<%= item.price %>
-        </td>
-      </tr>
-  <% end %>
-  </tbody>
-</table>
-<table>
-  <tbody>
-  <tr>
-    <td>
-      <%# Allow to charge or schedule if orders is in pending (1) or payment failed (3) status and all wines are advised%>
-      <% if !(@order.order_items.map { |item| item.wine }).include?(nil) && [1, 3].include?(@order.status.id) %>
-          <%= link_to 'Charge Only', admin_order_charge_path(@order), {
-                  :class => 'buttonStyle',
-                  :method => :post,
-                  :data => {:confirm => 'Are you sure? This customer will be charged £' + @order.total_price.to_s}
-          } %>
-          <%= link_to 'Get Delivery Quotes', admin_advise_choose_path(:order => @order.id), {:class => 'buttonStyle'} %>
-      <% end %>
-      <% if [4,5,6].include?(@order.status.id) %>
-          <%= link_to 'Send Order Receipt', admin_order_send_receipt_path(@order), {
-                  :class => 'buttonStyle',
-                  :method => :post,
-                  :data => {:confirm => 'This will email order receipt to the client and a merchant.'}
-          } %>
-      <% end %>
-    </td>
-    <td>
-      <% unless @order.total_cost.nil? %>
-          <strong>Cost Total: </strong>£<%= @order.total_cost %> (wine: £<%= @order.total_wine_cost %>, delivery:
-          £<%= @order.delivery_cost %>)
-      <% end %>
-    </td>
-    <td>
-      <% unless @order.total_price.nil? %>
-          <strong>Customer Price Total:</strong> £<%= @order.total_price %>
-      <% end %>
-    </td>
-  </tr>
-  </tbody>
-</table>
-
-</p>
-
-
-<% unless @order.delivery_token.blank? %>
-    <div>
-      <strong>Delivery information: <a href="#" id="refresh-delivery" data-id="<%= @order.id %>">Refresh</a></strong>
+        <% if [4, 5, 6].include?(@order.status.id) %>
+            <%= link_to 'Send Order Receipt', admin_order_send_receipt_path(@order), {
+                                                    :class => 'buttonStyle',
+                                                    :method => :post,
+                                                    :data => {:confirm => 'This will email order receipt to the client and a merchant.'}
+                                            } %>
+        <% end %>
+        <%= link_to 'Edit', edit_admin_order_path(@order), :class => 'btn btn-primary' %>
+        <%= link_to 'Back', admin_orders_path, :class => 'btn btn-primary' %>
+        <%= link_to 'Cancel', admin_order_cancel_path(@order), method: :post, data: {confirm: 'Are you sure? Payments will be refunded and Shutl will get cancelled.'}, :class => 'btn btn-warning' %>
+      </div>
     </div>
-<% end %>
-
-<% if !@order.delivery_status.nil? %>
-    <div>
-      <p>
+    <% unless @order.delivery_token.blank? %>
+        <div class="row">
+          <div class="col-md-12">
+            <strong>Delivery information:
+              <a href="#" id="refresh-delivery" class="btn btn-primary" data-id="<%= @order.id %>">Refresh</a></strong>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <% if !@order.delivery_status.nil? %>
+                <div>
+                  <p>
     <pre id="delivery-status"><%= @order.delivery_status_json
                                   .gsub(/["|\\]/, "")
                                   .gsub(/[ ]*\{/, "\{<br /> ")
@@ -239,11 +255,19 @@
                                   .html_safe
                                   # gsub(/["|\\]/, "").gsub(/[\{]/, "\{<br />").gsub(/[\,]/, ",<br />").html_safe
     %></pre>
-      </p>
-    </div>
+                  </p>
+                </div>
+            <% end %>
+          </div>
+        </div>
+    <% end %>
+
 <% end %>
 
 
-<%= link_to 'Edit', edit_admin_order_path(@order) %>
-<%= link_to 'Back', admin_orders_path %>
-<%= link_to 'Cancel', admin_order_cancel_path(@order), method: :post, data: {confirm: 'Are you sure? Payments will be refunded and Shutl will get cancelled.'} %>
+
+
+
+
+
+
