@@ -62,7 +62,7 @@ git add .
 git commit -a -m "Adding precompiled assets"
 ```
 
-Push to Heroku (assumin you are logged in to Vyne Heroku account)
+Push to Heroku (assuming you are logged in to Vyne Heroku account)
 ```
 git push heroku master
 ```

@@ -96,13 +96,13 @@
                         </td>
 
                         <td>
-                          <%= order_item.wine.nil? ? 'Not Advised' : order_item.wine.name %>
+                          <%= order_item.wine.nil? ? 'Not Advised' : order_item.wine.display_name %>
                         </td>
 
                         <% if rowspan == 2 && index == 0 %>
                             <td rowspan="2"><%= local_time(order.created_at, '%b %d, %Y %l:%M %p') %></td>
                         <% elsif index == 0 %>
-                            <td><%= local_time(order.created_at) %></td>
+                            <td><%= local_time(order.created_at, '%b %d, %Y %l:%M %p') %></td>
                         <% end %>
 
                       </tr>

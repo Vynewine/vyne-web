@@ -143,7 +143,7 @@ class Admin::OrdersController < ApplicationController
     results = StripeHelper.charge(@order)
     if results
       respond_to do |format|
-        format.html { redirect_to [:admin, @order], notice: 'Order was successfully charged.' }
+        format.html { redirect_to [:admin, @order], :flash => { :success => 'Order was successfully charged.' }  }
       end
     else
       respond_to do |format|

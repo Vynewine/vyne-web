@@ -60,7 +60,7 @@
     </div>
   </div>
 
-  <% if current_user.has_role?(:admin) || current_user.has_role?(:superadmin) %>
+  <% if user_is_admin %>
       <div class="col-md-6">
         <div class="panel panel-default">
           <div class="panel-heading">
@@ -111,10 +111,10 @@
                       <% if @order.charge_id.blank? %>
                           <span class="to-do">Payment not processed</span>
                       <% else %>
-                          <div>Stripe Charge Id: <%= @order.charge_id %></div>
+                          Stripe Charge Id: <%= @order.charge_id %>
                       <% end %>
                       <% unless @order.refund_id.blank? %>
-                          <div>Stripe Refund Id: <%= @order.refund_id %></div>
+                          Stripe Refund Id: <%= @order.refund_id %>
                       <% end %>
                     </div>
                   </div>
@@ -210,15 +210,18 @@
           <div class="row">
             <div class="col-xs-12">
 
-                <%# Allow to charge or schedule if orders is in pending (1), payment failed (3), packing (8) status and all wines are advised%>
-                <% if !(@order.order_items.map { |item| item.wine }).include?(nil) && [1, 3, 8].include?(@order.status.id) %>
+
+                <% if @order.charge_id.blank? %>
                     <%= link_to 'Charge Only', admin_order_charge_path(@order), {
                                                      :class => 'btn btn-primary',
                                                      :method => :post,
                                                      :data => {:confirm => 'Are you sure? This customer will be charged £' + @order.total_price.to_s}
                                              } %>
-                    <%= link_to 'Get Delivery Quotes', admin_advise_choose_path(:order => @order.id), {:class => 'btn btn-primary'} %>
+
                 <% end %>
+              <% if @order.delivery_token.blank? %>
+              <%= link_to 'Get Delivery Quotes', admin_advise_choose_path(:order => @order.id), {:class => 'btn btn-primary'} %>
+                  <% end %>
                 <% if [4, 5, 6].include?(@order.status.id) %>
                     <%= link_to 'Re-Send Order Receipt', admin_order_send_receipt_path(@order), {
                                                                :class => 'btn btn-primary',
