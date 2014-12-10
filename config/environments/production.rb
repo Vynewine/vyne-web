@@ -120,4 +120,7 @@ Rails.application.configure do
   #Googe GCM
   config.google_gcm_public_api_key = 'AIzaSyCUuUzZOMAKS1n6kA396bI8FBUWpvdwyWk'
 
+  #Google Coordinate Team Id
+  config.google_coordinate_team_id = 'ZtCbuYnbGi9fTxkJtV390w'
+
 end

@@ -25,12 +25,8 @@
       <% end %>
       <li><a href="/delivery">Coverage Map</a></li>
 
-      <% if @can_use_the_site == nil %>
+      <% if has_invitation_code %>
           <li><a href="https://vyne.zendesk.com/">Help</a></li>
-      <% else %>
-          <% if @can_use_the_site %>
-              <li><a href="https://vyne.zendesk.com/">Help</a></li>
-          <% end %>
       <% end %>
       <li><a href="/tc">Terms</a></li>
       <li><a href="/jobs">Jobs</a></li>

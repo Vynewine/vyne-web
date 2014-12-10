@@ -38,4 +38,16 @@ module ApplicationHelper
       false
     end
   end
+
+  def has_invitation_code
+    if Rails.application.config.enable_invite_code == 'true'
+      if cookies[:invite_code] == Rails.application.config.invite_code
+        return true
+      else
+        return false
+      end
+    else
+      true
+    end
+  end
 end
