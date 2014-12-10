@@ -4,7 +4,7 @@
       <div class="panel-heading">
         <ul class="nav nav-tabs">
           <li
-          <% if params[:status].blank? || params[:status] == 1 %> class="active"
+          <% if params[:status].blank? || params[:status] == Status.statuses[:pending] %> class="active"
           <% end %> >
             <%= link_to 'Pending', :controller => 'orders' %>
           </li>
@@ -28,6 +28,20 @@
           <% end %>>
             <%= link_to 'Delivered', :controller => 'orders', :status => Status.statuses[:delivered] %>
           </li>
+          <% if user_is_admin %>
+              <li
+              <% if params[:status] == Status.statuses[:payment_failed].to_s %> class="active"
+              <% end %>>
+                <%= link_to 'Payment Failed', :controller => 'orders', :status => Status.statuses[:payment_failed] %>
+              </li>
+              <li
+              <% if params[:status] == Status.statuses[:cancelled].to_s %> class="active"
+              <% end %>>
+                <%= link_to 'Cancelled', :controller => 'orders', :status => Status.statuses[:cancelled] %>
+              </li>
+          <% end %>
+
+
         </ul>
       </div>
       <div class="panel-body">
@@ -71,9 +85,14 @@
 
                         <td><%= order_item.preferences.to_sentence(last_word_connector: ' and ').capitalize %>.</td>
                         <td>
-                          <a href="/admin/advise/item/<%= order_item.id %>">
-                            <%= order_item.wine.nil? ? 'Advise' : 'Advised' %>
-                          </a>
+                          <% if order.can_be_advised %>
+                              <a href="/admin/advise/item/<%= order_item.id %>">
+                                <%= order_item.wine.nil? ? 'Advise' : 'Advised' %>
+                              </a>
+                          <% else %>
+                                complete
+                          <% end %>
+
                         </td>
 
                         <td>
@@ -81,7 +100,7 @@
                         </td>
 
                         <% if rowspan == 2 && index == 0 %>
-                            <td rowspan="2"><%= local_time(order.created_at, '%b %d, %Y %l:%M %p' ) %></td>
+                            <td rowspan="2"><%= local_time(order.created_at, '%b %d, %Y %l:%M %p') %></td>
                         <% elsif index == 0 %>
                             <td><%= local_time(order.created_at) %></td>
                         <% end %>

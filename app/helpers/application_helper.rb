@@ -27,4 +27,15 @@ module ApplicationHelper
         flash_type.to_s
     end
   end
+
+  def user_is_admin
+    if current_user.blank?
+      return false
+    end
+    if current_user.has_role?(:admin) || current_user.has_role?(:superadmin)
+      true
+    else
+      false
+    end
+  end
 end

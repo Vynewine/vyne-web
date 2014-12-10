@@ -54,7 +54,10 @@ class Order < ActiveRecord::Base
         return true
       end
     end
+  end
 
+  def can_be_advised
+    [Status.statuses[:pending], Status.statuses[:packing]].include? status.id
   end
 
 end

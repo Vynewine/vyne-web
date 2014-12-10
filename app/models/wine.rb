@@ -137,4 +137,8 @@ class Wine < ActiveRecord::Base
     return comp
   end
 
+  def display_name
+    name + ' - ' + txt_vintage + ' - ' + producer.name
+  end
+
 end

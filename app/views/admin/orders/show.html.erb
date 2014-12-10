@@ -135,7 +135,7 @@
   <table class="table table-bordered">
     <thead>
     <tr>
-      <% if @order.status_id == 1 %>
+      <% if @order.can_be_advised %>
           <th>Advise</th>
       <% end %>
       <th>Customer Selection</th>
@@ -149,7 +149,7 @@
     <tbody>
     <% @order.order_items.order(:id).each do |item| %>
         <tr>
-          <% if @order.status_id == 1 %>
+          <% if @order.can_be_advised %>
               <td>
                 <a href="/admin/advise/item/<%= item.id %>" class="btn btn-default">
                   <span class="glyphicon glyphicon-glass" aria-hidden="true"></span> <%= item.wine.nil? ? 'Advise' : 'Advised' %>
@@ -162,7 +162,7 @@
           <td>x<%= item.quantity %></td>
           <td><%= item.category.name %></td>
           <td>
-            <%= item.wine.nil? ? 'Not Selected' : item.wine.name %>
+            <%= item.wine.nil? ? 'Not Selected' : item.wine.display_name %>
           </td>
           <td>
             £<%= item.cost %>
@@ -178,7 +178,7 @@
     <div class="row">
       <div class="col-xs-6">
         <%= link_to 'Back', admin_orders_path, :class => 'btn btn-primary' %>
-        <% if @order.advisory_complete %>
+        <% if @order.advisory_complete && @order.status_id == Status.statuses[:pending] %>
             <%= link_to 'Mark Ready', admin_order_mark_ready_path(@order), {
                                             :class => 'btn btn-success',
                                             :method => :post
@@ -205,46 +205,51 @@
       <div class="panel-heading">
         <h3 class="panel-title">Admin Only</h3>
       </div>
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-xs-12">
-            <%# Allow to charge or schedule if orders is in pending (1), payment failed (3), packing (8) status and all wines are advised%>
-            <% if !(@order.order_items.map { |item| item.wine }).include?(nil) && [1, 3, 8].include?(@order.status.id) %>
-                <%= link_to 'Charge Only', admin_order_charge_path(@order), {
-                                                 :class => 'btn btn-primary',
-                                                 :method => :post,
-                                                 :data => {:confirm => 'Are you sure? This customer will be charged £' + @order.total_price.to_s}
-                                         } %>
-                <%= link_to 'Get Delivery Quotes', admin_advise_choose_path(:order => @order.id), {:class => 'btn btn-primary'} %>
-            <% end %>
-            <% if [4, 5, 6].include?(@order.status.id) %>
-                <%= link_to 'Send Order Receipt', admin_order_send_receipt_path(@order), {
-                                                        :class => 'buttonStyle',
-                                                        :method => :post,
-                                                        :data => {:confirm => 'This will email order receipt to the client and a merchant.'}
-                                                } %>
-            <% end %>
-            <%= link_to 'Edit', edit_admin_order_path(@order), :class => 'btn btn-primary' %>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-xs-12">
 
-            <%= link_to 'Cancel', admin_order_cancel_path(@order), method: :post, data: {confirm: 'Are you sure? Payments will be refunded and Shutl will get cancelled.'}, :class => 'btn btn-warning' %>
+                <%# Allow to charge or schedule if orders is in pending (1), payment failed (3), packing (8) status and all wines are advised%>
+                <% if !(@order.order_items.map { |item| item.wine }).include?(nil) && [1, 3, 8].include?(@order.status.id) %>
+                    <%= link_to 'Charge Only', admin_order_charge_path(@order), {
+                                                     :class => 'btn btn-primary',
+                                                     :method => :post,
+                                                     :data => {:confirm => 'Are you sure? This customer will be charged £' + @order.total_price.to_s}
+                                             } %>
+                    <%= link_to 'Get Delivery Quotes', admin_advise_choose_path(:order => @order.id), {:class => 'btn btn-primary'} %>
+                <% end %>
+                <% if [4, 5, 6].include?(@order.status.id) %>
+                    <%= link_to 'Re-Send Order Receipt', admin_order_send_receipt_path(@order), {
+                                                               :class => 'btn btn-primary',
+                                                               :method => :post,
+                                                               :data => {:confirm => 'This will email order receipt to the client and a merchant.'}
+                                                       } %>
+                <% end %>
+                <%= link_to 'Edit', edit_admin_order_path(@order), :class => 'btn btn-primary' %>
+
+                <%= link_to 'Cancel', admin_order_cancel_path(@order), method: :post, data: {confirm: 'Are you sure? Payments will be refunded and Shutl will get cancelled.'}, :class => 'btn btn-warning' %>
+
+
+            </div>
           </div>
-        </div>
-      </div>
+        </li>
+        <% unless @order.delivery_token.blank? %>
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-xs-12">
 
-    </div>
-
-    <% unless @order.delivery_token.blank? %>
-        <div class="row">
-          <div class="col-md-12">
-            <strong>Delivery information:
-              <a href="#" id="refresh-delivery" class="btn btn-primary" data-id="<%= @order.id %>">Refresh</a></strong>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <% if !@order.delivery_status.nil? %>
-                <div>
-                  <p>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <strong>Delivery information:
+                        <a href="#" id="refresh-delivery" class="btn btn-primary" data-id="<%= @order.id %>">Refresh</a></strong>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <% if !@order.delivery_status.nil? %>
+                          <div>
+                            <p>
     <pre id="delivery-status"><%= @order.delivery_status_json
                                   .gsub(/["|\\]/, "")
                                   .gsub(/[ ]*\{/, "\{<br /> ")
@@ -255,12 +260,18 @@
                                   .html_safe
                                   # gsub(/["|\\]/, "").gsub(/[\{]/, "\{<br />").gsub(/[\,]/, ",<br />").html_safe
     %></pre>
-                  </p>
+                            </p>
+                          </div>
+                      <% end %>
+                    </div>
+                  </div>
+
                 </div>
-            <% end %>
-          </div>
-        </div>
-    <% end %>
+              </div>
+            </li>
+        <% end %>
+      </ul>
+    </div>
 
 <% end %>
 
