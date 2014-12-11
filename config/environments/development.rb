@@ -82,5 +82,7 @@ Rails.application.configure do
 
   #Google Coordinate Team Id
   config.google_coordinate_team_id = 'ZtCbuYnbGi9fTxkJtV390w'
+  config.google_coordinate_client_id = '662241065743-4jg7eectv71j6a4na8o327kid6m37tvd.apps.googleusercontent.com'
+  config.google_coordinate_client_secret = '5kdwemy_dpS1adj3TFNvAkX2'
 
 end

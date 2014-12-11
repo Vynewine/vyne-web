@@ -39,10 +39,10 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for nginx
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  # config.force_ssl = true
+  config.force_ssl = true
 
   # Devise mailer:
-  config.action_mailer.default_url_options = { host: 'vyneapp.herokuapp.com', scheme: 'http' }
+  config.action_mailer.default_url_options = { host: 'www.vyne.london', scheme: 'https' }
   # In production, :host should be set to the actual host of your application.
 
   # Prepend all log lines with the following tags.
@@ -122,5 +122,8 @@ Rails.application.configure do
 
   #Google Coordinate Team Id
   config.google_coordinate_team_id = 'ZtCbuYnbGi9fTxkJtV390w'
+
+  config.google_coordinate_client_id = ENV['CLIENT_ID']
+  config.google_coordinate_client_secret = ENV['CLIENT_SECRET']
 
 end

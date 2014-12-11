@@ -3,49 +3,62 @@ require 'google/api_client/client_secrets'
 require 'google/api_client/auth/file_storage'
 
 class OauthController < ApplicationController
+  before_filter :google_client
 
   #path = File.join(Rails.root, "config", "user_config.yml")
 
-  def index
+  CREDENTIALS_FILE = Rails.root.join('config', 'client_secrets_' + Rails.env + '.json')
+  GOOGLE_COORDINATE_TOKEN = 'google_coordinate'
 
+  def google_client
 
-    prepare_client
+    @client = Google::APIClient.new(
+        :application_name => 'Vyne Admin',
+        :application_version => '1.0.0'
+    )
 
-    #render :text => 'OK'
-    redirect_to user_credentials.authorization_uri({ :approval_prompt => 'force' }).to_s, status: 303
-  end
-
-  def prepare_client
-    @client = Google::APIClient.new(:application_name => 'Ruby Calendar sample',
-                                   :application_version => '1.0.0')
-
-    path = File.join(Rails.root, 'config', 'client_secrets_' + Rails.env + '.json')
-
-    client_secrets = Google::APIClient::ClientSecrets.load(path)
+    client_secrets = Google::APIClient::ClientSecrets.load(CREDENTIALS_FILE)
 
     @client.authorization = client_secrets.to_authorization
+    #TODO: Scope might need access_type: 'offline'
     @client.authorization.scope = 'https://www.googleapis.com/auth/coordinate'
 
 
+    @auth = @client.authorization.dup
+    @auth.redirect_uri = URI.join(request.original_url, callback_oauth_index_path)
+
   end
+
+  def index
+    redirect_to @auth.authorization_uri({ :approval_prompt => 'force' }).to_s, status: 303
+  end
+
 
   def callback
 
-    prepare_client
+    @auth.code = params[:code]
+    @auth.fetch_access_token!
 
-    user_credentials.code = params[:code]
-    user_credentials.fetch_access_token!
+    unless @auth.access_token.blank?
+
+      google_token = Token.find_by_key(GOOGLE_COORDINATE_TOKEN)
+
+      google_token.access_token = @auth.access_token
+      google_token.refresh_token = @auth.refresh_token
+      google_token.expires_at = Time.at(@auth.expires_at).to_datetime
+      google_token.save
+    end
 
     puts 'access_token'
-    puts user_credentials.access_token
+    puts @auth.access_token
     puts 'refresh_token'
-    puts user_credentials.refresh_token
+    puts @auth.refresh_token
     puts 'expires_in'
-    puts user_credentials.expires_in
+    puts @auth.expires_in
     puts 'issued_at'
-    puts user_credentials.issued_at
+    puts @auth.issued_at
 
-    puts json: user_credentials
+    puts json: @auth
 
     coordinate = @client.discovered_api('coordinate', 'v1')
 
@@ -55,9 +68,9 @@ class OauthController < ApplicationController
                                     'address' => '8A Pickfords Wharf, Wharf Road, N1 7RJ',
                                     'lat' => 51.5312285,
                                     'lng' => -0.0970227,
-                                    'title' => 'Order 13'
+                                    'title' => 'Order 14'
                                 },
-                                :authorization => user_credentials)
+                                :authorization => @auth)
 
 
     puts json: result
