@@ -36,6 +36,11 @@ Rails.application.routes.draw do
   # ------------
 
   resources :orders, :promotions, :share, :help, :delivery, :jobs
+  resources :oauth do
+    collection do
+      get 'callback'
+    end
+  end
 
   # ----------------------------------------------------------------------------
   # User authentication:

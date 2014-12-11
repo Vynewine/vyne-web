@@ -107,3 +107,7 @@ gem 'autoprefixer-rails'
 
 #Time conversion for UI
 gem 'local_time'
+
+#Google API and OAuth
+gem 'google-api-client'
+
