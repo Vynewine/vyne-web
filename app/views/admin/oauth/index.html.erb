@@ -22,8 +22,10 @@
               Created: <%= local_time(@token.created_at, '%b %d, %Y %l:%M %p') %>
             </li>
             <li class="list-group-item">
-              Expires: <%= local_time(@token.expires_at, '%b %d, %Y %l:%M %p') %>
-              (Auto Refresh: <%= !@token.refresh_token.blank? %>)
+              <% unless @token.expires_at.blank? %>
+                  Expires: <%= local_time(@token.expires_at, '%b %d, %Y %l:%M %p') %>
+                  (Auto Refresh: <%= !@token.refresh_token.blank? %>)
+              <% end %>
             </li>
             <li class="list-group-item text-center">
               <%= link_to 'Force Refresh', new_admin_oauth_path, {:class => 'btn btn-success'} %>
