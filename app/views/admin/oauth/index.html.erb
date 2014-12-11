@@ -1,0 +1,36 @@
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Google Authorisation</h3>
+      </div>
+
+      <ul class="list-group">
+        <li class="list-group-item">
+          Used for Google Coordinate API. When authorising ensure you are using Google account that is part of Google
+          Coordinate Team.
+        </li>
+        <% if @token.blank? %>
+            <li class="list-group-item text-center ">
+              <p class="text-danger">Not Authorised with Google</p>
+            </li>
+            <li class="list-group-item text-center">
+              <%= link_to 'Authorise', new_admin_oauth_path, {:class => 'btn btn-success'} %>
+            </li>
+        <% else %>
+            <li class="list-group-item">
+              Created: <%= local_time(@token.created_at, '%b %d, %Y %l:%M %p') %>
+            </li>
+            <li class="list-group-item">
+              Expires: <%= local_time(@token.expires_at, '%b %d, %Y %l:%M %p') %>
+              (Auto Refresh: <%= !@token.refresh_token.blank? %>)
+            </li>
+            <li class="list-group-item text-center">
+              <%= link_to 'Force Refresh', new_admin_oauth_path, {:class => 'btn btn-success'} %>
+            </li>
+        <% end %>
+      </ul>
+
+    </div>
+  </div>
+</div>

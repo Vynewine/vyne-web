@@ -923,13 +923,15 @@ $(function () {
 
         e.preventDefault();
 
-        var address_line_1 = $('#addr-line-1').val(),
-            address_line_2 = $('#addr-line-2').val(),
-            company_name = $('#addr-company-name').val(),
-            address_p = $('#addr-pc').val(),
-            mobile = $('#mobile').val(),
-            address_id = $('#address-id').val(),
-            new_address = $('#new-address').val();
+        var address_line_1 = $('#addr-line-1').val();
+        var address_line_2 = $('#addr-line-2').val();
+        var address_lat = $('#addr-lat').val();
+        var address_lng = $('#addr-lng').val();
+        var company_name = $('#addr-company-name').val();
+        var address_p = $('#addr-pc').val();
+        var mobile = $('#mobile').val();
+        var address_id = $('#address-id').val();
+        var new_address = $('#new-address').val();
 
         var $errorList = $('#address-errors');
 
@@ -946,7 +948,9 @@ $(function () {
                 address_p: address_p,
                 mobile: mobile,
                 address_id: address_id,
-                new_address: new_address
+                new_address: new_address,
+                address_lat: address_lat,
+                address_lng: address_lng
             },
             error: function (data) {
 
@@ -1050,6 +1054,8 @@ var postCodeLookup = function (postcode) {
 
     var line_1 = $('#addr-line-1');
     var line_2 = $('#addr-line-2');
+    var addrLat = $('#addr-lat');
+    var addrLng = $('#addr-lng');
     var companyName = $('#addr-company-name');
 
     var apiUrl = 'https://api.ideal-postcodes.co.uk/v1/postcodes/' + postcode;
@@ -1109,10 +1115,15 @@ var postCodeLookup = function (postcode) {
                                 line_2.val(line2);
                             }
 
+                            addrLat.val(idealAddress.latitude);
+                            addrLng.val(idealAddress.longitude)
+
                         } else {
                             line_1.val('');
                             line_2.val('');
                             companyName.val('');
+                            addrLat.val('');
+                            addrLng.val('')
                         }
                     });
                 });

@@ -11,7 +11,7 @@ class Address < ActiveRecord::Base
   end
 
   def full
-    ("#{line_1}" + (line_2.blank? ? '' : ', ' + line_2)) + " #{postcode}"
+    ((company_name.blank? ? '' : company_name + ', ') + line_1 + (line_2.blank? ? '' : ', ' + line_2)) + ', ' + postcode
   end
 
   def longitude=(lon)

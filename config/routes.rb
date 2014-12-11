@@ -36,11 +36,6 @@ Rails.application.routes.draw do
   # ------------
 
   resources :orders, :promotions, :share, :help, :delivery, :jobs
-  resources :oauth do
-    collection do
-      get 'callback'
-    end
-  end
 
   # ----------------------------------------------------------------------------
   # User authentication:
@@ -116,7 +111,7 @@ Rails.application.routes.draw do
       post 'cancel'
       post 'charge'
       post 'send_receipt'
-      post 'mark_ready'
+      post 'finished_advice'
     end
     resources :payments
     resources :statuses
@@ -124,6 +119,11 @@ Rails.application.routes.draw do
     resources :devices do
       collection do
         post 'register'
+      end
+    end
+    resources :oauth do
+      collection do
+        get 'callback'
       end
     end
     post '/orders/list' => 'orders#list'

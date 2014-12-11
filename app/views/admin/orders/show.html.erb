@@ -179,7 +179,7 @@
       <div class="col-xs-6">
         <%= link_to 'Back', admin_orders_path, :class => 'btn btn-primary' %>
         <% if @order.advisory_complete && @order.status_id == Status.statuses[:pending] %>
-            <%= link_to 'Finished Advice', admin_order_mark_ready_path(@order), {
+            <%= link_to 'Finished Advice', admin_order_finished_advice_path(@order), {
                                             :class => 'btn btn-success',
                                             :method => :post
                                     } %>

@@ -77,6 +77,11 @@ class SignupController < ApplicationController
       address.company_name = params[:company_name]
       address.postcode = params[:address_p].upcase
 
+      unless params[:address_lat].blank? || params[:address_lng].blank?
+        address.latitude = params[:address_lat]
+        address.longitude = params[:address_lng]
+      end
+
     end
 
     if address.save
