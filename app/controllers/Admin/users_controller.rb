@@ -83,7 +83,7 @@ class Admin::UsersController < ApplicationController
       return
     end
 
-    @user.email = @user.email + '_deleted_' + @user.id.to_s
+    @user.email = @user.email + '.' + @user.id.to_s + '.deleted.com'
     unless @user.save
       respond_to do |format|
         format.html { redirect_to admin_users_url, alert: @user.errors.full_messages().join(', ') }
