@@ -1,3 +1,7 @@
+require 'google/api_client'
+require 'google/api_client/client_secrets'
+require 'google/api_client/auth/installed_app'
+
 module CoordinateHelper
 
   CREDENTIALS_FILE = Rails.root.join('config', 'client_secrets_' + Rails.env + '.json')
