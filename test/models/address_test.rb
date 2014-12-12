@@ -106,7 +106,41 @@ class AddressTest < ActiveSupport::TestCase
             :longitude => ''
         }
     )
+  end
 
+  test 'Render full name' do
+    address = Address.create!({
+                                  :company_name => 'Company 1',
+                                  :line_1 => 'Street 1',
+                                  :line_2 => 'Street 2',
+                                  :postcode => 'N1 7RL',
+                              })
+
+    assert_equal('Company 1, Street 1, Street 2, N1 7RL', address.full)
+
+    address = Address.create!({
+                                  :line_1 => 'Street 1',
+                                  :line_2 => 'Street 2',
+                                  :postcode => 'N1 7RL',
+                              })
+
+    assert_equal('Street 1, Street 2, N1 7RL', address.full)
+
+    address = Address.create!({
+                                  :company_name => 'Company 1',
+                                  :line_1 => 'Street 1',
+                                  :postcode => 'N1 7RL',
+                              })
+
+    assert_equal('Company 1, Street 1, N1 7RL', address.full)
+
+
+    address = Address.create!({
+                                  :line_1 => 'Street 1',
+                                  :postcode => 'N1 7RL',
+                              })
+
+    assert_equal('Street 1, N1 7RL', address.full)
 
   end
 

@@ -30,8 +30,12 @@ class ApplicationController < ActionController::Base
   #Used to check for invitation code
   def check_the_gate
 
+    if user_signed_in?
+      return
+    end
+
     unless params['device'].blank?
-      cookies[:device] = { :value => params['device'], :expires => 3.years.from_now }
+      cookies[:device] = {:value => params['device'], :expires => 3.years.from_now}
     end
 
     unless Rails.application.config.enable_invite_code == 'false'
@@ -46,7 +50,7 @@ class ApplicationController < ActionController::Base
 
       unless params[:invite_code].blank?
         if params[:invite_code].strip.downcase == Rails.application.config.invite_code
-          cookies[:invite_code] = { :value => Rails.application.config.invite_code, :expires => 3.months.from_now }
+          cookies[:invite_code] = {:value => Rails.application.config.invite_code, :expires => 3.months.from_now}
           return
         else
           render '/home/gate'

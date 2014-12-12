@@ -25,21 +25,8 @@ class Admin::OrdersController < ApplicationController
     unless current_user.has_role?(:admin) || current_user.has_role?(:superadmin)
       @orders = @orders.where(:warehouse => current_user.warehouses)
     end
-
   end
 
-  # GET /orders/list.json
-  def list
-
-    @orders = Order.where(:status => params[:status])
-
-    respond_to do |format|
-      format.json
-    end
-  end
-
-  # GET /orders/1
-  # GET /orders/1.json
   def show
     @warehouses = Warehouse.find(@order.information['warehouses'].map { |warehouse| warehouse['id'] })
   end
