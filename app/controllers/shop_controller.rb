@@ -55,130 +55,49 @@ class ShopController < ApplicationController
     logger.info 'Creating New Order'
 
     begin
-      # Creates order:
+
+      # Create Order
       @order = Order.new
       @order.client = current_user
 
-      # Manages address:
+      # Assign Address
       order_address = params[:address_id].to_i
       address = Address.find(order_address)
       @order.address = address
 
-      # Manages card details:
-      card_id = params[:old_card].to_i
-      if card_id == 0 # New card
-
-        # Create Stripe Customer if not created
-        if current_user.stripe_id.blank?
-
-          response = StripeHelper.create_customer(@order.client)
-
-          if response[:errors].blank?
-            customer = response[:data]
-            current_user.stripe_id = customer.id
-          else
-            render json: response[:errors], status: :unprocessable_entity
-            return
-          end
-
-          unless current_user.save
-            render json: current_user.errors, status: :unprocessable_entity
-            return
-          end
-        else
-          response = StripeHelper.get_customer(current_user)
-          if response[:errors].blank?
-            customer = response[:data]
-          else
-            render json: response[:errors], status: :unprocessable_entity
-            return
-          end
-        end
-
-        token = params[:stripe_token]
-
-        response = StripeHelper.create_card(customer, token)
-
-        if response[:errors].blank?
-          card = response[:data]
-        else
-          render json: response[:errors], status: :unprocessable_entity
-          return
-        end
-
-        payment = Payment.new
-        payment.user = current_user
-        payment.brand = params[:new_brand]
-        payment.number = params[:new_card]
-        payment.stripe_card_id = card.id
-      else
-        payment = Payment.find_by(:id => card_id, :user => current_user)
-      end
-
-      @order.payment = payment
-      @order.status_id = 1 #pending
-
+      # Assign Warehouse
       warehouses = ''
       if params.has_key?(:warehouses)
         warehouses = params[:warehouses]
+        @order.information = warehouses
+        @order.warehouse = assign_warehouse(warehouses)
       end
 
-      wines = JSON.parse params[:wines]
+      # Add Order Items with Customer Preferences
+      set_customer_preferences(@order, params[:wines])
 
-      @order.information = warehouses
+      # Apply Promotions
+      apply_promotions(@order)
 
-      @order.warehouse = assign_warehouse(warehouses)
+      # Set Order Status Created
+      @order.status_id = Status.statuses[:created]
 
-      if @order.save
-        wines.each { |wine|
-
-          unless wine.blank?
-            if !wine['occasion'].blank? && wine['occasion'].to_i != 0
-              occasion = Occasion.find(wine['occasion'])
-            end
-
-            if !wine['wineType'].blank? && !wine['wineType']['id'].blank? && wine['wineType']['id'].to_i != 0
-              wine_type = Type.find(wine['wineType']['id'])
-            end
-
-            #TODO: Validate params, category is required.
-            category = Category.find(wine['category'])
-
-            order_item = @order.order_items.new({
-                                                    :specific_wine => wine['specificWine'],
-                                                    :quantity => wine['quantity'],
-                                                    :category => category,
-                                                    :price => category.price
-                                                })
-
-            if wine['food'].blank?
-              unless occasion.blank?
-                order_item.occasion = occasion
-              end
-
-              unless wine_type.nil?
-                order_item.type = wine_type
-              end
-            else
-              wine['food'].each do |food_choice|
-                food = Food.find(food_choice['id'])
-                preparation = Preparation.find_by_id(food_choice['preparation'])
-                FoodItem.create!(:food => food, :preparation => preparation, :order_item => order_item)
-              end
-            end
-
-            unless order_item.save
-              render json: order_item.errors, status: :unprocessable_entity
-              return
-            end
-          end
-        }
-      else
+      # Save Order
+      unless @order.save
+        logger.error @order.errors.full_messages().join(', ')
         render json: @order.errors, status: :unprocessable_entity
         return
       end
 
-      apply_promotions(@order)
+      # Charge Customer
+      payment_results = charge_customer(@order)
+      if payment_results.blank?
+        @order.status_id = Status.statuses[:pending]
+      else
+        logger.error payment_results
+        render json: payment_results, status: :unprocessable_entity
+        return
+      end
 
       if @order.save
 
@@ -193,6 +112,8 @@ class ShopController < ApplicationController
         render json: @order.errors, status: :unprocessable_entity
       end
     rescue => exception
+      logger.error "#{exception.class} - #{exception.message}"
+      logger.error exception.backtrace
       render json: ['We\re sorry by there was a server error.', exception.message], status: :internal_server_error
     end
   end
@@ -263,14 +184,126 @@ class ShopController < ApplicationController
           final_warehouse = near_warehouse
           distance = current_distance
         else
-           if distance > current_distance
-             final_warehouse = near_warehouse
-             distance = current_distance
-           end
+          if distance > current_distance
+            final_warehouse = near_warehouse
+            distance = current_distance
+          end
         end
       end
     end
     final_warehouse
+  end
+
+  def set_customer_preferences(order, params)
+
+    wines = JSON.parse params
+
+    wines.each do |wine|
+
+      unless wine.blank?
+        if !wine['occasion'].blank? && wine['occasion'].to_i != 0
+          occasion = Occasion.find(wine['occasion'])
+        end
+
+        if !wine['wineType'].blank? && !wine['wineType']['id'].blank? && wine['wineType']['id'].to_i != 0
+          wine_type = Type.find(wine['wineType']['id'])
+        end
+
+        #TODO: Validate params, category is required.
+        category = Category.find(wine['category'])
+
+        order_item = order.order_items.new({
+                                               :specific_wine => wine['specificWine'],
+                                               :quantity => wine['quantity'],
+                                               :category => category,
+                                               :price => category.price
+                                           })
+
+        if wine['food'].blank?
+          unless occasion.blank?
+            order_item.occasion = occasion
+          end
+
+          unless wine_type.nil?
+            order_item.type = wine_type
+          end
+        else
+          wine['food'].each do |food_choice|
+            food = Food.find(food_choice['id'])
+            preparation = Preparation.find_by_id(food_choice['preparation'])
+            FoodItem.create!(:food => food, :preparation => preparation, :order_item => order_item)
+          end
+        end
+
+      end
+    end
+  end
+
+  def charge_customer(order)
+
+    card_id = params[:old_card].to_i
+    if card_id == 0 # New card
+
+      # Create Stripe Customer if not created
+      if current_user.stripe_id.blank?
+
+        response = StripeHelper.create_customer(order.client)
+
+        if response[:errors].blank?
+          customer = response[:data]
+          current_user.stripe_id = customer.id
+        else
+          return response[:errors]
+        end
+
+        unless current_user.save
+          return current_user.errors
+        end
+      else
+        response = StripeHelper.get_customer(current_user)
+        if response[:errors].blank?
+          customer = response[:data]
+        else
+          return response[:errors]
+        end
+      end
+
+      token = params[:stripe_token]
+
+      # Create Card
+      response = StripeHelper.create_card(customer, token)
+
+      if response[:errors].blank?
+        card = response[:data]
+      else
+        return response[:errors]
+      end
+
+      payment = Payment.new
+      payment.user = current_user
+      payment.brand = params[:new_brand]
+      payment.number = params[:new_card]
+      payment.stripe_card_id = card.id
+    else
+      payment = Payment.find_by(:id => card_id, :user => current_user)
+    end
+
+    order.payment = payment
+
+    # Charge card
+    stripe_card_id = payment.stripe_card_id
+    stripe_customer_id = payment.user.stripe_id
+    value = (order.total_price * 100).to_i
+
+    results = StripeHelper.charge_card(value, stripe_card_id, stripe_customer_id)
+
+    if results[:errors].blank?
+      order.charge_id = results[:data].id
+    else
+      return results[:errors]
+    end
+
+    nil
   end
 end
 

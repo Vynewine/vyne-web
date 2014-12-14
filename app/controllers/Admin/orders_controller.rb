@@ -8,13 +8,13 @@ class Admin::OrdersController < ApplicationController
   before_action :authenticate_user!
   authorize_actions_for SupplierAuthorizer
   before_action :set_order, only: [:show, :edit, :update, :destroy]
-  authority_actions :finished_advice => 'update'
+  authority_actions :finished_advice => 'update', :packing_complete => 'update'
 
   # GET /orders
   # GET /orders.json
   def index
 
-    @orders = Order.order('id ASC')
+    @orders = Order.includes(order_items: [{ food_items: [:food, :preparation]}, :type, :occasion, :wine]).order('id DESC')
 
     if params[:status].blank?
       @orders = @orders.where(:status => Status.statuses[:pending])
@@ -127,16 +127,31 @@ class Admin::OrdersController < ApplicationController
   end
 
   def charge
-    @order = Order.find(params[:order_id])
-    results = StripeHelper.charge(@order)
-    if results
-      respond_to do |format|
-        format.html { redirect_to [:admin, @order], :flash => { :success => 'Order was successfully charged.' }  }
+
+    order = Order.find(params[:order_id])
+    payment_data = order.payment
+    stripe_card_id = payment_data.stripe_card_id
+    stripe_customer_id = payment_data.user.stripe_id
+    value = (order.total_price * 100).to_i
+
+    results = StripeHelper.charge_card(value, stripe_card_id, stripe_customer_id)
+
+    if results[:errors].blank? && results[:data].paid
+
+      unless results[:data].id.blank?
+        order.charge_id = results[:data].id
       end
+
+      if order.save
+        redirect_to [:admin, order], :flash => {:success => 'Order was successfully charged.'}
+        return
+      else
+        redirect_to [:admin, order], alert: @order.errors.full_messages().join(', ')
+        return
+      end
+
     else
-      respond_to do |format|
-        format.html { redirect_to [:admin, @order], alert: @order.errors.full_messages().join(', ') }
-      end
+      redirect_to [:admin, order], alert: results[:errors].join(', ')
     end
   end
 
@@ -156,9 +171,19 @@ class Admin::OrdersController < ApplicationController
     @order.status_id = Status.statuses[:packing]
     if @order.save
       schedule_job(@order)
-      redirect_to admin_orders_url(:status => @order.status_id), :flash => { :notice => 'Order marked for packing.' }
+      redirect_to admin_orders_url(:status => @order.status_id), :flash => {:notice => 'Order marked for packing.'}
     else
-      redirect_to [:admin, @order], :flash => { :error => @order.errors.full_messages().join(', ') }
+      redirect_to [:admin, @order], :flash => {:error => @order.errors.full_messages().join(', ')}
+    end
+  end
+
+  def packing_complete
+    @order = Order.find(params[:order_id])
+    @order.status_id = Status.statuses[:pickup]
+    if @order.save
+      redirect_to admin_orders_url(:status => @order.status_id), :flash => {:notice => 'Packing Completed for order: ' + @order.id.to_s}
+    else
+      redirect_to [:admin, @order], :flash => {:error => @order.errors.full_messages().join(', ')}
     end
   end
 

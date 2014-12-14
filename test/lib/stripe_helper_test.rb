@@ -66,5 +66,27 @@ class StripeHelperTest < ActiveSupport::TestCase
     Rails.application.config.stripe_key = stripe_key
   end
 
+  test 'Can charge the card' do
+    results = StripeHelper.charge_card(2000, 'card_14yNrx242nQKOZxvq4IBG6qB', 'cus_58fCEwXl68Xknn')
+    assert(results[:data].paid)
+    assert(!results[:data].blank?)
+  end
+
+  test 'Can handle integer charge error' do
+    results = StripeHelper.charge_card(20.00, 'card_14yNrx242nQKOZxvq4IBG6qB', 'cus_58fCEwXl68Xknn')
+    assert(!results[:errors].blank?)
+    assert_equal('Invalid integer: 20.0', results[:errors][0])
+  end
+
+  test 'Can handle API charge error' do
+    stripe_key = Rails.application.config.stripe_key
+    Rails.application.config.stripe_key = nil
+    results = StripeHelper.charge_card(20.00, 'card_14yNrx242nQKOZxvq4IBG6qB', 'cus_58fCEwXl68Xknn')
+    assert(!results[:errors].blank?)
+    assert(results[:errors][0].include?'No API key provided.')
+
+    #Reset Stripe Key for all other tests.
+    Rails.application.config.stripe_key = stripe_key
+  end
 
 end

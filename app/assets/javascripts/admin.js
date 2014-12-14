@@ -7,6 +7,7 @@
 //= require vendor/leaflet-plugins-1.2.0/layer/tile/Google
 //= require bootstrap-sprockets
 //= require local_time
+//= require admin_orders
 
 var advisor = advisor || null;
 

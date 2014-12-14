@@ -1,0 +1,131 @@
+<div class="panel-body">
+  <div class="tab-content">
+    <div class="tab-pane active">
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th></th>
+          <th>Id</th>
+          <th>Advised Wine</th>
+          <th>Client Post Code</th>
+          <th>Confirm Packing</th>
+          <th>Created</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @orders.each do |order| %>
+            <% rowspan = order.order_items.length %>
+            <% order.order_items.each_with_index do |order_item, index| %>
+                <tr>
+                  <% if rowspan == 2 && index == 0 %>
+                      <td rowspan="2">
+                        <%= link_to admin_order_path(order) do %>
+                            <i class="flaticon stroke zoom-1"></i>
+                        <% end %>
+                      </td>
+                  <% elsif index == 0 %>
+                      <td>
+                        <%= link_to admin_order_path(order) do %>
+                            <i class="flaticon stroke zoom-1"></i>
+                        <% end %>
+                      </td>
+                  <% end %>
+
+                  <% if rowspan == 2 && index == 0 %>
+                      <td rowspan="2"><%= order.id %></td>
+                  <% elsif index == 0 %>
+                      <td><%= order.id %></td>
+                  <% end %>
+
+                  <td>
+                    <%= order_item.wine.nil? ? 'Not Advised' : order_item.wine.display_name %>
+                  </td>
+
+                  <% if rowspan == 2 && index == 0 %>
+                      <td rowspan="2"><%= order.address.blank? ? '' : order.address.postcode %></td>
+                  <% elsif index == 0 %>
+                      <td><%= order.address.blank? ? '' : order.address.postcode %></td>
+                  <% end %>
+
+                  <% if rowspan == 2 && index == 0 %>
+                      <td rowspan="2">
+                        <button type="button" class="btn btn-primary btn-xs" data-toggle="modal"
+                                data-target="#finished-packing"
+                                data-order-id="<%= order.id %>"
+                                data-customer-postcode="<%= order.address.blank? ? '' : order.address.postcode %>">
+                          <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Done
+                        </button>
+                      </td>
+                  <% elsif index == 0 %>
+                      <td>
+                        <button type="button" class="btn btn-primary btn-xs" data-toggle="modal"
+                                data-target="#finished-packing"
+                                data-order-id="<%= order.id %>"
+                                data-customer-postcode="<%= order.address.blank? ? '' : order.address.postcode %>">
+                          <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Done
+                        </button>
+
+                      </td>
+                  <% end %>
+
+                  <% if rowspan == 2 && index == 0 %>
+                      <td rowspan="2"><%= local_time(order.created_at, '%b %d, %Y %l:%M %p') %></td>
+                  <% elsif index == 0 %>
+                      <td><%= local_time(order.created_at, '%b %d, %Y %l:%M %p') %></td>
+                  <% end %>
+                </tr>
+            <% end %>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="finished-packing" tabindex="-1" role="dialog" aria-labelledby="finished-packing" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Please confirm packing</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-12 text-center">
+            Please confirm this information is present on the package:
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-6 text-right">
+            <h1>Order Id</h1>
+          </div>
+          <div class="col-xs-6">
+            <h1 id="modal-order-id"></h1>
+          </div>
+        </div>
+          <div class="row">
+          <div class="col-xs-6 text-right">
+            <h1>Postcode</h1>
+          </div>
+            <div class="col-xs-6">
+            <h1 id="modal-customer-postcode"></h1>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-xs-12">
+            <form role="form" method="post" action="<%= packing_complete_admin_orders_path %>" id="finish-packing-form">
+              <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+              <input type="hidden" name="order_id" id="order-id"/>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <input type="submit" class="btn btn-primary" value="Done Packing"/>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

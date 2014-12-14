@@ -19,9 +19,9 @@
             <%= link_to 'Pickup', :controller => 'orders', :status => Status.statuses[:pickup] %>
           </li>
           <li
-          <% if params[:status] == Status.statuses[:delivery].to_s %> class="active"
+          <% if params[:status] == Status.statuses[:in_transit].to_s %> class="active"
           <% end %>>
-            <%= link_to 'Transit', :controller => 'orders', :status => Status.statuses[:delivery] %>
+            <%= link_to 'Transit', :controller => 'orders', :status => Status.statuses[:in_transit] %>
           </li>
           <li
           <% if params[:status] == Status.statuses[:delivered].to_s %> class="active"
@@ -39,80 +39,91 @@
               <% end %>>
                 <%= link_to 'Cancelled', :controller => 'orders', :status => Status.statuses[:cancelled] %>
               </li>
+              <li
+              <% if params[:status] == Status.statuses[:created].to_s %> class="active"
+              <% end %>>
+                <%= link_to 'Created', :controller => 'orders', :status => Status.statuses[:created] %>
+              </li>
           <% end %>
-
 
         </ul>
       </div>
-      <div class="panel-body">
-        <div class="tab-content">
-          <div class="tab-pane fade in active">
-            <table class="table table-bordered">
-              <thead>
-              <tr>
-                <th></th>
-                <th>Id</th>
-                <th>Client Preferences</th>
-                <th>Advise</th>
-                <th>Wine</th>
-                <th>Created</th>
-              </tr>
-              </thead>
-              <tbody>
-              <% @orders.each do |order| %>
-                  <% rowspan = order.order_items.length %>
-                  <% order.order_items.each_with_index do |order_item, index| %>
-                      <tr>
-                        <% if rowspan == 2 && index == 0 %>
-                            <td rowspan="2">
-                              <%= link_to admin_order_path(order) do %>
-                                  <i class="flaticon stroke zoom-1"></i>
-                              <% end %>
-                            </td>
-                        <% elsif index == 0 %>
+      <% if params[:status].blank? || params[:status] == Status.statuses[:pending].to_s %>
+          <%= render 'order.pending' %>
+      <% elsif params[:status] == Status.statuses[:packing].to_s %>
+          <%= render 'order.packing' %>
+      <% else %>
+          <div class="panel-body">
+            <div class="tab-content">
+              <div class="tab-pane active">
+                <table class="table table-bordered">
+                  <thead>
+                  <tr>
+                    <th></th>
+                    <th>Id</th>
+                    <th>Client Preferences</th>
+                    <th>Advise</th>
+                    <th>Wine</th>
+                    <th>Created</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <% @orders.each do |order| %>
+                      <% rowspan = order.order_items.length %>
+                      <% order.order_items.each_with_index do |order_item, index| %>
+                          <tr>
+                            <% if rowspan == 2 && index == 0 %>
+                                <td rowspan="2">
+                                  <%= link_to admin_order_path(order) do %>
+                                      <i class="flaticon stroke zoom-1"></i>
+                                  <% end %>
+                                </td>
+                            <% elsif index == 0 %>
+                                <td>
+                                  <%= link_to admin_order_path(order) do %>
+                                      <i class="flaticon stroke zoom-1"></i>
+                                  <% end %>
+                                </td>
+                            <% end %>
+
+                            <% if rowspan == 2 && index == 0 %>
+                                <td rowspan="2"><%= order.id %></td>
+                            <% elsif index == 0 %>
+                                <td><%= order.id %></td>
+                            <% end %>
+
+                            <td><%= order_item.preferences.to_sentence(last_word_connector: ' and ').capitalize %>.</td>
                             <td>
-                              <%= link_to admin_order_path(order) do %>
-                                  <i class="flaticon stroke zoom-1"></i>
+                              <% if order.can_be_advised %>
+                                  <a href="/admin/advise/item/<%= order_item.id %>">
+                                    <%= order_item.wine.nil? ? 'Advise' : 'Advised' %>
+                                  </a>
+                              <% else %>
+                                  complete
                               <% end %>
+
                             </td>
-                        <% end %>
 
-                        <% if rowspan == 2 && index == 0 %>
-                            <td rowspan="2"><%= order.id %></td>
-                        <% elsif index == 0 %>
-                            <td><%= order.id %></td>
-                        <% end %>
+                            <td>
+                              <%= order_item.wine.nil? ? 'Not Advised' : order_item.wine.display_name %>
+                            </td>
 
-                        <td><%= order_item.preferences.to_sentence(last_word_connector: ' and ').capitalize %>.</td>
-                        <td>
-                          <% if order.can_be_advised %>
-                              <a href="/admin/advise/item/<%= order_item.id %>">
-                                <%= order_item.wine.nil? ? 'Advise' : 'Advised' %>
-                              </a>
-                          <% else %>
-                                complete
-                          <% end %>
+                            <% if rowspan == 2 && index == 0 %>
+                                <td rowspan="2"><%= local_time(order.created_at, '%b %d, %Y %l:%M %p') %></td>
+                            <% elsif index == 0 %>
+                                <td><%= local_time(order.created_at, '%b %d, %Y %l:%M %p') %></td>
+                            <% end %>
 
-                        </td>
-
-                        <td>
-                          <%= order_item.wine.nil? ? 'Not Advised' : order_item.wine.display_name %>
-                        </td>
-
-                        <% if rowspan == 2 && index == 0 %>
-                            <td rowspan="2"><%= local_time(order.created_at, '%b %d, %Y %l:%M %p') %></td>
-                        <% elsif index == 0 %>
-                            <td><%= local_time(order.created_at, '%b %d, %Y %l:%M %p') %></td>
-                        <% end %>
-
-                      </tr>
+                          </tr>
+                      <% end %>
                   <% end %>
-              <% end %>
-              </tbody>
-            </table>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+      <% end %>
+
     </div>
   </div>
 </div>

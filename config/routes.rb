@@ -112,6 +112,9 @@ Rails.application.routes.draw do
       post 'charge'
       post 'send_receipt'
       post 'finished_advice'
+      collection do
+        post 'packing_complete'
+      end
     end
     resources :payments
     resources :statuses

@@ -39,6 +39,26 @@ class UserNewOrderTest < ActiveSupport::TestCase
     @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Thanks for ordering')]").displayed? }
   end
 
+  test 'Will show credit card error' do
+
+    email = Time.now.strftime('%Y%m%d%H%M%S') + '@vyne.london'
+    password = 'password'
+
+    @driver.get(@base_url + '/')
+
+    enter_promo_code
+    enter_postcode_first_page('n17rj')
+    select_bottle_for_category(2)
+    select_wine_by_occasion
+    confirm_order_selection
+    register_new_user(email, password)
+    register_new_address
+    register_new_credit_card('4000000000000002')
+    submit_order
+
+    @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'declined')]").displayed? }
+  end
+
   test 'New user two bottles' do
 
     email = Time.now.strftime('%Y%m%d%H%M%S') + '@vyne.london'
@@ -129,6 +149,7 @@ class UserNewOrderTest < ActiveSupport::TestCase
   end
 
   def select_bottle_for_category(category)
+    puts 'Selecting bootle by category' + category.to_s
     @wait.until { @driver.find_element(:css, '#bottles-panel').displayed? }
     @wait.until { @driver.find_element(:xpath, "//div[@id='bottles-panel']/div/ul/li[" + category.to_s + "]/a").displayed? }
     @driver.find_element(:xpath, "//div[@id='bottles-panel']/div/ul/li[" + category.to_s + "]/a").click
@@ -214,10 +235,10 @@ class UserNewOrderTest < ActiveSupport::TestCase
     @driver.find_element(:id, 'address-details').click
   end
 
-  def register_new_credit_card
+  def register_new_credit_card(card_number = '4111111111111111')
     puts 'Registering new card'
     @driver.find_element(:id, 'pmnm').clear
-    @driver.find_element(:id, 'pmnm').send_keys '4111111111111111'
+    @driver.find_element(:id, 'pmnm').send_keys card_number
     @driver.find_element(:id, 'pmcv').clear
     @driver.find_element(:id, 'pmcv').send_keys '542'
     @driver.find_element(:id, 'pmxp').clear
