@@ -41,7 +41,7 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000, scheme: 'http' }
   # In production, :host should be set to the actual host of your application.
 
-  config.log_level = :error
+  config.log_level = :debug
 
   #Mandrill API
   config.mandrill = 'ipcLBLgQRHya2q3jvpPQsw'
@@ -80,5 +80,7 @@ Rails.application.configure do
 
   #Google Coordinate Team Id
   config.google_coordinate_team_id = 'ZtCbuYnbGi9fTxkJtV390w'
+  config.google_coordinate_client_id = '662241065743-4jg7eectv71j6a4na8o327kid6m37tvd.apps.googleusercontent.com'
+  config.google_coordinate_client_secret = '5kdwemy_dpS1adj3TFNvAkX2'
 
 end

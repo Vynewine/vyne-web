@@ -169,8 +169,8 @@ class Admin::OrdersController < ApplicationController
   def finished_advice
     @order = Order.find(params[:order_id])
     @order.status_id = Status.statuses[:packing]
+    schedule_job(@order)
     if @order.save
-      schedule_job(@order)
       redirect_to admin_orders_url(:status => @order.status_id), :flash => {:notice => 'Order marked for packing.'}
     else
       redirect_to [:admin, @order], :flash => {:error => @order.errors.full_messages().join(', ')}

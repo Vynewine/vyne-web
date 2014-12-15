@@ -78,8 +78,6 @@
         <div id="shutl-info" style="white-space: pre; font-family: monospace;"></div>
         <script>
             var shutlInfo = JSON.parse('<%= @shutl_info.html_safe %>');
-            console.log(shutlInfo);
-            console.log(JSON.stringify(shutlInfo, null, 4));
             $('#shutl-info').text(JSON.stringify(shutlInfo, null, 4));
         </script>
     <% end %>

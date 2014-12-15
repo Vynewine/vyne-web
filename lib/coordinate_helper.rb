@@ -6,12 +6,14 @@ module CoordinateHelper
 
   CREDENTIALS_FILE = Rails.root.join('config', 'client_secrets_' + Rails.env + '.json')
   GOOGLE_COORDINATE_TOKEN = 'google_coordinate'
+  APP_NAME = 'Vyne Admin'
+  APP_VERSION = '1.0.0'
 
   def google_client
 
     @client = Google::APIClient.new(
-        :application_name => 'Vyne Admin',
-        :application_version => '1.0.0'
+        :application_name => APP_NAME,
+        :application_version => APP_VERSION
     )
 
     client_secrets = Google::APIClient::ClientSecrets.load(CREDENTIALS_FILE)
@@ -73,11 +75,77 @@ module CoordinateHelper
                                  'customerPhoneNumber' => order.client.mobile
                              })
 
-    puts json: result
 
+
+    Rails.logger.debug result
+
+    body = JSON.parse(result.body)
+    puts body
+    puts json: body['id']
+    order.delivery_token = body['id']
+    order.delivery_status = body
+    order.delivery_provider = 'google_coordinate'
   end
 
   def cancel_job(order)
 
   end
+
+  def get_job_status(order)
+    google_token = Token.find_by_key(GOOGLE_COORDINATE_TOKEN)
+
+    token = google_token.fresh_token
+
+    team_id = Rails.application.config.google_coordinate_team_id
+
+    response = RestClient.get "https://www.googleapis.com/coordinate/v1/teams/#{team_id}/jobs/#{order.delivery_token}",
+                              {
+                                  'Authorization' => "Bearer #{token}",
+                                  'User-Agent' => 'Vyne Admin/1.0.0'
+                              }
+
+    body = JSON.parse(response.body)
+
+    return body
+
+  end
+
+  def get_latest_courier_position(order)
+
+    response = {
+        :errors => [],
+        :data => ''
+    }
+
+    begin
+
+      google_token = Token.find_by_key(GOOGLE_COORDINATE_TOKEN)
+
+      token = google_token.fresh_token
+
+      team_id = Rails.application.config.google_coordinate_team_id
+
+      worker_email = URI::encode('jakub@vyne.london')
+
+      minute_ago = 10.minutes.ago.to_i * 1000
+
+      response = RestClient.get "https://www.googleapis.com/coordinate/v1/teams/#{team_id}/workers/#{worker_email}/locations?startTimestampMs=#{minute_ago.to_s}&maxResults=10",
+                                {
+                                    'Authorization' => "Bearer #{token}",
+                                    'User-Agent' => 'Vyne Admin/1.0.0'
+                                }
+
+      response[:data] = JSON.parse(response.body)
+
+    rescue => exception
+      message = "Error occurred while retrieving Booking information from Shutl: #{exception.class} - #{exception.message}"
+      Rails.logger.error message
+      Rails.logger.error exception.backtrace
+    ensure
+      return response
+    end
+
+
+  end
+
 end

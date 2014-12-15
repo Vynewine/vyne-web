@@ -111,3 +111,5 @@ gem 'local_time'
 #Google API and OAuth
 gem 'google-api-client'
 
+#REST Client
+gem 'rest-client'

@@ -292,6 +292,7 @@ DEPENDENCIES
   progress_bar
   rails (= 4.1.4)
   rails_12factor
+  rest-client
   rgeo-geojson
   rolify
   roo (~> 1.13.2)

@@ -1,6 +1,7 @@
 require 'test_helper'
 require 'google/api_client/client_secrets'
-
+require 'net/http'
+require 'rest-client'
 
 class CoordinateHelperTest < ActiveSupport::TestCase
   include CoordinateHelper
@@ -14,25 +15,63 @@ class CoordinateHelperTest < ActiveSupport::TestCase
     Sunspot.session = Sunspot.session.original_session
   end
 
-  test 'Can schedule job' do
-    path = File.join(Rails.root, 'config', 'client_secrets.json')
-    client_secrets = Google::APIClient::ClientSecrets.load(path)
+  test 'Can get job status' do
 
+    Token.create!({
+      :key => 'google_coordinate',
+      :access_token => 'ya29.3QDkYXsI_7_CNlJ5gWxSBRgeF7bTFQWw-_uSkx2FqXodlrOd8tIvXTz5lOnceRkZKXvw6xbHm4dulQ',
+      :refresh_token => '1/MvOsVqxL_EAl8fdlsXwe2B42WK2cZ3y-ZSVWvVzY9nUMEudVrK5jSpoR30zcRFq6',
+      :expires_at => Time.parse('2014-12-15 11:28:00')
+    })
 
-    redirect user_credentials.authorization_uri.to_s, 303
+    google_token = Token.find_by_key(GOOGLE_COORDINATE_TOKEN)
 
+    token = google_token.fresh_token
+
+    team_id = Rails.application.config.google_coordinate_team_id
+
+    response = RestClient.get "https://www.googleapis.com/coordinate/v1/teams/#{team_id}/jobs/",
+                              {
+                                  'Authorization' => "Bearer #{token}",
+                                  'User-Agent' => 'Vyne Admin/1.0.0'
+                              }
+
+    puts response.body
 
   end
 
-  def user_credentials
-    # Build a per-request oauth credential based on token stored in session
-    # which allows us to use a shared API client.
-    @authorization ||= (
-    auth = api_client.authorization.dup
-    auth.redirect_uri = to('/oauth2callback')
-    auth.update_token!(session)
-    auth
-    )
+
+  test 'Can get worket position details' do
+    Token.create!({
+                      :key => 'google_coordinate',
+                      :access_token => 'ya29.3QDpo-AXYeE84xf-coyWwZEtZ9ItquSDXzhfcUs2wWyeco3lVFEmq15ESPsVZUfBpGT8BGPYHtoL4Q',
+                      :refresh_token => '1/MvOsVqxL_EAl8fdlsXwe2B42WK2cZ3y-ZSVWvVzY9nUMEudVrK5jSpoR30zcRFq6',
+                      :expires_at => Time.parse('2014-12-15 15:00')
+                  })
+
+    google_token = Token.find_by_key(GOOGLE_COORDINATE_TOKEN)
+
+    token = google_token.fresh_token
+
+    puts token
+
+    team_id = Rails.application.config.google_coordinate_team_id
+
+    worker_email = URI::encode('jakub@vyne.london')
+
+    minute_ago = 10.minutes.ago.to_i * 1000
+
+    puts minute_ago
+
+    response = RestClient.get "https://www.googleapis.com/coordinate/v1/teams/#{team_id}/workers/#{worker_email}/locations?startTimestampMs=#{minute_ago.to_s}&maxResults=10",
+                              {
+                                  'Authorization' => "Bearer #{token}",
+                                  'User-Agent' => 'Vyne Admin/1.0.0'
+                              }
+
+    puts response.body
+
   end
+
 
 end

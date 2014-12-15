@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141214101731) do
+ActiveRecord::Schema.define(version: 20141215114858) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -308,6 +308,8 @@ ActiveRecord::Schema.define(version: 20141214101731) do
     t.string   "charge_id"
     t.string   "refund_id"
     t.decimal  "delivery_cost"
+    t.string   "delivery_provider"
+    t.json     "delivery_courier"
   end
 
   add_index "orders", ["address_id"], :name => "index_orders_on_address_id"

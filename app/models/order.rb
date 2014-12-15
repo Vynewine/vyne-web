@@ -13,6 +13,8 @@ class Order < ActiveRecord::Base
 
   scope :user_id, ->(id) { where("client_id = ?", id) }
 
+  enum delivery_type: { google_coordinate: 'google_coordinate', shutl: 'shutl' }
+
   def total_price
     if (order_items.map { |item| item.price }).include?(nil)
       nil
@@ -39,9 +41,7 @@ class Order < ActiveRecord::Base
   end
 
   def delivery_status_json
-    d = delivery_status.to_s
-    require 'pp'
-    PP.pp(d, '', 80)
+    delivery_status.to_json
   end
 
   def advisory_complete
