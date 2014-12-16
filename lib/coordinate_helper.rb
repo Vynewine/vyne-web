@@ -69,12 +69,11 @@ module CoordinateHelper
                                  'address' => order.address.full,
                                  'lat' => order.address.latitude,
                                  'lng' => order.address.longitude,
-                                 'title' => 'Order ' + order.id.to_s,
+                                 'title' => 'Order ' + order.id.to_s + (Rails.env.production? ? '' : ' - test'),
                                  'note' => order.address.full,
                                  'customerName' => order.client.name,
                                  'customerPhoneNumber' => order.client.mobile
                              })
-
 
     Rails.logger.debug result
 
@@ -178,7 +177,7 @@ module CoordinateHelper
           end
 
           result[:data] = {
-              :name =>  worker_email,
+              :name => worker_email,
               :collection_time => collection_time,
               :lat => lat,
               :lng => lng
@@ -196,6 +195,54 @@ module CoordinateHelper
       return result
     end
 
+  end
+
+  def get_jobs_status
+
+    result = {
+        :errors => [],
+        :data => ''
+    }
+
+    begin
+
+      google_token = Token.find_by_key(GOOGLE_COORDINATE_TOKEN)
+      token = google_token.fresh_token
+      team_id = Rails.application.config.google_coordinate_team_id
+      minutes_ago = 30.minutes.ago.to_i * 1000
+
+      response = RestClient.get "https://www.googleapis.com/coordinate/v1/teams/#{team_id}/jobs?minModifiedTimestampMs=#{minutes_ago.to_s}",
+                                {
+                                    'Authorization' => "Bearer #{token}",
+                                    'User-Agent' => 'Vyne Admin/1.0.0'
+                                }
+
+      data = JSON.parse(response.body)
+
+      result[:data] = []
+
+      unless data['items'].blank?
+        data['items'].each do |job|
+
+          job_data = {id: job['id']}
+
+          unless job['state'].blank?
+            job_data[:assignee] = job['state']['assignee']
+            job_data[:progress] = job['state']['progress']
+          end
+
+          result[:data] << job_data
+        end
+      end
+
+    rescue => exception
+      message = "Error occurred while retrieving Jobs status: #{exception.class} - #{exception.message}"
+      Rails.logger.error message
+      Rails.logger.error exception.backtrace
+      result[:errors] << message
+    ensure
+      return result
+    end
   end
 
   def coordinate_status_to_order_status(progress)

@@ -50,6 +50,7 @@ class DeliveryController < ApplicationController
       render json: ['404'], status: :not_found
       return
     else
+
       courier_info = get_latest_courier_position(order)
       unless courier_info[:data].blank?
         order.delivery_courier = courier_info[:data]

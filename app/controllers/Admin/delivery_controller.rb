@@ -64,9 +64,6 @@ class Admin::DeliveryController < ApplicationController
         unless state['assignee'].blank?
           courier = order.delivery_courier
 
-          puts 'Existing Courier'
-          puts json: courier
-
           if courier.blank?
             courier = {:name => state['assignee']}
           else
@@ -75,8 +72,6 @@ class Admin::DeliveryController < ApplicationController
 
           order.delivery_courier = courier
 
-          puts 'Updated Courier'
-          puts json: courier
         end
       end
       nil

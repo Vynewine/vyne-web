@@ -44,6 +44,7 @@ Rails.application.routes.draw do
 
   resources :orders do
     get 'status'
+
   end
 
   # ----------------------------------------------------------------------------
@@ -123,6 +124,7 @@ Rails.application.routes.draw do
       post 'finished_advice'
       collection do
         post 'packing_complete'
+        get 'refresh_all'
       end
     end
     resources :payments
