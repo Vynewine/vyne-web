@@ -39,7 +39,7 @@ module CoordinateHelper
     google_token = Token.find_by_key(CoordinateHelper::GOOGLE_COORDINATE_TOKEN)
 
     if google_token.blank?
-      google_token = Token.new({ :key => CoordinateHelper::GOOGLE_COORDINATE_TOKEN })
+      google_token = Token.new({:key => CoordinateHelper::GOOGLE_COORDINATE_TOKEN})
     end
 
     unless @auth.access_token.blank?
@@ -76,7 +76,6 @@ module CoordinateHelper
                              })
 
 
-
     Rails.logger.debug result
 
     body = JSON.parse(result.body)
@@ -92,27 +91,8 @@ module CoordinateHelper
   end
 
   def get_job_status(order)
-    google_token = Token.find_by_key(GOOGLE_COORDINATE_TOKEN)
 
-    token = google_token.fresh_token
-
-    team_id = Rails.application.config.google_coordinate_team_id
-
-    response = RestClient.get "https://www.googleapis.com/coordinate/v1/teams/#{team_id}/jobs/#{order.delivery_token}",
-                              {
-                                  'Authorization' => "Bearer #{token}",
-                                  'User-Agent' => 'Vyne Admin/1.0.0'
-                              }
-
-    body = JSON.parse(response.body)
-
-    return body
-
-  end
-
-  def get_latest_courier_position(order)
-
-    response = {
+    result = {
         :errors => [],
         :data => ''
     }
@@ -120,32 +100,113 @@ module CoordinateHelper
     begin
 
       google_token = Token.find_by_key(GOOGLE_COORDINATE_TOKEN)
-
       token = google_token.fresh_token
-
       team_id = Rails.application.config.google_coordinate_team_id
 
-      worker_email = URI::encode('jakub@vyne.london')
-
-      minute_ago = 10.minutes.ago.to_i * 1000
-
-      response = RestClient.get "https://www.googleapis.com/coordinate/v1/teams/#{team_id}/workers/#{worker_email}/locations?startTimestampMs=#{minute_ago.to_s}&maxResults=10",
+      response = RestClient.get "https://www.googleapis.com/coordinate/v1/teams/#{team_id}/jobs/#{order.delivery_token}",
                                 {
                                     'Authorization' => "Bearer #{token}",
                                     'User-Agent' => 'Vyne Admin/1.0.0'
                                 }
 
-      response[:data] = JSON.parse(response.body)
+      result[:data] = JSON.parse(response.body)
 
     rescue => exception
-      message = "Error occurred while retrieving Booking information from Shutl: #{exception.class} - #{exception.message}"
+      message = "Error occurred while retrieving Job Status from Google Coordinate: #{exception.class} - #{exception.message}"
       Rails.logger.error message
       Rails.logger.error exception.backtrace
+      result[:errors] << message
     ensure
-      return response
+      return result
     end
 
+  end
 
+  def get_latest_courier_position(order)
+
+    result = {
+        :errors => [],
+        :data => ''
+    }
+
+    begin
+
+      google_token = Token.find_by_key(GOOGLE_COORDINATE_TOKEN)
+      token = google_token.fresh_token
+      team_id = Rails.application.config.google_coordinate_team_id
+
+      courier = order.delivery_courier
+
+      unless courier.blank?
+        unless courier['name'].blank?
+
+          worker_email = URI::encode(courier['name'])
+          minute_ago = 10.minutes.ago.to_i * 1000
+
+          response = RestClient.get "https://www.googleapis.com/coordinate/v1/teams/#{team_id}/workers/#{worker_email}/locations?startTimestampMs=#{minute_ago.to_s}&maxResults=10",
+                                    {
+                                        'Authorization' => "Bearer #{token}",
+                                        'User-Agent' => 'Vyne Admin/1.0.0'
+                                    }
+
+          data = JSON.parse(response.body)
+
+          Rails.logger.info data
+
+          lat = courier['lat']
+          lng = courier['lng']
+          collection_time = courier['collection_time']
+
+          unless data['items'].blank?
+
+            data['items'].each do |item|
+
+              item_time = Time.at(item['collectionTime'].to_i / 1000)
+
+              if collection_time.blank?
+                collection_time = item_time
+                lat = item['latitude']
+                lng = item['longitude']
+              end
+
+              if collection_time < item_time
+                collection_time = item_time
+                lat = item['latitude']
+                lng = item['longitude']
+              end
+            end
+          end
+
+          result[:data] = {
+              :name =>  worker_email,
+              :collection_time => collection_time,
+              :lat => lat,
+              :lng => lng
+          }
+
+        end
+      end
+
+    rescue => exception
+      message = "Error occurred while retrieving Courier Status: #{exception.class} - #{exception.message}"
+      Rails.logger.error message
+      Rails.logger.error exception.backtrace
+      result[:errors] << message
+    ensure
+      return result
+    end
+
+  end
+
+  def coordinate_status_to_order_status(progress)
+    case progress.to_s.strip
+      when 'IN_PROGRESS'
+        return Status.statuses[:in_transit]
+      when 'COMPLETED'
+        return Status.statuses[:delivered]
+      else
+        return nil
+    end
   end
 
 end

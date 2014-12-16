@@ -337,11 +337,11 @@ module ShutlHelper
   def shutl_status_to_order_status(shutl_status)
     case shutl_status.to_s.strip
       when 'confirmed', 'allocated', 'arrived'
-        return 4 #pickup
+        return Status.statuses[:pickup]
       when 'collected'
-        return 5 #delivery
+        return Status.statuses[:in_transit]
       when 'delivered'
-        return 6 #delivered
+        return Status.statuses[:delivered]
       when 'cancelled_in_advance', 'cancelled_on_arrival'
         puts 'Error: Unexpected Shutl Status Received:' + shutl_status
         return nil

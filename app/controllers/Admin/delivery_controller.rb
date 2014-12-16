@@ -6,9 +6,9 @@ class Admin::DeliveryController < ApplicationController
     order = Order.find(params[:id])
 
     if order.delivery_provider == Order.delivery_types[:google_coordinate]
-      response = fetch_google_coordinate_job_info(order)
+      response = get_google_coordinate_job_info(order)
     elsif order.delivery_provider == Order.delivery_types[:shutl]
-      response = fetch_shutl_delivery_info(order)
+      response = get_shutl_delivery_info(order)
     end
 
 
@@ -20,7 +20,7 @@ class Admin::DeliveryController < ApplicationController
     end
   end
 
-  def fetch_shutl_delivery_info(order)
+  def get_shutl_delivery_info(order)
     response = fetch_order_information(Rails.application.config.shutl_url + '/bookings/' + order.delivery_token)
 
     if response[:errors].blank?
@@ -45,13 +45,43 @@ class Admin::DeliveryController < ApplicationController
     end
   end
 
-  def fetch_google_coordinate_job_info(order)
-    response = get_job_status(order)
+  def get_google_coordinate_job_info(order)
 
-    puts response
+    results = get_job_status(order)
 
-    order.delivery_status = response
+    if results[:errors].blank?
+      order.delivery_status = results[:data]
+      unless results[:data]['state'].blank?
+        state = results[:data]['state']
 
-    return nil
+        unless state['progress'].blank?
+          status = coordinate_status_to_order_status(state['progress'])
+          unless status.blank?
+            order.status_id = status
+          end
+        end
+
+        unless state['assignee'].blank?
+          courier = order.delivery_courier
+
+          puts 'Existing Courier'
+          puts json: courier
+
+          if courier.blank?
+            courier = {:name => state['assignee']}
+          else
+            courier[:name] = state['assignee']
+          end
+
+          order.delivery_courier = courier
+
+          puts 'Updated Courier'
+          puts json: courier
+        end
+      end
+      nil
+    else
+      results[:errors]
+    end
   end
 end

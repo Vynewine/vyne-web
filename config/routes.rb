@@ -35,7 +35,16 @@ Rails.application.routes.draw do
 
   # ------------
 
-  resources :orders, :promotions, :share, :help, :delivery, :jobs
+  resources :promotions, :share, :help, :jobs
+  resources :delivery do
+    collection do
+      get 'get_courier_location'
+    end
+  end
+
+  resources :orders do
+    get 'status'
+  end
 
   # ----------------------------------------------------------------------------
   # User authentication:

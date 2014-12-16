@@ -1,5 +1,5 @@
-$('document').ready(function() {
-    if ($('body.delivery').length) {
+var ready = function() {
+    if ($('body.delivery').length && areas.length > 0) {
 
         var map = L.map('map', {zoomControl: false}).setView([51.514525, -0.1050393], 12);
 
@@ -25,5 +25,7 @@ $('document').ready(function() {
                 fillOpacity: 0.45
             });
     }
-});
+};
 
+$(document).on('page:load', ready);
+$(document).ready(ready);

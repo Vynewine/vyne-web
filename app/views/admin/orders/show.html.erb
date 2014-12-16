@@ -236,28 +236,44 @@
         <% unless @order.delivery_token.blank? %>
             <li class="list-group-item">
               <div class="row">
-                <div class="col-md-12">
+                <div class="col-xs-6">
                   <strong>Delivery Information</strong>
+                </div>
+                <div class="col-xs-6 text-right">
+                  <a href="#" id="refresh-delivery" class="btn btn-primary" data-id="<%= @order.id %>">Refresh</a>
                 </div>
               </div>
             </li>
             <li class="list-group-item">
               <div class="row">
                 <div class="col-md-12">
-                  <a href="#" id="refresh-delivery" class="btn btn-primary" data-id="<%= @order.id %>">Refresh</a>
+                  <% if !@order.delivery_status.nil? %>
+                      <div id="delivery-info" style="white-space: pre; font-family: monospace;"></div>
+                      <script>
+                          var deliveryInfo = JSON.parse('<%= @order.delivery_status_json.html_safe %>');
+                          $('#delivery-info').text(JSON.stringify(deliveryInfo, null, 4));
+                      </script>
+                  <% end %>
                 </div>
               </div>
+            </li>
+            <li class="list-group-item">
               <div class="row">
                 <div class="col-md-12">
-                  <% if !@order.delivery_status.nil? %>
-                      <div>
-                        <div id="delivery-info" style="white-space: pre; font-family: monospace;"></div>
-                        <script>
-                            var deliveryInfo = JSON.parse('<%= @order.delivery_status_json.html_safe %>');
-                            $('#delivery-info').text(JSON.stringify(deliveryInfo, null, 4));
-                        </script>
+                  <strong>Courier Information</strong>
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-md-12">
+                  <% unless @order.delivery_courier.blank? %>
+                      <div id="delivery-courier" style="white-space: pre; font-family: monospace;"></div>
+                      <script>
+                          var deliveryCourier = JSON.parse('<%= @order.delivery_courier.to_json.html_safe %>');
+                          $('#delivery-courier').text(JSON.stringify(deliveryCourier, null, 4));
+                      </script>
                   <% end %>
-                  </div>
                 </div>
               </div>
             </li>

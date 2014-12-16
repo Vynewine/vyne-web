@@ -69,7 +69,7 @@ class CoordinateHelperTest < ActiveSupport::TestCase
                                   'User-Agent' => 'Vyne Admin/1.0.0'
                               }
 
-    puts response.body
+    puts JSON.parse(response.body)
 
   end
 

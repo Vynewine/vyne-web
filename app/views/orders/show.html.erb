@@ -1,13 +1,17 @@
+<% content_for :head do %>
+    <script src="http://maps.google.com/maps/api/js?v=3&sensor=false"></script>
+<% end %>
+
 <div class="order-confirmation">
 
   <div class="order-confirmation-overlay"></div>
 
   <div class="order-confirmation-content wrapper">
 
-    <ul class="accordian">
+    <ul class="accordian" id="order-views">
       <li class="accordian-item
-        <% if @order.status_id == 1 %> active
-        <% end %>">
+        <% if @order.status_id == Status.statuses[:pending] %> active
+        <% end %>" id="order-placed">
         <div class="line"></div>
         <span class="accordian-item-link">1. Order Placed</span>
 
@@ -22,8 +26,8 @@
         </div>
       </li>
       <li class="accordian-item
-        <% if @order.status_id == 4 %> active
-        <% end %>">
+        <% if @order.status_id == Status.statuses[:pickup] %> active
+        <% end %>" id="order-pickup">
         <span class="accordian-item-link">2. Courier collects from cellar</span>
 
         <div class="accordian-item-content">
@@ -38,8 +42,8 @@
         </div>
       </li>
       <li class="accordian-item
-        <% if @order.status_id == 5 %> active
-        <% end %>">
+        <% if @order.status_id == Status.statuses[:in_transit] %> active
+        <% end %>" id="order-in-transit">
         <span class="accordian-item-link">3. Your bottle is on its way!</span>
 
         <div class="accordian-item-content">
@@ -54,11 +58,14 @@
           <% unless @estimate.blank? %>
               <p>Estimated delivery time: <%= Time.parse(@estimate).strftime("%H:%M") %></p>
           <% end %>
+
+          <div id="map" style="width: 100%; height: 300px; display: none"></div>
+
         </div>
       </li>
       <li class="accordian-item
         <% if @order.status_id == 6 %> active
-        <% end %>">
+        <% end %>" id="order-delivered">
         <span class="accordian-item-link">4. Delivery Complete</span>
 
         <div class="accordian-item-content">
@@ -66,7 +73,8 @@
           <span class="number">4</span>
 
           <h3>Your order has been delivered.</h3>
-            <br/>
+          <br/>
+
           <p>If you have any problems, get in touch via <br/><a href="https://vyne.zendesk.com/hc">Vyne Helpdesk</a></p>
           <br/>
         </div>
@@ -77,4 +85,13 @@
   </div>
 
 </div>
-
+<script>
+    var orderId = <%= @order.id %>;
+    var orderData = {
+        status: '<%= @order.status.label %>',
+        customer_lat: <%= @order.address.latitude %>,
+        customer_lng: <%= @order.address.longitude %>,
+        warehouse_lat: <%= @order.warehouse.address.latitude %>,
+        warehouse_lng: <%= @order.warehouse.address.longitude %>
+    };
+</script>

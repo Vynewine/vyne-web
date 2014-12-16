@@ -6,11 +6,10 @@ class Status < ActiveRecord::Base
            paid: 2,
            payment_failed: 3,
            pickup: 4,
-           delivery: 5,
+           in_transit: 5,
            delivered: 6,
            cancelled: 7,
            packing: 8,
-           in_transit: 9,
            created: 10
        }
 

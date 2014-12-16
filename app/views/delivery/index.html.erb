@@ -12,12 +12,16 @@
            <h3> We currently deliver within this area </h3>
           </div>
 
+          <script>
+              var areas = [];
+          </script>
+
           <% unless @areas.blank? %>
 
               <div id="map" style="width: 100%; height: 500px;"></div>
 
               <script>
-                    var areas = <%= @areas.html_safe %>;
+                    areas = <%= @areas.html_safe %>;
               </script>
           <% end %>
         </div>
