@@ -90,10 +90,17 @@
     var orderId = <%= @order.id %>;
     var orderData = {
         status: '<%= @order.status.label %>',
+        <% unless @order.address.latitude.blank? %>
         customer_lat: <%= @order.address.latitude %>,
+        <% end %>
+        <% unless @order.address.longitude.blank? %>
         customer_lng: <%= @order.address.longitude %>,
+        <% end %>
+
+        <% unless @order.warehouse.blank?  %>
         warehouse_lat: <%= @order.warehouse.address.latitude %>,
         warehouse_lng: <%= @order.warehouse.address.longitude %>
+        <% end %>
     };
     <% end %>
 
