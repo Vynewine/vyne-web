@@ -101,7 +101,8 @@ class Admin::OrdersController < ApplicationController
     @order = Order.find(params[:order_id])
 
     #Refund any charges associated with the order
-    unless @order.charge_id.blank?
+    unless @order.charge_id.blank? || @order.charge_id == 'Admin'
+      #TODO: Move this to Stripe Helper
       stripe_charge = @order.charge_id
       Stripe.api_key = Rails.application.config.stripe_key
       charge = Stripe::Charge.retrieve(stripe_charge)
