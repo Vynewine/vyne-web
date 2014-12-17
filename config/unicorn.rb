@@ -8,8 +8,13 @@ before_fork do |server, worker|
     Process.kill 'QUIT', Process.pid
   end
 
-  defined?(ActiveRecord::Base) and
-      ActiveRecord::Base.connection.disconnect!
+  if defined?(ActiveRecord::Base)
+    ActiveRecord::Base.connection.disconnect!
+    Rails.logger.info('Disconnected from ActiveRecord')
+  end
+
+  sleep 1
+
 end
 
 after_fork do |server, worker|
@@ -22,5 +27,6 @@ after_fork do |server, worker|
         Rails.application.config.database_configuration[Rails.env]
     config['adapter'] = 'postgis'
     ActiveRecord::Base.establish_connection(config)
+    Rails.logger.info('Connected to ActiveRecord')
   end
 end

@@ -16,10 +16,10 @@ class OrderStatus
           if order.blank?
             puts 'Order with for job id: ' + job[:id].to_s + ' not found.'
           else
-
+            puts 'Processing order with job id ' + job[:id].to_s
             status = coordinate_status_to_order_status(job[:progress])
-            puts 'New order status: ' + status.to_s
             unless status.blank?
+              puts 'New order status: ' + status.to_s
               order.status_id = status
             end
             unless job[:assignee].blank?

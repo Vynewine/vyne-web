@@ -2,6 +2,7 @@ class Admin::OrdersController < ApplicationController
   include ShutlHelper
   include StripeHelper
   include UserMailer
+  include CoordinateHelper
 
   layout 'admin'
   before_action :authenticate_user!

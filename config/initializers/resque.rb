@@ -1,5 +1,7 @@
 require 'resque/server'
 
+
+
 class AuthenticatedMiddleware
   def initialize(app)
     @app = app
@@ -15,17 +17,3 @@ class AuthenticatedMiddleware
 end
 
 Resque::Server.use(AuthenticatedMiddleware)
-
-Resque.redis = Rails.application.config.redis
-
-Resque.before_fork do
-  defined?(ActiveRecord::Base) and
-      ActiveRecord::Base.connection.disconnect!
-end
-
-Resque.after_fork do
-  config = ActiveRecord::Base.configurations[Rails.env] ||
-      Rails.application.config.database_configuration[Rails.env]
-  config['adapter'] = 'postgis'
-  ActiveRecord::Base.establish_connection(config)
-end
