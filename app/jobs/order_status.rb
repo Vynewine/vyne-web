@@ -13,8 +13,12 @@ class OrderStatus
 
         jobs[:data].each do |job|
           order = Order.find_by(delivery_token: job[:id])
-          unless order.blank?
+          if order.blank?
+            puts 'Order with for job id: ' + job[:id].to_s + ' not found.'
+          else
+
             status = coordinate_status_to_order_status(job[:progress])
+            puts 'New order status: ' + status.to_s
             unless status.blank?
               order.status_id = status
             end
@@ -29,7 +33,9 @@ class OrderStatus
               order.delivery_courier = courier
             end
 
-            unless order.save
+            if order.save
+              puts 'Successfully saved order'
+            else
               puts 'Failed to process orders status update: ' + order.errors.join(', ')
             end
           end
