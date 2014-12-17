@@ -52,7 +52,8 @@
 
           <h3>Your bottle is en-route to your chosen location.</h3>
 
-          <p>Make sure you're available at <%= @order.address.postcode %> for the courier to deliver your
+          <p>Make sure you're available at <%= @order.address.blank? ? '' : @order.address.postcode %> for the courier
+            to deliver your
             bottle. </p>
           <br/>
           <% unless @estimate.blank? %>
@@ -90,14 +91,12 @@
     var orderId = <%= @order.id %>;
     var orderData = {
         status: '<%= @order.status.label %>',
-        <% unless @order.address.latitude.blank? %>
+        <% unless @order.address.blank? || @order.address.latitude.blank? || @order.address.longitude.blank? %>
         customer_lat: <%= @order.address.latitude %>,
-        <% end %>
-        <% unless @order.address.longitude.blank? %>
         customer_lng: <%= @order.address.longitude %>,
         <% end %>
 
-        <% unless @order.warehouse.blank?  %>
+        <% unless @order.warehouse.blank? || @order.warehouse.address.blank?  %>
         warehouse_lat: <%= @order.warehouse.address.latitude %>,
         warehouse_lng: <%= @order.warehouse.address.longitude %>
         <% end %>
