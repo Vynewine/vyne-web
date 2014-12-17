@@ -1,7 +1,5 @@
 require 'resque/server'
 
-
-
 class AuthenticatedMiddleware
   def initialize(app)
     @app = app
@@ -17,3 +15,5 @@ class AuthenticatedMiddleware
 end
 
 Resque::Server.use(AuthenticatedMiddleware)
+
+Resque.redis = Rails.application.config.redis

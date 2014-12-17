@@ -9,5 +9,4 @@ task 'resque:setup' => :environment do
     ActiveRecord::Base.establish_connection(config)
   }
 
-  Resque.redis = Rails.application.config.redis
 end
