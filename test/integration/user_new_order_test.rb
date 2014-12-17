@@ -7,7 +7,7 @@ class UserNewOrderTest < ActiveSupport::TestCase
   def setup
     WebMock.allow_net_connect!
     @driver = Selenium::WebDriver.for :firefox
-    @base_url = 'http://localhost:3000/'
+    @base_url = 'http://localhost:5000/'
     @accept_next_alert = true
     @driver.manage.timeouts.implicit_wait = 10
     @verification_errors = []

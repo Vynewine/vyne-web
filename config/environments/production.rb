@@ -126,4 +126,6 @@ Rails.application.configure do
   config.google_coordinate_client_id = ENV['CLIENT_ID']
   config.google_coordinate_client_secret = ENV['CLIENT_SECRET']
 
+  config.redis = ENV['OPENREDIS_URL']
+
 end

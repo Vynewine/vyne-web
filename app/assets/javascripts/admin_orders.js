@@ -14,14 +14,3 @@ var ready = function () {
 
 $(document).on('page:load', ready);
 $(document).ready(ready);
-
-var checkOrdersStatus = function() {
-    $.get('/admin/orders/refresh_all');
-};
-
-setInterval(function () {
-    checkOrdersStatus();
-    console.log(Date.now());
-}, 10000);
-
-checkOrdersStatus();

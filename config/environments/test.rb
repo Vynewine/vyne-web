@@ -83,4 +83,6 @@ Rails.application.configure do
   config.google_coordinate_client_id = '662241065743-4jg7eectv71j6a4na8o327kid6m37tvd.apps.googleusercontent.com'
   config.google_coordinate_client_secret = '5kdwemy_dpS1adj3TFNvAkX2'
 
+  config.redis = 'redis://127.0.0.1:6379/0'
+
 end

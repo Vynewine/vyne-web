@@ -48,4 +48,8 @@ class User < ActiveRecord::Base
     text :first_name, :last_name, :email
   end
 
+  def admin?
+    has_role?(:admin) || has_role?(:superadmin)
+  end
+
 end

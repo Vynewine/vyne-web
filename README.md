@@ -18,6 +18,20 @@ CREATE DATABASE vyne_development WITH OWNER = vyne;
 ```
 
 ### Step 4:
+We are using Redis and Resque for Jobs
+#### Install Redis
+```
+brew install redis
+```
+Follow the instructions in the notes to start Redis on boot, or start it manually with redis-server
+
+Test if Redis is working
+```
+redis-cli ping
+```
+Should respond with PONG
+
+### Step 4:
 * Browse to vyne dir using the console and start it up:
 ```
 bundle install

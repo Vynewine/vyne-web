@@ -295,12 +295,16 @@ class ShopController < ApplicationController
     stripe_customer_id = payment.user.stripe_id
     value = (order.total_price * 100).to_i
 
-    results = StripeHelper.charge_card(value, stripe_card_id, stripe_customer_id)
-
-    if results[:errors].blank?
-      order.charge_id = results[:data].id
+    if current_user.admin?
+      order.charge_id = 'Admin'
     else
-      return results[:errors]
+      results = StripeHelper.charge_card(value, stripe_card_id, stripe_customer_id)
+
+      if results[:errors].blank?
+        order.charge_id = results[:data].id
+      else
+        return results[:errors]
+      end
     end
 
     nil

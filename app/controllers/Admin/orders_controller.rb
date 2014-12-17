@@ -2,7 +2,6 @@ class Admin::OrdersController < ApplicationController
   include ShutlHelper
   include StripeHelper
   include UserMailer
-  include CoordinateHelper
 
   layout 'admin'
   before_action :authenticate_user!
@@ -184,53 +183,6 @@ class Admin::OrdersController < ApplicationController
       redirect_to admin_orders_url(:status => @order.status_id), :flash => {:notice => 'Packing Completed for order: ' + @order.id.to_s}
     else
       redirect_to [:admin, @order], :flash => {:error => @order.errors.full_messages().join(', ')}
-    end
-  end
-
-  def refresh_all
-
-    orders_in_process = Order.where(:status => [Status.statuses[:pickup], Status.statuses[:in_transit]]).count
-
-    if orders_in_process > 0
-      jobs = get_jobs_status
-
-      puts json: jobs
-
-      if jobs[:errors].blank?
-
-        jobs[:data].each do |job|
-          order = Order.find_by(delivery_token: job[:id])
-          unless order.blank?
-            status = coordinate_status_to_order_status(job[:progress])
-            unless status.blank?
-              order.status_id = status
-            end
-            unless job[:assignee].blank?
-              courier = order.delivery_courier
-
-              if courier.blank?
-                courier = {:name => job[:assignee]}
-              else
-                courier[:name] = job[:assignee]
-              end
-              order.delivery_courier = courier
-            end
-
-            unless order.save
-              render json: order.errors, status: 500
-              return
-            end
-          end
-        end
-
-        render json: {success: true}, status: :ok
-        return
-      else
-        render json: {errors: jobs[:errors]}, status: 500
-        return
-      end
-    else
-      render json: {success: true}, status: :ok
     end
   end
 

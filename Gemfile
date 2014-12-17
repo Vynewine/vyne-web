@@ -113,3 +113,13 @@ gem 'google-api-client'
 
 #REST Client
 gem 'rest-client'
+
+#Resque for running Background Job (Depends on Redis, check README instructions for installing Redis)
+gem 'resque', '~> 1.25.2'
+
+#Scheduling Work on Job Queue
+gem 'clockwork'
+
+#More Robust Web Server
+gem 'unicorn'
+
