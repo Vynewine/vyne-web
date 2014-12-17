@@ -4,28 +4,31 @@ var ready = function () {
 
         var checkOrderStatus = function () {
 
-            $.get('/orders/' + orderId + '/status', function (data) {
+            if(orderId) {
+                $.get('/orders/' + orderId + '/status', function (data) {
 
-                switch(data.status) {
-                    case 'pending':
-                    case 'packing':
-                        setOrderView('order-placed');
-                        break;
-                    case 'pickup':
-                        setOrderView('order-pickup');
-                        break;
-                    case 'in transit':
-                        setOrderView('order-in-transit');
-                        renderMap(data);
-                        break;
-                    case 'delivered':
-                        setOrderView('order-delivered');
-                        break;
-                    default:
-                        setOrderView('order-placed');
-                        break;
-                }
-            });
+                    switch(data.status) {
+                        case 'pending':
+                        case 'packing':
+                            setOrderView('order-placed');
+                            break;
+                        case 'pickup':
+                            setOrderView('order-pickup');
+                            break;
+                        case 'in transit':
+                            setOrderView('order-in-transit');
+                            renderMap(data);
+                            break;
+                        case 'delivered':
+                            setOrderView('order-delivered');
+                            break;
+                        default:
+                            setOrderView('order-placed');
+                            break;
+                    }
+                });
+            }
+
         };
 
         var setOrderView = function (status) {
@@ -122,7 +125,7 @@ var ready = function () {
 
         };
 
-        if (orderData.status === 'in transit') {
+        if (orderData && orderData.status === 'in transit') {
             renderMap(orderData);
         }
 
