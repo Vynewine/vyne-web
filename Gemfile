@@ -18,9 +18,7 @@ end
 
 # Recommended by Heroku
 # Takes care of sending logs to STDOUT and Serving Static Assets
-group :production do
-  gem 'rails_12factor'
-end
+gem 'rails_12factor'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.3'

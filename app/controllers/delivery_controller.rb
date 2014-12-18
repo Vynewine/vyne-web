@@ -51,14 +51,34 @@ class DeliveryController < ApplicationController
       return
     else
 
-      courier_info = get_latest_courier_position(order)
-      unless courier_info[:data].blank?
-        order.delivery_courier = courier_info[:data]
+      key = 'order:' + order.id.to_s + ':courier_location'
 
-        order.save
+      DataCache.data.multi do
+        DataCache.set(key, Time.now.strftime('%F %T'))
+        DataCache.data.expire(key, 30)
       end
 
-      render json: courier_info
+      result = {
+          :errors => [],
+          :data => {
+              :name => '',
+              :lat => 0,
+              :lng => 0
+          }
+      }
+
+      unless order.delivery_courier.blank?
+        unless order.delivery_courier['lat'].blank? || order.delivery_courier['lng'].blank?
+          result[:data][:lat] = order.delivery_courier['lat']
+          result[:data][:lng] = order.delivery_courier['lng']
+        end
+
+        unless order.delivery_courier['name'].blank?
+          result[:data][:name] = order.delivery_courier['name']
+        end
+      end
+
+      render json: result
 
     end
   end

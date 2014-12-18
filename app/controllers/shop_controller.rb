@@ -295,7 +295,7 @@ class ShopController < ApplicationController
     stripe_customer_id = payment.user.stripe_id
     value = (order.total_price * 100).to_i
 
-    if current_user.admin?
+    if current_user.admin? && Rails.env.downcase  == 'production'
       order.charge_id = 'Admin'
     else
       results = StripeHelper.charge_card(value, stripe_card_id, stripe_customer_id)

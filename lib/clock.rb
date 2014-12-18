@@ -4,6 +4,11 @@ require 'clockwork'
 
 include Clockwork
 
-every(10.seconds, 'Queueing order status update') {
+every(10.seconds, 'Queueing order status update.') {
   Resque.enqueue(OrderStatus)
 }
+
+every(10.seconds, 'Queueing courier location.') {
+  Resque.enqueue(CourierLocation)
+}
+

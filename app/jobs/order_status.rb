@@ -3,6 +3,8 @@ include CoordinateHelper
 class OrderStatus
   @queue = :order_status
 
+  @logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
+
   def self.perform
     orders_in_process = Order.where(:status => [Status.statuses[:pickup], Status.statuses[:in_transit]]).count
 
@@ -14,12 +16,12 @@ class OrderStatus
         jobs[:data].each do |job|
           order = Order.find_by(delivery_token: job[:id])
           if order.blank?
-            puts 'Order with for job id: ' + job[:id].to_s + ' not found.'
+            log 'Order with for job id: ' + job[:id].to_s + ' not found.'
           else
-            puts 'Processing order with job id ' + job[:id].to_s
+            log 'Processing order with job id ' + job[:id].to_s
             status = coordinate_status_to_order_status(job[:progress])
             unless status.blank?
-              puts 'New order status: ' + status.to_s
+              log 'New order status: ' + status.to_s
               order.status_id = status
             end
             unless job[:assignee].blank?
@@ -34,20 +36,24 @@ class OrderStatus
             end
 
             if order.save
-              puts 'Successfully saved order'
+              log 'Successfully saved order'
             else
-              puts 'Failed to process orders status update: ' + order.errors.join(', ')
+              log 'Failed to process orders status update: ' + order.errors.join(', ')
             end
           end
         end
 
-        puts 'Successfully updated status for ' + orders_in_process.to_s + ' orders.'
+        log 'Successfully updated status for ' + orders_in_process.to_s + ' orders.'
       else
-        puts 'Failed to process orders status update: ' + jobs[:errors].join(', ')
+        log 'Failed to process orders status update: ' + jobs[:errors].join(', ')
       end
     else
-      puts 'Nothing to process'
+      log 'Nothing to process'
     end
-    puts 'Finished refreshing orders'
+    log 'Finished refreshing orders'
+  end
+
+  def self.log(message)
+    @logger.tagged('Order Status Job') { @logger.info message }
   end
 end

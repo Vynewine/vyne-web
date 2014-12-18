@@ -1,10 +1,13 @@
 ## README
 
 ### Step 1:
-Have Ruby 2.1.2 and Rails 4.1.4 ready to go.
+Make sore you have these installed.
+Ruby 2.1.2
+Rails 4.1.4
+Heroku Toolbelt
 
 ### Step 2:
-Clone the repository
+Clone this repository
 
 ### Step 3:
 This system uses PostgreSQL.
@@ -40,7 +43,7 @@ rake db:migrate
 rake db:seed
 rake sunspot:solr:start (only if you didn't start before)
 rake sunspot:reindex
-rails s
+foreman start
 ```
 
 ### Testing
