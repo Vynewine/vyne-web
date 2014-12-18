@@ -51,6 +51,8 @@ class DeliveryController < ApplicationController
       return
     else
 
+      Rails.logger.info 'Client ' + current_user.email + ' Requested map update for order: ' + order.id.to_s
+
       key = 'order:' + order.id.to_s + ':courier_location'
 
       DataCache.data.multi do

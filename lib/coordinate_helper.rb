@@ -9,6 +9,8 @@ module CoordinateHelper
   APP_NAME = 'Vyne Admin'
   APP_VERSION = '1.0.0'
 
+  @logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
+
   def google_client
 
     @client = Google::APIClient.new(
@@ -150,7 +152,13 @@ module CoordinateHelper
 
           data = JSON.parse(response.body)
 
-          Rails.logger.info data
+          msg = {
+            :order => order.id.to_s,
+            :courier => courier['name'],
+            :data => data
+          }
+
+          log msg
 
           lat = courier['lat']
           lng = courier['lng']
@@ -254,6 +262,10 @@ module CoordinateHelper
       else
         return nil
     end
+  end
+
+  def self.log(message)
+    @logger.tagged('Coordinate Helper') { @logger.info message }
   end
 
 end
