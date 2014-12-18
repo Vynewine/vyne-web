@@ -13,10 +13,6 @@ task 'resque:setup' => :environment do
     config = ActiveRecord::Base.configurations[Rails.env] ||
         Rails.application.config.database_configuration[Rails.env]
     config['adapter'] = 'postgis'
-
-    puts 'Conecting #############################################'
-    puts json: config
-
     ActiveRecord::Base.establish_connection(config)
   end
 
