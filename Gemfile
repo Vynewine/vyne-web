@@ -123,3 +123,7 @@ gem 'clockwork'
 #More Robust Web Server
 gem 'unicorn'
 
+#Web Monitoring with New Relic
+gem 'newrelic_rpm'
+
+
