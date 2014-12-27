@@ -90,7 +90,7 @@ Rails.application.routes.draw do
 
   # Actions for admins are under "/admin"
   namespace 'admin' do
-    root :to => 'wines#index'
+    root :to => 'orders#index'
     resources :types
     resources :bottlings
     resources :inventories,

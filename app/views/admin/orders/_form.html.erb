@@ -1,60 +1,76 @@
-<%= form_for([:admin, @order]) do |f| %>
-    <% if @order.errors.any? %>
-        <div id="error_explanation">
-          <h2><%= pluralize(@order.errors.count, "error") %> prohibited this order from being saved:</h2>
+<div class="row">
+  <div class="col-md-12">
+    <%= form_for([:admin, @order], :html => {:class => 'form-horizontal'}) do |f| %>
+        <% if @order.errors.any? %>
+            <div id="error_explanation">
+              <h2><%= pluralize(@order.errors.count, "error") %> prohibited this order from being saved:</h2>
 
-          <ul>
-            <% @order.errors.full_messages.each do |message| %>
-                <li><%= message %></li>
-            <% end %>
-          </ul>
+              <ul>
+                <% @order.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+        <% end %>
+
+        <div class="form-group">
+          <%= f.label :status_id, :class => 'col-sm-2 control-label' %>
+          <div class="col-sm-10">
+            <%= f.select(:status_id,
+                         options_from_collection_for_select(@statuses, 'id', 'label', :selected => @order.status_id), {},
+                         {:prompt => 'Choose a status', :class => 'form-control'}) %>
+          </div>
+
         </div>
+        <div class="form-group">
+          <%= f.label :client_id, :class => 'col-sm-2 control-label' %>
+          <div class="col-sm-10">
+            <%= f.text_field :client_id, :class => 'form-control' %>
+          </div>
+
+        </div>
+        <div class="form-group">
+          <%= f.label :address_id, :class => 'col-sm-2 control-label' %>
+          <div class="col-sm-10">
+            <%= f.text_field :address_id, :class => 'form-control' %>
+          </div>
+        </div>
+        <div class="form-group">
+          <%= f.label :payment_id, :class => 'col-sm-2 control-label' %>
+          <div class="col-sm-10">
+            <%= f.text_field :payment_id, :class => 'form-control' %>
+          </div>
+        </div>
+        <div class="form-group">
+          <%= f.label :warehouse_id, :class => 'col-sm-2 control-label' %>
+          <div class="col-sm-10">
+            <%= f.text_field :warehouse_id, :class => 'form-control' %>
+          </div>
+        </div>
+        <div class="form-group">
+          <%= f.label :advisor_id, :class => 'col-sm-2 control-label' %>
+          <div class="col-sm-10">
+            <%= f.text_field :advisor_id, :class => 'form-control' %>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="delivery_token" class="col-sm-2 control-label">Delivery Booking Id</label>
+          <div class="col-sm-10">
+            <%= f.text_field :delivery_token, :class => 'form-control' %>
+          </div>
+        </div>
+        <div class="form-group">
+          <%= f.label :delivery_cost, :class => 'col-sm-2 control-label' %>
+          <div class="col-sm-10">
+            <%= f.text_field :delivery_cost, :class => 'form-control' %>
+          </div>
+        </div>
+
+        <div class="col-sm-offset-2 col-sm-10">
+          <%= f.submit(:class => 'btn btn-success') %>
+        </div>
+
     <% end %>
+  </div>
+</div>
 
-    <div class="field">
-      <%= f.label :status_id %>
-      <br>
-      <%= f.select :status_id, options_from_collection_for_select(@statuses, "id", "label", :selected => @order.status_id),
-                   :prompt => "Choose a status" %>
-    </div>
-    <div class="field">
-      <%= f.label :client_id %>
-      <br>
-      <%= f.text_field :client_id %>
-    </div>
-    <div class="field">
-      <%= f.label :address_id %>
-      <br>
-      <%= f.text_field :address_id %>
-    </div>
-    <div class="field">
-      <%= f.label :payment_id %>
-      <br>
-      <%= f.text_field :payment_id %>
-    </div>
-    <div class="field">
-      <%= f.label :warehouse_id %>
-      <br>
-      <%= f.text_field :warehouse_id %>
-    </div>
-    <div class="field">
-      <%= f.label :advisor_id %>
-      <br>
-      <%= f.text_field :advisor_id %>
-    </div>
-    <div class="field">
-      Delivery Booking Id
-      <br>
-      <%= f.text_field :delivery_token %>
-    </div>
-    <div class="field">
-      <%= f.label :delivery_cost %>
-      <br>
-      <%= f.text_field :delivery_cost %>
-    </div>
-
-
-    <div class="actions">
-      <%= f.submit %>
-    </div>
-<% end %>
