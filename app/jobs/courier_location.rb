@@ -9,12 +9,10 @@ class CourierLocation
     orders_in_transit = Order.where(:status => Status.statuses[:in_transit])
 
     if orders_in_transit.blank?
-
       log 'Nothing to process'
-      #Rails.logger.info 'Courier Location - Nothing to process'
     else
       log 'processing ' + orders_in_transit.count.to_s + ' order(s).'
-      #Rails.logger.info 'Courier Location - processing ' + orders_in_transit.count.to_s + ' orders.'
+
       orders_in_transit.each do |order|
 
         key = 'order:' + order.id.to_s + ':courier_location'
@@ -25,9 +23,22 @@ class CourierLocation
         else
           log 'Courier Location - processing for order key: ' + key
           courier_info = get_latest_courier_position(order)
+
+          log courier_info
+
           unless courier_info[:data].blank?
+
+            unless order.delivery_courier.blank?
+              if order.delivery_courier['lat'].to_s != courier_info[:data][:lat].to_s
+                log '############## Courier '  + courier_info[:data][:name] + ' Location Changed ##############'
+                log courier_info[:data][:lat].to_s + ' - ' + courier_info[:data][:lng].to_s
+              end
+            end
+
             order.delivery_courier = courier_info[:data]
-            order.save
+            unless order.save
+              @logger.tagged('Courier Location Job') { @logger.error order.errors }
+            end
           end
         end
       end

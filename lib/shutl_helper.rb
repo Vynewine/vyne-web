@@ -146,7 +146,7 @@ module ShutlHelper
       }
       response[:data] = JSON.parse(connection.read_body)
 
-    rescue => exception
+    rescue Exception => exception
       message = "Error occurred while retrieving Booking information from Shutl: #{exception.class} - #{exception.message}"
       Rails.logger.error message
       Rails.logger.error exception.backtrace
@@ -189,7 +189,7 @@ module ShutlHelper
         response[:errors] = map_errors(shutl_response['errors'], 'Error occurred when registering warehouse with Shutl')
       end
 
-    rescue => exception
+    rescue Exception => exception
       message = "Error occurred while registering warehouse with Shutl: #{exception.class} - #{exception.message}"
       Rails.logger.error message
       Rails.logger.error exception.backtrace
@@ -232,7 +232,7 @@ module ShutlHelper
         response[:errors] = map_errors(shutl_response['errors'], 'Error occurred when updating warehouse with Shutl')
       end
 
-    rescue => exception
+    rescue Exception => exception
       message = "Error occurred while updating warehouse with Shutl: #{exception.class} - #{exception.message}"
       Rails.logger.error message
       Rails.logger.error exception.backtrace
@@ -275,7 +275,7 @@ module ShutlHelper
         response[:errors] = map_errors(shutl_response['errors'], 'Error occurred when retrieving warehouse info Shutl')
       end
 
-    rescue => exception
+    rescue Exception => exception
       message = "Error occurred while retrieving warehouse info from Shutl: #{exception.class} - #{exception.message}"
       Rails.logger.error message
       Rails.logger.error exception.backtrace

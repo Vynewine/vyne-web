@@ -212,7 +212,7 @@ module UserMailer
 
     rescue Mandrill::Error => exception
       Rails.logger.error "A Mandrill error occurred order_receipt: #{exception.class} - #{exception.message}"
-    rescue => exception
+    rescue Exception => exception
       message = "Error occurred while sending email order_receipt: #{exception.class} - #{exception.message} - for user: #{order.client.email}"
       Rails.logger.error message
       Rails.logger.error exception.backtrace
@@ -323,7 +323,7 @@ module UserMailer
 
   rescue Mandrill::Error => exception
     Rails.logger.error "A Mandrill error occurred order_receipt: #{exception.class} - #{exception.message}"
-  rescue => exception
+  rescue Exception => exception
     message = "Error occurred while sending email order_at_your_desk: #{exception.class} - #{exception.message} - for user: #{email}"
     Rails.logger.error message
     Rails.logger.error exception.backtrace
@@ -349,7 +349,7 @@ module UserMailer
 
   rescue Mandrill::Error => exception
     Rails.logger.error "A Mandrill error occurred order_receipt: #{exception.class} - #{exception.message}"
-  rescue => exception
+  rescue Exception => exception
     message = "Error occurred while sending email coming_soon_near_you: #{exception.class} - #{exception.message} - for user: #{email}"
     Rails.logger.error message
     Rails.logger.error exception.backtrace

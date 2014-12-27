@@ -1,3 +1,8 @@
+last_lat_time = Date.now();
+last_lng_time = Date.now();
+last_lat = 0;
+last_lng = 0;
+
 var ready = function () {
     if ($('body.orders').length) {
         var currentStatus = '';
@@ -108,6 +113,16 @@ var ready = function () {
 
             $.get('/delivery/get_courier_location?id=' + orderId, function (data) {
 
+                if(data.data.lat !== last_lat) {
+                    last_lat = data.data.lat;
+                    last_lat_time = Date.now();
+                }
+
+                if(data.data.lng !== last_lng) {
+                    last_lng = data.data.lng;
+                    last_lng_time = Date.now();
+                }
+
                 if(!wineMarker) {
                     var bottleIcon = L.icon({
                         iconUrl: '/wine-bottle.png',
@@ -116,6 +131,15 @@ var ready = function () {
                     });
                     wineMarker = L.marker([data.data.lat, data.data.lng], {icon: bottleIcon}).addTo(map);
                 } else {
+
+                    if(typeof(debug_location) !== 'undefined') {
+                        console.log(data.data.lat);
+                        console.log(Date.now() - last_lat_time);
+                        console.log(data.data.lng);
+                        console.log(Date.now() - last_lng_time);
+                    }
+
+
                     wineMarker.setLatLng(L.latLng(
                         data.data.lat,
                         data.data.lng)

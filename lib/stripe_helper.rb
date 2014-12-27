@@ -21,7 +21,7 @@ module StripeHelper
         Stripe::APIConnectionError,
         Stripe::StripeError => exception
       response[:errors] << handle_error(exception)
-    rescue => exception
+    rescue Exception => exception
       response[:errors] << handle_error(exception)
     ensure
       unless response[:errors].blank?
@@ -48,7 +48,7 @@ module StripeHelper
         Stripe::APIConnectionError,
         Stripe::StripeError => exception
       response[:errors] << handle_error(exception)
-    rescue => exception
+    rescue Exception => exception
       response[:errors] << handle_error(exception)
     ensure
       unless response[:errors].blank?
@@ -76,7 +76,7 @@ module StripeHelper
         Stripe::APIConnectionError,
         Stripe::StripeError => exception
       response[:errors] << handle_error(exception)
-    rescue => exception
+    rescue Exception => exception
       response[:errors] << handle_error(exception)
     ensure
       return response
@@ -108,7 +108,7 @@ module StripeHelper
         Stripe::APIConnectionError,
         Stripe::StripeError => exception
       response[:errors] << handle_error(exception)
-    rescue => exception
+    rescue Exception => exception
       response[:errors] << handle_error(exception)
     ensure
       return response

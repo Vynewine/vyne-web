@@ -9,7 +9,7 @@ module CoordinateHelper
   APP_NAME = 'Vyne Admin'
   APP_VERSION = '1.0.0'
 
-  @logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
+
 
   def google_client
 
@@ -112,7 +112,7 @@ module CoordinateHelper
 
       result[:data] = JSON.parse(response.body)
 
-    rescue => exception
+    rescue Exception => exception
       message = "Error occurred while retrieving Job Status from Google Coordinate: #{exception.class} - #{exception.message}"
       Rails.logger.error message
       Rails.logger.error exception.backtrace
@@ -158,8 +158,6 @@ module CoordinateHelper
             :data => data
           }
 
-          log msg
-
           lat = courier['lat']
           lng = courier['lng']
           collection_time = courier['collection_time']
@@ -194,7 +192,7 @@ module CoordinateHelper
         end
       end
 
-    rescue => exception
+    rescue Exception => exception
       message = "Error occurred while retrieving Courier Status: #{exception.class} - #{exception.message}"
       Rails.logger.error message
       Rails.logger.error exception.backtrace
@@ -243,7 +241,7 @@ module CoordinateHelper
         end
       end
 
-    rescue => exception
+    rescue Exception => exception
       message = "Error occurred while retrieving Jobs status: #{exception.class} - #{exception.message}"
       Rails.logger.error message
       Rails.logger.error exception.backtrace
@@ -264,8 +262,12 @@ module CoordinateHelper
     end
   end
 
-  def self.log(message)
-    @logger.tagged('Coordinate Helper') { @logger.info message }
+  def log(message)
+    logger.tagged('Coordinate Helper') { @logger.info message }
+  end
+
+  def logger
+    @logger ||= ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
   end
 
 end

@@ -111,7 +111,7 @@ class ShopController < ApplicationController
       else
         render json: @order.errors, status: :unprocessable_entity
       end
-    rescue => exception
+    rescue Exception => exception
       logger.error "#{exception.class} - #{exception.message}"
       logger.error exception.backtrace
       render json: ['We\re sorry by there was a server error.', exception.message], status: :internal_server_error

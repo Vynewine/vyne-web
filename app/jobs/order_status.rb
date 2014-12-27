@@ -50,7 +50,6 @@ class OrderStatus
     else
       log 'Nothing to process'
     end
-    log 'Finished refreshing orders'
   end
 
   def self.log(message)

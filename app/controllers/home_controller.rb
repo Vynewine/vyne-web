@@ -73,7 +73,7 @@ class HomeController < ApplicationController
     rescue Mailchimp::ListAlreadySubscribedError
       render :json => {:errors => ['You are already subscribed to the list']}, :status => 422
       return
-    rescue => exception
+    rescue Exception => exception
       message = "Error while signing up user to mailing list on home page. #{exception.class} - #{exception.message}"
       logger.error message
       logger.error exception.backtrace

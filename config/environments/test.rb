@@ -41,7 +41,7 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000, scheme: 'http' }
   # In production, :host should be set to the actual host of your application.
 
-  config.log_level = :debug
+  config.log_level = :error
 
   #Mandrill API
   config.mandrill = 'ipcLBLgQRHya2q3jvpPQsw'
