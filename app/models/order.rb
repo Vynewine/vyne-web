@@ -15,6 +15,8 @@ class Order < ActiveRecord::Base
 
   enum delivery_type: { google_coordinate: 'google_coordinate', shutl: 'shutl' }
 
+  self.per_page = 15
+
   def total_price
     if (order_items.map { |item| item.price }).include?(nil)
       nil

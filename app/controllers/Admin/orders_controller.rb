@@ -14,7 +14,8 @@ class Admin::OrdersController < ApplicationController
   # GET /orders.json
   def index
 
-    @orders = Order.includes(order_items: [{food_items: [:food, :preparation]}, :type, :occasion, :wine]).order('id DESC')
+    @orders = Order.includes(order_items: [{food_items: [:food, :preparation]}, :type, :occasion, :wine]).order('id DESC').page(params[:page])
+
 
     if params[:status].blank?
       @orders = @orders.where(:status => Status.statuses[:pending])

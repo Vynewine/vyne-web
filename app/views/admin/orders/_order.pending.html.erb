@@ -18,13 +18,13 @@
                 <tr>
                   <% if rowspan == 2 && index == 0 %>
                       <td rowspan="2">
-                        <%= link_to admin_order_path(order) do %>
+                        <%= link_to admin_order_path(order), class: 'btn btn-default' do %>
                             <i class="flaticon stroke zoom-1"></i>
                         <% end %>
                       </td>
                   <% elsif index == 0 %>
                       <td>
-                        <%= link_to admin_order_path(order) do %>
+                        <%= link_to admin_order_path(order), class: 'btn btn-default' do %>
                             <i class="flaticon stroke zoom-1"></i>
                         <% end %>
                       </td>
