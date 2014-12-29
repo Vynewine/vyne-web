@@ -97,31 +97,53 @@ module ShutlHelper
 
   def shutl_book(quote, order)
 
-    token = shutl_token
-
-    domain = Rails.application.config.shutl_url
-    url = URI("#{domain}/bookings")
-
-    params = {
-        :booking => {
-            :quote_id => quote,
-            :merchant_booking_reference => "order_#{order.id}"
-        }
+    result = {
+        :errors => [],
+        :data => ''
     }
 
-    Rails.logger.info params
+    begin
 
-    headers = {
-        'Authorization' => "Bearer #{token}"
-    }
+      token = shutl_token
+      domain = Rails.application.config.shutl_url
+      url = URI("#{domain}/bookings")
 
-    req = Net::HTTP::Post.new(url, headers)
-    req.body = params.to_json
-    res = Net::HTTP::start(url.hostname, url.port, :use_ssl => url.scheme == 'https') { |http|
-      http.request(req)
-    }
+      params = {
+          :booking => {
+              :quote_id => quote,
+              :merchant_booking_reference => "order_#{order.id}"
+          }
+      }
 
-    res
+      Rails.logger.info params
+
+      headers = {
+          'Authorization' => "Bearer #{token}"
+      }
+
+      req = Net::HTTP::Post.new(url, headers)
+      req.body = params.to_json
+      res = Net::HTTP::start(url.hostname, url.port, :use_ssl => url.scheme == 'https') { |http|
+        http.request(req)
+      }
+
+      result[:data] = JSON.parse(res.read_body)
+
+      Rails.logger.info result[:data]
+
+      unless result[:data]['errors'].blank?
+        result[:errors] << result[:data]['errors'].to_json
+      end
+
+    rescue Exception => exception
+      message = "Error occurred while booking Shutl delivery: #{exception.class} - #{exception.message}"
+      Rails.logger.error message
+      Rails.logger.error exception.backtrace
+      result[:errors] << message
+    ensure
+      return result
+    end
+
   end
 
   # Gets information of booking for a given order.

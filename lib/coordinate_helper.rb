@@ -10,7 +10,6 @@ module CoordinateHelper
   APP_VERSION = '1.0.0'
 
 
-
   def google_client
 
     @client = Google::APIClient.new(
@@ -88,6 +87,39 @@ module CoordinateHelper
   end
 
   def cancel_job(order)
+    result = {
+        :errors => [],
+        :data => ''
+    }
+
+    if order.delivery_token.blank?
+      result[:errors] << 'Order Job ID is Missing'
+      return result
+    end
+
+    begin
+
+      google_token = Token.find_by_key(GOOGLE_COORDINATE_TOKEN)
+      token = google_token.fresh_token
+      puts token
+      team_id = Rails.application.config.google_coordinate_team_id
+
+      response = RestClient.put("https://www.googleapis.com/coordinate/v1/teams/#{team_id}/jobs/#{order.delivery_token}?progress=OBSOLETE", {},
+                                {
+                                    'Authorization' => "Bearer #{token}",
+                                    'User-Agent' => 'Vyne Admin/1.0.0'
+                                })
+
+      result[:data] = JSON.parse(response.body)
+
+    rescue Exception => exception
+      message = "Error occurred while canceling Google Coordinate Job: #{exception.class} - #{exception.message}"
+      Rails.logger.error message
+      Rails.logger.error exception.backtrace
+      result[:errors] << message
+    ensure
+      return result
+    end
 
   end
 
@@ -151,12 +183,6 @@ module CoordinateHelper
                                     }
 
           data = JSON.parse(response.body)
-
-          msg = {
-            :order => order.id.to_s,
-            :courier => courier['name'],
-            :data => data
-          }
 
           lat = courier['lat']
           lng = courier['lng']

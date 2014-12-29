@@ -163,6 +163,22 @@ class CoordinateHelperTest < ActiveSupport::TestCase
 
   end
 
+  test 'Can cancel Job' do
+
+    Token.create!({
+                      :key => 'google_coordinate',
+                      :access_token => "ya29.6wAxoEhWSkC72iTVMRa4WOOS0SvmD1D7aT0z9Ekj2OowueMcskO8sPgVGlS9rqCipseBY2P1n0Imww",
+                      :refresh_token => "1/7qS0zkINFvC1d803uoFKVDO_Xrsi-z2VH84UxfP5lQUMEudVrK5jSpoR30zcRFq6",
+                      :expires_at => "2014-12-29 19:48:02.448894"
+                  })
+
+    order = orders(:order1)
+    order.delivery_token = '1883650'
+    results = cancel_job(order)
+    #results = get_job_status(order)
+    puts results
+  end
+
   def location_response
     {
         "kind"=>"coordinate#locationList",

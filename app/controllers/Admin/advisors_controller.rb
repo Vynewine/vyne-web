@@ -6,7 +6,7 @@ require 'json'
 class Admin::AdvisorsController < ApplicationController
   include ShutlHelper
   include UserMailer
-
+  include CoordinateHelper
 
   layout 'admin'
   before_action :authenticate_user!
@@ -50,11 +50,14 @@ class Admin::AdvisorsController < ApplicationController
   end
 
   def complete
-    logger.warn 'Complete order request'
 
     order = Order.find(params[:order])
 
-    #0 Save Delivery Quote
+    if order.delivery_provider == 'google_coordinate' && !order.delivery_token.blank?
+      cancel_job(order)
+    end
+
+    # Save Delivery Quote
     quote = {
         :id => params[:quote],
         :price => params[:price],
@@ -69,80 +72,41 @@ class Admin::AdvisorsController < ApplicationController
 
     order.delivery_quote = quote
 
-    #1 Charge Card
+    # Schedule Shutl
+    if order.save
 
-    payment_data = order.payment
-    stripe_card_id = payment_data.stripe_card_id
-    stripe_customer_id = payment_data.user.stripe_id
-    value = (order.total_price * 100).to_i
+      booking_response = shutl_book(params[:quote], order)
 
-    if order.status_id != 2
-      charge_details = charge_card(value, stripe_card_id, stripe_customer_id)
+      if booking_response[:errors].blank?
 
-      if charge_details.paid
-        order.status_id = 2 # paid
-      end
+        booking_hash = booking_response[:data]
+        booking_ref = nil
 
-      unless charge_details.id.blank?
-        order.charge_id = charge_details.id
-      end
-    end
-
-    #2 Schedule Shutl
-
-    if order.status_id == 2
-      if order.save
-
-        booking_response = shutl_book(params[:quote], order)
-
-        if booking_response.is_a?(Net::HTTPSuccess)
-
-          booking_hash = JSON.parse(booking_response.read_body)
-          booking_ref = nil
-
-          unless booking_hash.blank?
-            unless booking_hash['booking'].blank?
-              unless booking_hash['booking']['reference'].blank?
-                booking_ref = booking_hash['booking']['reference']
-              end
+        unless booking_hash.blank?
+          unless booking_hash['booking'].blank?
+            unless booking_hash['booking']['reference'].blank?
+              booking_ref = booking_hash['booking']['reference']
             end
           end
+        end
 
-          if booking_ref.nil?
-            @message = "error:Couldn't do the booking."
-            puts json: booking_response
-          else
-            order.delivery_token = booking_ref
-            order.delivery_status = booking_hash
-            order.status_id = 4 #pickup
-            if order.save
-              @message = 'Success'
-
-              #3 Reduce Inventory Count
-
-              order.order_items.each do |item|
-                inventory = Inventory.find_by(:wine => item.wine, :warehouse => order.warehouse)
-                inventory.quantity = inventory.quantity - 1
-                inventory.save #TODO: Handle inventory update failure
-              end
-
-            else
-              @message = "error:Couldn't save order after booking"
-            end
-          end
+        if booking_ref.nil?
+          @message = 'Booking Reference is missing'
         else
-          puts json: booking_response
-          booking_error = JSON.parse(booking_response.read_body)
-          puts booking_error
-          @message = "error:Couldn't do the booking. " + booking_error['errors'].to_json
+          order.delivery_token = booking_ref
+          order.delivery_status = booking_hash
+          order.delivery_provider = 'shutl'
+          if order.save
+            @message = 'Success'
+          else
+            @message = "Couldn't save order after booking"
+          end
         end
       else
-        @message = "error:Couldn't save order after booking"
+        @message = booking_response[:errors]
       end
     else
-      @message = "error:The payment was not processed. #{charge_details.description}"
-      order.status_id = 3 #payment failed
-      order.save
+      @message = order.errors
     end
 
     if @message == 'Success'
@@ -187,7 +151,7 @@ class Admin::AdvisorsController < ApplicationController
 
     @search.results.each do |wine|
 
-      inventory = wine.inventories.select{ |inv| inv.warehouse == order.warehouse }.first
+      inventory = wine.inventories.select { |inv| inv.warehouse == order.warehouse }.first
 
       wines << {
           :countryCode => wine.producer.country.alpha_2,

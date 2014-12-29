@@ -207,7 +207,7 @@
           <div class="row">
             <div class="col-xs-12">
 
-
+              <%= link_to 'Edit', edit_admin_order_path(@order), :class => 'btn btn-primary' %>
               <% if @order.charge_id.blank? %>
                   <%= link_to 'Charge Only', admin_order_charge_path(@order), {
                                                    :class => 'btn btn-primary',
@@ -216,9 +216,15 @@
                                            } %>
 
               <% end %>
-              <% if @order.delivery_token.blank? %>
-                  <%= link_to 'Get Delivery Quotes', admin_advise_choose_path(:order => @order.id), {:class => 'btn btn-primary'} %>
+
+              <% if @order.status_id != Status.statuses[:cancelled] %>
+                  <% if @order.delivery_provider == Order.delivery_types[:google_coordinate] %>
+                      <%= link_to 'Schedule Shutl', admin_advise_choose_path(:order => @order.id), {:class => 'btn btn-primary'} %>
+                  <% else %>
+                    <% #TODO Schedule Google Coordinate %>
+                  <% end %>
               <% end %>
+
               <% if [4, 5, 6].include?(@order.status.id) %>
                   <%= link_to 'Re-Send Order Receipt', admin_order_send_receipt_path(@order), {
                                                              :class => 'btn btn-primary',
@@ -226,9 +232,10 @@
                                                              :data => {:confirm => 'This will email order receipt to the client and a merchant.'}
                                                      } %>
               <% end %>
-              <%= link_to 'Edit', edit_admin_order_path(@order), :class => 'btn btn-primary' %>
 
-              <%= link_to 'Cancel', admin_order_cancel_path(@order), method: :post, data: {confirm: 'Are you sure? Payments will be refunded and Shutl will get cancelled.'}, :class => 'btn btn-warning' %>
+              <% if @order.status_id != Status.statuses[:cancelled] %>
+                  <%= link_to 'Cancel Order', admin_order_cancel_path(@order), method: :post, data: {confirm: 'Are you sure? Payments will be refunded and Shutl will get cancelled.'}, :class => 'btn btn-warning' %>
+              <% end %>
 
             </div>
           </div>
@@ -250,7 +257,10 @@
                   <% if !@order.delivery_status.nil? %>
                       <div id="delivery-info" style="white-space: pre; font-family: monospace;"></div>
                       <script>
-                          var deliveryInfo = JSON.parse('<%= @order.delivery_status_json.html_safe %>');
+                          <% delivery_info = @order.delivery_status
+                          delivery_info['booking']['carrier_name'] = h(delivery_info['booking']['carrier_name'])
+                          %>
+                          var deliveryInfo = JSON.parse('<%= delivery_info.to_json.html_safe %>');
                           $('#delivery-info').text(JSON.stringify(deliveryInfo, null, 4));
                       </script>
                   <% end %>

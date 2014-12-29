@@ -115,17 +115,22 @@ class Admin::OrdersController < ApplicationController
 
     #Cancel Shutl delivery if already booked
     unless @order.delivery_token.blank?
-      cancel_booking(@order.delivery_token)
+      if @order.delivery_provider == 'google_coordinate'
+        cancel_job(@order)
+      else
+        cancel_booking(@order.delivery_token)
+      end
+
     end
 
-    @order.status_id = 7
+    @order.status_id = Status.statuses[:cancelled]
 
-    #TODO Handle save errors
-    @order.save
-
-    respond_to do |format|
-      format.html { redirect_to [:admin, @order], notice: 'Order was successfully cancelled.' }
+    if @order.save
+      redirect_to [:admin, @order], notice: 'Order was successfully cancelled.'
+    else
+      redirect_to [:admin, @order], :flash => {:error => @order.errors.full_messages().join(', ')}
     end
+
   end
 
   def charge
