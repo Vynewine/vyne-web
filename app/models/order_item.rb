@@ -6,6 +6,7 @@ class OrderItem < ActiveRecord::Base
   belongs_to :occasion
   belongs_to :type
   belongs_to :category
+  belongs_to :inventory
   has_many :food_items
 
   def preferences

@@ -332,9 +332,10 @@ var adminReady = function() {
                             .attr('src', wine.countryFlag)
 
                     ),
+                    $('<td>').html(wine.vendor_sku),
                     $('<td>').addClass('name').html(
                         wine.name +
-                        ' ' + wine.vintage + (wine.bottle_size ? ' - ' + wine.bottle_size + 'CL' : '')
+                        ' - ' + wine.vintage + ' - ' + wine.producer + (wine.bottle_size ? ' - ' + wine.bottle_size + 'CL' : '')
                     ),
                     $('<td>').addClass('region').html(region.join(', ')),
                     $('<td>').addClass('type').html(
@@ -365,6 +366,7 @@ var adminReady = function() {
                     $('<tr>').append(
                         $('<th>').html(''),
                         $('<th>').html(''),
+                        $('<th>').html('SKU'),
                         $('<th>').html('Name'),
                         $('<th>').html('Region'),
                         $('<th>').html('Type'),

@@ -162,6 +162,7 @@
           <td><%= item.category.name %></td>
           <td>
             <%= item.wine.nil? ? 'Not Selected' : item.wine.display_name %>
+            <%= item.inventory.nil? ? '' : ' - ' + item.inventory.vendor_sku %>
           </td>
           <td>
             £<%= item.cost %>

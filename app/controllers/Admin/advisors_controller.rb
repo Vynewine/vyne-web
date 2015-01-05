@@ -34,6 +34,7 @@ class Admin::AdvisorsController < ApplicationController
 
     @order_item.wine = wine
     @order_item.cost = inventory.cost
+    @order_item.inventory = inventory
 
     @order.advisor = current_user
     @order_item.save
@@ -171,7 +172,9 @@ class Admin::AdvisorsController < ApplicationController
           :price => inventory.category.price,
           :quantity => inventory.quantity,
           :category => inventory.category.name + ' - £' + inventory.category.price.to_s,
-          :bottle_size => wine.bottle_size
+          :bottle_size => wine.bottle_size,
+          :vendor_sku => inventory.vendor_sku,
+          :producer => wine.producer.name
       }
     end
 

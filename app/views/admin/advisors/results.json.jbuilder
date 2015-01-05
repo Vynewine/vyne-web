@@ -15,6 +15,8 @@ json.array!(@results) do |wine|
   json.vintage wine[:vintage]
   json.single_estate wine[:single_estate]
   json.bottle_size wine[:bottle_size].blank? ? '' : wine[:bottle_size].to_i
+  json.vendor_sku wine[:vendor_sku]
+  json.producer wine[:producer]
 
   # Relationships
   json.type wine[:type]

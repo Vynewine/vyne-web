@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141215155904) do
+ActiveRecord::Schema.define(version: 20150105113233) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -283,9 +283,11 @@ ActiveRecord::Schema.define(version: 20141215155904) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.integer  "inventory_id"
   end
 
   add_index "order_items", ["deleted_at"], :name => "index_order_items_on_deleted_at"
+  add_index "order_items", ["inventory_id"], :name => "index_order_items_on_inventory_id"
   add_index "order_items", ["occasion_id"], :name => "index_order_items_on_occasion_id"
   add_index "order_items", ["order_id"], :name => "index_order_items_on_order_id"
   add_index "order_items", ["type_id"], :name => "index_order_items_on_type_id"

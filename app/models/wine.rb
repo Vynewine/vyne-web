@@ -58,6 +58,10 @@ class Wine < ActiveRecord::Base
   searchable do
     text :name
 
+    text :producer do
+      producer.name
+    end
+
     # Single relationships
     text :country_name do
       producer.country.name
@@ -101,10 +105,18 @@ class Wine < ActiveRecord::Base
 
     text :note
 
+    text :sku do
+      unless inventories.blank?
+        inventories.map { |inv| inv.vendor_sku }
+      end
+    end
+
 
     integer :warehouse_ids, :multiple => true
 
     integer :category_ids, :multiple => true
+
+
 
     boolean :single_estate
 

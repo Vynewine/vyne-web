@@ -14,7 +14,7 @@ class Admin::OrdersController < ApplicationController
   # GET /orders.json
   def index
 
-    @orders = Order.includes(order_items: [{food_items: [:food, :preparation]}, :type, :occasion, :wine]).order('id DESC').page(params[:page])
+    @orders = Order.includes(order_items: [{food_items: [:food, :preparation]}, :type, :occasion, :wine, :inventory]).order('id DESC').page(params[:page])
 
 
     if params[:status].blank?
