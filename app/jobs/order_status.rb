@@ -6,7 +6,7 @@ class OrderStatus
   @logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
 
   def self.perform
-    orders_in_process = Order.where(:status => [Status.statuses[:pickup], Status.statuses[:in_transit]]).count
+    orders_in_process = Order.where(:status => [Status.statuses[:pickup], Status.statuses[:in_transit]], :delivery_provider => Order.delivery_types[:google_coordinate]).count
 
     if orders_in_process > 0
       jobs = get_jobs_status
