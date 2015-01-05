@@ -258,7 +258,10 @@
                       <div id="delivery-info" style="white-space: pre; font-family: monospace;"></div>
                       <script>
                           <% delivery_info = @order.delivery_status
-                          delivery_info['booking']['carrier_name'] = h(delivery_info['booking']['carrier_name'])
+                          unless delivery_info.blank? || delivery_info['booking'].blank? ||  delivery_info['booking']['carrier_name'].blank?
+                            delivery_info['booking']['carrier_name'] = h(delivery_info['booking']['carrier_name'])
+                          end
+
                           %>
                           var deliveryInfo = JSON.parse('<%= delivery_info.to_json.html_safe %>');
                           $('#delivery-info').text(JSON.stringify(deliveryInfo, null, 4));

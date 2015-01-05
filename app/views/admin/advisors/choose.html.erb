@@ -1,89 +1,103 @@
-<h3>
-  <div>Wine Cost Total: £<%= @order.total_wine_cost %> - Order Price Total £<%= @order.total_price %></div>
-</h3>
+<div class="row">
+  <div class="col-md-12">
+    <h3>
+      Wine Cost Total: £<%= @order.total_wine_cost %> - Order Price Total £<%= @order.total_price %>
+    </h3>
+  </div>
+</div>
 
 <% best_quote = @quotes['quote_collection']['best_quote']
    unless best_quote.blank? %>
-    <h4>Best Quote</h4>
-    <table border="1" class="list-table">
-      <thead>
-      <tr>
-        <td>Pickup Start</td>
-        <td>Pickup Finish</td>
-        <td>Delivery Start</td>
-        <td>Delivery Finish</td>
-        <td>Offer Valid Until</td>
-        <td>Vehicle</td>
-        <td>Promise</td>
-        <td>Price (merchant/customer)</td>
-        <td></td>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td><%= Time.parse(best_quote['pickup_start']).strftime("%d/%m/%Y - %H:%M") %></td>
-        <td><%= Time.parse(best_quote['pickup_finish']).strftime("%d/%m/%Y - %H:%M") %></td>
-        <td><%= Time.parse(best_quote['delivery_start']).strftime("%d/%m/%Y - %H:%M") %></td>
-        <td><%= Time.parse(best_quote['delivery_finish']).strftime("%d/%m/%Y - %H:%M") %></td>
-        <td><%= Time.parse(best_quote['valid_until']).strftime("%d/%m/%Y - %H:%M") %></td>
-        <td><%= best_quote['vehicle'] %></td>
-        <td><%= best_quote['delivery_promise_text'] %></td>
-        <td>£<%= (best_quote['merchant_price'].to_f / 100) %>/£<%= (best_quote['customer_price'].to_f / 100) %></td>
-        <td data-id="<%= best_quote['id'] %>"
-            data-price="<%= (best_quote['merchant_price'].to_f / 100) %>"
-            data-vehicle="<%= best_quote['vehicle'] %>"
-            data-pickup_start="<%= best_quote['pickup_start'] %>"
-            data-pickup_finish="<%= best_quote['pickup_finish'] %>"
-            data-delivery_start="<%= best_quote['delivery_start'] %>"
-            data-delivery_finish="<%= best_quote['delivery_finish'] %>"
-            data-valid_until="<%= best_quote['valid_until'] %>"
-            data-delivery_promise="<%= best_quote['delivery_promise'] %>">
-          <a href="#" class="choose-quote">Choose</a>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Best Quote</h3>
+      </div>
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th>Pickup Start</th>
+          <th>Pickup Finish</th>
+          <th>Delivery Start</th>
+          <th>Delivery Finish</th>
+          <th>Offer Valid Until</th>
+          <th>Vehicle</th>
+          <th>Promise</th>
+          <th>Price (merchant/customer)</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td><%= Time.parse(best_quote['pickup_start']).strftime("%d/%m/%Y - %H:%M") %></td>
+          <td><%= Time.parse(best_quote['pickup_finish']).strftime("%d/%m/%Y - %H:%M") %></td>
+          <td><%= Time.parse(best_quote['delivery_start']).strftime("%d/%m/%Y - %H:%M") %></td>
+          <td><%= Time.parse(best_quote['delivery_finish']).strftime("%d/%m/%Y - %H:%M") %></td>
+          <td><%= Time.parse(best_quote['valid_until']).strftime("%d/%m/%Y - %H:%M") %></td>
+          <td><%= best_quote['vehicle'] %></td>
+          <td><%= best_quote['delivery_promise_text'] %></td>
+          <td>£<%= (best_quote['merchant_price'].to_f / 100) %>/£<%= (best_quote['customer_price'].to_f / 100) %></td>
+          <td data-id="<%= best_quote['id'] %>"
+              data-price="<%= (best_quote['merchant_price'].to_f / 100) %>"
+              data-vehicle="<%= best_quote['vehicle'] %>"
+              data-pickup_start="<%= best_quote['pickup_start'] %>"
+              data-pickup_finish="<%= best_quote['pickup_finish'] %>"
+              data-delivery_start="<%= best_quote['delivery_start'] %>"
+              data-delivery_finish="<%= best_quote['delivery_finish'] %>"
+              data-valid_until="<%= best_quote['valid_until'] %>"
+              data-delivery_promise="<%= best_quote['delivery_promise'] %>">
+            <a href="#" class="choose-quote">Choose</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
 <% end %>
-<h4>Quotes</h4>
-<table border="1" class="list-table">
-  <thead>
-  <tr>
-    <td>Pickup Start</td>
-    <td>Pickup Finish</td>
-    <td>Delivery Start</td>
-    <td>Delivery Finish</td>
-    <td>Offer Valid Until</td>
-    <td>Vehicle</td>
-    <td>Price (merchant)</td>
-    <td></td>
-  </tr>
-  </thead>
-  <tbody>
-  <% @quotes['quote_collection']['quotes'].each do |quote| %>
-      <tr>
-        <td><%= Time.parse(quote['pickup_start']).strftime("%d/%m/%Y - %H:%M") %></td>
-        <td><%= Time.parse(quote['pickup_finish']).strftime("%d/%m/%Y - %H:%M") %></td>
-        <td><%= Time.parse(quote['delivery_start']).strftime("%d/%m/%Y - %H:%M") %></td>
-        <td><%= Time.parse(quote['delivery_finish']).strftime("%d/%m/%Y - %H:%M") %></td>
-        <td><%= Time.parse(quote['valid_until']).strftime("%d/%m/%Y - %H:%M") %></td>
-        <td><%= quote['vehicle'] %></td>
-        <td>£<%= (quote['merchant_price'].to_f / 100) %></td>
-        <td data-id="<%= quote['id'] %>"
-            data-price="<%= (quote['merchant_price'].to_f / 100) %>"
-            data-vehicle="<%= quote['vehicle'] %>"
-            data-pickup_start="<%= quote['pickup_start'] %>"
-            data-pickup_finish="<%= quote['pickup_finish'] %>"
-            data-delivery_start="<%= quote['delivery_start'] %>"
-            data-delivery_finish="<%= quote['delivery_finish'] %>"
-            data-valid_until="<%= quote['valid_until'] %>"
-            >
-          <a href="#" class="choose-quote">Choose</a>
-        </td>
-      </tr>
-  <% end %>
-  </tbody>
-</table>
+
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Quotes</h3>
+  </div>
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>Pickup Start</th>
+      <th>Pickup Finish</th>
+      <th>Delivery Start</th>
+      <th>Delivery Finish</th>
+      <th>Offer Valid Until</th>
+      <th>Vehicle</th>
+      <th>Price (merchant/customer)</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @quotes['quote_collection']['quotes'].each do |quote| %>
+        <tr>
+          <td><%= Time.parse(quote['pickup_start']).strftime("%d/%m/%Y - %H:%M") %></td>
+          <td><%= Time.parse(quote['pickup_finish']).strftime("%d/%m/%Y - %H:%M") %></td>
+          <td><%= Time.parse(quote['delivery_start']).strftime("%d/%m/%Y - %H:%M") %></td>
+          <td><%= Time.parse(quote['delivery_finish']).strftime("%d/%m/%Y - %H:%M") %></td>
+          <td><%= Time.parse(quote['valid_until']).strftime("%d/%m/%Y - %H:%M") %></td>
+          <td><%= quote['vehicle'] %></td>
+          <td>£<%= (quote['merchant_price'].to_f / 100) %></td>
+          <td data-id="<%= quote['id'] %>"
+              data-price="<%= (quote['merchant_price'].to_f / 100) %>"
+              data-vehicle="<%= quote['vehicle'] %>"
+              data-pickup_start="<%= quote['pickup_start'] %>"
+              data-pickup_finish="<%= quote['pickup_finish'] %>"
+              data-delivery_start="<%= quote['delivery_start'] %>"
+              data-delivery_finish="<%= quote['delivery_finish'] %>"
+              data-valid_until="<%= quote['valid_until'] %>"
+          >
+            <a href="#" class="choose-quote">Choose</a>
+          </td>
+        </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+
 
 <form method="post" action="/admin/advise/complete" id="choose-form">
   <input type="hidden" id="order" name="order" value="<%= @order.id %>"/>
@@ -103,8 +117,7 @@
     $('.choose-quote').click(function () {
         var $a = $(event.target);
         var $td = $a.parent();
-        var response = confirm("You chose to schedule: " + $td.data('vehicle') + ' - for: ' + $td.data('price') +
-                '\nWe will charge customer and schedule delivery.');
+        var response = confirm("You chose to schedule: " + $td.data('vehicle') + ' - for: ' + $td.data('price'));
         if (response == true) {
             $('#quote').val($td.data('id'));
             $('#price').val($td.data('price'));
