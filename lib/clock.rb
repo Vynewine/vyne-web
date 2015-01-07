@@ -12,3 +12,6 @@ every(10.seconds, 'Queueing courier location.') {
   Resque.enqueue(CourierLocation)
 }
 
+every(30.seconds, 'Queueing order reminder notification') {
+  Resque.enqueue(OrderReminderNotification)
+}

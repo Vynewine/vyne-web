@@ -5,3 +5,11 @@ one:
 two:
   key: 123abc
   registration_id: 543wdre33
+
+three:
+  key: xyz123
+  registration_id: 34345443ew
+
+four:
+  key: xyz456
+  registration_id: fre34543e4e
