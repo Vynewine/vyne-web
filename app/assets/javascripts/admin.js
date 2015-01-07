@@ -249,6 +249,21 @@ var adminReady = function() {
             $('#update-form').submit();
         };
 
+        $('#wine-additional-info').on('show.bs.modal', function (event) {
+
+            var $tr = $(event.relatedTarget).closest('tr');
+            var composition = $tr.data('composition');
+            var singleEstate = $tr.data('single-estate');
+
+            var modal = $(this);
+            modal.find('#modal-composition').text(composition);
+            if(singleEstate) {
+                modal.find('#modal-single-estate').text('Single Estate');
+            } else {
+                modal.find('#modal-single-estate').text('');
+            }
+        });
+
         var parseWarehouseStatuses = function(availabilityList) {
             var d = new Date();
             var w = d.getDay();
@@ -290,11 +305,6 @@ var adminReady = function() {
                 compositionArray.push(composition.name + (composition.percentage ? ': ' + composition.percentage + '%' : ''));
             }
 
-            var $se
-
-            if (wine.single_estate)
-                $se = $('<span>').addClass('single flaticon solid house-2');
-
             var region = [];
 
             if(wine.appellation){
@@ -320,11 +330,17 @@ var adminReady = function() {
                 .attr('data-name', wine.name + ' ' + wine.vintage)
                 .attr('data-price', basePrice)
                 .attr('data-warehouse', basePriceWarehouse)
+                .attr('data-single-estate', wine.single_estate)
+                .attr('data-composition', compositionArray.join(', '))
                 .addClass( warehouseOpen ? 'warehouse-open' : 'warehouse-closed')
                 .addClass('wine')
                     .append(
-                    $('<td>').addClass('actions').append(
-                        $('<a>').attr('href', '#').html('Choose').click(chooseWine)
+                    $('<td>').append(
+                        $('<a>').attr('href', '#').html(
+                            $('<button>').addClass('btn btn-default').append(
+                                $('<span>').addClass('glyphicon glyphicon-plus')
+                            )
+                        ).click(chooseWine)
                     ),
                     $('<td>').addClass('flag').append(
                         $('<img>')
@@ -337,23 +353,20 @@ var adminReady = function() {
                         wine.name +
                         ' - ' + wine.vintage + ' - ' + wine.producer + (wine.bottle_size ? ' - ' + wine.bottle_size + 'CL' : '')
                     ),
-                    $('<td>').addClass('region').html(region.join(', ')),
                     $('<td>').addClass('type').html(
-                        wine.type
+                        wine.type + ' / ' + region.join(', ')
                     ),
                     $('<td>').addClass('cost').html(
                         '&pound;' + cost
                     ),
-                    $('<td>').addClass('price').html(
-                        '&pound;' + basePrice
-                    ),
-                    $('<td>').addClass('composition').html(
-                        compositionArray.join(', ')
-                    ),
-                    $('<td>').addClass('flags').append(
-                        $se
+                    $('<td>').append(
+                        $('<button>').addClass('btn btn-default')
+                            .attr('data-toggle', 'modal')
+                            .attr('data-target', '#wine-additional-info')
+                            .append(
+                            $('<span>').addClass('glyphicon glyphicon-info-sign')
+                        )
                     )
-
                 )
             );
         };
@@ -368,12 +381,9 @@ var adminReady = function() {
                         $('<th>').html(''),
                         $('<th>').html('SKU'),
                         $('<th>').html('Name'),
-                        $('<th>').html('Region'),
-                        $('<th>').html('Type'),
+                        $('<th>').html('Type / Region'),
                         $('<th>').html('Cost'),
-                        $('<th>').html('Category'),
-                        $('<th>').html('Composition'),
-                        $('<th>').html('Estate')
+                        $('<th>').html('Info')
                     )
                 ),
                 $('<tbody>')
@@ -569,13 +579,7 @@ var adminReady = function() {
     }
 };
 
-
-
-// // console.log(2);
-$(document).ready(adminReady);
-$(document).on('page:load', adminReady);
-
-$('document').ready(function() {
+var renderWarehouse = function() {
     if ($('body.admin_warehouses').length) {
 
         var map = L.map('map').setView([ warehouseLatitude, warehouseLongitude], 12);
@@ -599,6 +603,10 @@ $('document').ready(function() {
                 fillOpacity: 0.45
             });
     }
-});
+};
 
+$(document).ready(adminReady);
+$(document).on('page:load', adminReady);
 
+$(document).ready(renderWarehouse);
+$(document).on('page:load', renderWarehouse);

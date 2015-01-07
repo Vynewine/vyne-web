@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150105113233) do
+ActiveRecord::Schema.define(version: 20150107155518) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -104,6 +104,8 @@ ActiveRecord::Schema.define(version: 20150105113233) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.decimal  "merchant_price_min"
+    t.decimal  "merchant_price_max"
   end
 
   add_index "categories", ["deleted_at"], :name => "index_categories_on_deleted_at"

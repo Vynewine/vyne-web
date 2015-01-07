@@ -8,7 +8,8 @@
         <li class="list-group-item">
           <div class="row">
             <div class="col-xs-12">
-              Category: &pound;<%= @order_item.category.price %>
+              Category: <strong>&pound;<%= '%.2f' % @order_item.category.merchant_price_min %></strong> to
+              <strong>&pound;<%= '%.2f' % @order_item.category.merchant_price_max %></strong>
               (<%= @order_item.category.name.capitalize %>)
               <%= @order_item.preferences.to_sentence(last_word_connector: ' and ').capitalize %>.
             </div>
@@ -20,24 +21,24 @@
 </div>
 
 <% if !@order_item.wine.nil? %>
-<div class="row">
-  <div class="col-md-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">Already Selected Wine</h3>
-      </div>
-      <ul class="list-group">
-        <li class="list-group-item">
-          <div class="row">
-            <div class="col-xs-12">
-              <%= @order_item.wine.display_name %> - Cost: £<%= @order_item.cost %>
-            </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Already Selected Wine</h3>
           </div>
-        </li>
-      </ul>
+          <ul class="list-group">
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-xs-12">
+                  <%= @order_item.wine.display_name %> - Cost: £<%= @order_item.cost %>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 <% end %>
 
 <div class="row">
@@ -69,7 +70,8 @@
                          <% end %>
                          />
                   <label for="tick-cat-<%= category.name %>">
-                    &pound;<%= category.price %>
+                    &pound;<%= '%.2f' % category.merchant_price_min %>
+                    to &pound;<%= '%.2f' % category.merchant_price_max %>
                     (<%= category.name.capitalize %>)
                   </label>
               <% end %>
@@ -99,3 +101,101 @@
 </form>
 
 <%= link_to 'Back to order details', admin_order_path(@order), :class => 'btn btn-primary' %>
+
+<!-- Modal -->
+<div class="modal fade" id="wine-additional-info" tabindex="-1" role="dialog" aria-labelledby="wine-additional-info" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Additional Information</h4>
+
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-12 text-center">
+            <strong>Grape Composition:</strong> <span id="modal-composition"></span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12 text-center">
+            <strong><span id="modal-single-estate"></span></strong>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-xs-12">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Not moving these styles to global CSS. Just need to center modal on this page. Probably will have to re-think it. -->
+<style>
+    .modal-dialog {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+    }
+
+    .modal-body {
+        overflow-y: auto;
+    }
+    .modal-footer {
+        margin-top: 0;
+    }
+
+    @media (max-width: 767px) {
+        .modal-dialog {
+            width: 100%;
+        }
+    }
+</style>
+
+<script>
+
+    function adjustModalMaxHeightAndPosition(){
+        $('.modal').each(function(){
+            if($(this).hasClass('in') == false){
+                $(this).show();
+            };
+            var contentHeight = $(window).height() - 60;
+            var headerHeight = $(this).find('.modal-header').outerHeight() || 2;
+            var footerHeight = $(this).find('.modal-footer').outerHeight() || 2;
+
+            $(this).find('.modal-content').css({
+                'max-height': function () {
+                    return contentHeight;
+                }
+            });
+
+            $(this).find('.modal-body').css({
+                'max-height': function () {
+                    return (contentHeight - (headerHeight + footerHeight));
+                }
+            });
+
+            $(this).find('.modal-dialog').css({
+                'margin-top': function () {
+                    return -($(this).outerHeight() / 2);
+                },
+                'margin-left': function () {
+                    return -($(this).outerWidth() / 2);
+                }
+            });
+            if($(this).hasClass('in') == false){
+                $(this).hide();
+            };
+        });
+    };
+
+    $(window).resize(adjustModalMaxHeightAndPosition).trigger("resize");
+
+
+</script>
