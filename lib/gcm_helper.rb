@@ -17,9 +17,9 @@ module GcmHelper
       options = {
           data: {
               message: message
-          },
-          collapse_key: message
+          }
       }
+
       full_response = gcm.send(registration_ids, options)
 
       log full_response
