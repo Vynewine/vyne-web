@@ -8,7 +8,17 @@ class OrdersController < ApplicationController
   end
 
   def show
-    @order = Order.find_by(id: params[:id], client_id: current_user)
+    if current_user.admin?
+      @order = Order.find_by(id: params[:id])
+    else
+      @order = Order.find_by(id: params[:id], client_id: current_user)
+    end
+
+    if @order.nil?
+      render :status => :forbidden, :text => 'Forbidden fruit'
+      return
+    end
+
     if @order.status_id == Status.statuses[:in_transit]
       unless @order.delivery_status['booking'].blank? ||
           @order.delivery_status['booking']['estimates'].blank? ||
@@ -16,13 +26,15 @@ class OrdersController < ApplicationController
         @estimate = @order.delivery_status['booking']['estimates']['eta']
       end
     end
-    if @order.nil?
-      render :status => :forbidden, :text => 'Forbidden fruit'
-    end
   end
 
   def status
-    @order = Order.find_by(id: params[:order_id], client_id: current_user)
+    if current_user.admin?
+      @order = Order.find_by(id: params[:order_id])
+    else
+      @order = Order.find_by(id: params[:order_id], client_id: current_user)
+    end
+
     if @order.blank?
       render json: ['404'], status: :not_found
     else

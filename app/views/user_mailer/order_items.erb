@@ -1,5 +1,5 @@
 <%
-   def get_wine_color(color)
+   def self.get_wine_color(color)
      case color
        when 'Medium Red'
          '#800000'
@@ -45,7 +45,7 @@
     %>
     <div style="margin: 5px 0 15px 0">
     <span style="color:#FFFFFF">
-        <%= welcome %> <%= order.order_items[i].category.name + ' wine (£' + order.order_items[i].price.to_s + ')' %>
+        <%= welcome %> <%= order.order_items[i].category.name + ' wine (£' + '%.2f' % order.order_items[i].price + ')' %>
       perfect for your
     </span>
     </div>

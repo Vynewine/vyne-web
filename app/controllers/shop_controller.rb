@@ -101,11 +101,9 @@ class ShopController < ApplicationController
 
       if @order.save
 
-        Thread.new do
-          first_time_ordered @order
-          order_notification @order
-        end
-
+        Resque.enqueue(OrderEmailNotification, @order.id, :first_time_ordered)
+        Resque.enqueue(OrderEmailNotification, @order.id, :order_notification)
+        Resque.enqueue(OrderEmailNotification, @order.id, :merchant_order_confirmation)
         Resque.enqueue(OrderNotification, 'You have a new order.', @order.warehouse.devices.map { |device| device.registration_id })
 
         render :json => @order.to_json

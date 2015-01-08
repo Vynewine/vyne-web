@@ -36,7 +36,7 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   # Devise mailer:
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000, scheme: 'http' }
+  config.action_mailer.default_url_options = { host: 'localhost', port: 5000, scheme: 'http' }
   # In production, :host should be set to the actual host of your application.
 
   config.log_level = :info
@@ -71,7 +71,7 @@ Rails.application.configure do
   config.max_delivery_distance = 3
 
   #Vyne order internal notification email
-  config.order_notification = 'jakub@vyne.london'
+  config.order_notification = 'jakub-order-notification-for-vyne@vyne.london'
 
   #Require invitation code to access the site.
   config.enable_invite_code = 'true'

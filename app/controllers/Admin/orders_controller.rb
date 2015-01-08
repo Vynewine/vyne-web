@@ -164,11 +164,11 @@ class Admin::OrdersController < ApplicationController
 
   def send_receipt
     @order = Order.find(params[:order_id])
-    order_receipt(@order)
-    merchant_order_confirmation(@order)
+
+    Resque.enqueue(OrderEmailNotification, @order.id, :order_receipt)
 
     respond_to do |format|
-      format.html { redirect_to [:admin, @order], notice: 'Receipt for order sent successfully' }
+      format.html { redirect_to [:admin, @order], notice: 'Receipt for order re-sent successfully' }
     end
 
   end
@@ -187,7 +187,11 @@ class Admin::OrdersController < ApplicationController
   def packing_complete
     @order = Order.find(params[:order_id])
     @order.status_id = Status.statuses[:pickup]
+
     if @order.save
+
+      Resque.enqueue(OrderEmailNotification, @order.id, :order_receipt)
+
       redirect_to admin_orders_url(:status => @order.status_id), :flash => {:notice => 'Packing Completed for order: ' + @order.id.to_s}
     else
       redirect_to [:admin, @order], :flash => {:error => @order.errors.full_messages().join(', ')}

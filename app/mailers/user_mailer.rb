@@ -3,7 +3,12 @@ require 'erb'
 
 module UserMailer
 
-  def first_time_ordered(order)
+  @logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
+  TAG = 'User Mailer'
+
+  def self.first_time_ordered(order)
+
+    log "Sending email notification to customer: #{order.client.email} for order #{order.id.to_s}"
 
     begin
 
@@ -52,15 +57,18 @@ module UserMailer
       mandrill.messages.send_template template_name, nil, message
 
     rescue Mandrill::Error => exception
-      Rails.logger.error "A Mandrill error occurred first_time_ordered: #{exception.class} - #{exception.message}"
+      log_error "A Mandrill error occurred first_time_ordered: #{exception.class} - #{exception.message}"
     rescue Exception => exception
       message = "Error occurred while sending email first_time_ordered: #{exception.class} - #{exception.message} - for user: #{order.client.email}"
-      Rails.logger.error message
-      Rails.logger.error exception.backtrace
+      log_error message
+      log_error exception.backtrace
     end
   end
 
-  def order_notification(order)
+  def self.order_notification(order)
+
+    log "Sending email notification to Vyne for order #{order.id.to_s}"
+
     begin
 
       template = ERB.new(File.read(Rails.root.join('app', 'views', 'user_mailer', 'order_items.erb')))
@@ -69,7 +77,7 @@ module UserMailer
       mandrill = Mandrill::API.new Rails.application.config.mandrill
       template_name = 'orderplaced-1tochv1'
       message = {
-          :subject => 'Client: ' + order.client.name + ' - ' + order.client.email  + ' Placed Order No: ' + order.id.to_s,
+          :subject => 'Client: ' + order.client.name + ' - ' + order.client.email + ' Placed Order No: ' + order.id.to_s,
           :from_email => 'checkout@vyne.london',
           :from_name => 'Vyne Checkout',
           :to => [
@@ -108,15 +116,17 @@ module UserMailer
       mandrill.messages.send_template template_name, nil, message
 
     rescue Mandrill::Error => exception
-      Rails.logger.error "A Mandrill error occurred first_time_ordered: #{exception.class} - #{exception.message}"
+      log_error "A Mandrill error occurred first_time_ordered: #{exception.class} - #{exception.message}"
     rescue Exception => exception
       message = "Error occurred while sending email first_time_ordered: #{exception.class} - #{exception.message} - for user: #{order.client.email}"
-      Rails.logger.error message
-      Rails.logger.error exception.backtrace
+      log_error message
+      log_error exception.backtrace
     end
   end
 
-  def order_receipt(order)
+  def self.order_receipt(order)
+
+    log "Sending email order receipt to customer #{order.client.email} for order #{order.id.to_s}"
 
     begin
 
@@ -167,7 +177,6 @@ module UserMailer
                       {
                           :name => 'SHUTL_LINK',
                           :content => ''
-
                       },
                       {
                           :name => 'ADDRESSLINE1',
@@ -204,48 +213,37 @@ module UserMailer
                   ]
               }
           ]
-
       }
-
 
       mandrill.messages.send_template template_name, nil, message
 
     rescue Mandrill::Error => exception
-      Rails.logger.error "A Mandrill error occurred order_receipt: #{exception.class} - #{exception.message}"
+      log_error "A Mandrill error occurred order_receipt: #{exception.class} - #{exception.message}"
     rescue Exception => exception
       message = "Error occurred while sending email order_receipt: #{exception.class} - #{exception.message} - for user: #{order.client.email}"
-      Rails.logger.error message
-      Rails.logger.error exception.backtrace
+      log_error message
+      log_error exception.backtrace
     end
   end
 
-  def merchant_order_confirmation(order)
+  def self.merchant_order_confirmation(order)
+
+    log "Sending email merchant order confirmation for order id #{order.id.to_s}"
+
     begin
 
-      wine1 = order.order_items[0].wine
-      inventory_item1 = Inventory.where(wine: wine1, warehouse: order.warehouse).take
-      wine1_name = "1x #{wine1.name} #{wine1.txt_vintage}, #{wine1.producer.name}"
-      wine1_name += wine1.region.blank? ? '' : ', ' + wine1.region.name
-      wine1_name += ", #{order.warehouse.title}, ID: #{inventory_item1.vendor_sku}, (£#{order.order_items[0].cost})"
+      order_item_1 = order.order_items[0]
+      wine_1_preferences = "Category:  £#{ '%.2f' % order_item_1.category.merchant_price_min} to
+      £#{ '%.2f' % order_item_1.category.merchant_price_max}
+      (#{order_item_1.category.name.capitalize}) #{order_item_1.preferences.to_sentence(last_word_connector: ' and ').capitalize}"
 
-
-      unless order.order_items[1].blank?
-        wine2 = order.order_items[1].wine
-        inventory_item2 = Inventory.where(wine: wine2, warehouse: order.warehouse).take
-        wine2_name = "1x #{wine2.name} #{wine2.txt_vintage}, #{wine2.producer.name}"
-        wine2_name += wine2.region.blank? ? '' : ', ' + wine2.region.name
-        wine2_name += ", #{order.warehouse.title}, ID: #{inventory_item2.vendor_sku}, (£#{order.order_items[1].cost})"
+      wine_2_preferences = ''
+      order_item_2 = order.order_items[1]
+      unless order_item_2.blank?
+        wine_2_preferences = "Category:  £#{ '%.2f' % order_item_2.category.merchant_price_min} to
+        £#{ '%.2f' % order_item_2.category.merchant_price_max}
+        (#{order_item_2.category.name.capitalize}) #{order_item_2.preferences.to_sentence(last_word_connector: ' and ').capitalize}"
       end
-
-      shutl_reference = order.delivery_token
-
-      pickup_start_time = 'unknown'
-      pickup_finish_time = 'unknown'
-      unless order.delivery_quote.blank?
-        pickup_start_time = Time.parse(order.delivery_quote['pickup_start']).strftime("%d/%m/%Y - %H:%M")
-        pickup_finish_time = Time.parse(order.delivery_quote['pickup_finish']).strftime("%d/%m/%Y - %H:%M")
-      end
-
 
       mandrill = Mandrill::API.new Rails.application.config.mandrill
       template_name = 'merchant-order-confirmation-5tmsmov1'
@@ -269,36 +267,26 @@ module UserMailer
                       },
                       {
                           :name => 'WINE1MERCHANT',
-                          :content => wine1_name
+                          :content => wine_1_preferences
                       },
                       {
                           :name => 'WINE2MERCHANT',
-                          :content => wine2_name
-                      },
-                      {
-                          :name => 'SHUTLREFNO',
-                          :content => shutl_reference
-                      },
-                      {
-                          :name => 'PICKUPSTART',
-                          :content => pickup_start_time
-                      },
-                      {
-                          :name => 'PICKUPFINISH',
-                          :content => pickup_finish_time
+                          :content => wine_2_preferences
                       }
                   ]
               }
           ]
-
       }
-
 
       mandrill.messages.send_template template_name, nil, message
 
     rescue Mandrill::Error => exception
-      Rails.logger.error "A Mandrill error occurred order_receipt: #{exception.class} - #{exception.message}"
-      Rails.logger.error exception.backtrace
+      log_error "A Mandrill error occurred merchant_order_confirmation: #{exception.class} - #{exception.message}"
+      log_error exception.backtrace
+    rescue Exception => exception
+      message = "Error occurred while sending email merchant_order_confirmation: #{exception.class} - #{exception.message}"
+      log_error message
+      log_error exception.backtrace
     end
   end
 
@@ -327,6 +315,8 @@ module UserMailer
     message = "Error occurred while sending email order_at_your_desk: #{exception.class} - #{exception.message} - for user: #{email}"
     Rails.logger.error message
     Rails.logger.error exception.backtrace
+  ensure
+    log 'done here'
   end
 
   def coming_soon_near_you(email)
@@ -353,5 +343,15 @@ module UserMailer
     message = "Error occurred while sending email coming_soon_near_you: #{exception.class} - #{exception.message} - for user: #{email}"
     Rails.logger.error message
     Rails.logger.error exception.backtrace
+  end
+
+  private
+
+  def self.log(message)
+    @logger.tagged(TAG) { @logger.info message }
+  end
+
+  def self.log_error(message)
+    @logger.tagged(TAG) { @logger.error message }
   end
 end

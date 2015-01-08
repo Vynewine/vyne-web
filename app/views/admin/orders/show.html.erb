@@ -226,11 +226,11 @@
                   <% end %>
               <% end %>
 
-              <% if [4, 5, 6].include?(@order.status.id) %>
+              <% if [Status.statuses[:pickup], Status.statuses[:in_transit], Status.statuses[:delivered]].include?(@order.status.id) %>
                   <%= link_to 'Re-Send Order Receipt', admin_order_send_receipt_path(@order), {
                                                              :class => 'btn btn-primary',
                                                              :method => :post,
-                                                             :data => {:confirm => 'This will email order receipt to the client and a merchant.'}
+                                                             :data => {:confirm => 'This will re-send order receipt to the client.'}
                                                      } %>
               <% end %>
 
