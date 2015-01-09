@@ -4,4 +4,10 @@ class Inventory < ActiveRecord::Base
   belongs_to :warehouse
   belongs_to :wine
   belongs_to :category
+
+  validates :vendor_sku, uniqueness_without_deleted: {
+                           scope: :warehouse,
+                           case_sensitive: false,
+                           message: 'has to be unique per warehouse.'
+                       }
 end

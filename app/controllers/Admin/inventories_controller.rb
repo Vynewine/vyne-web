@@ -10,13 +10,32 @@ class Admin::InventoriesController < ApplicationController
   # GET /inventories.json
   def index
     @warehouses = Warehouse.all.order('active desc, id')
-    if params[:warehouse_id].blank?
+
+    unless current_user.admin?
+      @warehouses = @warehouses.where(id: current_user.warehouses)
+    end
+
+    warehouse_id = params[:warehouse_id]
+
+    unless current_user.admin?
+      unless current_user.warehouses.map { |warehouse| warehouse.id.to_s }.include?(warehouse_id)
+        warehouse_id = nil
+      end
+    end
+
+    if warehouse_id.blank?
       @inventories = []
     else
       @inventories = Inventory
-      .joins(:warehouse, :wine)
-      .order('warehouses.title', 'wines.name')
-      .where(:warehouse_id => params[:warehouse_id])
+                         .joins(:warehouse, :wine)
+                         .order('vendor_sku')
+                         .where(:warehouse_id => params[:warehouse_id])
+                         .page(params[:page])
+
+      unless params[:search].blank?
+        @inventories = @inventories.where(:vendor_sku => params[:search])
+      end
+
       @warehouse = Warehouse.find(params[:warehouse_id])
     end
   end
@@ -35,6 +54,9 @@ class Admin::InventoriesController < ApplicationController
   def fetch_data
     @categories = Category.all
     @warehouses = Warehouse.all.order(:id)
+    unless current_user.admin?
+      @warehouses = @warehouses.where(id: current_user.warehouses)
+    end
   end
 
   # GET /inventories/1/edit
@@ -49,8 +71,9 @@ class Admin::InventoriesController < ApplicationController
 
     if params[:inventory][:warehouse_id].empty? || params[:inventory][:wine_id].empty? || params[:inventory][:vendor_sku].empty? ||
         params[:inventory][:category_id].empty?
+      @inventory = Inventory.new
       fetch_data
-      flash.now[:alert] = 'Warehouse, wine, vendor sku and category are required'
+      flash.now[:error] = 'Warehouse, wine, vendor sku and category are required'
       render :new
       return
     end
@@ -59,9 +82,14 @@ class Admin::InventoriesController < ApplicationController
 
     respond_to do |format|
       if @inventory.save
+
+        Sunspot.index! [@inventory.wine]
+
         format.html { redirect_to [:admin, @inventory], notice: 'Inventory was successfully created.' }
         format.json { render :show, status: :created, location: @inventory }
       else
+        fetch_data
+        flash.now[:error] =  @inventory.errors.full_messages().join(', ')
         format.html { render :new }
         format.json { render json: @inventory.errors, status: :unprocessable_entity }
       end
@@ -73,7 +101,9 @@ class Admin::InventoriesController < ApplicationController
   def update
     respond_to do |format|
       if @inventory.update(inventory_params)
-        Wine.reindex
+
+        Sunspot.index! [@inventory.wine]
+
         format.html { redirect_to [:admin, @inventory], notice: 'Inventory was successfully updated.' }
         format.json { render :show, status: :ok, location: @inventory }
       else
@@ -86,7 +116,12 @@ class Admin::InventoriesController < ApplicationController
   # DELETE /inventories/1
   # DELETE /inventories/1.json
   def destroy
+    wine = @inventory.wine
+
     @inventory.destroy
+
+    Sunspot.index! [wine]
+
     respond_to do |format|
       format.html { redirect_to admin_inventories_url, notice: 'Inventory was successfully destroyed.' }
       format.json { head :no_content }
@@ -95,6 +130,9 @@ class Admin::InventoriesController < ApplicationController
 
   def upload
     @warehouses = Warehouse.all.order('active desc, id')
+    unless current_user.admin?
+      @warehouses = @warehouses.where(id: current_user.warehouses)
+    end
   end
 
   def import

@@ -1,72 +1,99 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Inventory Management</h3>
+  </div>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-xs-12">
+          Please Select Warehouse to manage inventory for:
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-6">
+          <%= form_for :warehouse_id, :html => {:method => 'get', :class => 'form-inline'} do |f| %>
+              <div class="form-group">
+                <%= select_tag 'warehouse_id', content_tag(:option, 'select one...', :value => "")+options_from_collection_for_select(@warehouses, 'id', :short_name, params[:warehouse_id]), {:class => 'form-control'} %>
+                <%= f.submit :name => nil, :value => 'GO', :class => 'btn btn-success' %>
+              </div>
+          <% end %>
+        </div>
+        <div class="col-md-6 text-right">
+          <%= link_to new_admin_inventory_path(:page => params[:page], :warehouse_id => params[:warehouse_id]), :class => 'btn btn-default' do %>
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New Inventory Item
+          <% end %>
+          <%= link_to '<span class="glyphicon glyphicon-cloud-upload" aria-hidden="true"></span> Bulk Upload'.html_safe, {controller: 'inventories', action: 'upload'}, {:class => 'btn btn-default'} %>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<% unless params[:warehouse_id].blank? %>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-md-6">
+            <h3 class="panel-title">Inventory Items</h3>
+          </div>
+          <div class="col-md-6">
+            <%= will_paginate @inventories, :class => 'vyne_pagination' %>
+          </div>
+        </div>
+      </div>
+
+      <ul class="list-group">
+        <li class="list-group-item">
+          <form action="/admin/inventories" method="get" class="form-inline">
+            <input type="text" name="search" value="<%= params[:search] %>" class="form-control"/>
+            <input type="hidden" name="warehouse_id" value="<%= params[:warehouse_id] %>">
+            <input type="submit" value="SKU Search" class="btn btn-primary"/>
+            <% unless params[:search].blank? %>
+                <a href="/admin/inventories?warehouse_id=<%= params[:warehouse_id] %>" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span> Clear</a>
+            <% end %>
+          </form>
+        </li>
+      </ul>
+
+      <table class="table table-bordered">
+
+        <thead>
+        <tr>
+          <th>Vendor Sku</th>
+          <th>Wine</th>
+          <th>Category</th>
+          <th>Cost</th>
+          <th>Quantity</th>
+          <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <% @inventories.each do |inventory| %>
+            <tr>
+              <td><%= inventory.vendor_sku %></td>
+              <td><%= inventory.wine.name %></td>
+              <td><%= if inventory.category.nil? then
+                        ' - '
+                      else
+                        inventory.category.name
+                      end %></td>
+              <td><%= inventory.cost %></td>
+              <td><%= inventory.quantity %></td>
 
 
-<h1>Inventory</h1>
-
-<table>
-  <tr>
-    <td></td>
-    <td><%= form_for :warehouse_id , :html => { :method => 'get'} do | f | %>
-          <%= select_tag 'warehouse_id', content_tag(:option,'select one...',:value=>"")+options_from_collection_for_select(@warehouses, 'id', :short_name, params[:warehouse_id]) %>
-          <%= f.submit :name => nil, :value => 'GO' %>
-      <% end %></td>
-    <td>
-      <% unless @warehouse.blank? && @inventories.blank? %>
-      Wine count for <%= @warehouse.title %>: <%= @inventories.count %>
-      <% end %>
-    </td>
-  </tr>
-</table>
-
-<%= link_to 'Upload', controller: 'inventories', action: 'upload' %>
-
-
-
-<% unless @inventories.blank? %>
-
-    <table border="1" class="list-table">
-      <thead>
-      <tr>
-        <th>Vendor Sku</th>
-        <th>Wine</th>
-        <th>Category</th>
-        <th>Cost</th>
-        <th>Quantity</th>
-        <th colspan="3"></th>
-      </tr>
-      </thead>
-
-      <tbody>
-      <% @inventories.each do |inventory| %>
-          <tr>
-            <td><%= inventory.vendor_sku %></td>
-            <td><%= inventory.wine.name %></td>
-            <td><%= if inventory.category.nil? then ' - ' else inventory.category.name end %></td>
-            <td><%= inventory.cost %></td>
-            <td><%= inventory.quantity %></td>
-
-
-            <td class="button-wrapper">
-              <%= link_to admin_inventory_path(inventory) do %>
-                  <i class="flaticon stroke zoom-1"></i>
-              <% end %>
-            </td>
-            <td class="button-wrapper">
-              <%= link_to edit_admin_inventory_path(inventory) do %>
-                  <i class="flaticon stroke pencil-2"></i>
-              <% end %>
-            </td>
-            <td class="button-wrapper">
-              <%= link_to admin_inventory_path(inventory), method: :delete, data: { confirm: 'Are you sure?' } do %>
-                  <i class="flaticon stroke trash-2"></i>
-              <% end %>
-            </td>
-          </tr>
-      <% end %>
-      </tbody>
-    </table>
+              <td class="button-wrapper">
+                <%= link_to admin_inventory_path(inventory, :page => params[:page]), class: 'btn btn-default' do %>
+                    <i class="glyphicon glyphicon-search"></i>
+                <% end %>
+              </td>
+            </tr>
+        <% end %>
+        </tbody>
+      </table>
 <% end %>
 
-
-<br>
-
-<%= link_to 'New Inventory Item', new_admin_inventory_path %>
+</div>

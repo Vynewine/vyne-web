@@ -1,51 +1,40 @@
-<%= form_for([:admin, @inventory]) do |f| %>
-    <% if @inventory.errors.any? %>
-        <div id="error_explanation">
-          <h2><%= pluralize(@inventory.errors.count, "error") %> prohibited this inventory from being saved:</h2>
+    <%= form_for([:admin, @inventory]) do |f| %>
 
-          <ul>
-            <% @inventory.errors.full_messages.each do |message| %>
-                <li><%= message %></li>
-            <% end %>
-          </ul>
+        <div class="form-group">
+          <%= f.label :warehouse_id%> <span style="color: red">*</span> <br>
+          <%= f.select :warehouse_id,
+                       options_from_collection_for_select(@warehouses, "id", "short_name", :selected => params[:warehouse_id] ? params[:warehouse_id] : @inventory.warehouse_id), {},
+                       {:prompt => 'Choose a Warehouse', :class => 'form-control'}
+          %>
+        </div>
+        <div class="form-group">
+          <%= f.label :wine_id %> <span style="color: red">*</span> <br>
+          <%= f.text_field :wine_id, :class => 'form-control' %>
+        </div>
+        <div class="form-group">
+          <%= f.label :quantity %>
+          <br>
+          <%= f.number_field :quantity, :class => 'form-control' %>
+        </div>
+        <div class="form-group">
+          <%= f.label :cost %>
+          <br>
+          <%= f.number_field :cost, :class => 'form-control', :step => 'any' %>
+        </div>
+        <div class="form-group">
+          <%= f.label :vendor_sku %> <span style="color: red">*</span>
+          <br>
+          <%= f.text_field :vendor_sku, :class => 'form-control' %>
+        </div>
+        <div class="form-group">
+          <%= f.label :category %> <span style="color: red">*</span>
+          <br>
+          <%= f.select :category_id,
+                       options_from_collection_for_select(@categories, "id", "name", :selected => @inventory.category_id), {},
+                       {:prompt => "Choose a category", :class => 'form-control'}
+          %>
+        </div>
+        <div class="actions">
+          <%= f.submit(:class => 'btn btn-success') %>
         </div>
     <% end %>
-
-    <div class="field">
-      <%= f.label :warehouse_id %> <span style="color: red">*</span> <br>
-      <%= f.select :warehouse_id,
-                   options_from_collection_for_select(@warehouses, "id", "short_name", :selected => @inventory.warehouse_id),
-                   :prompt => "Choose a Warehouse"
-      %>
-    </div>
-    <div class="field">
-      <%= f.label :wine %> Id <span style="color: red">*</span> <br>
-      <%= f.text_field :wine_id %>
-    </div>
-    <div class="field">
-      <%= f.label :quantity %>
-      <br>
-      <%= f.number_field :quantity %>
-    </div>
-    <div class="field">
-      <%= f.label :cost %>
-      <br>
-      <%= f.number_field :cost %>
-    </div>
-    <div class="field">
-      <%= f.label :vendor_sku %> <span style="color: red">*</span>
-      <br>
-      <%= f.text_field :vendor_sku %>
-    </div>
-    <div class="field">
-      <%= f.label :category %> <span style="color: red">*</span>
-      <br>
-      <%= f.select :category_id,
-                   options_from_collection_for_select(@categories, "id", "name", :selected => @inventory.category_id),
-                   :prompt => "Choose a category"
-      %>
-    </div>
-    <div class="actions">
-      <%= f.submit %>
-    </div>
-<% end %>

@@ -6,43 +6,43 @@
           <li
           <% if params[:status].blank? || params[:status] == Status.statuses[:pending] %> class="active"
           <% end %> >
-            <%= link_to 'Pending', :controller => 'orders' %>
+            <%= link_to 'Pending', admin_orders_path %>
           </li>
           <li
           <% if params[:status] == Status.statuses[:packing].to_s %> class="active"
           <% end %>>
-            <%= link_to 'Packing', :controller => 'orders', :status => Status.statuses[:packing] %>
+            <%= link_to 'Packing', admin_orders_path(:status => Status.statuses[:packing]) %>
           </li>
           <li
           <% if params[:status] == Status.statuses[:pickup].to_s %> class="active"
           <% end %> >
-            <%= link_to 'Pickup', :controller => 'orders', :status => Status.statuses[:pickup] %>
+            <%= link_to 'Pickup', admin_orders_path(:status => Status.statuses[:pickup]) %>
           </li>
           <li
           <% if params[:status] == Status.statuses[:in_transit].to_s %> class="active"
           <% end %>>
-            <%= link_to 'Transit', :controller => 'orders', :status => Status.statuses[:in_transit] %>
+            <%= link_to 'Transit', admin_orders_path(:status => Status.statuses[:in_transit]) %>
           </li>
           <li
           <% if params[:status] == Status.statuses[:delivered].to_s %> class="active"
           <% end %>>
-            <%= link_to 'Delivered', :controller => 'orders', :status => Status.statuses[:delivered] %>
+            <%= link_to 'Delivered', admin_orders_path(:status => Status.statuses[:delivered]) %>
           </li>
           <% if user_is_admin %>
               <li
               <% if params[:status] == Status.statuses[:payment_failed].to_s %> class="active"
               <% end %>>
-                <%= link_to 'Payment Failed', :controller => 'orders', :status => Status.statuses[:payment_failed] %>
+                <%= link_to 'Payment Failed', admin_orders_path(:status => Status.statuses[:payment_failed]) %>
               </li>
               <li
               <% if params[:status] == Status.statuses[:cancelled].to_s %> class="active"
               <% end %>>
-                <%= link_to 'Cancelled', :controller => 'orders', :status => Status.statuses[:cancelled] %>
+                <%= link_to 'Cancelled', admin_orders_path(:status => Status.statuses[:cancelled]) %>
               </li>
               <li
               <% if params[:status] == Status.statuses[:created].to_s %> class="active"
               <% end %>>
-                <%= link_to 'Created', :controller => 'orders', :status => Status.statuses[:created] %>
+                <%= link_to 'Created', admin_orders_path(:status => Status.statuses[:created]) %>
               </li>
           <% end %>
 

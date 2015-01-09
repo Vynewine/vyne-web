@@ -30,4 +30,6 @@ json.array!(@results) do |wine|
   json.quantity  wine[:quantity]
   json.category  wine[:category]
   json.warehouse_distance wine[:warehouse_distance]
+  json.inventory_id wine[:inventory_id]
+
 end

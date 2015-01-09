@@ -1,5 +1,6 @@
 module InventoryImporter
-  #TODO need to return status and errors
+  # TODO need to return status and errors
+  # Move this to QUEUE?
   def import_inventory(file, warehouse)
 
     inventory_data = Roo::CSV.new(file)
@@ -35,6 +36,8 @@ module InventoryImporter
               :category => assign_category(categories, row['cost'])[0]
           )
         end
+
+        Sunspot.index! [wine]
 
       end
     end

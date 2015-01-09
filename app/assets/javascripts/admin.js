@@ -254,6 +254,7 @@ var adminReady = function() {
             var $tr = $(event.relatedTarget).closest('tr');
             var composition = $tr.data('composition');
             var singleEstate = $tr.data('single-estate');
+            var inventoryId = $tr.data('inventory-id');
 
             var modal = $(this);
             modal.find('#modal-composition').text(composition);
@@ -262,6 +263,7 @@ var adminReady = function() {
             } else {
                 modal.find('#modal-single-estate').text('');
             }
+            modal.find('#modal-inventory').attr('href','/admin/inventories/' + inventoryId);
         });
 
         var parseWarehouseStatuses = function(availabilityList) {
@@ -332,6 +334,7 @@ var adminReady = function() {
                 .attr('data-warehouse', basePriceWarehouse)
                 .attr('data-single-estate', wine.single_estate)
                 .attr('data-composition', compositionArray.join(', '))
+                .attr('data-inventory-id', wine.inventory_id)
                 .addClass( warehouseOpen ? 'warehouse-open' : 'warehouse-closed')
                 .addClass('wine')
                     .append(
@@ -359,6 +362,9 @@ var adminReady = function() {
                     $('<td>').addClass('cost').html(
                         '&pound;' + cost
                     ),
+                    $('<td>').html(
+                        wine.quantity
+                    ),
                     $('<td>').append(
                         $('<button>').addClass('btn btn-default')
                             .attr('data-toggle', 'modal')
@@ -383,6 +389,7 @@ var adminReady = function() {
                         $('<th>').html('Name'),
                         $('<th>').html('Type / Region'),
                         $('<th>').html('Cost'),
+                        $('<th>').html('Qt'),
                         $('<th>').html('Info')
                     )
                 ),

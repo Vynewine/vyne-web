@@ -154,28 +154,32 @@ class Admin::AdvisorsController < ApplicationController
 
       inventory = wine.inventories.select { |inv| inv.warehouse == order.warehouse }.first
 
-      wines << {
-          :countryCode => wine.producer.country.alpha_2,
-          :countryName => wine.producer.country.name,
-          :region => wine.region.blank? ? '' : wine.region.name,
-          :subregion => wine.subregion.nil? ? '' : wine.subregion.name,
-          :locale => wine.locale.blank? ? '' : wine.locale.name,
-          :id => wine.id,
-          :appellation => wine.appellation.blank? ? '' : wine.appellation.name,
-          :name => wine.name,
-          :vintage => wine.txt_vintage,
-          :single_estate => wine.single_estate,
-          :type => wine.type.name,
-          :compositions => wine.composition.blank? ? '' : wine.composition.composition_grapes.map { |c| {:name => c.grape.name, :percentage => c.percentage} },
-          :note => wine.note,
-          :cost => inventory.cost.to_s,
-          :price => inventory.category.price,
-          :quantity => inventory.quantity,
-          :category => inventory.category.name + ' - £' + inventory.category.price.to_s,
-          :bottle_size => wine.bottle_size,
-          :vendor_sku => inventory.vendor_sku,
-          :producer => wine.producer.name
-      }
+      unless inventory.blank?
+        wines << {
+            :countryCode => wine.producer.country.alpha_2,
+            :countryName => wine.producer.country.name,
+            :region => wine.region.blank? ? '' : wine.region.name,
+            :subregion => wine.subregion.nil? ? '' : wine.subregion.name,
+            :locale => wine.locale.blank? ? '' : wine.locale.name,
+            :id => wine.id,
+            :appellation => wine.appellation.blank? ? '' : wine.appellation.name,
+            :name => wine.name,
+            :vintage => wine.txt_vintage,
+            :single_estate => wine.single_estate,
+            :type => wine.type.name,
+            :compositions => wine.composition.blank? ? '' : wine.composition.composition_grapes.map { |c| {:name => c.grape.name, :percentage => c.percentage} },
+            :note => wine.note,
+            :cost => inventory.cost.to_s,
+            :price => inventory.category.price,
+            :quantity => inventory.quantity,
+            :category => inventory.category.name + ' - £' + inventory.category.price.to_s,
+            :bottle_size => wine.bottle_size,
+            :vendor_sku => inventory.vendor_sku,
+            :producer => wine.producer.name,
+            :inventory_id => inventory.id
+        }
+
+      end
     end
 
     @results = wines

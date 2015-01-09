@@ -13,7 +13,6 @@ module ApplicationHelper
 
   def bootstrap_class_for flash_type
 
-    puts flash_type == 'error'
     case flash_type
       when 'success'
         'alert-success'
