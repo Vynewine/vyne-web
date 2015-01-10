@@ -389,7 +389,7 @@ var adminReady = function() {
                         $('<th>').html('Name'),
                         $('<th>').html('Type / Region'),
                         $('<th>').html('Cost'),
-                        $('<th>').html('Qt'),
+                        $('<th>').html('Qty'),
                         $('<th>').html('Info')
                     )
                 ),

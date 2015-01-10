@@ -28,20 +28,53 @@ class Admin::AdvisorsController < ApplicationController
   def update
     @order_item = OrderItem.find(params[:id])
     @order = @order_item.order
+
+    unless @order_item.wine.blank?
+      advised_wine = @order_item.wine
+      inventory = Inventory.find_by(:warehouse => @order.warehouse, :wine => advised_wine)
+      inventory.quantity += 1
+      unless inventory.save
+        redirect_to admin_order_path @order, :flash => {:error => inventory.errors.full_messages().join(', ')}
+        return
+      end
+    end
+
     wine = Wine.find(params['wine-id'])
 
     inventory = Inventory.find_by(:warehouse => @order.warehouse, :wine => wine)
+
+    if inventory.quantity == 0
+      flash[:error] = "Insufficient stock quantity for #{inventory.vendor_sku}"
+      redirect_to admin_order_path @order
+      return
+    end
+
+    inventory.quantity -= 1
+
+    unless inventory.save
+      flash[:error] = inventory.errors.full_messages().join(', ')
+      redirect_to admin_order_path @order
+      return
+    end
 
     @order_item.wine = wine
     @order_item.cost = inventory.cost
     @order_item.inventory = inventory
 
     @order.advisor = current_user
-    @order_item.save
-    @order.save
-    respond_to do |format|
-      format.html { redirect_to admin_order_path @order }
+    unless @order_item.save
+      flash[:error] = @order_item.errors.full_messages().join(', ')
+      redirect_to admin_order_path @order
+      return
     end
+
+    if @order.save
+      redirect_to admin_order_path @order
+    else
+      flash[:error] = @order.errors.full_messages().join(', ')
+      redirect_to admin_order_path @order
+    end
+
   end
 
   def choose
@@ -154,7 +187,7 @@ class Admin::AdvisorsController < ApplicationController
 
       inventory = wine.inventories.select { |inv| inv.warehouse == order.warehouse }.first
 
-      unless inventory.blank?
+      unless inventory.blank? || inventory.quantity == 0
         wines << {
             :countryCode => wine.producer.country.alpha_2,
             :countryName => wine.producer.country.name,
