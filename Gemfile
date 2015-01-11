@@ -60,7 +60,7 @@ gem 'authority'
 gem 'rolify'
 
 # Charging API
-gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
+gem 'stripe'
 
 # Solr and Sunspot
 gem 'progress_bar'
@@ -111,7 +111,7 @@ gem 'local_time'
 gem 'google-api-client'
 
 #REST Client
-gem 'rest-client'
+gem 'rest-client', '~> 1.6.8'
 
 #Resque for running Background Job (Depends on Redis, check README instructions for installing Redis)
 gem 'resque', '~> 1.25.2'
@@ -124,5 +124,8 @@ gem 'unicorn'
 
 #Web Monitoring with New Relic
 gem 'newrelic_rpm'
+
+#Well obvious
+gem 'pgbackups-archive'
 
 
