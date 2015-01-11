@@ -39,10 +39,10 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for nginx
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = false
+  config.force_ssl = true
 
   # Devise mailer:
-  config.action_mailer.default_url_options = { host: 'www.vyne.london', scheme: 'https' }
+  config.action_mailer.default_url_options = { host: 'www.vyne.co.uk', scheme: 'https' }
   # In production, :host should be set to the actual host of your application.
 
   # Prepend all log lines with the following tags.
