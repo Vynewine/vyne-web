@@ -1,0 +1,11 @@
+<br/>
+<br/>
+<br/>
+
+
+<p>Please let us know reason for this cancellation</p>
+
+<%= form_tag(order_cancel_path(@order), method: 'post') do %>
+    <%= text_field_tag(:reason) %>
+    <%= submit_tag('Submit') %>
+<% end %>

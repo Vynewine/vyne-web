@@ -13,7 +13,7 @@ class Order < ActiveRecord::Base
 
   scope :user_id, ->(id) { where("client_id = ?", id) }
 
-  enum delivery_type: { google_coordinate: 'google_coordinate', shutl: 'shutl' }
+  enum delivery_type: {google_coordinate: 'google_coordinate', shutl: 'shutl'}
 
   self.per_page = 15
 
@@ -59,7 +59,32 @@ class Order < ActiveRecord::Base
   end
 
   def can_be_advised
-    [Status.statuses[:pending], Status.statuses[:packing]].include? status.id
+    [Status.statuses[:pending], Status.statuses[:packing], Status.statuses[:advised]].include? status.id
+  end
+
+  def can_request_substitution?
+    if order_items.blank?
+      false
+    else
+      if order_items.select { |item| item.substitution_status != 'not_requested' }.count > 0
+        false
+      else
+        true
+      end
+    end
+  end
+
+
+  def substitution_requested?
+    if order_items.blank?
+      false
+    else
+      if order_items.select { |item| item.substitution_status.requested? }.count > 0
+        true
+      else
+        false
+      end
+    end
   end
 
 end

@@ -1,0 +1,30 @@
+<br/>
+<br/>
+<br/>
+
+<p>
+  Please select wines you'd like to substitute
+</p>
+
+<% @order.order_items.each do |item| %>
+    <p>
+      <input type="checkbox" name="order_item" style="-webkit-appearance: checkbox" value="<%= item.id %>"/>
+      Wine: <%= item.wine.full_info %>, price: <%= item.price %>
+      <input type="text" id="substitution-reason-<%= item.id %>" style="display: none"/>
+    </p>
+<% end %>
+
+
+Please Specify reason for substitution:
+1. Price too high
+2. I don't like this wine
+3. Other
+
+<%= form_tag(order_substitute_path(@order), id: 'substitutions-form', method: 'post') do %>
+    <input type="hidden" name="substitutions" id="substitutions">
+    <input type="submit" id="request-substitution" value="Request Substitutions" />
+<% end %>
+
+<script>
+    var substitutionOrderId = <%= @order.id %>;
+</script>

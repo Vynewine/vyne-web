@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150107155518) do
+ActiveRecord::Schema.define(version: 20150112105159) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -286,6 +286,10 @@ ActiveRecord::Schema.define(version: 20150107155518) do
     t.datetime "updated_at"
     t.datetime "deleted_at"
     t.integer  "inventory_id"
+    t.datetime "substitution_requested_at"
+    t.integer  "substitution_status",       default: 0
+    t.text     "substitution_request_note"
+    t.text     "advisory_note"
   end
 
   add_index "order_items", ["deleted_at"], :name => "index_order_items_on_deleted_at"
@@ -314,6 +318,8 @@ ActiveRecord::Schema.define(version: 20150107155518) do
     t.decimal  "delivery_cost"
     t.string   "delivery_provider"
     t.json     "delivery_courier"
+    t.datetime "advisory_completed_at"
+    t.text     "cancellation_note"
   end
 
   add_index "orders", ["address_id"], :name => "index_orders_on_address_id"

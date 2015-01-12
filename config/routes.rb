@@ -46,7 +46,10 @@ Rails.application.routes.draw do
 
   resources :orders do
     get 'status'
-
+    get 'substitution_request'
+    post 'substitute'
+    get 'cancellation_request'
+    post 'cancel'
   end
 
   # ----------------------------------------------------------------------------

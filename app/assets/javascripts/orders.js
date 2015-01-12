@@ -4,18 +4,27 @@ last_lat = 0;
 last_lng = 0;
 
 var ready = function () {
-    if ($('body.orders').length) {
+    if ($('body.orders').length && typeof(orderId) !== 'undefined') {
         var currentStatus = '';
 
         var checkOrderStatus = function () {
 
-            if(orderId) {
+            if (orderId) {
                 $.get('/orders/' + orderId + '/status', function (data) {
 
-                    switch(data.status) {
+                    switch (data.status) {
                         case 'pending':
-                        case 'packing':
                             setOrderView('order-placed');
+                            break;
+                        case 'advised':
+                            if (orderData.status !== 'advised') {
+                                location.reload();
+                            } else {
+                                setOrderView('order-advised');
+                            }
+                            break;
+                        case 'packing':
+                            setOrderView('order-advised');
                             break;
                         case 'pickup':
                             setOrderView('order-pickup');
@@ -37,7 +46,7 @@ var ready = function () {
         };
 
         var setOrderView = function (status) {
-            if(currentStatus === '') {
+            if (currentStatus === '') {
                 currentStatus = status;
                 resetViews();
                 $('#' + status).addClass('active');
@@ -48,11 +57,12 @@ var ready = function () {
             }
         };
 
-        var resetViews = function() {
+        var resetViews = function () {
             $('#order-placed').removeClass('active');
             $('#order-pickup').removeClass('active');
             $('#order-in-transit').removeClass('active');
             $('#order-delivered').removeClass('active');
+            $('#order-advised').removeClass('active');
         };
 
         setInterval(function () {
@@ -65,7 +75,7 @@ var ready = function () {
 
         var renderMap = function (data) {
 
-            if(!map) {
+            if (!map) {
                 $('#map').show();
                 map = L.map('map', {zoomControl: false});
 
@@ -103,7 +113,7 @@ var ready = function () {
                             line_points[line_points.length] = [val.lat(), val.lng()];
                         });
 
-                        var polyline = L.polyline(line_points, { color: 'blue' }).addTo(map);
+                        var polyline = L.polyline(line_points, {color: 'blue'}).addTo(map);
 
                         map.fitBounds(polyline.getBounds());
                     }
@@ -113,17 +123,17 @@ var ready = function () {
 
             $.get('/delivery/get_courier_location?id=' + orderId, function (data) {
 
-                if(data.data.lat !== last_lat) {
+                if (data.data.lat !== last_lat) {
                     last_lat = data.data.lat;
                     last_lat_time = Date.now();
                 }
 
-                if(data.data.lng !== last_lng) {
+                if (data.data.lng !== last_lng) {
                     last_lng = data.data.lng;
                     last_lng_time = Date.now();
                 }
 
-                if(!wineMarker) {
+                if (!wineMarker) {
                     var bottleIcon = L.icon({
                         iconUrl: '/wine-bottle.png',
                         iconRetinaUrl: '/wine-bottle@2x.png',
@@ -132,7 +142,7 @@ var ready = function () {
                     wineMarker = L.marker([data.data.lat, data.data.lng], {icon: bottleIcon}).addTo(map);
                 } else {
 
-                    if(typeof(debug_location) !== 'undefined') {
+                    if (typeof(debug_location) !== 'undefined') {
                         console.log(data.data.lat);
                         console.log(Date.now() - last_lat_time);
                         console.log(data.data.lng);
@@ -141,8 +151,8 @@ var ready = function () {
 
 
                     wineMarker.setLatLng(L.latLng(
-                        data.data.lat,
-                        data.data.lng)
+                            data.data.lat,
+                            data.data.lng)
                     );
                 }
             });
@@ -153,6 +163,33 @@ var ready = function () {
             renderMap(orderData);
         }
 
+    }
+
+    if ($('body.orders').length && typeof(substitutionOrderId) !== 'undefined') {
+
+        $("[name='order_item']").click(function (e) {
+            $('#substitution-reason-' + this.value).toggle();
+        });
+
+
+        $('#substitutions-form').submit(function(e) {
+
+            var substitutions = [];
+
+            e.preventDefault();
+            $("input:checked").each(function() {
+                var reason = $('#substitution-reason-' + this.value);
+
+                substitutions.push({
+                    id: this.value,
+                    reason: reason.val()
+                });
+            });
+
+            $('#substitutions').val(JSON.stringify(substitutions))
+
+            this.submit();
+        });
     }
 };
 

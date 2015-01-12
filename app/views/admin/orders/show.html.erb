@@ -56,6 +56,16 @@
             </div>
           </div>
         </li>
+        <% unless @order.cancellation_note.blank? %>
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-xs-12">
+                  <strong>Cancellation Note:</strong>
+                  <%= @order.cancellation_note %>
+                </div>
+              </div>
+            </li>
+        <% end %>
       </ul>
     </div>
   </div>
@@ -150,8 +160,15 @@
         <tr>
           <% if @order.can_be_advised %>
               <td>
-                <a href="/admin/advise/item/<%= item.id %>" class="btn btn-default">
-                  <span class="glyphicon glyphicon-glass" aria-hidden="true"></span> <%= item.wine.nil? ? 'Advise' : 'Advised' %>
+                <a href="/admin/advise/item/<%= item.id %>" class="btn <%= item.substitution_status == 'requested' ? 'btn-warning' : 'btn-default' %>">
+                  <span class="glyphicon glyphicon-glass" aria-hidden="true"></span>
+                  <% if item.wine.nil? %>
+                      Advise
+                  <% elsif item.substitution_status == 'requested' %>
+                      Substitution Requested
+                  <% else %>
+                      Advised
+                  <% end %>
                 </a>
               </td>
           <% end %>

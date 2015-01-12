@@ -9,6 +9,8 @@ class OrderItem < ActiveRecord::Base
   belongs_to :inventory
   has_many :food_items
 
+  enum substitution_status: %i(not_requested requested completed)
+
   def preferences
     preferences = []
 

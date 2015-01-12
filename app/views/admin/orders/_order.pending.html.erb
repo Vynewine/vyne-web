@@ -39,8 +39,15 @@
                   <td><%= order_item.preferences.to_sentence(last_word_connector: ' and ').capitalize %>.</td>
                   <td>
                     <% if order.can_be_advised %>
-                        <a href="/admin/advise/item/<%= order_item.id %>" class="btn btn-default">
-                          <span class="glyphicon glyphicon-glass" aria-hidden="true"></span> <%= order_item.wine.nil? ? 'Advise' : 'Advised' %>
+                        <a href="/admin/advise/item/<%= order_item.id %>" class="btn <%= order_item.substitution_status == 'requested' ? 'btn-warning' : 'btn-default' %>">
+                          <span class="glyphicon glyphicon-glass" aria-hidden="true"></span>
+                          <% if order_item.wine.nil? %>
+                              Advise
+                          <% elsif order_item.substitution_status == 'requested' %>
+                              Substitution Requested
+                          <% else %>
+                              Advised
+                          <% end %>
                         </a>
                     <% else %>
                         complete

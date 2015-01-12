@@ -31,7 +31,14 @@
             <li class="list-group-item">
               <div class="row">
                 <div class="col-xs-12">
-                  <%= @order_item.wine.display_name %> - Cost: £<%= @order_item.cost %>
+                  <%= @order_item.wine.full_info %> - Price: £<%= @order_item.cost %>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12">
+                  <% if @order_item.substitution_status == 'requested' %>
+                      <span class="text-warning">Reason for Substitution Request: <%= @order_item.substitution_request_note %></span>
+                  <% end %>
                 </div>
               </div>
             </li>

@@ -1,3 +1,5 @@
+#TODO: Since Rails 4 this should be on the Order as Enum
+
 class Status < ActiveRecord::Base
   acts_as_paranoid
 
@@ -10,7 +12,8 @@ class Status < ActiveRecord::Base
            delivered: 6,
            cancelled: 7,
            packing: 8,
-           created: 10
+           created: 10,
+           advised: 11
        }
 
 end

@@ -61,12 +61,17 @@ class Admin::AdvisorsController < ApplicationController
     @order_item.cost = inventory.cost
     @order_item.inventory = inventory
 
-    @order.advisor = current_user
+    if @order_item.substitution_status == 'requested'
+      @order_item.substitution_status = 'completed'
+    end
+
     unless @order_item.save
       flash[:error] = @order_item.errors.full_messages().join(', ')
       redirect_to admin_order_path @order
       return
     end
+
+    @order.advisor = current_user
 
     if @order.save
       redirect_to admin_order_path @order

@@ -9,6 +9,11 @@
             <%= link_to 'Pending', admin_orders_path %>
           </li>
           <li
+          <% if params[:status] == Status.statuses[:advised].to_s %> class="active"
+          <% end %>>
+            <%= link_to 'Advised', admin_orders_path(:status => Status.statuses[:advised]) %>
+          </li>
+          <li
           <% if params[:status] == Status.statuses[:packing].to_s %> class="active"
           <% end %>>
             <%= link_to 'Packing', admin_orders_path(:status => Status.statuses[:packing]) %>
@@ -95,11 +100,11 @@
                             <td><%= order_item.preferences.to_sentence(last_word_connector: ' and ').capitalize %>.</td>
                             <td>
                               <% if order.can_be_advised %>
-                                  <a href="/admin/advise/item/<%= order_item.id %>">
+                                  <a href="/admin/advise/item/<%= order_item.id %>" class="btn btn-default">
                                     <%= order_item.wine.nil? ? 'Advise' : 'Advised' %>
                                   </a>
                               <% else %>
-                                  complete
+                                  Complete
                               <% end %>
 
                             </td>

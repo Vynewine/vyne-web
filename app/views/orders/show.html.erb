@@ -8,84 +8,109 @@
 
   <div class="order-confirmation-content wrapper">
 
-    <ul class="accordian" id="order-views">
-      <li class="accordian-item
+    <% if @order.status_id == Status.statuses[:cancelled] || params[:cancelled] == 'true' %>
+        Your order has been cancelled.
+    <% else %>
+        <ul class="accordian" id="order-views">
+          <li class="accordian-item
         <% if @order.status_id == Status.statuses[:pending] %> active
         <% end %>" id="order-placed">
-        <div class="line"></div>
-        <span class="accordian-item-link">1. Order Placed</span>
+            <div class="line"></div>
+            <span class="accordian-item-link">1. Order Placed</span>
 
-        <div class="accordian-item-content">
-          <div class="line"></div>
-          <span class="number">1</span>
+            <div class="accordian-item-content">
+              <div class="line"></div>
+              <span class="number">1</span>
 
-          <h3>Thanks for ordering</h3>
+              <h3>Thanks for ordering</h3>
 
-          <p>Our sommelier is now choosing your wine</p>
-          <span>(Based on the preferences provided)</span>
-        </div>
-      </li>
-      <li class="accordian-item
+              <p>Our sommelier is now choosing your wine</p>
+              <span>(Based on the preferences provided)</span>
+            </div>
+          </li>
+          <li class="accordian-item
+        <% if [Status.statuses[:advised], Status.statuses[:packing]].include? @order.status_id %> active
+        <% end %>" id="order-advised">
+            <div class="line"></div>
+            <span class="accordian-item-link">2. Order Advised</span>
+
+            <div class="accordian-item-content">
+              <div class="line"></div>
+              <span class="number">2</span>
+
+              <h3>Your advised wine details</h3>
+
+              <p>Please review your order.</p>
+              <% if @order.can_request_substitution? %>
+                  <p>Request any substitutions if necessary.</p>
+              <% end %>
+              <%= render 'order_items' %>
+
+            </div>
+          </li>
+          <li class="accordian-item
         <% if @order.status_id == Status.statuses[:pickup] %> active
         <% end %>" id="order-pickup">
-        <span class="accordian-item-link">2. Courier collects from cellar</span>
+            <span class="accordian-item-link">3. Courier collects from cellar</span>
 
-        <div class="accordian-item-content">
-          <div class="line"></div>
-          <span class="number">2</span>
+            <div class="accordian-item-content">
+              <div class="line"></div>
+              <span class="number">3</span>
 
-          <h3>Courier en route to wine cellar</h3>
+              <h3>Courier en route to wine cellar</h3>
 
-          <p>The courier is on the first leg of the journey: to the wine cellar. </p><br/>
+              <p>The courier is on the first leg of the journey: to the wine cellar. </p><br/>
 
-          <p>Check this page in 10-20 minutes to see if the bottle has been collected and on its way to you.</p>
-        </div>
-      </li>
-      <li class="accordian-item
+              <p>Check this page in 10-20 minutes to see if the bottle has been collected and on its way to you.</p>
+            </div>
+          </li>
+          <li class="accordian-item
         <% if @order.status_id == Status.statuses[:in_transit] %> active
         <% end %>" id="order-in-transit">
-        <span class="accordian-item-link">3. Your bottle is on its way!</span>
+            <span class="accordian-item-link">4. Your bottle is on its way!</span>
 
-        <div class="accordian-item-content">
-          <div class="line"></div>
-          <span class="number">3</span>
+            <div class="accordian-item-content">
+              <div class="line"></div>
+              <span class="number">4</span>
 
-          <h3>Your bottle is en-route to your chosen location.</h3>
+              <h3>Your bottle is en-route to your chosen location.</h3>
 
-          <p>Make sure you're available at <%= @order.address.blank? ? '' : @order.address.postcode %> for the courier
-            to deliver your
-            bottle. </p>
-          <br/>
-          <% unless @estimate.blank? %>
-              <p>Estimated delivery time: <%= Time.parse(@estimate).strftime("%H:%M") %></p>
-          <% end %>
+              <p>Make sure you're available at <%= @order.address.blank? ? '' : @order.address.postcode %> for the
+                courier
+                to deliver your
+                bottle. </p>
+              <br/>
+              <% unless @estimate.blank? %>
+                  <p>Estimated delivery time: <%= Time.parse(@estimate).strftime("%H:%M") %></p>
+              <% end %>
 
-          <div id="map" style="width: 100%; height: 300px; display: none"></div>
+              <div id="map" style="width: 100%; height: 300px; display: none"></div>
 
-        </div>
-      </li>
-      <li class="accordian-item
+            </div>
+          </li>
+          <li class="accordian-item
         <% if @order.status_id == 6 %> active
         <% end %>" id="order-delivered">
-        <span class="accordian-item-link">4. Delivery Complete</span>
+            <span class="accordian-item-link">5. Delivery Complete</span>
 
-        <div class="accordian-item-content">
-          <div class="line"></div>
-          <span class="number">4</span>
+            <div class="accordian-item-content">
+              <div class="line"></div>
+              <span class="number">5</span>
 
-          <h3>Your order has been delivered.</h3>
-          <br/>
+              <h3>Your order has been delivered.</h3>
+              <br/>
 
-          <p>If you have any problems, get in touch via <br/><a href="https://vyne.zendesk.com/hc">Vyne Helpdesk</a></p>
-          <br/>
-        </div>
-      </li>
-    </ul>
-
-
+              <p>If you have any problems, get in touch via <br/><a href="https://vyne.zendesk.com/hc">Vyne Helpdesk</a>
+              </p>
+              <br/>
+            </div>
+          </li>
+        </ul>
+    <% end %>
   </div>
 
 </div>
+
 <script>
     <% unless @order.blank? %>
     var orderId = <%= @order.id %>;
