@@ -6,7 +6,7 @@ class HomeController < ApplicationController
   def index
 
     unless params['device'].blank?
-      cookies[:device] = { :value => params['device'], :expires => 3.years.from_now }
+      cookies[:device] = {:value => params['device'], :expires => 3.years.from_now}
     end
 
     if !cookies[:device].blank? && !user_signed_in?
@@ -54,6 +54,17 @@ class HomeController < ApplicationController
 
   def warehouses
     @warehouses = Warehouse.where(:active => true)
+    max_distance = Rails.application.config.max_delivery_distance
+    warehouses = {warehouses: []}
+    @warehouses.each do |warehouse|
+      warehouses[:warehouses] << {
+          id: warehouse.id,
+          address: warehouse.address.postcode,
+          distance: max_distance,
+          is_open: warehouse.is_open
+      }
+    end
+    render :json => warehouses
   end
 
   def terms
