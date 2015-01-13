@@ -5,7 +5,8 @@ class OrdersController < ApplicationController
                     :substitution_request => 'read',
                     :substitute => 'update',
                     :cancel => 'update',
-                    :cancellation_request => 'read'
+                    :cancellation_request => 'read',
+                    :accept => 'update'
 
   def index
     @orders = Order.find_by(client: current_user)
@@ -30,6 +31,7 @@ class OrdersController < ApplicationController
         @estimate = @order.delivery_status['booking']['estimates']['eta']
       end
     end
+
   end
 
   def status
@@ -37,6 +39,12 @@ class OrdersController < ApplicationController
       @order = Order.find_by(id: params[:order_id])
     else
       @order = Order.find_by(id: params[:order_id], client_id: current_user)
+    end
+
+    seconds_since_advisory = -1
+
+    unless @order.advisory_completed_at.blank?
+      seconds_since_advisory = (Time.now.utc - @order.advisory_completed_at).seconds.to_i
     end
 
     if @order.blank?
@@ -47,24 +55,42 @@ class OrdersController < ApplicationController
                  :customer_lat => @order.address.latitude,
                  :customer_lng => @order.address.longitude,
                  :warehouse_lat => @order.warehouse.address.latitude,
-                 :warehouse_lng => @order.warehouse.address.longitude,
+                 :warehouse_lng => @order.warehouse.address.longitude
              }
     end
   end
 
   def substitution_request
-    @order = Order.find(params[:order_id])
+    if current_user.admin?
+      @order = Order.find_by(id: params[:order_id])
+    else
+      @order = Order.find_by(id: params[:order_id], client_id: current_user)
+    end
+
+    if @order.blank?
+      render :status => :forbidden, :text => 'Forbidden fruit'
+      return
+    end
   end
 
   def substitute
 
-    @order = Order.find(params[:order_id])
+    if current_user.admin?
+      @order = Order.find_by(id: params[:order_id])
+    else
+      @order = Order.find_by(id: params[:order_id], client_id: current_user)
+    end
+
+    if @order.blank?
+      render :status => :forbidden, :text => 'Forbidden fruit'
+      return
+    end
 
     substitutions = JSON.parse params[:substitutions]
 
     unless substitutions.blank?
       substitutions.each do |sub|
-        order_item = @order.order_items.select{ |item| item.id.to_s == sub['id'].to_s }.first
+        order_item = @order.order_items.select { |item| item.id.to_s == sub['id'].to_s }.first
         order_item.substitution_requested_at = Time.now.utc
         order_item.substitution_status = 'requested'
         order_item.substitution_request_note = sub['reason']
@@ -80,11 +106,53 @@ class OrdersController < ApplicationController
   end
 
   def cancellation_request
-    @order = Order.find(params[:order_id])
+    if current_user.admin?
+      @order = Order.find_by(id: params[:order_id])
+    else
+      @order = Order.find_by(id: params[:order_id], client_id: current_user)
+    end
+
+    if @order.blank?
+      render :status => :forbidden, :text => 'Forbidden fruit'
+    end
   end
 
   def cancel
+
+    if current_user.admin?
+      @order = Order.find_by(id: params[:order_id])
+    else
+      @order = Order.find_by(id: params[:order_id], client_id: current_user)
+    end
+
+    if @order.blank?
+      render :status => :forbidden, :text => 'Forbidden fruit'
+      return
+    end
+
     Resque.enqueue(OrderCancellation, params[:order_id], params[:reason])
     redirect_to order_path(params[:order_id], :cancelled => 'true')
+  end
+
+  def accept
+    if current_user.admin?
+      @order = Order.find_by(id: params[:order_id])
+    else
+      @order = Order.find_by(id: params[:order_id], client_id: current_user)
+    end
+
+    if @order.blank?
+      render :status => :forbidden, :text => 'Forbidden fruit'
+      return
+    end
+
+    results = OrderHelper.confirm_order(@order, @order.client.admin?)
+
+    if results[:errors].blank?
+      #TODO: Need to unschedule queues job here!!!!!!!!!!!!!!!!
+      redirect_to order_path(@order)
+    else
+      @errors = results[:errors]
+    end
   end
 end

@@ -1,4 +1,6 @@
 require 'resque/server'
+require 'resque-scheduler'
+require 'resque/scheduler/server'
 
 class AuthenticatedMiddleware
   def initialize(app)

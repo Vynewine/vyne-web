@@ -47,7 +47,7 @@ class Admin::DeliveryController < ApplicationController
 
   def get_google_coordinate_job_info(order)
 
-    results = get_job_status(order)
+    results = CoordinateHelper.get_job_status(order)
 
     if results[:errors].blank?
       order.delivery_status = results[:data]

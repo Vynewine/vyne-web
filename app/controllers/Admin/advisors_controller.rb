@@ -93,7 +93,7 @@ class Admin::AdvisorsController < ApplicationController
     order = Order.find(params[:order])
 
     if order.delivery_provider == 'google_coordinate' && !order.delivery_token.blank?
-      cancel_job(order)
+      CoordinateHelper.cancel_job(order)
     end
 
     # Save Delivery Quote

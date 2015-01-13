@@ -2,10 +2,22 @@
 <br/>
 <br/>
 
+<% if @order.order_change_timeout_seconds > 0 %>
+    <p>Please let us know reason for this cancellation</p>
 
-<p>Please let us know reason for this cancellation</p>
+    <%= form_tag(order_cancel_path(@order), method: 'post') do %>
+        <%= text_field_tag(:reason) %>
+        <%= submit_tag('Submit') %>
+    <% end %>
 
-<%= form_tag(order_cancel_path(@order), method: 'post') do %>
-    <%= text_field_tag(:reason) %>
-    <%= submit_tag('Submit') %>
+    <div id="counter"></div>
+
+<% else %>
+    Cancellation request time expired. Please contact Vyne support in case of any queries about your order.
 <% end %>
+
+
+<script>
+    var cancellationOrderId = <%= @order.id %>;
+    var orderChangeTimeOutSeconds = <%= @order.order_change_timeout_seconds %>;
+</script>

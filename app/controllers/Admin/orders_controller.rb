@@ -99,38 +99,12 @@ class Admin::OrdersController < ApplicationController
   end
 
   def cancel
-    @order = Order.find(params[:order_id])
-
-    #Refund any charges associated with the order
-    unless @order.charge_id.blank? || @order.charge_id == 'Admin'
-      #TODO: Move this to Stripe Helper
-      stripe_charge = @order.charge_id
-      Stripe.api_key = Rails.application.config.stripe_key
-      charge = Stripe::Charge.retrieve(stripe_charge)
-      puts json: charge
-      puts charge.refunds
-      refund = charge.refunds.create
-      @order.refund_id = refund.id
-    end
-
-    #Cancel Shutl delivery if already booked
-    unless @order.delivery_token.blank?
-      if @order.delivery_provider == 'google_coordinate'
-        cancel_job(@order)
-      else
-        cancel_booking(@order.delivery_token)
-      end
-
-    end
-
-    @order.status_id = Status.statuses[:cancelled]
-
-    if @order.save
-      redirect_to [:admin, @order], notice: 'Order was successfully cancelled.'
+    if current_user.admin?
+      Resque.enqueue(OrderCancellation, params[:order_id], 'Cancelled by ' + current_user.name)
+      redirect_to admin_order_path(params[:order_id]), :flash => { :notice => 'Order queued for cancellation.' }
     else
-      redirect_to [:admin, @order], :flash => {:error => @order.errors.full_messages().join(', ')}
+      redirect_to admin_order_path(params[:order_id]), :flash => { :notice => "You don't have rights to cancel orders." }
     end
-
   end
 
   def charge
@@ -177,7 +151,9 @@ class Admin::OrdersController < ApplicationController
     @order = Order.find(params[:order_id])
     @order.status_id = Status.statuses[:advised]
     @order.advisory_completed_at = Time.now.utc
-    schedule_job(@order)
+
+    Resque.enqueue_in(5.minutes, OrderConfirmation, @order.id, @order.client.admin? ? true : false)
+
     if @order.save
       redirect_to admin_orders_url(:status => @order.status_id), :flash => {:notice => 'Order advised. Waiting for client to confirm.'}
     else

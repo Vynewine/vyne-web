@@ -22,7 +22,7 @@ class CourierLocation
           log 'Courier Location - order key: ' + key + ' not found or expired'
         else
           log 'Courier Location - processing for order key: ' + key
-          courier_info = get_latest_courier_position(order)
+          courier_info = CoordinateHelper.get_latest_courier_position(order)
 
           log courier_info
 

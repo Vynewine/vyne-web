@@ -10,7 +10,7 @@ module CoordinateHelper
   APP_VERSION = '1.0.0'
 
 
-  def google_client
+  def self.google_client
 
     @client = Google::APIClient.new(
         :application_name => APP_NAME,
@@ -25,14 +25,14 @@ module CoordinateHelper
 
   end
 
-  def google_auth
+  def self.google_auth
     google_client
     @auth = @client.authorization.dup
     @auth.redirect_uri = URI.join(request.original_url, callback_admin_oauth_index_path)
     @auth
   end
 
-  def fetch_access_token(code)
+  def self.fetch_access_token(code)
     google_client
     @auth.code = code
     @auth.fetch_access_token!
@@ -54,7 +54,7 @@ module CoordinateHelper
 
   end
 
-  def schedule_job(order)
+  def self.schedule_job(order)
 
     google_client
 
@@ -79,14 +79,13 @@ module CoordinateHelper
     Rails.logger.debug result
 
     body = JSON.parse(result.body)
-    puts body
-    puts json: body['id']
+
     order.delivery_token = body['id']
     order.delivery_status = body
     order.delivery_provider = 'google_coordinate'
   end
 
-  def cancel_job(order)
+  def self.cancel_job(order)
     result = {
         :errors => [],
         :data => ''
@@ -123,7 +122,7 @@ module CoordinateHelper
 
   end
 
-  def get_job_status(order)
+  def self.get_job_status(order)
 
     result = {
         :errors => [],
@@ -155,7 +154,7 @@ module CoordinateHelper
 
   end
 
-  def get_latest_courier_position(order)
+  def self.get_latest_courier_position(order)
 
     result = {
         :errors => [],
@@ -229,7 +228,7 @@ module CoordinateHelper
 
   end
 
-  def get_jobs_status
+  def self.get_jobs_status
 
     result = {
         :errors => [],
@@ -277,7 +276,7 @@ module CoordinateHelper
     end
   end
 
-  def coordinate_status_to_order_status(progress)
+  def self.coordinate_status_to_order_status(progress)
     case progress.to_s.strip
       when 'IN_PROGRESS'
         return Status.statuses[:in_transit]
@@ -288,11 +287,11 @@ module CoordinateHelper
     end
   end
 
-  def log(message)
+  def self.log(message)
     logger.tagged('Coordinate Helper') { @logger.info message }
   end
 
-  def logger
+  def self.logger
     @logger ||= ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
   end
 

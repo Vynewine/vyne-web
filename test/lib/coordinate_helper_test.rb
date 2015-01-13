@@ -157,7 +157,7 @@ class CoordinateHelperTest < ActiveSupport::TestCase
                       :expires_at => '2014-12-22 19:20:05.326676'
                   })
 
-    results = get_latest_courier_position(order)
+    results = CoordinateHelper.get_latest_courier_position(order)
 
     assert_equal(51.5199904, results[:data][:lat])
 
@@ -174,7 +174,7 @@ class CoordinateHelperTest < ActiveSupport::TestCase
 
     order = orders(:order1)
     order.delivery_token = '1883650'
-    results = cancel_job(order)
+    results = CoordinateHelper.cancel_job(order)
     #results = get_job_status(order)
     puts results
   end

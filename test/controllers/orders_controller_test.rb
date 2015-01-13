@@ -50,4 +50,22 @@ class OrdersControllerTest < ActionController::TestCase
     assert_response :forbidden
   end
 
+  test 'sub dates' do
+
+    advised_at = Time.now.utc - 20.seconds
+    # puts advised_at
+    # puts advised_at - 5.minutes
+    # puts (Time.now.utc - advised_at).seconds.to_i
+    # puts 5.minutes.seconds
+
+
+    time_out = Time.now.utc - 5.minutes
+    if advised_at > time_out
+      puts (advised_at - time_out).seconds.to_i
+    else
+      puts 0
+    end
+
+  end
+
 end

@@ -89,8 +89,8 @@ class ShopController < ApplicationController
         return
       end
 
-      # Charge Customer
-      payment_results = charge_customer(@order)
+      # Create Stripe Customer
+      payment_results = create_stripe_customer(@order)
       if payment_results.blank?
         @order.status_id = Status.statuses[:pending]
       else
@@ -98,6 +98,7 @@ class ShopController < ApplicationController
         render json: payment_results, status: :unprocessable_entity
         return
       end
+
 
       if @order.save
 
@@ -238,7 +239,7 @@ class ShopController < ApplicationController
     end
   end
 
-  def charge_customer(order)
+  def create_stripe_customer(order)
 
     card_id = params[:old_card].to_i
     if card_id == 0 # New card
@@ -288,23 +289,6 @@ class ShopController < ApplicationController
     end
 
     order.payment = payment
-
-    # Charge card
-    stripe_card_id = payment.stripe_card_id
-    stripe_customer_id = payment.user.stripe_id
-    value = (order.total_price * 100).to_i
-
-    if current_user.admin? && Rails.env.downcase  == 'production'
-      order.charge_id = 'Admin'
-    else
-      results = StripeHelper.charge_card(value, stripe_card_id, stripe_customer_id)
-
-      if results[:errors].blank?
-        order.charge_id = results[:data].id
-      else
-        return results[:errors]
-      end
-    end
 
     nil
   end

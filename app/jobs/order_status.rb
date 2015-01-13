@@ -1,5 +1,3 @@
-include CoordinateHelper
-
 class OrderStatus
   @queue = :order_status
 
@@ -9,7 +7,7 @@ class OrderStatus
     orders_in_process = Order.where(:status => [Status.statuses[:pickup], Status.statuses[:in_transit]], :delivery_provider => Order.delivery_types[:google_coordinate]).count
 
     if orders_in_process > 0
-      jobs = get_jobs_status
+      jobs = CoordinateHelper.get_jobs_status
 
       if jobs[:errors].blank?
 
@@ -19,7 +17,7 @@ class OrderStatus
             log 'Order with for job id: ' + job[:id].to_s + ' not found.'
           else
             log 'Processing order with job id ' + job[:id].to_s
-            status = coordinate_status_to_order_status(job[:progress])
+            status = CoordinateHelper.coordinate_status_to_order_status(job[:progress])
             unless status.blank?
               log 'New order status: ' + status.to_s
               order.status_id = status

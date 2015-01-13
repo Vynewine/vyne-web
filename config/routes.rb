@@ -50,6 +50,7 @@ Rails.application.routes.draw do
     post 'substitute'
     get 'cancellation_request'
     post 'cancel'
+    get 'accept'
   end
 
   # ----------------------------------------------------------------------------

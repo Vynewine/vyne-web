@@ -41,12 +41,12 @@ class Admin::OauthController < ApplicationController
   end
 
   def new
-    auth = google_auth
+    auth = CoordinateHelper.google_auth
     redirect_to auth.authorization_uri({:approval_prompt => 'force'}).to_s, status: 303
   end
 
   def callback
-    fetch_access_token(params[:code])
+    CoordinateHelper.fetch_access_token(params[:code])
     redirect_to admin_oauth_index_path
   end
 

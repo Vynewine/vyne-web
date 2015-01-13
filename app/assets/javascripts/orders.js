@@ -3,6 +3,37 @@ last_lng_time = Date.now();
 last_lat = 0;
 last_lng = 0;
 
+var interval;
+
+var setCountDown = function (time) {
+    if (time > 0) {
+        var minutes = Math.floor(time / 60);
+        var seconds = time - minutes * 60;
+
+        interval = setInterval(function () {
+            var counter = $('#counter');
+            if (seconds == 0) {
+                if (minutes == 0) {
+                    clearInterval(interval);
+                    location.reload();
+                    return;
+                } else {
+                    minutes--;
+                    seconds = 60;
+                }
+            }
+            if (minutes > 0) {
+                var minute_text = minutes < 10 ? '0' + minutes : minutes;
+            } else {
+                var minute_text = '00';
+            }
+            var second_text = seconds < 10 ? '0' + seconds : seconds;
+            counter.html(minute_text + ':' + second_text);
+            seconds--;
+        }, 1000);
+    }
+};
+
 var ready = function () {
     if ($('body.orders').length && typeof(orderId) !== 'undefined') {
         var currentStatus = '';
@@ -68,6 +99,8 @@ var ready = function () {
         setInterval(function () {
             checkOrderStatus();
         }, 10000);
+
+        setCountDown(orderChangeTimeOutSeconds);
 
 
         var map;
@@ -166,18 +199,20 @@ var ready = function () {
     }
 
     if ($('body.orders').length && typeof(substitutionOrderId) !== 'undefined') {
+        
+        setCountDown(orderChangeTimeOutSeconds);
 
         $("[name='order_item']").click(function (e) {
             $('#substitution-reason-' + this.value).toggle();
         });
 
 
-        $('#substitutions-form').submit(function(e) {
+        $('#substitutions-form').submit(function (e) {
 
             var substitutions = [];
 
             e.preventDefault();
-            $("input:checked").each(function() {
+            $("input:checked").each(function () {
                 var reason = $('#substitution-reason-' + this.value);
 
                 substitutions.push({
@@ -191,6 +226,11 @@ var ready = function () {
             this.submit();
         });
     }
+
+    if ($('body.orders').length && typeof(cancellationOrderId) !== 'undefined') {
+        setCountDown(orderChangeTimeOutSeconds);
+    }
+
 };
 
 $(document).on('page:load', ready);

@@ -115,6 +115,7 @@ gem 'rest-client', '~> 1.6.8'
 
 #Resque for running Background Job (Depends on Redis, check README instructions for installing Redis)
 gem 'resque', '~> 1.25.2'
+gem 'resque-scheduler', '~> 4.0.0'
 
 #Scheduling Work on Job Queue
 gem 'clockwork'

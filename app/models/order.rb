@@ -63,7 +63,7 @@ class Order < ActiveRecord::Base
   end
 
   def can_request_substitution?
-    if order_items.blank?
+    if order_items.blank? || status_id != Status.statuses[:advised]
       false
     else
       if order_items.select { |item| item.substitution_status != 'not_requested' }.count > 0
@@ -74,6 +74,18 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def order_change_timeout_seconds
+    if advisory_completed_at.blank? || status_id != Status.statuses[:advised]
+      0
+    else
+      time_out = Time.now.utc - 5.minutes
+      if advisory_completed_at > time_out
+        return (advisory_completed_at - time_out).seconds.to_i
+      else
+        0
+      end
+    end
+  end
 
   def substitution_requested?
     if order_items.blank?

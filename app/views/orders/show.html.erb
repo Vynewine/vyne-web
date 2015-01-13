@@ -126,6 +126,9 @@
         warehouse_lng: <%= @order.warehouse.address.longitude %>
         <% end %>
     };
+
+    var orderChangeTimeOutSeconds = <%= @order.order_change_timeout_seconds %>;
+
     <% end %>
 
 </script>

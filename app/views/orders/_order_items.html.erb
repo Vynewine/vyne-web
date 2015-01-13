@@ -2,10 +2,23 @@
     <% @order.order_items.each do |item| %>
         <div><%= item.wine.full_info %></div>
     <% end %>
-    <% if @order.can_request_substitution? && @order.advisory_completed_at > Time.now.utc - 5.minutes %>
-        <a href="/orders/<%= @order.id %>/substitution_request">Request Substitution</a>
-    <% end %>
-    <% if @order.advisory_completed_at > Time.now.utc - 5.minutes %>
-        <a href="/orders/<%= @order.id %>/cancellation_request">Cancel Order</a>
+
+    <% if @order.order_change_timeout_seconds > 0 %>
+        <div>
+          <a href="/orders/<%= @order.id %>/accept" id="accept-order">Accept Order</a>
+        </div>
+
+        <div>
+          <% if @order.can_request_substitution? %>
+              <a href="/orders/<%= @order.id %>/substitution_request">Request Substitution</a>
+          <% end %>
+        </div>
+
+        <div>
+          <a href="/orders/<%= @order.id %>/cancellation_request">Cancel Order</a>
+        </div>
+
+
+        <div id="counter"></div>
     <% end %>
 <% end %>
