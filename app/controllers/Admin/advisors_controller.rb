@@ -39,7 +39,7 @@ class Admin::AdvisorsController < ApplicationController
       end
     end
 
-    wine = Wine.find(params['wine-id'])
+    wine = Wine.find(params['wine_id'])
 
     inventory = Inventory.find_by(:warehouse => @order.warehouse, :wine => wine)
 
@@ -60,6 +60,7 @@ class Admin::AdvisorsController < ApplicationController
     @order_item.wine = wine
     @order_item.cost = inventory.cost
     @order_item.inventory = inventory
+    @order_item.advisory_note = params['advisory_note']
 
     if @order_item.substitution_status == 'requested'
       @order_item.substitution_status = 'completed'

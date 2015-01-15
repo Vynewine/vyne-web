@@ -1,6 +1,7 @@
 <% unless @order.advisory_completed_at.blank? %>
     <% @order.order_items.each do |item| %>
         <div><%= item.wine.full_info %></div>
+        <div>Note from the merchant: <%= item.advisory_note %> </div>
     <% end %>
 
     <% if @order.order_change_timeout_seconds > 0 %>

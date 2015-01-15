@@ -178,8 +178,14 @@
           <td>x<%= item.quantity %></td>
           <td><%= item.category.name %> (&pound;<%= '%.2f' % item.category.merchant_price_min %> to &pound;<%= '%.2f' % item.category.merchant_price_max %>)</td>
           <td>
-            <%= item.wine.nil? ? 'Not Selected' : item.wine.display_name %>
-            <%= item.inventory.nil? ? '' : ' - ' + item.inventory.vendor_sku %>
+            <% if item.wine.blank? %>
+                Not Selected
+                <% else %>
+                Wine: <%= item.wine.display_name %><br/>
+                SKU: <%= item.inventory.nil? ? '' : ' - ' + item.inventory.vendor_sku %><br/>
+                Note: <%= item.advisory_note.blank? ? 'N/A' : item.advisory_note %>
+                <% end %>
+
           </td>
           <td>
             £<%= item.cost %>
