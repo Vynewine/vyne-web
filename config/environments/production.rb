@@ -81,15 +81,15 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  #Mandrill API
+  # Mandrill API
   config.mandrill = 'ipcLBLgQRHya2q3jvpPQsw'
 
-  #Stripe
+  # Stripe
   config.stripe_key = ENV['STRIPE_KEY']
 
   config.stripe_key_publishable = ENV['STRIPE_KEY_PUBLISHABLE']
 
-  #Shutl
+  # Shutl
   config.shutl_url = ENV['SHUTL_URL']
 
   config.shutl_id = ENV['SHUTL_ID']
@@ -98,34 +98,40 @@ Rails.application.configure do
   config.shutl_secret = ENV['SHUTL_SECRET']
   # "DAiXY/UzTM14g6PAqAHDrm/ILwkJ3fT5mnh7aT15JiPI6YLz5GYN7qLtx4Yac60PFN+rZRuZuFyi0FExri3F6w==" ??
 
-  #Segment IO
+  # Segment IO
   config.segment_io_write_key =  '0zwU3t4m36'
 
-  #Sentry
+  # Sentry
   config.sentry_dns = 'https://d8178d04a5164db7be5668971be436a3:1bc7da2220874227af68c54d011880ac@app.getsentry.com/32494'
 
-  #Mailchimp
+  # Mailchimp
   config.mailchimp_key = '218800eead6b63a85a54db6df3eaedc4-us8'
 
-  #Currrent Delivery Distance
+  # Currrent Delivery Distance
   config.max_delivery_distance = ENV['MAX_DELIVERY_DISTANCE'].to_f
 
-  #Vyne order internal notification email
+  # Vyne order internal notification email
   config.order_notification = ENV['ORDER_NOTIFICATION']
 
-  #Require invitation code to access the site.
+  # Require invitation code to access the site.
   config.enable_invite_code = ENV['ENABLE_INVITE_CODE']
   config.invite_code = ENV['INVITE_CODE']
 
-  #Googe GCM
+  # Googe GCM
   config.google_gcm_public_api_key = 'AIzaSyCUuUzZOMAKS1n6kA396bI8FBUWpvdwyWk'
 
-  #Google Coordinate Team Id
+  # Google Coordinate Team Id
   config.google_coordinate_team_id = 'ZtCbuYnbGi9fTxkJtV390w'
 
   config.google_coordinate_client_id = ENV['CLIENT_ID']
   config.google_coordinate_client_secret = ENV['CLIENT_SECRET']
 
+  # Redis
   config.redis = ENV['OPENREDIS_URL']
+
+  # Twilio
+  config.twilio_account_sid = ENV['TWILIO_ACCOUNT_SID']
+  config.twilio_auth_token = ENV['TWILIO_AUTH_TOKEN']
+  config.twilio_number = ENV['TWILIO_NUMBER']
 
 end

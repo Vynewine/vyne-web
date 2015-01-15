@@ -224,7 +224,7 @@ class UserNewOrderTest < ActiveSupport::TestCase
     puts 'Register new address'
     Selenium::WebDriver::Support::Select.new(@driver.find_element(:id, 'suggested-addresses')).select_by(:text, '8a Pickfords Wharf, Wharf Road')
     @driver.find_element(:id, 'mobile').clear
-    @driver.find_element(:id, 'mobile').send_keys '+44 7718225201'
+    @driver.find_element(:id, 'mobile').send_keys '+447718225201'
     @driver.find_element(:id, 'address-details').click
   end
 

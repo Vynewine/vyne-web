@@ -153,6 +153,8 @@ class Admin::OrdersController < ApplicationController
     @order.advisory_completed_at = Time.now.utc
 
     Resque.enqueue_in(5.minutes, OrderConfirmation, :order_id => @order.id, :admin => @order.client.admin?)
+    Resque.enqueue(OrderEmailNotification, @order.id, :order_receipt)
+    Resque.enqueue(OrderSmsNotification, @order.id)
 
     if @order.save
       redirect_to admin_orders_url(:status => @order.status_id), :flash => {:notice => 'Order advised. Waiting for client to confirm.'}
@@ -167,7 +169,7 @@ class Admin::OrdersController < ApplicationController
 
     if @order.save
 
-      Resque.enqueue(OrderEmailNotification, @order.id, :order_receipt)
+
 
       redirect_to admin_orders_url(:status => @order.status_id), :flash => {:notice => 'Packing Completed for order: ' + @order.id.to_s}
     else

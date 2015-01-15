@@ -128,8 +128,10 @@ group :production do
   gem 'newrelic_rpm'
 end
 
-
 #Well obvious
 gem 'pgbackups-archive'
+
+#Twilio
+gem 'twilio-ruby'
 
 
