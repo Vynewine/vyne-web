@@ -5,10 +5,10 @@ class OrderConfirmation
   @logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
   TAG = 'Order Confirmation'
 
-  def self.perform (order_id, admin)
-    log 'Processing order confirmation for order id: ' + order_id.to_s
-    order = Order.find(order_id)
-    OrderHelper.confirm_order(order, admin)
+  def self.perform (args)
+    log 'Processing order confirmation for order id: ' + args['order_id'].to_s
+    order = Order.find(args['order_id'])
+    OrderHelper.confirm_order(order, args['admin'])
   end
 
   def self.log(message)

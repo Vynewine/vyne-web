@@ -152,7 +152,7 @@ class Admin::OrdersController < ApplicationController
     @order.status_id = Status.statuses[:advised]
     @order.advisory_completed_at = Time.now.utc
 
-    Resque.enqueue_in(5.minutes, OrderConfirmation, @order.id, @order.client.admin? ? true : false)
+    Resque.enqueue_in(5.minutes, OrderConfirmation, :order_id => @order.id, :admin => @order.client.admin?)
 
     if @order.save
       redirect_to admin_orders_url(:status => @order.status_id), :flash => {:notice => 'Order advised. Waiting for client to confirm.'}

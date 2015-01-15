@@ -11,5 +11,10 @@ task 'resque:setup' => :environment do
 
 end
 
+task 'resque:scheduler_setup' => :environment do
+  require 'resque-scheduler'
+  Resque.schedule = YAML.load_file(File.join(Rails.root, 'config', 'resque_schedule.yml'))
+end
+
 desc 'Alias for resque:work'
 task 'jobs:work' => 'resque:work'

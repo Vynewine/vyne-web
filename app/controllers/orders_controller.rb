@@ -146,10 +146,10 @@ class OrdersController < ApplicationController
       return
     end
 
+    Resque.remove_delayed(OrderConfirmation, :order_id => @order.id, :admin => @order.client.admin?)
     results = OrderHelper.confirm_order(@order, @order.client.admin?)
 
     if results[:errors].blank?
-      #TODO: Need to unschedule queues job here!!!!!!!!!!!!!!!!
       redirect_to order_path(@order)
     else
       @errors = results[:errors]

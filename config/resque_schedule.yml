@@ -1,0 +1,17 @@
+queue_order_status_update:
+  every: 10s
+  class: "OrderStatus"
+  args:
+  description: "Queueing order status update."
+
+queue_courier_location:
+  every: 10s
+  class: "CourierLocation"
+  args:
+  description: "Queueing courier location."
+
+queue_order_reminder_notification:
+  every: 30s
+  class: "OrderReminderNotification"
+  args:
+  description: "Queueing order reminder notification."

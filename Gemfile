@@ -36,10 +36,10 @@ gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
-gem 'sdoc', '~> 0.4.0',          group: :doc
+gem 'sdoc', '~> 0.4.0', group: :doc
 
 # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-gem 'spring',        group: :development
+gem 'spring', group: :development
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -123,8 +123,11 @@ gem 'clockwork'
 #More Robust Web Server
 gem 'unicorn'
 
-#Web Monitoring with New Relic
-gem 'newrelic_rpm'
+group :production do
+  #Web Monitoring with New Relic
+  gem 'newrelic_rpm'
+end
+
 
 #Well obvious
 gem 'pgbackups-archive'
