@@ -19,6 +19,9 @@ module OrderHelper
     if order.charge_id.blank? && order.status_id == Status.statuses[:advised]
       if admin
         order.charge_id = 'Admin'
+        order.status_id = Status.statuses[:packing]
+        #TODO Need to handle errors here
+        CoordinateHelper.schedule_job(order)
       else
         results = StripeHelper.charge_card(value, stripe_card_id, stripe_customer_id)
 
