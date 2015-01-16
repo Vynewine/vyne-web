@@ -16,7 +16,7 @@ module OrderHelper
     stripe_customer_id = order.payment.user.stripe_id
     value = (order.total_price * 100).to_i
 
-    if order.charge_id.blank?
+    if order.charge_id.blank? && order.status_id == Status.statuses[:advised]
       if admin
         order.charge_id = 'Admin'
       else

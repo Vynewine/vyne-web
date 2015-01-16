@@ -48,6 +48,20 @@ class OrderCancellation
       log_error order.errors
     end
 
+    order.order_items.each do |item|
+      unless item.wine.blank?
+        advised_wine = item.wine
+        inventory = Inventory.find_by(:warehouse => order.warehouse, :wine => advised_wine)
+        inventory.quantity += 1
+        unless inventory.save
+          log_error inventory.errors
+        end
+      end
+    end
+
+    Resque.enqueue(OrderEmailNotification, order.id, :order_cancellation)
+    Resque.enqueue(OrderSmsNotification, order.id, :order_cancellation)
+
   end
 
   def self.log(message)

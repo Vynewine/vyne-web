@@ -140,9 +140,9 @@ module UserMailer
                                    })
 
       if order.payment.brand == 3 # American Express
-        cardNumber = '**** ****** ' + order.payment.number
+        card_number = '**** ****** ' + order.payment.number
       else
-        cardNumber = '**** **** **** ' + order.payment.number
+        card_number = '**** **** **** ' + order.payment.number
       end
 
       wine1 = order.order_items[0].wine
@@ -200,7 +200,7 @@ module UserMailer
                       },
                       {
                           :name => 'CUSTOMERCARD',
-                          :content => cardNumber
+                          :content => card_number
                       },
                       {
                           :name => 'FULLWINE1NAME',
@@ -343,6 +343,82 @@ module UserMailer
     message = "Error occurred while sending email coming_soon_near_you: #{exception.class} - #{exception.message} - for user: #{email}"
     Rails.logger.error message
     Rails.logger.error exception.backtrace
+  end
+
+  def self.order_cancellation(order)
+
+    log "Sending email order cancellation to customer #{order.client.email} for order #{order.id.to_s}"
+
+    begin
+
+      wine1 = order.order_items[0].wine
+      wine1_name = "#{wine1.name} #{wine1.txt_vintage}, #{wine1.producer.name}, £#{'%.2f' % order.order_items[0].price} (#{order.order_items[0].category.name})"
+
+      unless order.order_items[1].blank?
+        wine2 = order.order_items[1].wine
+        wine2_name = "#{wine2.name} #{wine2.txt_vintage}, #{wine2.producer.name}, £#{'%.2f' % order.order_items[1].price} (#{order.order_items[1].category.name})"
+      end
+
+      mandrill = Mandrill::API.new Rails.application.config.mandrill
+      template_name = 'cancellation-2scch'
+      message = {
+          :subject => 'Your Vyne Order No: ' + order.id.to_s + ' has been cancelled.',
+          :from_email => 'checkout@vyne.london',
+          :from_name => 'Vyne Checkout',
+          :to => [
+              {
+                  :email => order.client.email,
+                  :name => order.client.first_name
+              }
+          ],
+          :merge_vars => [
+              {
+                  :rcpt => order.client.email,
+                  :vars => [
+                      {
+                          :name => 'FIRSTNAME',
+                          :content => order.client.first_name
+                      },
+                      {
+                          :name => 'ADDRESSLINE1',
+                          :content => order.address.line_1
+                      },
+                      {
+                          :name => 'POSTCODE',
+                          :content => order.address.postcode
+                      },
+                      {
+                          :name => 'VYNEORDERID',
+                          :content => order.id.to_s
+                      },
+                      {
+                          :name => 'ORDERTOTAL',
+                          :content => '£' + '%.2f' % order.total_price
+                      },
+                      {
+                          :name => 'WINE1RECEIPT',
+                          :content => wine1_name
+                      },
+                      {
+                          :name => 'WINE2RECEIPT',
+                          :content => wine2_name
+                      }
+                  ]
+              }
+          ]
+      }
+
+      mandrill.messages.send_template template_name, nil, message
+
+    rescue Mandrill::Error => exception
+      log_error "A Mandrill error occurred order_cancellation: #{exception.class} - #{exception.message}"
+      raise
+    rescue Exception => exception
+      message = "Error occurred while sending email order_cancellation: #{exception.class} - #{exception.message} - for user: #{order.client.email}"
+      log_error message
+      log_error exception.backtrace
+      raise
+    end
   end
 
   private
