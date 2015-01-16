@@ -59,6 +59,7 @@ class Admin::AdvisorsController < ApplicationController
 
     @order_item.wine = wine
     @order_item.cost = inventory.cost
+    @order_item.price = inventory.cost
     @order_item.inventory = inventory
     @order_item.advisory_note = params['advisory_note']
 

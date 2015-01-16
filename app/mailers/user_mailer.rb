@@ -146,12 +146,12 @@ module UserMailer
       end
 
       wine1 = order.order_items[0].wine
-      wine1_name = "#{wine1.name} #{wine1.txt_vintage}, #{wine1.producer.name}, (#{order.order_items[0].category.name})"
+      wine1_name = "#{wine1.name} #{wine1.txt_vintage}, #{wine1.producer.name}, £#{'%.2f' % order.order_items[0].price} (#{order.order_items[0].category.name})"
 
 
       unless order.order_items[1].blank?
         wine2 = order.order_items[1].wine
-        wine2_name = "#{wine2.name} #{wine2.txt_vintage}, #{wine2.producer.name}, (#{order.order_items[1].category.name})"
+        wine2_name = "#{wine2.name} #{wine2.txt_vintage}, #{wine2.producer.name}, £#{'%.2f' % order.order_items[1].price} (#{order.order_items[1].category.name})"
       end
 
       mandrill = Mandrill::API.new Rails.application.config.mandrill
@@ -196,7 +196,7 @@ module UserMailer
                       },
                       {
                           :name => 'ORDERTOTAL',
-                          :content => '£' + order.total_price.to_s
+                          :content => '£' + '%.2f' % order.total_price
                       },
                       {
                           :name => 'CUSTOMERCARD',

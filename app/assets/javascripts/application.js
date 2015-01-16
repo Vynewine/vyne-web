@@ -34,6 +34,8 @@ var wine = function () {
     this.category = 0;
     this.label = '';
     this.price = '';
+    this.priceMin = 0;
+    this.priceMax = 0;
     this.specificWine = '';
     this.food = [];
     this.occasion = 0;
@@ -454,6 +456,8 @@ $(function () {
         wines[wineCount].label = $(this).parent().find('.label').text();
         wines[wineCount].price = $(this).parent().find('.price').text();
         wines[wineCount].category = $(this).closest('.bottle-info').data('category-id');
+        wines[wineCount].priceMin = $(this).closest('.bottle-info').data('price-min');
+        wines[wineCount].priceMax = $(this).closest('.bottle-info').data('price-max');
 
         analytics.track('Bottle chosen', {
             category: wines[wineCount].category
@@ -1149,13 +1153,13 @@ function createCartPage(wines, wineCount) {
 
         var $td = $('<td>')
             .attr('id', 'wine-' + wines.indexOf(wine))
-            .addClass('order-table-bottle wine-bottle-' + wine.price.substr(1, 2))
+            .addClass('order-table-bottle wine-bottle')
             .append($('<a/>', {href: '#', text: 'x'}).addClass('delete'))
             .append('<div class="wine-bottle"></div>');
 
         for (var key in wine) {
             if (wine.hasOwnProperty(key)) {
-                if (key != 'price') {
+                if (key != 'price' && key != 'priceMin' && key != 'priceMax') {
                     if (key == 'food' && wine['food'] && wine['food'].length > 0) {
                         var foods = wine[key];
                         var $ul = $('<ul/>').addClass('food');
@@ -1195,7 +1199,10 @@ function createCartPage(wines, wineCount) {
             }
         }
 
-        var $pricetd = $('<td>').addClass('order-table-bottle-price').append($('<span/>', {text: wine['price']}).addClass('price'));
+        var $pricetd = $('<td>')
+            .addClass('order-table-bottle-price')
+            .append($('<span/>', {text: '£' + parseInt(wine['priceMin']) + '-' + parseInt(wine['priceMax'])})
+                .addClass('price'));
 
         $('.add-bottle').before($('<tr>').addClass('order-bottle').append($td).append($pricetd));
 
@@ -1248,24 +1255,31 @@ var resetEventsForEmptyCart = function () {
 };
 
 function calculateTotalCost() {
-    var totalCost = 0;
     secondBottle = false;
+    var totalMinimum = 0.00;
+    var totalMaximum = 0.00;
+    var deliveryCost = 2.50;
 
-    $('.order-bottle').each(function (i, el) {
-        $price = $(el).find('.price');
-
-        if (i > 0) {
-            var discountedPrice = parseInt($price.text().substr(1, 2)) - 5;
-            totalCost += discountedPrice;
-            $price.wrap('<del></del>');
-            $price.parent().after($('<span/>', {text: '£' + discountedPrice}).addClass('price'));
-        } else {
-            totalCost += parseInt($price.text().substr(1, 2));
-        }
-
+    $(wines).each(function(index, wine) {
+        totalMinimum += parseFloat(wine.priceMin);
+        totalMaximum += parseFloat(wine.priceMax);
     });
 
-    $('.total-cost span').text('£' + totalCost);
+    totalMinimum += deliveryCost;
+    totalMaximum += deliveryCost;
+
+    var $deliveryCost = $('.delivery-cost');
+    var $totalCost = $('.total-cost');
+
+    if (wines.length > 0) {
+        $deliveryCost.find('.price').text(deliveryCost.toFixed(2));
+        $totalCost.find('.price').text(totalMinimum.toFixed(2) + '-' + totalMaximum.toFixed(2));
+        $deliveryCost.show();
+        $totalCost.show();
+    } else {
+        $deliveryCost.hide();
+        $totalCost.hide();
+    }
 
     var bottlesInTheCart = $('.order-bottle').length;
     $('.cart-count').show().text(bottlesInTheCart);

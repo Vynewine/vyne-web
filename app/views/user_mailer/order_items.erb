@@ -45,7 +45,7 @@
     %>
     <div style="margin: 5px 0 15px 0">
     <span style="color:#FFFFFF">
-        <%= welcome %> <%= order.order_items[i].category.name + ' wine (£' + '%.2f' % order.order_items[i].price + ')' %>
+        <%= welcome %> <%= order.order_items[i].category.name + ' wine (£' + '%.2f' % order.order_items[i].category.price_min + '-' + '%.2f' % order.order_items[i].category.price_max + ')' %>
       perfect for your
     </span>
     </div>
@@ -113,3 +113,8 @@
    i += 1
    end
 %>
+<% unless order.delivery_price.blank? %>
+<div>
+    <span style="color:#FFFFFF"> Delivery fee: £<%= '%.2f' % order.delivery_price %> </span>
+</div>
+<% end %>

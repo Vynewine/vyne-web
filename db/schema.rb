@@ -106,6 +106,8 @@ ActiveRecord::Schema.define(version: 20150112105159) do
     t.datetime "deleted_at"
     t.decimal  "merchant_price_min"
     t.decimal  "merchant_price_max"
+    t.decimal  "price_min"
+    t.decimal  "price_max"
   end
 
   add_index "categories", ["deleted_at"], :name => "index_categories_on_deleted_at"
@@ -320,6 +322,7 @@ ActiveRecord::Schema.define(version: 20150112105159) do
     t.json     "delivery_courier"
     t.datetime "advisory_completed_at"
     t.text     "cancellation_note"
+    t.decimal  "delivery_price"
   end
 
   add_index "orders", ["address_id"], :name => "index_orders_on_address_id"

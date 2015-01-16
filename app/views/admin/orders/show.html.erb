@@ -151,7 +151,6 @@
       <th>Quantity</th>
       <th>Category</th>
       <th>Wine</th>
-      <th>Cost</th>
       <th>Price</th>
     </tr>
     </thead>
@@ -176,22 +175,25 @@
             <%= item.preferences.to_sentence(last_word_connector: ' and ').capitalize %>.
           </td>
           <td>x<%= item.quantity %></td>
-          <td><%= item.category.name %> (&pound;<%= '%.2f' % item.category.merchant_price_min %> to &pound;<%= '%.2f' % item.category.merchant_price_max %>)</td>
+          <td><%= item.category.name %> (&pound;<%= '%.2f' % item.category.merchant_price_min %>
+            to &pound;<%= '%.2f' % item.category.merchant_price_max %>)
+          </td>
           <td>
             <% if item.wine.blank? %>
                 Not Selected
-                <% else %>
+            <% else %>
                 Wine: <%= item.wine.display_name %><br/>
                 SKU: <%= item.inventory.nil? ? '' : ' - ' + item.inventory.vendor_sku %><br/>
                 Note: <%= item.advisory_note.blank? ? 'N/A' : item.advisory_note %>
-                <% end %>
+            <% end %>
 
           </td>
           <td>
-            £<%= item.cost %>
-          </td>
-          <td>
-            £<%= item.price %>
+            <% if item.price.blank? %>
+            -
+            <% else %>
+                £<%= '%.2f' % item.price %>
+            <% end %>
           </td>
         </tr>
     <% end %>
@@ -209,12 +211,11 @@
         <% end %>
       </div>
       <div class="col-xs-6 text-right">
-        <% unless @order.total_cost.nil? %>
-            <strong>Cost Total: </strong>£<%= @order.total_cost %> (wine: £<%= @order.total_wine_cost %>, delivery:
-            £<%= @order.delivery_cost %>)
+        <% unless @order.delivery_price.blank? %>
+            Delivery Price £<%= '%.2f' % @order.delivery_price %>
         <% end %>
         <% unless @order.total_price.nil? %>
-            <strong>Customer Price Total:</strong> £<%= @order.total_price %>
+            <strong>Customer Price Total:</strong> £<%= '%.2f' % @order.total_price %>
         <% end %>
       </div>
     </div>
@@ -245,11 +246,11 @@
                   <% if @order.delivery_provider == Order.delivery_types[:google_coordinate] %>
                       <%= link_to 'Schedule Shutl', admin_advise_choose_path(:order => @order.id), {:class => 'btn btn-primary'} %>
                   <% else %>
-                    <% #TODO Schedule Google Coordinate %>
+                      <% #TODO Schedule Google Coordinate   %>
                   <% end %>
               <% end %>
 
-              <% if [Status.statuses[:pickup], Status.statuses[:in_transit], Status.statuses[:delivered]].include?(@order.status.id) %>
+              <% if [Status.statuses[:advised], Status.statuses[:packing], Status.statuses[:pickup], Status.statuses[:in_transit], Status.statuses[:delivered]].include?(@order.status.id) %>
                   <%= link_to 'Re-Send Order Receipt', admin_order_send_receipt_path(@order), {
                                                              :class => 'btn btn-primary',
                                                              :method => :post,
@@ -271,6 +272,9 @@
                   <strong>Delivery Information</strong>
                 </div>
                 <div class="col-xs-6 text-right">
+                  <% unless @order.delivery_cost.nil? %>
+                      Delivery Cost: £<%= '%.2f' % @order.delivery_cost %>)
+                  <% end %>
                   <a href="#" id="refresh-delivery" class="btn btn-primary" data-id="<%= @order.id %>">Refresh</a>
                 </div>
               </div>

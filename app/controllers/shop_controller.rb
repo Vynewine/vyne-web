@@ -76,11 +76,11 @@ class ShopController < ApplicationController
       # Add Order Items with Customer Preferences
       set_customer_preferences(@order, params[:wines])
 
-      # Apply Promotions
-      apply_promotions(@order)
-
       # Set Order Status Created
       @order.status_id = Status.statuses[:created]
+
+      # Fixed delivery price:
+      @order.delivery_price = 2.5
 
       # Save Order
       unless @order.save
@@ -98,7 +98,6 @@ class ShopController < ApplicationController
         render json: payment_results, status: :unprocessable_entity
         return
       end
-
 
       if @order.save
 
@@ -165,14 +164,6 @@ class ShopController < ApplicationController
     )
   end
 
-  def apply_promotions(order)
-    #Second Bottle 5 off promotion
-    if order.order_items.count == 2
-      order.order_items[1].price = (order.order_items[1].price - 5)
-      order.order_items[1].save
-    end
-  end
-
   def assign_warehouse(warehouses)
     final_warehouse = nil
     distance = nil
@@ -215,8 +206,7 @@ class ShopController < ApplicationController
         order_item = order.order_items.new({
                                                :specific_wine => wine['specificWine'],
                                                :quantity => wine['quantity'],
-                                               :category => category,
-                                               :price => category.price
+                                               :category => category
                                            })
 
         if wine['food'].blank?

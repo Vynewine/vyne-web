@@ -77,19 +77,25 @@
     <div id="bottles-panel" class="order-panel swiper-slide noSwipingClass" data-hash="bottles">
       <div class="order-panel-content wrapper wrapper-large">
         <a href="#" class="back-nav"></a>
-        <h2 class="title">Select your bottle</h2>
-        <h3 class="subttitle">Prices include delivery</h3>
+        <h2 class="title">Select price range</h2>
+        <h3 class="subttitle"></h3>
 
         <ul class="bottle-list cf">
       
         <% @categories.each do |category| %>
           <li class="bottle">
-            <a href="#" class="bottle-link" data-category-id="<%= category.id %>">
+            <a href="#" class="bottle-link"
+               data-category-id="<%= category.id %>"
+            >
               <%= image_tag "icons/wine/bottle#{category.price}.png", :alt => "wine bottle" %>
               <span class="label"><%= category.name %></span>
               <span class="description"><%= category.summary %></span>
             </a>
-            <div class="bottle-info" data-category-id="<%= category.id %>">
+            <div class="bottle-info"
+                 data-category-id="<%= category.id %>"
+                 data-price-min="<%= category.price_min %>"
+                 data-price-max="<%= category.price_max %>"
+            >
               <div class="bottle-info-bg"></div>
               <div class="bottle-info-content">
                 <div class="close">
@@ -99,6 +105,7 @@
                 <%= image_tag "icons/wine/bottle#{category.price}.png", :alt => "wine bottle" %>
                 <span class="label"><%= category.name %></span>
                 <span class="price">£<%= category.price %></span>
+
                 <span class="description">Entry-level to best wine regions.</span>
                 <div class="full-description">
                   <%= category.description.html_safe %>
@@ -271,7 +278,12 @@
       <div class="order-panel-content wrapper wrapper-large">
         <a href="" class="back-nav"></a>
         <h2>Review order</h2>
-        <p>We need to check if the wine is available to deliver in your area</p>
+        <p>
+          1. Local merchant receives your preferences. <br/>
+          2. Their expert chooses your wine. <br/>
+          3. You get to review their selection.
+        </p>
+
 
         <table class="order-table">
           <tr>
@@ -286,22 +298,21 @@
           </tr>
           <tr class="add-bottle">
             <td colspan="2">
-              <span>Save £5 off a second bottle</span>
               <a href="" class="btn btn__small add-same-bottle-link" id="add-same-bottle">Add same bottle</a>
               <span class="or">or</span>
               <a href="" class="btn btn__small add-bottle-link another-bottle" id="add-another-bottle">Add another bottle</a>
             </td>
           </tr>
-          <tr class="total">
-            <td>Total (inc. delivery):</td>
-            <td class="total-cost">
-              <span>£20</span>
-            </td>
+          <tr class="total" >
+            <td class="delivery-cost" colspan="2">Delivery <span class="disclaimer">(flat fee)</span> £ <span class="price"></span></td>
+          </tr>
+          <tr class="total" >
+            <td class="total-cost" colspan="2">Total <span class="disclaimer">(range)</span> £<span class="price"></span></td>
           </tr>
         </table>
 
         <div class="btn-checkout">
-          <a href="" id="checkout" class="next-slide btn btn__full-width">Checkout</a>
+          <a href="" id="checkout" class="next-slide btn btn__full-width">Finalise Order</a>
         </div>
 
       </div>

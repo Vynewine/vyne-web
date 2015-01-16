@@ -235,7 +235,7 @@
                                     }
 
                                     img {
-                                        width: 34px;
+                                        width: 67px;
                                         height: auto;
                                     }
 
@@ -393,7 +393,7 @@
                                         }
 
                                         img {
-                                            width: 55px;
+                                            width: 100px;
                                             height: auto;
                                         }
 
@@ -670,12 +670,17 @@
                             text-align: left;
                             margin-bottom: 100px;
 
+                            .order-table-bottle-price {
+                              padding: 0;
+                            }
+
                             th {
                                 padding: 5px 10px;
                             }
 
                             td {
                                 padding: 10px;
+
                             }
 
                             th, td {
@@ -699,24 +704,13 @@
                                 }
 
                                 .wine-bottle {
-                                    width: 44px;
+                                    width: 33px;
                                     height: 95px;
                                     float: left;
                                     margin: 10px 15px 10px 10px;
-                                    background-image: url(asset-path('icons/wine/bottle15.png'));
+                                    background-image: url(asset-path('icons/wine/bottle.png'));
+                                    background-repeat:no-repeat;
                                     background-size: 100%;
-                                }
-
-                                &.wine-bottle-20 .wine-bottle {
-                                    background-image: url(asset-path('icons/wine/bottle20.png'));
-                                }
-
-                                &.wine-bottle-30 .wine-bottle {
-                                    background-image: url(asset-path('icons/wine/bottle30.png'));
-                                }
-
-                                &.wine-bottle-50 .wine-bottle {
-                                    background-image: url(asset-path('icons/wine/bottle50.png'));
                                 }
 
                                 del {
@@ -785,23 +779,33 @@
                             }
 
                             .total {
+
                                 td {
-                                    &:first-child {
-                                        border: 0;
-                                        text-align: right;
-                                        color: rgba(255,255,255,0.4);
-                                    }
+                                    text-align: right;
                                 }
+
                                 span {
-                                    display: block;
-                                    text-align: center;
+
+                                    display: inline;
+
+                                    &.disclaimer {
+                                        color: rgba(255,255,255,0.4);
+                                        font-size: 14px;
+                                    }
+
                                 }
                             }
                         }
 
                         p {
-                            display: none;
-                            text-align: center;
+                            text-align: justify;
+                            font-size: 14px;
+                            width: 100%;
+                            margin: 0 auto 10px;
+                        }
+
+                        h2 {
+                            margin: 0 0 10px 0;
                         }
 
                     }

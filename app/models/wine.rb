@@ -111,12 +111,8 @@ class Wine < ActiveRecord::Base
       end
     end
 
-
     integer :warehouse_ids, :multiple => true
-
     integer :category_ids, :multiple => true
-
-
 
     boolean :single_estate
 

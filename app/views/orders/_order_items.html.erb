@@ -1,8 +1,12 @@
 <% unless @order.advisory_completed_at.blank? %>
     <% @order.order_items.each do |item| %>
-        <div><%= item.wine.full_info %></div>
+        <div><%= item.wine.full_info %> - £<%= '%.2f' % item.price %></div>
         <div>Note from the merchant: <%= item.advisory_note %> </div>
     <% end %>
+    <% unless @order.delivery_price.blank? %>
+        <div>Delivery: £<%= '%.2f' % @order.delivery_price %></div>
+    <% end %>
+    <div>Total (inc. delivery and VAT): £<%= '%.2f' % @order.total_price %></div>
 
     <% if @order.order_change_timeout_seconds > 0 %>
         <div>

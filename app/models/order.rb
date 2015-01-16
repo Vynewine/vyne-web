@@ -21,7 +21,8 @@ class Order < ActiveRecord::Base
     if (order_items.map { |item| item.price }).include?(nil)
       nil
     else
-      (order_items.map { |item| item.price }).inject(:+)
+      total = (order_items.map { |item| item.price }).inject(:+)
+      total + (delivery_price.blank? ? 0 : delivery_price)
     end
   end
 
@@ -30,15 +31,6 @@ class Order < ActiveRecord::Base
       nil
     else
       (order_items.map { |item| item.cost }).inject(:+)
-    end
-  end
-
-  def total_cost
-    cost = total_wine_cost
-    if cost.blank? || delivery_cost.blank?
-      nil
-    else
-      cost += delivery_cost
     end
   end
 
