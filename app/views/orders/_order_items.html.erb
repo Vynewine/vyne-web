@@ -1,29 +1,49 @@
 <% unless @order.advisory_completed_at.blank? %>
-    <% @order.order_items.each do |item| %>
-        <div><%= item.wine.full_info %> - £<%= '%.2f' % item.price %></div>
-        <div>Note from the merchant: <%= item.advisory_note %> </div>
-    <% end %>
-    <% unless @order.delivery_price.blank? %>
-        <div>Delivery: £<%= '%.2f' % @order.delivery_price %></div>
-    <% end %>
-    <div>Total (inc. delivery and VAT): £<%= '%.2f' % @order.total_price %></div>
 
+    <p class="note">An expert at <strong><%= @order.warehouse.title %></strong> has chosen your wine.</p>
     <% if @order.order_change_timeout_seconds > 0 %>
-        <div>
-          <a href="/orders/<%= @order.id %>/accept" id="accept-order">Accept Order</a>
+        <p class="note">Please review your order.</p>
+        <% if @order.can_request_substitution? %>
+            <p class="note">Request any substitutions if necessary.</p>
+        <% end %>
+        <div style="margin-top: 10px; margin-bottom: 10px">
+          <a href="/orders/<%= @order.id %>/accept" class="btn btn__full-width" id="accept-order">Accept Order</a>
+        </div>
+    <% else %>
+        <hr class="divider">
+    <% end %>
+
+    <% @order.order_items.each_with_index do |item, index| %>
+        <div class="wine-name"><%= index + 1 %> - <%= item.wine.full_info %> - £<%= '%.2f' % item.price %></div>
+        <% unless item.advisory_note.blank? %>
+            <div class="merchant-note">Merchant Note: <%= item.advisory_note %> </div>
+        <% end %>
+        <hr class="divider">
+    <% end %>
+
+    <% unless @order.delivery_price.blank? %>
+        <div class="total">Delivery: £<%= '%.2f' % @order.delivery_price %></div>
+    <% end %>
+    <div class="total">Total (inc. delivery and VAT): £<%= '%.2f' % @order.total_price %></div>
+    <hr class="divider">
+    <% if @order.order_change_timeout_seconds > 0 %>
+
+        <div class="total" style="margin-bottom: 10px">
+          This order will be scheduled for delivery in:
+          <span id="counter"></span>
         </div>
 
-        <div>
+        <div style="margin-top: 10px">
           <% if @order.can_request_substitution? %>
-              <a href="/orders/<%= @order.id %>/substitution_request">Request Substitution</a>
+              <a href="/orders/<%= @order.id %>/substitution_request" class="btn btn__small btn__full-width btn__gray">Request
+                Substitution</a>
           <% end %>
         </div>
 
-        <div>
-          <a href="/orders/<%= @order.id %>/cancellation_request">Cancel Order</a>
+        <div style="margin-top: 10px">
+          <a href="/orders/<%= @order.id %>/cancellation_request" class="btn btn__small btn__full-width btn__gray">Cancel
+            Order</a>
         </div>
 
-
-        <div id="counter"></div>
     <% end %>
 <% end %>

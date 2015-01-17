@@ -38,12 +38,8 @@
               <div class="line"></div>
               <span class="number">2</span>
 
-              <h3>Your advised wine details</h3>
+              <h3> Your sommelier's recommendation</h3>
 
-              <p>Please review your order.</p>
-              <% if @order.can_request_substitution? %>
-                  <p>Request any substitutions if necessary.</p>
-              <% end %>
               <%= render 'order_items' %>
 
             </div>

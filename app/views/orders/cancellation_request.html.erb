@@ -1,21 +1,26 @@
-<br/>
-<br/>
-<br/>
+<div class="order-confirmation">
+  <div class="order-confirmation-overlay"></div>
+  <div class="order-confirmation-content wrapper">
+    <div class="order-sub-content">
+      <% if @order.order_change_timeout_seconds > 0 %>
+          <div class="cancel" style="padding-bottom: 10px;">Please let us know reason for this cancellation</div>
+          <%= form_tag(order_cancel_path(@order), method: 'post') do %>
+              <%= text_field_tag(:reason, nil, placeholder: 'Reason') %>
+              <div class="total" style="display: none; margin-top: 10px;" id="cancel-error">Please enter reason for your cancellation</div>
+              <%= submit_tag('Submit', :style => 'margin-top: 10px;') %>
+          <% end %>
 
-<% if @order.order_change_timeout_seconds > 0 %>
-    <p>Please let us know reason for this cancellation</p>
+          <div class="total" style="margin-bottom: 10px; margin-top: 10px;">
+            This order will be scheduled for delivery in:
+            <span id="counter"></span>
+          </div>
 
-    <%= form_tag(order_cancel_path(@order), method: 'post') do %>
-        <%= text_field_tag(:reason) %>
-        <%= submit_tag('Submit') %>
-    <% end %>
-
-    <div id="counter"></div>
-
-<% else %>
-    Cancellation request time expired. Please contact Vyne support in case of any queries about your order.
-<% end %>
-
+      <% else %>
+          Cancellation request time expired. Please contact Vyne support in case of any queries about your order.
+      <% end %>
+    </div>
+  </div>
+</div>
 
 <script>
     var cancellationOrderId = <%= @order.id %>;

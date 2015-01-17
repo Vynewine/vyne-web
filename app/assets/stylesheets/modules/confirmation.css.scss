@@ -18,5 +18,52 @@
         height: 100%;
         padding: 50px 0 0;
         position: relative;
+
+        .order-sub-content {
+            box-sizing: border-box;
+            opacity: 1;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+
+            p {
+
+                margin: 0 auto;
+                color: rgba(255,255,255,0.5);
+
+                &.note {
+                  font-size: 14px;
+                }
+            }
+
+            .cancel {
+                text-align: center;
+            }
+
+            .wine-name {
+                text-align: left;
+                font-size: 14px;
+            }
+
+            .merchant-note {
+                text-align: left;
+                color: rgba(255,255,255,0.5);
+                font-size: 14px;
+            }
+
+            .divider {
+                border: none;
+                height: 1px;
+                background-color: #626262;
+            }
+
+            .total {
+                font-size: 16px;
+            }
+
+            .small-link {
+                font-size: 16px;
+                text-decoration: underline;
+            }
+        }
     }
 }

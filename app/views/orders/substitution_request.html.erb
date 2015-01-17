@@ -1,39 +1,41 @@
-<br/>
-<br/>
-<br/>
+<div class="order-confirmation">
+  <div class="order-confirmation-overlay"></div>
+  <div class="order-confirmation-content wrapper">
+    <div class="order-sub-content">
+      <% if @order.can_request_substitution? && @order.order_change_timeout_seconds > 0 %>
+          <p class="note">
+            Please select wines you'd like to substitute
+          </p>
+          <hr class="divider">
+          <% @order.order_items.each_with_index do |item, index| %>
 
-<% if @order.can_request_substitution? && @order.order_change_timeout_seconds > 0 %>
-    <p>
-      Please select wines you'd like to substitute
-    </p>
+              <div class="wine-name"><%= index + 1 %> - <%= item.wine.full_info %> - £<%= '%.2f' % item.price %></div>
+              <% unless item.advisory_note.blank? %>
+                  <div class="merchant-note">Merchant Note: <%= item.advisory_note %> </div>
+              <% end %>
+              <a href="#" name="order_item" class="btn btn__small btn__full-width btn__gray" data-id="<%= item.id %>">Substitute</a>
+              <input type="text" id="substitution-reason-<%= item.id %>" style="display: none; margin-top: 10px;" placeholder="Reason for substitution"/>
+              <hr class="divider">
 
-    <% @order.order_items.each do |item| %>
-        <p>
-          <input type="checkbox" name="order_item" style="-webkit-appearance: checkbox" value="<%= item.id %>"/>
-          Wine: <%= item.wine.full_info %>, price: <%= item.price %>
-          <input type="text" id="substitution-reason-<%= item.id %>" style="display: none"/>
-        </p>
-    <% end %>
+          <% end %>
 
+          <%= form_tag(order_substitute_path(@order), id: 'substitutions-form', method: 'post') do %>
+              <input type="hidden" name="substitutions" id="substitutions">
+              <input type="submit" id="request-substitution" value="Request Substitutions"/>
+          <% end %>
 
-    Please Specify reason for substitution:
-    1. Price too high
-    2. I don't like this wine
-    3. Other
+          <div id="counter"></div>
 
-    <%= form_tag(order_substitute_path(@order), id: 'substitutions-form', method: 'post') do %>
-        <input type="hidden" name="substitutions" id="substitutions">
-        <input type="submit" id="request-substitution" value="Request Substitutions"/>
-    <% end %>
+      <% else %>
 
-    <div id="counter"></div>
-
-<% else %>
-    Substitution request time expired. Please contact Vyne support in case of any queries about your order.
-<% end %>
+          Substitution request time expired. Please contact Vyne support in case of any queries about your order.
+      <% end %>
+    </div>
 
 
-<script>
-    var substitutionOrderId = <%= @order.id %>;
-    var orderChangeTimeOutSeconds = <%= @order.order_change_timeout_seconds %>;
-</script>
+    <script>
+        var substitutionOrderId = <%= @order.id %>;
+        var orderChangeTimeOutSeconds = <%= @order.order_change_timeout_seconds %>;
+    </script>
+  </div>
+</div>

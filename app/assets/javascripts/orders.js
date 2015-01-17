@@ -199,29 +199,43 @@ var ready = function () {
     }
 
     if ($('body.orders').length && typeof(substitutionOrderId) !== 'undefined') {
-        
+
         setCountDown(orderChangeTimeOutSeconds);
 
-        $("[name='order_item']").click(function (e) {
-            $('#substitution-reason-' + this.value).toggle();
-        });
+        var substitutions = [];
 
+        $("[name='order_item']").click(function (e) {
+            e.preventDefault();
+            var $link = $(this);
+            var id = $link.data('id');
+            $('#substitution-reason-' + id).toggle();
+            if ($link.text() === 'Substitute') {
+                substitutions.push(id);
+                $link.text('Cancel');
+            } else {
+                $link.text('Substitute');
+                var index = $.inArray(id, substitutions);
+                if (index > -1) {
+                    substitutions.splice(index, 1);
+                }
+            }
+        });
 
         $('#substitutions-form').submit(function (e) {
 
-            var substitutions = [];
+            var substitutionsAndReasons = [];
 
             e.preventDefault();
-            $("input:checked").each(function () {
-                var reason = $('#substitution-reason-' + this.value);
+            $(substitutions).each(function () {
+                var reason = $('#substitution-reason-' + this);
 
-                substitutions.push({
-                    id: this.value,
+                substitutionsAndReasons.push({
+                    id: this,
                     reason: reason.val()
                 });
             });
 
-            $('#substitutions').val(JSON.stringify(substitutions))
+            $('#substitutions').val(JSON.stringify(substitutionsAndReasons))
 
             this.submit();
         });
