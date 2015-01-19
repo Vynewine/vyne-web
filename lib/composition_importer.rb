@@ -1,92 +1,110 @@
 module CompositionImporter
-  def import_compositions(file_part, columns)
 
-    results = process_file(file_part)
+  @logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
+  TAG = 'Composition Importer'
 
-    unless results[:success]
-      return results
-    end
+  def self.import_compositions(file_part, columns)
 
-    data = Roo::CSV.new(results[:file_path])
+    results = {
+        :success => false,
+        :errors => [],
+    }
 
-    header = data.row(1)
+    begin
 
-    header_validation = validate_header(header, columns)
+      results = process_file(file_part)
 
-    if header_validation != true
-      results[:success] = false
-      results[:errors] << 'Column missing: ' + header_validation
-      return results
-    end
-
-    (2..data.last_row).each do |i|
-      row = Hash[[header, data.row(i)].transpose]
-
-      id = row['composition_id']
-      name = row['name']
-      grape1_id = row['grape1_id']
-
-      max_grapes = 10
-
-
-      if id.blank? || grape1_id.blank?
-        return
+      unless results[:success]
+        return results
       end
 
-      composition = Composition.find_by_id(id)
+      data = Roo::CSV.new(results[:file_path])
 
-      if composition.nil?
-        new_composition = Composition.create!(
-            id: id,
-            name: name
-        )
+      header = data.row(1)
 
-        (1..max_grapes).each do |i|
-          grape_id = row['grape' + i.to_s + '_id']
-          unless grape_id.blank?
-            percentage = row['grape' + i.to_s + '_percentage']
-            CompositionGrape.create(
-                composition_id: new_composition.id,
-                grape_id: grape_id,
-                percentage: percentage
-            )
-          end
+      header_validation = validate_header(header, columns)
+
+      if header_validation != true
+        results[:success] = false
+        results[:errors] << 'Column missing: ' + header_validation
+        return results
+      end
+
+      (2..data.last_row).each do |i|
+        row = Hash[[header, data.row(i)].transpose]
+
+        id = row['composition_id']
+        name = row['name']
+        grape1_id = row['grape1_id']
+
+        max_grapes = 10
+
+
+        if id.blank? || grape1_id.blank?
+          return
         end
 
-      else
-        composition.update(
-            name: name
-        )
+        composition = Composition.find_by_id(id)
 
-        (1..max_grapes).each do |i|
-          grape_id = row['grape' + i.to_s + '_id']
-          unless grape_id.blank?
-            percentage = row['grape' + i.to_s + '_percentage']
-            existing_comp = composition.composition_grapes.detect { |comp| comp.grape_id == grape_id.to_i }
-            if existing_comp.blank?
+        if composition.nil?
+          new_composition = Composition.create!(
+              id: id,
+              name: name
+          )
+
+          (1..max_grapes).each do |i|
+            grape_id = row['grape' + i.to_s + '_id']
+            unless grape_id.blank?
+              percentage = row['grape' + i.to_s + '_percentage']
               CompositionGrape.create(
-                  composition_id: composition.id,
-                  grape_id: grape_id,
-                  percentage: percentage
-              )
-            else
-              existing_comp.update(
+                  composition_id: new_composition.id,
                   grape_id: grape_id,
                   percentage: percentage
               )
             end
           end
+
+        else
+          composition.update(
+              name: name
+          )
+
+          (1..max_grapes).each do |i|
+            grape_id = row['grape' + i.to_s + '_id']
+            unless grape_id.blank?
+              percentage = row['grape' + i.to_s + '_percentage']
+              existing_comp = composition.composition_grapes.detect { |comp| comp.grape_id == grape_id.to_i }
+              if existing_comp.blank?
+                CompositionGrape.create(
+                    composition_id: composition.id,
+                    grape_id: grape_id,
+                    percentage: percentage
+                )
+              else
+                existing_comp.update(
+                    grape_id: grape_id,
+                    percentage: percentage
+                )
+              end
+            end
+          end
+
+          composition.save
         end
-
-        composition.save
       end
-    end
 
-    results
+    rescue Exception => exception
+      message = "Error occurred while importing compositions: #{exception.class} - #{exception.message}"
+      log_error message
+      log_error exception.backtrace
+      raise
+    ensure
+      return results
+    end
 
   end
 
-  def process_file(file_part)
+  def self.process_file(file_part)
     response = {
         :success => false,
         :errors => [],
@@ -122,7 +140,7 @@ module CompositionImporter
 
   end
 
-  def validate_header(header, columns)
+  def self.validate_header(header, columns)
     columns.each do |column|
       found_column = header.select { |item| item == column }
       if found_column.length == 0
@@ -130,5 +148,13 @@ module CompositionImporter
       end
     end
     true
+  end
+
+  def self.log(message)
+    @logger.tagged(TAG) { @logger.info message }
+  end
+
+  def self.log_error(message)
+    @logger.tagged(TAG) { @logger.error message }
   end
 end

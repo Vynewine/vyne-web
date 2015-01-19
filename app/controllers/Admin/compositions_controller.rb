@@ -1,5 +1,5 @@
 class Admin::CompositionsController < ApplicationController
-  include CompositionImporter
+
   layout "admin"
   before_action :authenticate_user!
   authorize_actions_for SupplierAuthorizer # Triggers user check
@@ -71,7 +71,7 @@ class Admin::CompositionsController < ApplicationController
   end
 
   def import
-    results = import_data(params[:file], %w(composition_id grape1_id))
+    results = CompositionImporter.import_compositions(params[:file], %w(composition_id grape1_id))
 
     if results[:success]
       respond_to do |format|

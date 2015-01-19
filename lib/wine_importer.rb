@@ -1,90 +1,108 @@
 module WineImporter
 
-  #todo need to return status and errors
-  def import_wines(file)
+  @logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
+  TAG = 'Wine Importer'
 
-    wine_data = Roo::CSV.new(file)
+  def self.import_wines(file)
 
-    header = wine_data.row(1)
+    result = {
+        :errors => []
+    }
 
-    if validate_wine_data(wine_data)
-      (2..wine_data.last_row).each do |i|
-        row = Hash[[header, wine_data.row(i)].transpose]
+    begin
+      wine_data = Roo::CSV.new(file)
 
-        key = row['wine_key']
+      header = wine_data.row(1)
 
-        unless key.nil?
-          wine = Wine.find_by(wine_key: key)
-        end
+      if validate_wine_data(wine_data)
+        (2..wine_data.last_row).each do |i|
+          row = Hash[[header, wine_data.row(i)].transpose]
 
-        unless wine.nil?
+          key = row['wine_key']
 
-          wine.update(
-              name: row['name'],
-              vintage: convert_vintage(row['vintage']),
-              single_estate: if row['single_estate'].nil?
-                               false
-                             else
-                               row['single_estate'].downcase.strip == 'true' ? true : false
-                             end,
-              alcohol: row['alcohol'],
-              producer_id: row['producer_id'].to_i,
-              type_id: row['type_id'].to_i,
-              note: row['note'],
-              bottle_size: row['bottle_size'],
-              region_id: row['region_id'],
-              subregion_id: row['subregion_id'],
-              locale_id: row['locale_id'],
-              appellation_id: row['appellation_id'],
-              maturation_id: row['maturation_id'],
-              vinification_id: row['vinification_id'],
-              composition_id: row['composition_id']
-          )
-        else
+          wine = nil
 
-          new_key = create_wine_key(row)
-
-          #TODO: Allow for forcing of new key from file upload to overwrite generated one.
-          if !key.nil? && key.length > 0 && key != new_key
-            puts 'Existing Key in file: ' + key + ' doesn\'t match generated key: ' + new_key + '\nUsing Generate Key'
+          unless key.blank?
+            wine = Wine.find_by(wine_key: key)
           end
 
-          existing_wine = Wine.find_by(wine_key: new_key)
+          if wine.blank?
 
-          if existing_wine.nil?
-            Wine.create!(
-                :wine_key => new_key,
-                :name => row['name'],
-                :vintage => convert_vintage(row['vintage']),
-                :single_estate => if row['single_estate'].nil?
-                                    false
-                                  else
-                                    row['single_estate'].downcase.strip == 'true' ? true : false
-                                  end,
-                :alcohol => row['alcohol'],
-                :producer_id => row['producer_id'].to_i,
-                :type_id => row['type_id'].to_i,
-                :note => row['note'],
-                :bottle_size => row['bottle_size'],
-                :region_id => row['region_id'],
-                :subregion_id => row['subregion_id'],
-                :locale_id => row['locale_id'],
-                :appellation_id => row['appellation_id'],
-                :maturation_id => row['maturation_id'],
-                :vinification_id => row['vinification_id'],
-                :composition_id => row['composition_id']
-            )
+            new_key = create_wine_key(row)
+
+            #TODO: Allow for forcing of new key from file upload to overwrite generated one.
+            unless key.blank? || key != new_key
+              log_warning "Existing Key in file: #{key} doesn't match generated key: #{new_key} - Using Generate Key"
+            end
+
+            existing_wine = Wine.find_by(wine_key: new_key)
+
+            if existing_wine.nil?
+              Wine.create!(
+                  :wine_key => new_key,
+                  :name => row['name'],
+                  :vintage => convert_vintage(row['vintage']),
+                  :single_estate => if row['single_estate'].nil?
+                                      false
+                                    else
+                                      row['single_estate'].downcase.strip == 'true' ? true : false
+                                    end,
+                  :alcohol => row['alcohol'],
+                  :producer_id => row['producer_id'].to_i,
+                  :type_id => row['type_id'].to_i,
+                  :note => row['note'],
+                  :bottle_size => row['bottle_size'],
+                  :region_id => row['region_id'],
+                  :subregion_id => row['subregion_id'],
+                  :locale_id => row['locale_id'],
+                  :appellation_id => row['appellation_id'],
+                  :maturation_id => row['maturation_id'],
+                  :vinification_id => row['vinification_id'],
+                  :composition_id => row['composition_id']
+              )
+            else
+              result[:errors] << 'Duplicate wine key found: ' + new_key + ' name: ' + existing_wine.name + ' - new wine name: ' + row['name']
+              return
+            end
           else
-            puts 'Duplicate wine key found: ' + new_key + ' name: ' + existing_wine.name + ' - new wine name: ' + row['name']
-            return
+
+            wine.update(
+                name: row['name'],
+                vintage: convert_vintage(row['vintage']),
+                single_estate: if row['single_estate'].nil?
+                                 false
+                               else
+                                 row['single_estate'].downcase.strip == 'true' ? true : false
+                               end,
+                alcohol: row['alcohol'],
+                producer_id: row['producer_id'].to_i,
+                type_id: row['type_id'].to_i,
+                note: row['note'],
+                bottle_size: row['bottle_size'],
+                region_id: row['region_id'],
+                subregion_id: row['subregion_id'],
+                locale_id: row['locale_id'],
+                appellation_id: row['appellation_id'],
+                maturation_id: row['maturation_id'],
+                vinification_id: row['vinification_id'],
+                composition_id: row['composition_id']
+            )
           end
         end
       end
+
+    rescue Exception => exception
+      message = "Error occurred while importing wine data: #{exception.class} - #{exception.message}"
+      log_error message
+      log_error exception.backtrace
+      result[:errors] << message
+    ensure
+      return result
     end
   end
 
   #TODO: Move to model
-  def create_wine_key_from_wine(wine)
+  def self.create_wine_key_from_wine(wine)
     key = convert_name_to_key_part(wine.name)
     key.concat('-')
     key.concat(convert_vintage_to_key_part(convert_vintage(wine.vintage)))
@@ -121,7 +139,7 @@ module WineImporter
     key
   end
 
-  def create_wine_key(row)
+  def self.create_wine_key(row)
     key = convert_name_to_key_part(row['name'])
     key.concat('-')
     key.concat(convert_vintage_to_key_part(convert_vintage(row['vintage'])))
@@ -154,7 +172,7 @@ module WineImporter
     key
   end
 
-  def convert_name_to_key_part(name)
+  def self.convert_name_to_key_part(name)
 
     part = ''
 
@@ -168,7 +186,7 @@ module WineImporter
 
   end
 
-  def convert_vintage_to_key_part(vintage)
+  def self.convert_vintage_to_key_part(vintage)
     if vintage.nil?
       'nv'
     else
@@ -180,7 +198,7 @@ module WineImporter
     end
   end
 
-  def convert_producer_to_key_part(producer_id)
+  def self.convert_producer_to_key_part(producer_id)
 
     producer = Producer.find(producer_id)
     name = convert_to_ascii(producer.name).downcase.split
@@ -194,7 +212,7 @@ module WineImporter
     part + '-' + producer.country.alpha_2
   end
 
-  def convert_region_to_key_part(region_id)
+  def self.convert_region_to_key_part(region_id)
 
     if region_id.nil? || region_id == ''
       return '_'
@@ -210,7 +228,7 @@ module WineImporter
     name[0][0, 1] + name[0][1, 1]
   end
 
-  def convert_subregion_to_key_part(subregion_id)
+  def self.convert_subregion_to_key_part(subregion_id)
 
     if subregion_id.nil? || subregion_id == ''
       return '_'
@@ -226,7 +244,7 @@ module WineImporter
     name[0][0, 1] + name[0][1, 1]
   end
 
-  def convert_bottle_size_to_key_part(bottle_size)
+  def self.convert_bottle_size_to_key_part(bottle_size)
     if bottle_size.to_s != '75'
       bottle_size.to_s
     else
@@ -235,7 +253,7 @@ module WineImporter
   end
 
   #Convert to ASCII and remove keep only alphanumeric characters
-  def convert_to_ascii(string)
+  def self.convert_to_ascii(string)
     encoding_options = {
         :invalid => :replace, # Replace invalid byte sequences
         :undef => :replace, # Replace anything not defined in ASCII
@@ -246,7 +264,7 @@ module WineImporter
     string.encode(Encoding.find('ASCII'), encoding_options).gsub(/[^0-9a-z ]/i, '')
   end
 
-  def validate_wine_data(data)
+  def self.validate_wine_data(data)
     header = data.row(1)
     (2..data.last_row).each do |i|
       row = Hash[[header, data.row(i)].transpose]
@@ -275,7 +293,7 @@ module WineImporter
     end
   end
 
-  def convert_vintage(vintage)
+  def self.convert_vintage(vintage)
     vintage = vintage.to_s.strip.downcase
     case vintage
       when 'nv'
@@ -288,6 +306,18 @@ module WineImporter
             0
         end
     end
+  end
+
+  def self.log(message)
+    @logger.tagged(TAG) { @logger.info message }
+  end
+
+  def self.log_warning(message)
+    @logger.tagged(TAG) { @logger.warn message }
+  end
+
+  def self.log_error(message)
+    @logger.tagged(TAG) { @logger.error message }
   end
 
 end

@@ -172,11 +172,15 @@ class Admin::InventoriesController < ApplicationController
       file.write(uploaded_file.read)
     end
 
-    import_inventory(file_path.to_s, warehouse)
+    results = InventoryImporter.import_inventory(file_path.to_s, warehouse)
 
-    respond_to do |format|
-      format.html { redirect_to admin_inventories_path, notice: 'Inventory was successfully uploaded.' }
+    if results[:errors].blank?
+      redirect_to admin_inventories_path, notice: 'Inventory was successfully uploaded.'
+    else
+      redirect_to admin_inventories_path, :flash => { :error => results[:errors] }
     end
+
+
   end
 
   private

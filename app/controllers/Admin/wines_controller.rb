@@ -61,7 +61,7 @@ class Admin::WinesController < ApplicationController
       @wine.note = params[:wine][:note]
       @wine.bottle_size = params[:wine][:bottle_size]
 
-      @wine.wine_key = create_wine_key_from_wine(@wine)
+      @wine.wine_key = WineImporter.create_wine_key_from_wine(@wine)
 
       if @wine.save
         respond_to do |format|
@@ -141,11 +141,14 @@ class Admin::WinesController < ApplicationController
       file.write(uploaded_file.read)
     end
 
-    import_wines(file_path.to_s)
+    results = WineImporter.import_wines(file_path.to_s)
 
-    respond_to do |format|
-      format.html { redirect_to admin_wines_path, notice: 'Wines were successfully uploaded.' }
+    if results[:errors].blank?
+      redirect_to admin_wines_path, notice: 'Wines were successfully uploaded.'
+    else
+      redirect_to admin_wines_path, :flash => {:error => results[:errors].join(', ') }
     end
+
   end
 
   private
