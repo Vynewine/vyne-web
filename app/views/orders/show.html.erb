@@ -9,7 +9,9 @@
   <div class="order-confirmation-content wrapper">
 
     <% if @order.status_id == Status.statuses[:cancelled] || params[:cancelled] == 'true' %>
+        <div class="cancel" style="padding: 20px;text-align: center">
         Your order has been cancelled.
+        </div>
     <% else %>
         <ul class="accordian" id="order-views">
           <li class="accordian-item

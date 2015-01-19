@@ -33,7 +33,8 @@ module InventoryImporter
           inventory_item.update(
               :cost => row['cost'],
               :quantity => row['quantity'],
-              :category => assign_category(categories, row['cost'])[0]
+              :category => assign_category(categories, row['cost'])[0],
+              :vendor_sku => row['vendor_sku']
           )
         end
 

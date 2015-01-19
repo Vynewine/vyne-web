@@ -14,7 +14,7 @@ class OrderCancellation
 
     order = Order.find(order_id)
 
-    unless order.charge_id.blank? || order.charge_id == 'Admin'
+    unless order.charge_id.blank? || order.charge_id == 'Admin' || !order.refund_id.blank?
       log 'Refunding any charges associated with the order'
       #TODO: Move this to Stripe Helper
       stripe_charge = order.charge_id

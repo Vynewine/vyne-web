@@ -20,6 +20,9 @@ class OrderStatus
             status = CoordinateHelper.coordinate_status_to_order_status(job[:progress])
             unless status.blank?
               log 'New order status: ' + status.to_s
+              if order.status_id != status && status == Status.statuses[:in_transit]
+                Resque.enqueue(OrderSmsNotification, order.id, :order_in_transit)
+              end
               order.status_id = status
             end
             unless job[:assignee].blank?
@@ -34,7 +37,7 @@ class OrderStatus
             end
 
             if order.save
-              log 'Successfully saved order'
+              log "Successfully saved order #{order.id.to_s}"
             else
               log 'Failed to process orders status update: ' + order.errors.join(', ')
             end

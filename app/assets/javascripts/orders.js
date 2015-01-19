@@ -10,6 +10,10 @@ var setCountDown = function (time) {
         var minutes = Math.floor(time / 60);
         var seconds = time - minutes * 60;
 
+        setInterval(function () {
+            $('#counter-text').fadeIn('slow');
+        }, 1000);
+
         interval = setInterval(function () {
             var counter = $('#counter');
             if (seconds == 0) {
@@ -208,14 +212,16 @@ var ready = function () {
             e.preventDefault();
             var $link = $(this);
             var id = $link.data('id');
+            $('#error').hide();
             $('#substitution-reason-' + id).toggle();
-            if ($link.text() === 'Substitute') {
+            if ($link.text() === 'Change') {
                 substitutions.push(id);
                 $link.text('Cancel');
             } else {
-                $link.text('Substitute');
+                $link.text('Change');
                 var index = $.inArray(id, substitutions);
                 if (index > -1) {
+                    $('#reason-error-' + id).hide();
                     substitutions.splice(index, 1);
                 }
             }
@@ -224,10 +230,15 @@ var ready = function () {
         $('#substitutions-form').submit(function (e) {
 
             var substitutionsAndReasons = [];
+            var errors = [];
 
             e.preventDefault();
             $(substitutions).each(function () {
                 var reason = $('#substitution-reason-' + this);
+
+                if (reason.val().trim() === '') {
+                    errors.push($('#reason-error-' + this));
+                }
 
                 substitutionsAndReasons.push({
                     id: this,
@@ -235,14 +246,37 @@ var ready = function () {
                 });
             });
 
-            $('#substitutions').val(JSON.stringify(substitutionsAndReasons))
+            if (errors.length > 0) {
+                $.each(errors, function () {
+                    this.show();
+                });
 
-            this.submit();
+            } else if (substitutions.length === 0) {
+                $('#error').show();
+            }
+            else {
+                $('#substitutions').val(JSON.stringify(substitutionsAndReasons))
+                this.submit();
+            }
         });
     }
 
     if ($('body.orders').length && typeof(cancellationOrderId) !== 'undefined') {
+
         setCountDown(orderChangeTimeOutSeconds);
+        setInterval(function () {
+            $('#counter-text').fadeIn('slow');
+        }, 1000);
+
+        $('#cancel-order').submit(function (e) {
+            e.preventDefault();
+            if ($('#reason').val().trim() === '') {
+                $('#cancel-error').show();
+            } else {
+                this.submit();
+            }
+        });
+
     }
 
 };

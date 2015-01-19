@@ -152,10 +152,6 @@ class Wine < ActiveRecord::Base
   def full_info
     name = display_name
 
-    unless bottle_size.blank?
-      name = name + ' - ' + bottle_size.to_s + ' CL'
-    end
-
     unless type.blank? || type.name.blank?
       name = name + ', ' + type.name
     end

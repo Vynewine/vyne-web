@@ -61,6 +61,10 @@
             .wine-name {
                 text-align: left;
                 font-size: 14px;
+
+                .wine-number {
+                    color: $primary-colour;
+                }
             }
 
             .merchant-note {
