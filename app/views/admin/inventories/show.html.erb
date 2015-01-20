@@ -50,7 +50,7 @@
           <% if @inventory.category.blank? %>
               N/A
           <% else %>
-              <%= @inventory.category.name %>
+              <%= @inventory.category.name_with_ranges %>
           <% end %>
         </div>
       </div>

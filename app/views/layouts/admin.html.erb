@@ -62,8 +62,16 @@
       </button>
       <a class="navbar-brand" href="#">
         <%= image_tag '/favicon-32x32.png', :style => 'width: 16px;height 16px;' %></a>
-      <a class="navbar-brand" href="/<%= params[:controller] %>">
-        <%= params[:controller].gsub('admin/', '').capitalize %></a>
+
+      <% if params[:controller].gsub('admin/', '') == 'advisors' %>
+          <a class="navbar-brand" href="/admin/orders">
+            <%= params[:controller].gsub('admin/', '').capitalize %>
+          </a>
+      <% else %>
+          <a class="navbar-brand" href="/<%= params[:controller] %>">
+            <%= params[:controller].gsub('admin/', '').capitalize %>
+          </a>
+      <% end %>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
@@ -119,7 +127,7 @@
 </nav>
 
 <% flash.each do |type, message| %>
-<% puts type %>
+    <% puts type %>
     <% puts message %>
     <div class="container-fluid">
       <div class="alert <%= bootstrap_class_for(type) %> fade in">
