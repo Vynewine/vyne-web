@@ -85,7 +85,8 @@ module WineImporter
                 appellation_id: row['appellation_id'],
                 maturation_id: row['maturation_id'],
                 vinification_id: row['vinification_id'],
-                composition_id: row['composition_id']
+                composition_id: row['composition_id'],
+                updated_at: Time.now.utc
             )
           end
         end

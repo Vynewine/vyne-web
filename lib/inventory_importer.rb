@@ -17,8 +17,6 @@ module InventoryImporter
 
     validation_error = validate_inventory_data(inventory_data)
 
-    puts json: validation_error
-
     if validation_error.blank?
 
       categories = Category.all
@@ -53,13 +51,17 @@ module InventoryImporter
               :cost => row['cost'],
               :quantity => row['quantity'],
               :category => assign_category(categories, row['cost'])[0],
-              :vendor_sku => row['vendor_sku']
+              :vendor_sku => row['vendor_sku'],
+              :updated_at => Time.now.utc
           )
         end
 
-        Sunspot.index! [wine]
+        Sunspot.index [wine]
 
       end
+
+      Sunspot.commit
+
     else
       result[:errors] << validation_error
     end
