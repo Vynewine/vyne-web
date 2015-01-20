@@ -56,11 +56,11 @@ module InventoryImporter
           )
         end
 
-        Sunspot.index [wine]
+        #Sunspot.index [wine]
 
       end
 
-      Sunspot.commit
+      #Sunspot.commit
 
     else
       result[:errors] << validation_error
