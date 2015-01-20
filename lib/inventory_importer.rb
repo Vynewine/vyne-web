@@ -21,6 +21,8 @@ module InventoryImporter
 
       categories = Category.all
 
+      wines_to_re_index = []
+
       (2..inventory_data.last_row).each do |i|
         row = Hash[[header, inventory_data.row(i)].transpose]
         key = row['wine_key']
@@ -56,11 +58,11 @@ module InventoryImporter
           )
         end
 
-        #Sunspot.index [wine]
+        wines_to_re_index << wine.id
 
       end
 
-      #Sunspot.commit
+      Resque.enqueue(InventoryReIndexing, wines_to_re_index)
 
     else
       result[:errors] << validation_error
