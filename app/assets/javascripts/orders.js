@@ -196,6 +196,26 @@ var ready = function () {
 
         };
 
+        if(orderData && orderData.status === 'advised') {
+            $("[name='wine-more-details-link']").click(function (e) {
+                e.preventDefault();
+                var id = $(this).data("id");
+                $('#wine-summary-' + id).fadeToggle("slow", function() {
+                    $('#wine-detail-' + id).fadeToggle("slow");
+                });
+            });
+
+            $("[name='wine-less-details-link']").click(function (e) {
+                e.preventDefault();
+                var id = $(this).data("id");
+                $('#wine-detail-' + id).fadeToggle("slow", function() {
+                    $('#wine-summary-' + id).fadeToggle("slow");
+                });
+            });
+
+
+        }
+
         if (orderData && orderData.status === 'in transit') {
             renderMap(orderData);
         }

@@ -14,10 +14,37 @@
     <% end %>
 
     <% @order.order_items.each_with_index do |item, index| %>
-        <div class="wine-name"><span class="wine-number"><%= index + 1 %>: </span> <%= item.wine.full_info %> - £<%= '%.2f' % item.price %></div>
-        <% unless item.advisory_note.blank? %>
-            <div class="merchant-note">Merchant Note: <%= item.advisory_note %> </div>
-        <% end %>
+        <div id="wine-summary-<%= index + 1 %>">
+          <div class="wine-name">
+            <span class="wine-number"><%= index + 1 %>: </span> <%= item.wine.full_info %> - £<%= '%.2f' % item.price %>
+            <a name="wine-more-details-link" href="#" data-id="<%= index + 1 %>" style="float: right">+ more</a>
+          </div>
+          <% unless item.advisory_note.blank? %>
+              <div class="merchant-note">
+                Merchant Note: <%= item.advisory_note %>
+              </div>
+          <% end %>
+        </div>
+        <div id="wine-detail-<%= index + 1 %>" data-id="<%= index + 1 %>" style="display: none" class="wine-name">
+          <span>Name:</span> <%= item.wine.name %>
+          <a name="wine-less-details-link" href="#" data-id="<%= index + 1 %>" style="float: right">- less</a><br/>
+          <span>Producer:</span> <%= item.wine.producer.name %><br/>
+          <span>Vintage:</span> <%= item.wine.txt_vintage %><br/>
+          <% unless item.wine.type.blank? %>
+              <span>Type:</span> <%= item.wine.type.name %><br/>
+          <% end %>
+          <span>Grape:</span> <%= item.wine.compositions_array.map { |grape| grape[:name] }.join(', ') %><br/>
+          <span>Location:</span> <%= "#{item.wine.producer.country.name} - #{item.wine.region.name}" %><%= item.wine.subregion.blank? ? '' : (", #{item.wine.subregion.name}") %>
+          <br/>
+
+
+          <% unless item.wine.appellation.blank? %>
+              <span>Appellation:</span> <%= item.wine.appellation.name %><%= item.wine.appellation.classification.blank? ? '' : " (#{item.wine.appellation.classification})" %>
+              <br/>
+          <% end %>
+          <span>Price:</span> £<%= '%.2f' % item.price %>
+        </div>
+
         <hr class="divider">
     <% end %>
 
@@ -29,7 +56,8 @@
     <% if @order.order_change_timeout_seconds > 0 %>
 
         <div class="total" style="margin-bottom: 10px;">
-          <div id="counter-text" style="display: none; text-align: center"> This order will be scheduled for delivery in:
+          <div id="counter-text" style="display: none; text-align: center"> This order will be scheduled for delivery
+            in:
             <span id="counter"></span>
           </div>
         </div>
@@ -52,12 +80,12 @@
 
 <input type="hidden" id="refreshed" value="no">
 <script type="text/javascript">
-    var onLoad = function(){
-        var e=document.getElementById("refreshed");
-        if(e.value=="no")
-            e.value="yes";
-        else{
-            e.value="no";
+    var onLoad = function () {
+        var e = document.getElementById("refreshed");
+        if (e.value == "no")
+            e.value = "yes";
+        else {
+            e.value = "no";
             location.reload();
         }
     }

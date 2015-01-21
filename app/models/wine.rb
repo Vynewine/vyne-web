@@ -139,8 +139,8 @@ class Wine < ActiveRecord::Base
 
   def compositions_array
     comp = []
-    compositions.each do |c|
-      comp.push({:name => c.grape.name, :quantity => c.quantity})
+    composition.composition_grapes.each do |c|
+      comp.push({:name => c.grape.name, :percentage => c.percentage})
     end
     return comp
   end
