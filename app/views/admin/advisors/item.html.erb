@@ -31,15 +31,18 @@
             <li class="list-group-item">
               <div class="row">
                 <div class="col-xs-12">
-                  <%= @order_item.wine.full_info %> - Price: £<%= @order_item.cost %> - SKU: <%= @order_item.inventory.nil? ? '' : ' - ' + @order_item.inventory.vendor_sku %>
+                  <%= @order_item.wine.full_info %> - Price: £<%= @order_item.cost %> -
+                  SKU: <%= @order_item.inventory.nil? ? '' : ' - ' + @order_item.inventory.vendor_sku %>
                 </div>
               </div>
               <div class="row">
                 <div class="col-xs-12">
                   Advisory Note: <%= @order_item.advisory_note.blank? ? 'N/A' : @order_item.advisory_note %>
-                  <button id="edit-advisory-note-btn" class="btn btn-default btn-xs" data-toggle="modal" data-target="#edit-advisory-note-modal"><span class="glyphicon glyphicon-pencil"></span> Edit</button>
-                  <input type="hidden" id="existing-advisory-note" value="<%= @order_item.advisory_note %>" />
-                  <input type="hidden" id="existing-wine-id" value="<%= @order_item.wine.id %>" />
+                  <button id="edit-advisory-note-btn" class="btn btn-default btn-xs" data-toggle="modal" data-target="#edit-advisory-note-modal">
+                    <span class="glyphicon glyphicon-pencil"></span> Edit
+                  </button>
+                  <input type="hidden" id="existing-advisory-note" value="<%= @order_item.advisory_note %>"/>
+                  <input type="hidden" id="existing-wine-id" value="<%= @order_item.wine.id %>"/>
                 </div>
               </div>
               <div class="row">
@@ -124,50 +127,55 @@
       <div class="modal-header">
         <h4 class="modal-title">Note for Customer</h4>
       </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-xs-12 text-center">
-            <input id="advisory-note-text" class="form-control"/>
+      <form id="advisory-note-form">
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xs-12 text-center">
+              <input id="advisory-note-text" class="form-control"/>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <div class="row">
-          <div class="col-xs-6 text-left">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
-          <div class="col-xs-6 text-right">
-            <a id="advisory-note-save" class="btn btn-default">Save</a>
+        <div class="modal-footer">
+          <div class="row">
+            <div class="col-xs-6 text-left">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+            <div class="col-xs-6 text-right">
+              <input type="submit" id="advisory-note-save" class="btn btn-default" value="Save"/>
+            </div>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   </div>
 </div>
 
+<!-- Edit Wine Note -->
 <div class="modal fade" id="edit-advisory-note-modal" tabindex="-1" role="dialog" aria-labelledby="edit-advisory-note-modal" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">Edit Note for Customer</h4>
       </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-xs-12 text-center">
-            <input id="edit-advisory-note-text" class="form-control"/>
+      <form id="edit-advisory-note-form">
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xs-12 text-center">
+              <input id="edit-advisory-note-text" class="form-control"/>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <div class="row">
-          <div class="col-xs-6 text-left">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
-          <div class="col-xs-6 text-right">
-            <a id="edit-advisory-note-save" class="btn btn-default">Save</a>
+        <div class="modal-footer">
+          <div class="row">
+            <div class="col-xs-6 text-left">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+            <div class="col-xs-6 text-right">
+              <input type="submit" id="edit-advisory-note-save" class="btn btn-default" value="Save"/>
+            </div>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   </div>
 </div>
@@ -207,72 +215,3 @@
     </div>
   </div>
 </div>
-
-<!-- Not moving these styles to global CSS. Just need to center modal on this page. Probably will have to re-think it. -->
-<style>
-    .modal-dialog {
-        margin: 0;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-    }
-
-    .modal-body {
-        overflow-y: auto;
-    }
-
-    .modal-footer {
-        margin-top: 0;
-    }
-
-    @media (max-width: 767px) {
-        .modal-dialog {
-            width: 100%;
-        }
-    }
-</style>
-
-<script>
-
-    function adjustModalMaxHeightAndPosition() {
-        $('.modal').each(function () {
-            if ($(this).hasClass('in') == false) {
-                $(this).show();
-            }
-            ;
-            var contentHeight = $(window).height() - 60;
-            var headerHeight = $(this).find('.modal-header').outerHeight() || 2;
-            var footerHeight = $(this).find('.modal-footer').outerHeight() || 2;
-
-            $(this).find('.modal-content').css({
-                'max-height': function () {
-                    return contentHeight;
-                }
-            });
-
-            $(this).find('.modal-body').css({
-                'max-height': function () {
-                    return (contentHeight - (headerHeight + footerHeight));
-                }
-            });
-
-            $(this).find('.modal-dialog').css({
-                'margin-top': function () {
-                    return -($(this).outerHeight() / 2);
-                },
-                'margin-left': function () {
-                    return -($(this).outerWidth() / 2);
-                }
-            });
-            if ($(this).hasClass('in') == false) {
-                $(this).hide();
-            }
-            ;
-        });
-    }
-    ;
-
-    $(window).resize(adjustModalMaxHeightAndPosition).trigger("resize");
-
-
-</script>

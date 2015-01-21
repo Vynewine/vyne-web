@@ -70,7 +70,7 @@ ruby -I test test/controllers/signup_controller_test.rb -n /.*method name.*/
 ### Deployment
 Precompile assets
 ```
-RAILS_ENV=production rake assets:precompile
+RAILS_ENV=production rake assets:clean assets:precompile
 ```
 
 Commit precompiled assets

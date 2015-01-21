@@ -272,7 +272,7 @@ var adminReady = function () {
             }
         });
 
-        $('#advisory-note-save').click(function(e) {
+        $('#advisory-note-form').submit(function(e) {
             e.preventDefault();
             $('#advisory-note').val($('#advisory-note-text').val());
             $('#update-form').submit();
@@ -289,34 +289,11 @@ var adminReady = function () {
             $('#wine-id').val($('#existing-wine-id').val());
         });
 
-        $('#edit-advisory-note-save').click(function(e) {
+        $('#edit-advisory-note-form').submit(function(e) {
             e.preventDefault();
             $('#advisory-note').val($('#edit-advisory-note-text').val());
             $('#update-form').submit();
         });
-
-
-
-        var parseWarehouseStatuses = function (availabilityList) {
-            var d = new Date();
-            var w = d.getDay();
-            var t = parseInt('' + (d.getHours() * 100 + d.getMinutes()));
-            var o, c;
-            var s = [];
-            for (var i = 0, availability; availability = availabilityList[i++];) {
-                for (var j = 0, agenda; agenda = availability.agendas[j++];) {
-                    if (agenda.day === w) {
-                        o = agenda.opening;
-                        c = agenda.closing;
-                        // console.log('w:',w,'o:',o,'c:',c);
-                        s[i - 1] = t >= o && t < c;
-                        break;
-                    }
-                }
-            }
-            ;
-            return s;
-        };
 
         /**
          * Renders wine entry into interface
