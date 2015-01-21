@@ -196,7 +196,7 @@ var ready = function () {
 
         };
 
-        if(orderData && orderData.status === 'advised') {
+        if(orderData && (orderData.status === 'advised' || orderData.status === 'packing')) {
             $("[name='wine-more-details-link']").click(function (e) {
                 e.preventDefault();
                 var id = $(this).data("id");
