@@ -61,7 +61,9 @@ class HomeController < ApplicationController
           id: warehouse.id,
           address: warehouse.address.postcode,
           distance: max_distance,
-          is_open: warehouse.is_open
+          is_open: warehouse.is_open,
+          opening_time: warehouse.today_opening_time,
+          closing_time: warehouse.today_closing_time
       }
     end
     render :json => warehouses

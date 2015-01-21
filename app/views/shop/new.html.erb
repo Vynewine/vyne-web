@@ -30,10 +30,7 @@
           </div>
           <input type="text" id="filterPostcode" style="display:none;" placeholder="Enter postcode" autocomplete="off"/>
           <ul class="errors" id="postcode-errors" style="display:none;"></ul>
-          <div class="opening-times">
-            <span>Opening hours:</span>
-            <span>12:00 - 20:15</span>
-          </div>
+
           <span id="filterPostcodeMessage" class="message"></span>
           <a href="" id="use-postcode" class="btn next-slide">Choose wine</a>
           <div class="not-available">
@@ -44,7 +41,7 @@
             </div>
             <div class="closed">
               <h3>We deliver wine in your area, but your local wine cellars are closed</h3>
-              <p>The cellars are currently closed in your area, come back between 12:00 - 20:15 daily.</p>
+              <p>The cellars are currently closed in your area, come back between <span id="opening-hours"></span> daily.</p>
               <p>We can drop you an email if the opening hours are extended.</p>
             </div>
             <div id="sign-up-panel">

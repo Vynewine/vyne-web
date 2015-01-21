@@ -33,11 +33,6 @@ class Warehouse < ActiveRecord::Base
     if self.agendas.blank?
       false
     else
-      #TODO: In the future we'll make time zone identifier configurable
-      time_zone_identifier = 'Europe/London'
-      tz = TZInfo::Timezone.get(time_zone_identifier)
-      # current local time
-      local_time = tz.utc_to_local(Time.now.getutc)
       # Select agenda for today for a warehouse
       agenda = self.agendas.select { |agenda| agenda.day == local_time.wday }.first
       unless agenda.blank?
@@ -65,6 +60,36 @@ class Warehouse < ActiveRecord::Base
         (agenda_open < local_time && agenda_close > local_time)
       end
     end
+  end
+
+  def today_opening_time
+    # Select agenda for today for a warehouse
+    agenda = self.agendas.select { |agenda| agenda.day == local_time.wday }.first
+    if agenda.blank?
+      'N/A'
+    else
+      opening_time = Time.parse(agenda.opening_time)
+      "#{opening_time.hour < 10 ? '0' + opening_time.hour.to_s : opening_time.hour.to_s}:#{opening_time.min < 10 ? '0' + opening_time.min.to_s : opening_time.min.to_s}"
+    end
+  end
+
+  def today_closing_time
+    # Select agenda for today for a warehouse
+    agenda = self.agendas.select { |agenda| agenda.day == local_time.wday }.first
+    if agenda.blank?
+      'N/A'
+    else
+      closing_time = Time.parse(agenda.closing_time)
+      "#{closing_time.hour < 10 ? '0' + closing_time.hour.to_s : closing_time.hour.to_s}:#{closing_time.min < 10 ? '0' + closing_time.min.to_s : closing_time.min.to_s}"
+    end
+  end
+
+  def local_time
+    #TODO: In the future we'll make time zone identifier configurable
+    time_zone_identifier = 'Europe/London'
+    tz = TZInfo::Timezone.get(time_zone_identifier)
+    # current local time
+    tz.utc_to_local(Time.now.getutc)
   end
 
   def area=(area)
@@ -100,7 +125,7 @@ class Warehouse < ActiveRecord::Base
   end
 
   #TODO: Actually take city as a parameter ;)
-  # If you came here to refactor this. Congratulations VYNE made it!
+  # If you came here to refactor this, congratulations VYNE made it!
   def self.delivery_area_by_city
     results = ActiveRecord::Base.connection.execute('select ST_Union(w.delivery_area) from warehouses w where w.active = true;')
     #Binary Parser

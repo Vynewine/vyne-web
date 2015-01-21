@@ -95,7 +95,13 @@ function MapUtility() {
                         dists.push({m: distanceKm, mi: distanceMi});
                         if (distanceMi <= parseInt(distances[i])) {
                             delivery.available = true;
-                            delivery.warehouses.push({id: warehouses[i].id, distance: distanceMi, is_open: warehouses[i].is_open });
+                            delivery.warehouses.push({
+                                id: warehouses[i].id,
+                                distance: distanceMi,
+                                is_open: warehouses[i].is_open,
+                                opening_time: warehouses[i].opening_time,
+                                closing_time: warehouses[i].closing_time
+                            });
                         }
                     }
                 }
@@ -117,7 +123,9 @@ function MapUtility() {
                 for (var i = 0; i < data.warehouses.length; i++) {
                     warehouses.push({
                         id: data.warehouses[i].id,
-                        is_open: data.warehouses[i].is_open
+                        is_open: data.warehouses[i].is_open,
+                        opening_time: data.warehouses[i].opening_time,
+                        closing_time: data.warehouses[i].closing_time
                     });
                     allDistances.push(data.warehouses[i].distance);
                     allPostcodes.push(data.warehouses[i].address);

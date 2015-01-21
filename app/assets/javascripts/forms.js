@@ -277,6 +277,10 @@ $(document).ready(function () {
                         return warehouse.is_open
                     });
 
+                    var closedWarehouses = delivery.warehouses.filter(function (warehouse) {
+                        return warehouse.is_open === false;
+                    });
+
                     if (openedWarehouses.length > 0) {
 
                         $slideable.removeClass('slideup');
@@ -297,6 +301,11 @@ $(document).ready(function () {
                         $slideable.addClass('slideup');
                         $('.opening-times').hide();
                         $notavailable.show();
+                        var openingHours = '12:00 - 21:00';
+                        if (closedWarehouses.length > 0) {
+                            openingHours = closedWarehouses[0].opening_time + ' - ' + closedWarehouses[0].closing_time
+                        }
+                        $('#opening-hours').text(openingHours);
                         $('.closed').show();
                         $('.outside').hide();
                     }
