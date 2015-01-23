@@ -9,6 +9,7 @@
 //= require local_time
 //= require bootstrap_growl/bootstrap-growl.min
 //= require admin_orders
+//= require reconnecting-websocket/reconnecting-websocket
 //= require admin_notifications
 
 var advisor = advisor || null;

@@ -31,6 +31,9 @@ module OrderReminderNotification
           GcmHelper.send_notification(message, registration_ids)
         end
       end
+
+      WebNotificationDispatcher.publish(notifications.map{|notification|notification[:warehouse]}, 'You have pending order(s).', 'pending_orders')
+
     end
 
   end

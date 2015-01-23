@@ -351,13 +351,16 @@ module UserMailer
 
     begin
 
-      wine1 = order.order_items[0].wine
-      wine1_name = "#{wine1.name} #{wine1.txt_vintage}, #{wine1.producer.name}, £#{'%.2f' % order.order_items[0].price} (#{order.order_items[0].category.name})"
+      unless order.order_items[0].wine.blank?
+        wine1 = order.order_items[0].wine
+        wine1_name = "#{wine1.name} #{wine1.txt_vintage}, #{wine1.producer.name}, £#{'%.2f' % order.order_items[0].price} (#{order.order_items[0].category.name})"
 
-      unless order.order_items[1].blank?
-        wine2 = order.order_items[1].wine
-        wine2_name = "#{wine2.name} #{wine2.txt_vintage}, #{wine2.producer.name}, £#{'%.2f' % order.order_items[1].price} (#{order.order_items[1].category.name})"
+        unless order.order_items[1].blank?
+          wine2 = order.order_items[1].wine
+          wine2_name = "#{wine2.name} #{wine2.txt_vintage}, #{wine2.producer.name}, £#{'%.2f' % order.order_items[1].price} (#{order.order_items[1].category.name})"
+        end
       end
+
 
       mandrill = Mandrill::API.new Rails.application.config.mandrill
       template_name = 'cancellation-2scch'
@@ -393,7 +396,7 @@ module UserMailer
                       },
                       {
                           :name => 'ORDERTOTAL',
-                          :content => '£' + '%.2f' % order.total_price
+                          :content => order.total_price.blank? ? '' : '£' + '%.2f' % order.total_price
                       },
                       {
                           :name => 'WINE1RECEIPT',

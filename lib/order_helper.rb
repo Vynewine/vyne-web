@@ -19,24 +19,25 @@ module OrderHelper
     if order.charge_id.blank? && order.status_id == Status.statuses[:advised]
       if admin
         order.charge_id = 'Admin'
-        order.status_id = Status.statuses[:packing]
-        #TODO Need to handle errors here
-        CoordinateHelper.schedule_job(order)
       else
         results = StripeHelper.charge_card(value, stripe_card_id, stripe_customer_id)
 
         if results[:errors].blank?
           order.charge_id = results[:data].id
-          order.status_id = Status.statuses[:packing]
-
-          #TODO Need to handle errors here
-          CoordinateHelper.schedule_job(order)
         else
           response[:errors] = results[:errors]
           order.status_id = Status.statuses[:payment_failed]
           return response
         end
       end
+
+      unless order.charge_id.blank?
+        order.status_id = Status.statuses[:packing]
+        WebNotificationDispatcher.publish([order.warehouse.id], 'You have order(s) ready for packing', 'packing_orders')
+        #TODO Need to handle errors here
+        CoordinateHelper.schedule_job(order)
+      end
+
     else
       message = "Can't charge already charged order: " + order.id.to_s
       response[:errors] << message

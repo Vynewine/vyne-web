@@ -16,7 +16,6 @@ class SessionsController < Devise::SessionsController
       cookies[:warehouses] = 'admin'
     else
       unless current_user.warehouses.blank?
-        puts json: current_user.warehouses.map { |warehouse| warehouse.id }.join(',')
         cookies[:warehouses] = current_user.warehouses.map { |warehouse| warehouse.id }.join(',')
       end
     end
