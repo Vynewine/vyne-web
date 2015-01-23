@@ -106,6 +106,8 @@ class ShopController < ApplicationController
         Resque.enqueue(OrderEmailNotification, @order.id, :merchant_order_confirmation)
         Resque.enqueue(OrderNotification, 'You have a new order.', @order.warehouse.devices.map { |device| device.registration_id })
 
+        WebNotificationDispatcher.publish([@order.warehouse.id], "New order placed. Id: #{@order.id}")
+
         render :json => @order.to_json
       else
         render json: @order.errors, status: :unprocessable_entity

@@ -7,7 +7,9 @@
 //= require vendor/leaflet-plugins-1.2.0/layer/tile/Google
 //= require bootstrap-sprockets
 //= require local_time
+//= require bootstrap_growl/bootstrap-growl.min
 //= require admin_orders
+//= require admin_notifications
 
 var advisor = advisor || null;
 

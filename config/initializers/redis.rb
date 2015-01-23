@@ -1,4 +1,7 @@
 class DataCache
+
+  ADMIN_NOTIFICATION_CHANNEL = 'admin-notifications'
+
   def self.data
     @data ||= Redis.new(:url => Rails.application.config.redis)
   end

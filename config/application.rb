@@ -63,5 +63,8 @@ module Vyne
                                           File.extname(path).in? %w(.html .erb .haml .png .gif .jpg .jpeg .eot .otf .svc .woff .ttf)
                                         end)
     end
+
+    config.middleware.use "WebNotifications"
+
   end
 end

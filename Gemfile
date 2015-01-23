@@ -41,19 +41,6 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
 gem 'spring', group: :development
 
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
-
-# Use unicorn as the app server
-# gem 'unicorn'
-
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
-
-# Use debugger
-# gem 'debugger', group: [:development, :test]
-
-
 # Login stuff
 gem 'devise'
 gem 'authority'
@@ -70,68 +57,69 @@ gem 'sunspot_solr' # optional pre-packaged Solr distribution for use in developm
 # Mandrill API
 gem 'mandrill-api'
 
-#Process CSV and XLS files
+# Process CSV and XLS files
 gem 'roo', '~> 1.13.2'
 
-#Sentry
+# Sentry
 gem 'sentry-raven', :require => 'raven', :git => 'https://github.com/getsentry/raven-ruby.git'
 
-#Mailchimp
+# Mailchimp
 gem 'mailchimp-api'
 
-#Prevent from permanently deleting records
+# Prevent from permanently deleting records
 gem 'paranoia', '~> 2.0'
 gem 'paranoia_uniqueness_validator', '1.1.0'
 
-#Add some damn pagination yeah!
+# Add some damn pagination yeah!
 gem 'will_paginate', '~> 3.0'
 
-#PostGIS Spatial Capabilities
+# PostGIS Spatial Capabilities
 gem 'activerecord-postgis-adapter'
 
-#Timezon fun
+# Timezon fun
 gem 'tzinfo'
 
-#Spatial to JSON
+# Spatial to JSON
 gem 'rgeo-geojson'
 
-#Google GCM
+# Google GCM
 gem 'gcm'
 
-#Let's get some Bootstrap goodness
+# Let's get some Bootstrap goodness
 gem 'bootstrap-sass', '~> 3.3.1'
 
-#More Magic
+# More Magic
 gem 'autoprefixer-rails'
 
-#Time conversion for UI
+# Time conversion for UI
 gem 'local_time'
 
-#Google API and OAuth
+# Google API and OAuth
 gem 'google-api-client'
 
-#REST Client
+# REST Client
 gem 'rest-client', '~> 1.6.8'
 
-#Resque for running Background Job (Depends on Redis, check README instructions for installing Redis)
+# Resque for running Background Job (Depends on Redis, check README instructions for installing Redis)
 gem 'resque', '~> 1.25.2'
 gem 'resque-scheduler', '~> 4.0.0'
 
-#Scheduling Work on Job Queue
+# Scheduling Work on Job Queue
 gem 'clockwork'
 
-#More Robust Web Server
-gem 'unicorn'
+# More Robust Web Server
+gem 'puma'
 
 group :production do
-  #Web Monitoring with New Relic
+  # Web Monitoring with New Relic
   gem 'newrelic_rpm'
 end
 
-#Well obvious
+# Well obvious
 gem 'pgbackups-archive'
 
-#Twilio
+# Twilio
 gem 'twilio-ruby'
 
-
+# Web Sockets
+gem 'faye-websocket'

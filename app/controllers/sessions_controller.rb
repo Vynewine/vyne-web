@@ -12,16 +12,25 @@ class SessionsController < Devise::SessionsController
     resource ||= resource_or_scope
     sign_in(scope, resource) unless warden.user(scope) == resource
 
+    if current_user.admin?
+      cookies[:warehouses] = 'admin'
+    else
+      unless current_user.warehouses.blank?
+        puts json: current_user.warehouses.map { |warehouse| warehouse.id }.join(',')
+        cookies[:warehouses] = current_user.warehouses.map { |warehouse| warehouse.id }.join(',')
+      end
+    end
+
     respond_to do |format|
       format.html { redirect_to home_index_path }
       format.json {
         render :json => {
-            :success => true,
-            :user => current_user,
-            :addresses => current_user.addresses.order(updated_at: :desc),
-            :payments => current_user.payments.order(updated_at: :desc),
-            :csrfToken => form_authenticity_token
-        }
+                   :success => true,
+                   :user => current_user,
+                   :addresses => current_user.addresses.order(updated_at: :desc),
+                   :payments => current_user.payments.order(updated_at: :desc),
+                   :csrfToken => form_authenticity_token
+               }
       }
     end
 
