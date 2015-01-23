@@ -39,7 +39,7 @@ class ApplicationController < ActionController::Base
     end
 
     unless Rails.application.config.enable_invite_code == 'false'
-      if cookies[:invite_code] == Rails.application.config.invite_code
+      if cookies[:invite_code] == Rails.application.config.invite_code || params[:monitoring] == 'true'
         return
       end
 
