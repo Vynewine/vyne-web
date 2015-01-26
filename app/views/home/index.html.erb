@@ -1,61 +1,17 @@
 <div id="walkthrough" class="swiper-container">
-    <div class="swiper-wrapper">
 
-        <div id="one" class="swiper-slide walkthrough-panel">
-            <div class="walkthrough-panel-bg"></div>
-            <div class="walkthrough-panel-overlay"></div>
-            <div class="inner wrapper wrapper-large">
-                <!--<h3>Matching great wines to your occasion</h3>
-                <h4>Superfast delivery</h4>
-                <p>Get the same wines as top restaurants delivered on-demand</p>-->
-                <h3>Matching great wines for any occasion</h3>
-                <p>Restaurant quality wine delivered on-demand</p>
-            </div>
-        </div>
-        
-        <div id="two" class="swiper-slide walkthrough-panel">
-            <div class="walkthrough-panel-bg"></div>
-            <div class="walkthrough-panel-overlay"></div>
-            <div class="inner wrapper wrapper-large">
-                <!--<h3>From London's best wine cellars</h3>
-                <p>Used by top restaurants.</p>
-                <p>Only Producers from the best vineyards in the world.</p>
-                <p>Never settle for supermarket wine again.</p>-->
-                <h3>From London's best wine cellars</h3>
-                <p>Only producers from the best vineyards in the world</p>
-            </div>
-        </div>
+  <%= render 'swiper_content' %>
 
-        <div id="three" class="swiper-slide walkthrough-panel">
-            <div class="walkthrough-panel-bg"></div>
-            <div class="walkthrough-panel-overlay"></div>
-            <div class="inner wrapper wrapper-large">
-                <h3>Your digital sommelier</h3>
-                <p>Select the occasion or meal you’re having with your wine</p>
-                <p>We’ll find a match for you</p>
-            </div>
-        </div>
-
+  <div class="check-availability">
+    <div class="wrapper">
+      <span style="display:none;" id="postcode-error">Not a valid postcode</span>
+      <form action="/shop/neworder" id="postcode-check" method="GET">
+        <input type="text" id="filterPostcode" placeholder="Enter postcode" name="postcode" autocomplete="off"/>
+        <input type="submit" value="Check Availability"/>
+      </form>
     </div>
+  </div>
 
 
-
-    <div class="check-availability">
-        <div class="wrapper">
-          <span style="display:none;" id="postcode-error">Not a valid postcode</span>
-            <form action="/shop/neworder" id="postcode-check" method="GET">
-                <input type="text" id="filterPostcode" placeholder="Enter postcode" name="postcode" autocomplete="off"/>
-                <input type="submit" value="Check Availability" />
-            </form>
-        </div>
-    </div>
-
-  <style>
-
-  </style>
-
-  <a class="arrow-left" href="#" style="display: none"><img class="arrow-left-image" src="<%= asset_path('icons/arrow-left.png') %>" /></a>
-  <a class="arrow-right" href="#"><img class="arrow-right-image" src="<%= asset_path('icons/arrow-right.png') %>" /></a>
-  <div class="pagination"></div>
 
 </div>
