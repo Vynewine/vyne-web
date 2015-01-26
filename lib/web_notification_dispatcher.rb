@@ -7,7 +7,7 @@ module WebNotificationDispatcher
   @logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
   TAG = 'Web Notification Dispatcher'
 
-  def self.publish(warehouse_ids, notification, type = 'default')
+  def self.publish(warehouse_ids, notification, type = :default)
     log "Dispatching message: '#{notification}' to warehouse #{warehouse_ids}"
 
     begin

@@ -106,7 +106,34 @@ class OrderTest < ActiveSupport::TestCase
 
     end
 
-     puts notifications
+    puts notifications
+
+  end
+
+  test 'Will return actionable order counts' do
+    order_1 = orders(:order1)
+    order_2 = orders(:order2)
+    order_3 = orders(:order3)
+
+    order_1.status_id = Status.statuses[:pending]
+    order_2.status_id = Status.statuses[:packing]
+    order_3.status_id = Status.statuses[:pending]
+
+    warehouse_1 = warehouses(:one)
+    warehouse_2 = warehouses(:two)
+
+    order_1.warehouse = warehouse_1
+    order_2.warehouse = warehouse_1
+    order_3.warehouse = warehouse_2
+
+    order_1.save
+    order_2.save
+    order_3.save
+
+    actionable_order_counts = Order.actionable_order_counts([warehouse_1, warehouse_2], false)
+
+    assert(actionable_order_counts[:pending] == 2, 'Expected 2 pending orders')
+    assert(actionable_order_counts[:packing] == 1, 'Expected 1 order in packing status')
 
   end
 

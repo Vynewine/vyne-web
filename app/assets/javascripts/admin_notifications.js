@@ -5,7 +5,6 @@ var ws = new ReconnectingWebSocket(uri, null, { debug: false, reconnectInterval:
 var notifications = [];
 var setupNotifications = function () {
 
-
     ws.onmessage = function (message) {
         var data = JSON.parse(message.data);
 
@@ -44,14 +43,21 @@ var setupNotifications = function () {
                 })
             }
         }
+
+        switch(data.type) {
+            case 'new_order':
+            case 'cancel_orders':
+            case 'packing_orders':
+                $(document).trigger( "orderChange", [data.type]);
+                break;
+
+        }
     };
 
     var styleMessage = function (message) {
         return '<span style="padding: 0 20px 0 0">' + message + '</span>'
     };
 };
-
-
 
 $(document).ready(setupNotifications);
 $(document).on('page:load', function() {

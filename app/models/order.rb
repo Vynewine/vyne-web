@@ -91,4 +91,48 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def self.actionable_order_counts(warehouses, is_admin)
+
+    counts = {
+        :pending => 0,
+        :packing => 0,
+        :advised => 0,
+        :in_transit => 0,
+        :pickup => 0
+    }
+
+    unless warehouses.blank? && !is_admin
+
+      statuses_to_report = [
+          Status.statuses[:pending],
+          Status.statuses[:packing],
+          Status.statuses[:advised],
+          Status.statuses[:in_transit],
+          Status.statuses[:pickup]
+      ]
+
+      if is_admin
+        actionable_orders = where(:status => statuses_to_report)
+      else
+        actionable_orders = where(:status => statuses_to_report, :warehouse => warehouses)
+      end
+
+      actionable_orders.each do |order|
+        case order.status_id
+          when Status.statuses[:pending]
+            counts[:pending] += 1
+          when Status.statuses[:packing]
+            counts[:packing] += 1
+          when Status.statuses[:advised]
+            counts[:advised] += 1
+          when Status.statuses[:in_transit]
+            counts[:in_transit] += 1
+          when Status.statuses[:pickup]
+            counts[:pickup] += 1
+        end
+      end
+    end
+    counts
+  end
+
 end

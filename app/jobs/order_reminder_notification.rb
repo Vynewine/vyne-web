@@ -32,7 +32,7 @@ module OrderReminderNotification
         end
       end
 
-      WebNotificationDispatcher.publish(notifications.map{|notification|notification[:warehouse]}, 'You have pending order(s).', 'pending_orders')
+      WebNotificationDispatcher.publish(notifications.map{|notification|notification[:warehouse]}, 'You have pending order(s).', :pending_orders)
 
     end
 

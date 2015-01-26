@@ -8,7 +8,8 @@ class Admin::OrdersController < ApplicationController
   before_action :authenticate_user!
   authorize_actions_for SupplierAuthorizer
   before_action :set_order, only: [:show, :edit, :update, :destroy]
-  authority_actions :finished_advice => 'update', :packing_complete => 'update', :refresh_all => 'update'
+  authority_actions :finished_advice => 'update', :packing_complete => 'update', :refresh_all => 'update', :notification => 'update', :order_counts => 'read'
+
 
   # GET /orders
   # GET /orders.json
@@ -23,9 +24,12 @@ class Admin::OrdersController < ApplicationController
       @orders = @orders.where(:status => params[:status])
     end
 
-    unless current_user.has_role?(:admin) || current_user.has_role?(:superadmin)
+    unless current_user.admin?
       @orders = @orders.where(:warehouse => current_user.warehouses)
     end
+
+    @actionable_order_counts = Order.actionable_order_counts(current_user.warehouses, current_user.admin?)
+
   end
 
   def show
@@ -101,9 +105,9 @@ class Admin::OrdersController < ApplicationController
   def cancel
     if current_user.admin?
       Resque.enqueue(OrderCancellation, params[:order_id], 'Cancelled by ' + current_user.name)
-      redirect_to admin_order_path(params[:order_id]), :flash => { :notice => 'Order queued for cancellation.' }
+      redirect_to admin_order_path(params[:order_id]), :flash => {:notice => 'Order queued for cancellation.'}
     else
-      redirect_to admin_order_path(params[:order_id]), :flash => { :notice => "You don't have rights to cancel orders." }
+      redirect_to admin_order_path(params[:order_id]), :flash => {:notice => "You don't have rights to cancel orders."}
     end
   end
 
@@ -168,13 +172,15 @@ class Admin::OrdersController < ApplicationController
     @order.status_id = Status.statuses[:pickup]
 
     if @order.save
-
-
-
       redirect_to admin_orders_url(:status => @order.status_id), :flash => {:notice => 'Packing Completed for order: ' + @order.id.to_s}
     else
       redirect_to [:admin, @order], :flash => {:error => @order.errors.full_messages().join(', ')}
     end
+  end
+
+  def order_counts
+    actionable_order_counts = Order.actionable_order_counts(current_user.warehouses, current_user.admin?)
+    render json: {success: true, actionable_order_counts: actionable_order_counts}, status: :ok
   end
 
   private
@@ -200,5 +206,11 @@ class Admin::OrdersController < ApplicationController
         :delivery_cost,
         address_attributes: [:id, :line_1, :postcode, :line_2, :company_name]
     )
+  end
+
+  def sanitize(message)
+    json = JSON.parse(message)
+    json.each { |key, value| json[key] = ERB::Util.html_escape(value) }
+    JSON.generate(json)
   end
 end

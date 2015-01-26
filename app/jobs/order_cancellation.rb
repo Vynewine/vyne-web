@@ -62,7 +62,7 @@ class OrderCancellation
     Resque.enqueue(OrderEmailNotification, order.id, :order_cancellation)
     Resque.enqueue(OrderSmsNotification, order.id, :order_cancellation)
 
-    WebNotificationDispatcher.publish([order.warehouse.id], 'One of your orders has been cancelled.', 'cancel_orders')
+    WebNotificationDispatcher.publish([order.warehouse.id], 'One of your orders has been cancelled.', :cancel_orders)
 
   end
 

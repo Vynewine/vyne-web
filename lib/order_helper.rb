@@ -33,7 +33,6 @@ module OrderHelper
 
       unless order.charge_id.blank?
         order.status_id = Status.statuses[:packing]
-        WebNotificationDispatcher.publish([order.warehouse.id], 'You have order(s) ready for packing', 'packing_orders')
         #TODO Need to handle errors here
         CoordinateHelper.schedule_job(order)
       end
@@ -43,7 +42,9 @@ module OrderHelper
       response[:errors] << message
     end
 
-    unless order.save
+    if order.save
+      WebNotificationDispatcher.publish([order.warehouse.id], 'You have order(s) ready for packing', :packing_orders)
+    else
       response[:errors] << order.errors
     end
 

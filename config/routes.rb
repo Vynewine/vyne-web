@@ -131,6 +131,7 @@ Rails.application.routes.draw do
       collection do
         post 'packing_complete'
         get 'refresh_all'
+        get 'order_counts'
       end
     end
     resources :payments

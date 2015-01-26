@@ -194,7 +194,7 @@ class Admin::AdvisorsController < ApplicationController
 
       inventory = wine.inventories.select { |inv| inv.warehouse == order.warehouse }.first
 
-      unless inventory.blank? || inventory.quantity == 0
+      unless inventory.blank? || inventory.quantity == 0 || inventory.category.blank?
         wines << {
             :countryCode => wine.producer.country.alpha_2,
             :countryName => wine.producer.country.name,

@@ -269,10 +269,10 @@ var adminReady = function () {
             var $tr = $(event.relatedTarget).closest('tr');
             var wine = $tr.data('id');
             $('#wine-id').val(wine);
-            var existingNote = $('#existing-advisory-note').val();
-            if(existingNote) {
-                $(this).find('#advisory-note-text').val(existingNote);
-            }
+
+        }).on('shown.bs.modal', function () {
+            var $note = $(this).find('#advisory-note-text');
+            $note.focus();
         });
 
         $('#advisory-note-form').submit(function(e) {
@@ -285,11 +285,17 @@ var adminReady = function () {
             e.preventDefault();
 
             var existingNote = $('#existing-advisory-note').val();
+            var $editNote = $('#edit-advisory-note-text');
             if(existingNote) {
-                $('#edit-advisory-note-text').val(existingNote);
+                $editNote.val(existingNote);
             }
 
             $('#wine-id').val($('#existing-wine-id').val());
+        });
+
+        $('#edit-advisory-note-modal').on('shown.bs.modal', function () {
+            var $note =  $('#edit-advisory-note-text');
+            $note.focus();
         });
 
         $('#edit-advisory-note-form').submit(function(e) {
