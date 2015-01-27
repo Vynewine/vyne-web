@@ -8,7 +8,7 @@ module WebNotificationDispatcher
   TAG = 'Web Notification Dispatcher'
 
   def self.publish(warehouse_ids, notification, type = :default)
-    log "Dispatching message: '#{notification}' to warehouse #{warehouse_ids}"
+    log "Dispatching message: '#{notification}' type #{type} to warehouse #{warehouse_ids}"
 
     begin
       message = sanitize({warehouses: warehouse_ids.join(','), text: notification, type: type})

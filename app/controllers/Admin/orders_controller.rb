@@ -8,7 +8,12 @@ class Admin::OrdersController < ApplicationController
   before_action :authenticate_user!
   authorize_actions_for SupplierAuthorizer
   before_action :set_order, only: [:show, :edit, :update, :destroy]
-  authority_actions :finished_advice => 'update', :packing_complete => 'update', :refresh_all => 'update', :notification => 'update', :order_counts => 'read'
+  authority_actions :finished_advice => 'update',
+                    :packing_complete => 'update',
+                    :refresh_all => 'update',
+                    :notification => 'update',
+                    :order_counts => 'read',
+                    :increment_cancel_count => 'update'
 
 
   # GET /orders
@@ -30,6 +35,13 @@ class Admin::OrdersController < ApplicationController
 
     @actionable_order_counts = Order.actionable_order_counts(current_user.warehouses, current_user.admin?)
 
+    unless params[:status].blank?
+      if params[:status] == Status.statuses[:cancelled].to_s
+        session[:cancel_count] = 0
+      end
+    end
+
+    @actionable_order_counts[:cancel_count] = session[:cancel_count].blank? ? 0 : session[:cancel_count]
   end
 
   def show
@@ -161,6 +173,7 @@ class Admin::OrdersController < ApplicationController
     Resque.enqueue(OrderSmsNotification, @order.id, :order_receipt)
 
     if @order.save
+      WebNotificationDispatcher.publish([@order.warehouse.id], '', :order_change)
       redirect_to admin_orders_url(:status => @order.status_id), :flash => {:notice => 'Order advised. Waiting for client to confirm.'}
     else
       redirect_to [:admin, @order], :flash => {:error => @order.errors.full_messages().join(', ')}
@@ -172,6 +185,7 @@ class Admin::OrdersController < ApplicationController
     @order.status_id = Status.statuses[:pickup]
 
     if @order.save
+      WebNotificationDispatcher.publish([@order.warehouse.id], '', :order_change)
       redirect_to admin_orders_url(:status => @order.status_id), :flash => {:notice => 'Packing Completed for order: ' + @order.id.to_s}
     else
       redirect_to [:admin, @order], :flash => {:error => @order.errors.full_messages().join(', ')}
@@ -180,7 +194,13 @@ class Admin::OrdersController < ApplicationController
 
   def order_counts
     actionable_order_counts = Order.actionable_order_counts(current_user.warehouses, current_user.admin?)
+    actionable_order_counts[:cancel_count] = session[:cancel_count].blank? ? 0 : session[:cancel_count]
     render json: {success: true, actionable_order_counts: actionable_order_counts}, status: :ok
+  end
+
+  def increment_cancel_count
+    session[:cancel_count] = session[:cancel_count].blank? ? 1 : session[:cancel_count] += 1
+    render json: {success: true}, status: :ok
   end
 
   private

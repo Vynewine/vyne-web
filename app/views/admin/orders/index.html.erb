@@ -53,7 +53,7 @@
           <% end %>>
             <a href="<%= admin_orders_path(:status => Status.statuses[:cancelled]) %>">
               Cancelled <span id="badge-cancelled" class="label label-warning label-as-badge"
-                            style="display: none;"></span>
+                            style="display: <%= @actionable_order_counts[:cancel_count] == 0 ? 'none' : 'inline' %>;"><%= @actionable_order_counts[:cancel_count] %></span>
             </a>
           </li>
           <% if user_is_admin %>

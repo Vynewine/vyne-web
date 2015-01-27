@@ -23,6 +23,11 @@ class OrderStatus
               if order.status_id != status && status == Status.statuses[:in_transit]
                 Resque.enqueue(OrderSmsNotification, order.id, :order_in_transit)
               end
+
+              if order.status_id != status
+                WebNotificationDispatcher.publish([order.warehouse.id], '', :order_change)
+              end
+
               order.status_id = status
             end
             unless job[:assignee].blank?

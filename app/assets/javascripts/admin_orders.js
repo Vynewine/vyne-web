@@ -1,5 +1,3 @@
-var canceledOrdersCount = 0;
-
 var ready = function () {
     if ($('.admin_orders').length) {
         $('#finished-packing').on('show.bs.modal', function (event) {
@@ -17,17 +15,13 @@ var ready = function () {
 var updateOrderBadgeCounts = function (type) {
     if ($('.admin_orders').length) {
 
-        if (type === 'cancel_orders') {
-            canceledOrdersCount += 1;
-            updateCancelledOrdersCount(false);
-        }
-
         $.get('/admin/orders/order_counts', function (data) {
             var $pending = $('#badge-pending');
             var $packing = $('#badge-packing');
             var $advised = $('#badge-advised');
             var $inTransit = $('#badge-in-transit');
             var $pickup = $('#badge-pickup');
+            var $cancelled = $('#badge-cancelled');
 
             if (data.actionable_order_counts.pending > 0) {
                 $pending.css('display', 'inline');
@@ -63,31 +57,18 @@ var updateOrderBadgeCounts = function (type) {
             } else {
                 $pickup.css('display', 'none');
             }
+
+            if (data.actionable_order_counts.cancel_count > 0) {
+                $cancelled.css('display', 'inline');
+                $cancelled.text(data.actionable_order_counts.cancel_count);
+            } else {
+                $cancelled.css('display', 'none');
+            }
         });
     }
-
 };
 
-var updateCancelledOrdersCount = function (change) {
-    if ($('.admin_orders').length) {
-        var $cancelled = $('#badge-cancelled');
-
-        if (change && currentStatus === 7) {
-            $cancelled.css('display', 'none');
-            canceledOrdersCount = 0;
-        } else {
-            if (canceledOrdersCount > 0) {
-                $cancelled.css('display', 'inline');
-                $cancelled.text(canceledOrdersCount);
-            }
-        }
-    }
-};
-
-$(document).on('page:load', function () {
-    ready();
-    updateCancelledOrdersCount(true);
-});
+$(document).on('page:load', ready);
 $(document).ready(ready);
 $(document).on("orderChange", function (event, type) {
     updateOrderBadgeCounts(type);

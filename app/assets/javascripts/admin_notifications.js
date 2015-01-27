@@ -1,14 +1,21 @@
-
 var scheme = window.document.location.protocol === "http:" ? "ws://" : "wss://";
 var uri = scheme + window.document.location.host + "/";
-var ws = new ReconnectingWebSocket(uri, null, { debug: false, reconnectInterval: 4000 });
+var ws = new ReconnectingWebSocket(uri, null, {debug: false, reconnectInterval: 4000});
 var notifications = [];
 var setupNotifications = function () {
 
     ws.onmessage = function (message) {
         var data = JSON.parse(message.data);
 
-        if (data.type === 'default') {
+        if (data.type === 'cancel_orders') {
+            $.post('/admin/orders/increment_cancel_count', function(){
+                $(document).trigger("orderChange", [data.type]);
+            });
+        }
+
+        if (data.type === 'order_change') {
+            // Skip Notification
+        } else if (data.type === 'default') {
             $.growl({
                 message: styleMessage(data.text)
             }, {
@@ -44,11 +51,11 @@ var setupNotifications = function () {
             }
         }
 
-        switch(data.type) {
+        switch (data.type) {
             case 'new_order':
-            case 'cancel_orders':
             case 'packing_orders':
-                $(document).trigger( "orderChange", [data.type]);
+            case 'order_change':
+                $(document).trigger("orderChange", [data.type]);
                 break;
 
         }
@@ -60,6 +67,6 @@ var setupNotifications = function () {
 };
 
 $(document).ready(setupNotifications);
-$(document).on('page:load', function() {
+$(document).on('page:load', function () {
     notifications = [];
 });
