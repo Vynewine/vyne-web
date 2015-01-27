@@ -113,8 +113,6 @@ gem 'puma'
 group :production do
   # Web Monitoring with New Relic
   gem 'newrelic_rpm'
-  # Performance monitoring
-  gem 'skylight'
 end
 
 # Well obvious
@@ -128,4 +126,7 @@ gem 'faye-websocket'
 
 # Recommended by Heroku to use with Puma Web Server
 gem 'rack-timeout'
+
+# Performance monitoring
+gem 'skylight'
 
