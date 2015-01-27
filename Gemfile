@@ -123,3 +123,6 @@ gem 'twilio-ruby'
 
 # Web Sockets
 gem 'faye-websocket'
+
+# Recommended by Heroku to use with Puma Web Server
+gem 'rack-timeout'
