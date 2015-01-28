@@ -5,6 +5,7 @@
   <%= stylesheet_link_tag 'admin', 'token-input-facebook', media: 'all' %>
   <script>
       var admin = true;
+      var enableNotifications = <%= ENV['ENABLE_WEB_NOTIFICATION'] %>;
   </script>
   <%= javascript_include_tag 'admin', 'jquery.tokeninput', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>

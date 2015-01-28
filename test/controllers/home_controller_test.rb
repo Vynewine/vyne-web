@@ -20,11 +20,10 @@ class HomeControllerTest < ActionController::TestCase
   test 'User can not access device if not registered with the same warehouse' do
     @user.warehouses << warehouses(:one)
 
-    device = Device.create!({
-                                :key => @device_key
-                            })
-
-    device.warehouses << warehouses(:two)
+    Device.create!({
+                       :key => @device_key,
+                       :warehouse => warehouses(:two)
+                   })
 
     user_can_access_device = @controller.send(:user_can_access_device)
     assert(!user_can_access_device)
@@ -46,11 +45,11 @@ class HomeControllerTest < ActionController::TestCase
     warehouse = warehouses(:one)
     @user.warehouses << [warehouse]
 
-    device = Device.create!({
-                                :key => @device_key
-                            })
+    Device.create!({
+                       :key => @device_key,
+                       :warehouse => warehouse
+                   })
 
-    device.warehouses << warehouse
     user_can_access_device = @controller.send(:user_can_access_device)
     assert(user_can_access_device)
 
@@ -63,30 +62,13 @@ class HomeControllerTest < ActionController::TestCase
     warehouse = warehouses(:one)
     @user.warehouses << warehouse
 
-    device = Device.create!({
-                                :key => @device_key
-                            })
+    Device.create!({
+                       :key => @device_key,
+                       :warehouse => warehouse
+                   })
 
-    device.warehouses << warehouse
     user_can_access_device = @controller.send(:user_can_access_device)
     assert(!user_can_access_device)
   end
 
-  test 'Device registration is required when device not registered with GCM and user is from the same warehouse' do
-
-    warehouse = warehouses(:one)
-    @user.warehouses << [warehouse]
-
-    device = Device.create!({
-                                :key => @device_key
-                            })
-
-    device.warehouses << warehouse
-    needs_registration = @controller.send(:device_needs_registration)
-    assert(needs_registration)
-  end
-
-  test 'Device registration not available for users from different warehouse' do
-
-  end
 end

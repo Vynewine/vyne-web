@@ -1,40 +1,42 @@
-<h1>Devices</h1>
-<table>
-  <thead>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Devices</h3>
+  </div>
+
+  <table class="table table-bordered">
+    <thead>
     <tr>
       <th>Id</th>
       <th>Key</th>
+      <th>Warehouse</th>
       <th>Registration Id</th>
-      <th colspan="3"></th>
+      <th></th>
     </tr>
-  </thead>
+    </thead>
 
-  <tbody>
+    <tbody>
     <% @devices.each do |device| %>
-      <tr>
-        <td><%= device.id %></td>
-        <td><%= device.key %></td>
-        <td><%= device.registration_id %></td>
-        <td class="button-wrapper">
-          <%= link_to admin_device_path(device) do %>
-            <i class="flaticon stroke zoom-1"></i>
-          <% end %>
-        </td>
-        <td class="button-wrapper">
-          <%= link_to edit_admin_device_path(device) do %>
-            <i class="flaticon stroke pencil-2"></i>
-          <% end %>
-        </td>
-        <td class="button-wrapper">
-          <%= link_to admin_device_path(device), method: :delete, data: { confirm: 'Are you sure?' } do %>
-            <i class="flaticon stroke trash-2"></i>
-          <% end %>
-        </td>
-      </tr>
+        <tr>
+          <td><%= device.id %></td>
+          <td><%= device.key %></td>
+          <td><%= device.warehouse.blank? ? 'unassigned' : device.warehouse.title %></td>
+          <td><%= device.registration_id.blank? ? 'unregistered' : device.registration_id[0...20] + '...' %></td>
+          <td class="button-wrapper">
+            <%= link_to admin_device_path(device, :page => params[:page]), class: 'btn btn-default' do %>
+                <i class="glyphicon glyphicon-search"></i>
+            <% end %>
+          </td>
+        </tr>
     <% end %>
-  </tbody>
-</table>
+    </tbody>
+  </table>
 
-<br>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <%= link_to 'New Device', new_admin_device_path, :class => 'btn btn-primary' %>
+    </li>
+  </ul>
+</div>
 
-<%= link_to 'New Device', new_admin_device_path %>
+
+

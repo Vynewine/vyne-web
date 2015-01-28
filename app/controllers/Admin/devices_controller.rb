@@ -28,11 +28,10 @@ class Admin::DevicesController < ApplicationController
   def create
     @device = Device.new(device_params)
 
-    unless params[:warehouse_id].blank?
-      warehouse = Warehouse.find_by_id(params[:warehouse_id])
+    unless params[:device][:warehouse_id].blank?
+      warehouse = Warehouse.find_by_id(params[:device][:warehouse_id])
       unless warehouse.blank?
-        @device.warehouses.clear
-        @device.warehouses << warehouse
+        @device.warehouse = warehouse
       end
     end
 
@@ -51,11 +50,10 @@ class Admin::DevicesController < ApplicationController
 
     @device = Device.find(params[:id])
 
-    unless params[:warehouse_id].blank?
-      warehouse = Warehouse.find_by_id(params[:warehouse_id])
+    unless params[:device][:warehouse_id].blank?
+      warehouse = Warehouse.find_by_id(params[:device][:warehouse_id])
       unless warehouse.blank?
-        @device.warehouses.clear
-        @device.warehouses << warehouse
+        @device.warehouse = warehouse
       end
     end
 
@@ -71,6 +69,7 @@ class Admin::DevicesController < ApplicationController
   end
 
   def destroy
+    @device = Device.find(params[:id])
     @device.destroy
     respond_to do |format|
       format.html { redirect_to admin_devices_url, notice: 'Device was successfully destroyed.' }

@@ -111,11 +111,11 @@ class HomeController < ApplicationController
 
     @device = Device.find_by_key(cookies[:device])
 
-    if @device.blank? || @device.warehouses.blank? || current_user.warehouses.blank?
+    if @device.blank? || @device.warehouse.blank? || current_user.warehouses.blank?
       return false
     end
 
-    (@device.warehouses & current_user.warehouses).each do
+    if current_user.warehouses.include?(@device.warehouse)
       return true
     end
 
