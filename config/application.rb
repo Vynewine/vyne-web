@@ -64,7 +64,10 @@ module Vyne
                                         end)
     end
 
-    config.middleware.use "WebNotifications"
+    if ENV['ENABLE_WEB_NOTIFICATION'] == 'true'
+      puts 'Enabling WebNotifications'
+      config.middleware.use 'WebNotifications'
+    end
 
   end
 end

@@ -1,8 +1,14 @@
-var scheme = window.document.location.protocol === "http:" ? "ws://" : "wss://";
-var uri = scheme + window.document.location.host + "/";
-var ws = new ReconnectingWebSocket(uri, null, {debug: false, reconnectInterval: 4000});
-var notifications = [];
+
 var setupNotifications = function () {
+
+    if (!enableNotifications) {
+        return;
+    }
+
+    var scheme = window.document.location.protocol === "http:" ? "ws://" : "wss://";
+    var uri = scheme + window.document.location.host + "/";
+    var ws = new ReconnectingWebSocket(uri, null, {debug: false, reconnectInterval: 4000});
+    var notifications = [];
 
     ws.onmessage = function (message) {
         var data = JSON.parse(message.data);

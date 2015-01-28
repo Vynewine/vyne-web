@@ -8,6 +8,12 @@ module WebNotificationDispatcher
   TAG = 'Web Notification Dispatcher'
 
   def self.publish(warehouse_ids, notification, type = :default)
+
+    if ENV['ENABLE_WEB_NOTIFICATION'] != 'true'
+      log 'Web notifications are disabled'
+      return
+    end
+
     log "Dispatching message: '#{notification}' type #{type} to warehouse #{warehouse_ids}"
 
     begin
