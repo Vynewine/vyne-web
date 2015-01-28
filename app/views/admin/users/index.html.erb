@@ -1,13 +1,86 @@
-<%= form_tag("/admin/users/", method: "get") do %>
-  <%= label_tag(:s, "Search for:") %>
-  <div class="search-area with-button">
-	  <%= text_field_tag(:s) %>
-	  <%= submit_tag("Search", name: nil) %>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Users</h3>
   </div>
-<% end %>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-xs-12">
+          <%= form_tag('/admin/users/', method: 'get', class: 'form-inline') do %>
+              <div class="form-group">
+                <%= text_field_tag 's', params[:s], class: 'form-control' %>
+                <%= submit_tag('Search', name: nil, :class => 'btn btn-success') %>
+                <% unless params[:s].blank? %>
+                    <%= link_to admin_users_path, :class => 'btn btn-default' do %>
+                        <span class="glyphicon glyphicon-remove"></span> Clear
+                    <% end %>
+                <% end %>
+              </div>
+          <% end %>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row" style="margin-bottom: 10px;">
+        <div class="col-md-12">
+          <% unless @search %>
+              <%= will_paginate @inventories, :class => 'vyne_pagination' %>
+          <% end %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <table class="table table-bordered">
+            <thead>
+            <tr>
+              <th>Id</th>
+              <th>E-mail</th>
+              <th>Name</th>
+              <th>Mobile</th>
+              <th>Stripe Id</th>
+              <th>Roles</th>
+              <% unless params[:show_deleted] %>
+                  <th></th>
+              <% end %>
+            </tr>
+            </thead>
 
-<% unless @search %>
-<%= render :partial => "list" %>
-<% else %>
-<%= render :partial => "search" %>
-<% end %>
+            <tbody>
+            <% @users.each do |user| %>
+                <tr>
+                  <td><%= user.id %></td>
+                  <td><%= user.email %></td>
+                  <td><%= user.name %></td>
+                  <td><%= user.mobile %></td>
+                  <td><%= user.stripe_id %></td>
+                  <td>
+                    <% if user.roles.blank? %>
+                        Limbo
+                    <% else %>
+                        <%= user.roles.map { |role| role.name }.join(',') %>
+                    <% end %>
+                  </td>
+                  <% unless params[:show_deleted] %>
+                      <td class="button-wrapper">
+                        <%= link_to admin_user_path(user), class: 'btn btn-default' do %>
+                            <i class="glyphicon glyphicon-search"></i>
+                        <% end %>
+                      </td>
+                  <% end %>
+                </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-xs-12">
+          <%= link_to 'New User', new_admin_user_path, class: 'btn btn-primary' %>
+          <%= link_to 'Show Deleted Users', admin_users_url(:show_deleted => true), class: 'btn btn-default' %>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

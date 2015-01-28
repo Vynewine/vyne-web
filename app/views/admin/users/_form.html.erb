@@ -1,94 +1,84 @@
 <%= form_for([:admin, @user]) do |f| %>
-    <% if @user.errors.any? %>
-        <div id="error_explanation">
-          <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
 
-          <ul>
-            <% @user.errors.full_messages.each do |message| %>
-                <li><%= message %></li>
-            <% end %>
-          </ul>
-        </div>
-    <% end %>
-
-    <div class="field">
-      <%= f.label :email %>
+    <div class="form-group">
+      <%= f.label :email %> <span style="color: red">*</span>
       <br>
-      <%= f.text_field :email %> *
+      <%= f.text_field :email, :class => 'form-control' %>
     </div>
-    <div class="field">
-      <%= f.label :first_name %>
+    <div class="form-group">
+      <%= f.label :first_name %> <span style="color: red">*</span>
       <br>
-      <%= f.text_field :first_name %> *
+      <%= f.text_field :first_name, :class => 'form-control' %>
     </div>
-    <div class="field">
-      <%= f.label :last_name %>
+    <div class="form-group">
+      <%= f.label :last_name %> <span style="color: red">*</span>
       <br>
-      <%= f.text_field :last_name %> *
+      <%= f.text_field :last_name, :class => 'form-control' %>
     </div>
-    <div class="field">
-      <%= f.label :mobile %>
+    <div class="form-group">
+      <%= f.label :mobile %> <span style="color: red">*</span>
       <br>
-      <%= f.text_field :mobile %> *
+      <%= f.text_field :mobile, :class => 'form-control' %>
     </div>
-    <div class="field">
+    <div class="form-group">
       <%= f.label :stripe_id %>
       <br>
-      <%= f.text_field :stripe_id %>
+      <%= f.text_field :stripe_id, :class => 'form-control' %>
     </div>
-    <div class="field">
+    <div class="form-group">
       <%= f.label :password %> (only if you want to change it)
       <br>
-      <%= f.password_field :password %>
+      <%= f.password_field :password, :class => 'form-control' %>
     </div>
 
-    <div class="field">
-      Addresses
-      <br>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Addresses</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-12">
 
-      <a href="#" class="add_nested_field" data-parent-entity="user" data-nested-entity="addresses" data-field-name="company_name,line_1,line_2,postcode" data-last-sum="<%= @user.addresses.count %>">Add
-        address</a>
-      <% if @user.addresses %>
-          <% @user.addresses.each do |address| %>
-              <%= f.fields_for :addresses do |c| %>
-                  <div class="field">
-                    <%= c.label :company_name %>
+            <% if @user.addresses %>
+                <%= f.fields_for :addresses do |c| %>
+                    <div class="form-group">
+                      <%= c.label :company_name %>
+                      <br/>
+                      <%= c.text_field :company_name, :class => 'form-control' %>
+                    </div>
+                    <div class="form-group">
+                      <%= c.label :line_1 %>
+                      <br/>
+                      <%= c.text_field :line_1, :class => 'form-control' %>
+                    </div>
+                    <div class="form-group">
+                      <%= c.label :line_2 %>
+                      <br/>
+                      <%= c.text_field :line_2, :class => 'form-control' %>
+                    </div>
+                    <div class="form-group">
+                      <%= c.label :postcode %>
+                      <br/>
+                      <%= c.text_field :postcode, :class => 'form-control' %>
+                    </div>
                     <br/>
-                    <%= c.text_field :company_name %>
-                  </div>
-                  <div class="field">
-                    <%= c.label :line_1 %>
-                    <br/>
-                    <%= c.text_field :line_1 %>
-                  </div>
-                  <div class="field">
-                    <%= c.label :line_2 %>
-                    <br/>
-                    <%= c.text_field :line_2 %>
-                  </div>
-                  <div class="field">
-                    <%= c.label :postcode %>
-                    <br/>
-                    <%= c.text_field :postcode %>
-                  </div>
-                  <br/>
-              <% end %>
-          <% end %>
-      <% end %>
+                <% end %>
+            <% end %>
+            <a href="#" class="add_nested_field btn btn-primary" data-parent-entity="user" data-nested-entity="addresses" data-field-name="company_name,line_1,line_2,postcode" data-last-sum="<%= @user.addresses.count %>">Add
+              address</a>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="field">
+    <div class="form-group">
       <%= f.label :active %>
       <br>
       <%= f.check_box :active %>
     </div>
-    <div class="field">
-      <%= f.label :code %>
-      <br>
-      <%= f.text_field :code %>
-    </div>
 
-    <div class="field">
+    <div class="form-group">
+      <label>Roles</label>
       <% @roles.each do |role| %>
           <p>
             <%= check_box_tag 'user[role_ids][]', role.id, @user.roles.include?(role) %>
@@ -97,6 +87,6 @@
       <% end %>
     </div>
     <div class="actions">
-      <%= f.submit %>
+      <%= f.submit(:class => 'btn btn-success') %>
     </div>
 <% end %>

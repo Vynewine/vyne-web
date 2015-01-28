@@ -61,7 +61,7 @@ gem 'mandrill-api'
 gem 'roo', '~> 1.13.2'
 
 # Sentry
-gem 'sentry-raven', :require => 'raven', :git => 'https://github.com/getsentry/raven-ruby.git'
+#gem 'sentry-raven', :require => 'raven', :git => 'https://github.com/getsentry/raven-ruby.git'
 
 # Mailchimp
 gem 'mailchimp-api'
@@ -112,9 +112,9 @@ gem 'puma'
 
 group :production do
   # Web Monitoring with New Relic
-  gem 'newrelic_rpm'
+  # gem 'newrelic_rpm'
   # Performance monitoring
-  gem 'skylight'
+  # gem 'skylight'
 end
 
 # Well obvious

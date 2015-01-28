@@ -45,7 +45,7 @@ class User < ActiveRecord::Base
 
   # Solr & sunspot:
   searchable do
-    text :first_name, :last_name, :email
+    text :first_name, :last_name, :email, :mobile
   end
 
   def admin?

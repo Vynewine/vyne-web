@@ -13,11 +13,10 @@ class Admin::UsersController < ApplicationController
       end
       @users = @search.results
     else
-    # @admUsers = User.all.includes(:roles).where(id: [1,2])
       if params[:show_deleted]
-        @users = User.only_deleted.order(:id)
+        @users = User.only_deleted.page(params[:page]).order(:id)
       else
-        @users = User.all.order(:id)
+        @users = User.all.page(params[:page]).order(:id)
       end
     end
   end
@@ -48,7 +47,7 @@ class Admin::UsersController < ApplicationController
         format.html { redirect_to [:admin, @user], notice: 'User was successfully created.' }
         format.json { render :show, status: :created, location: @user }
       else
-        format.html { redirect_to new_admin_user_path, alert: @user.errors.full_messages().join(', ')}
+        format.html { redirect_to new_admin_user_path, alert: @user.errors.full_messages().join(', ') }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
@@ -65,7 +64,7 @@ class Admin::UsersController < ApplicationController
         format.html { redirect_to [:admin, @user], notice: 'User was successfully updated.' }
         format.json { render :show, status: :ok, location: @user }
       else
-        format.html { redirect_to edit_admin_user_path(@user), alert: @user.errors.full_messages().join(', ')}
+        format.html { redirect_to edit_admin_user_path(@user), alert: @user.errors.full_messages().join(', ') }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
@@ -99,14 +98,14 @@ class Admin::UsersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_user
+    @user = User.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def user_params
-      params.require(:user).permit(
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def user_params
+    params.require(:user).permit(
         :first_name,
         :last_name,
         :mobile,
@@ -118,6 +117,6 @@ class Admin::UsersController < ApplicationController
         :stripe_id,
         role_ids: [],
         addresses_attributes: [:id, :line_1, :postcode, :line_2, :company_name]
-      )
-    end
+    )
+  end
 end

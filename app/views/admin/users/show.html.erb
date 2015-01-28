@@ -1,73 +1,123 @@
-<p id="notice"><%= notice %></p>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">User</h3>
+  </div>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Id:</strong>
+          <%= @user.id %>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>E-mail:</strong>
+          <%= @user.email %>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Name:</strong>
+          <%= @user.name %>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Mobile:</strong>
+          <%= @user.mobile %>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Active:</strong>
+          <%= @user.active %>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Addresses:</strong>
+          <ul>
+            <% @user.addresses.each do |address| %>
+                <li><%= link_to address.full, admin_address_url(address) %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Role(s):</strong>
+          <%= @user.roles.map(&:name).join(" - ") %>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Stripe Id:</strong>
+          <%= @user.stripe_id %>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>
+            Stripe Cards:
+          </strong>
+          <% unless @user.payments.blank? %>
+              <table class="table table-bordered">
+                <thead>
+                <tr>
+                  <th>Stripe Id</th>
+                  <th>Last 4</th>
+                  <th>Create Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% @user.payments.each do |payment| %>
+                    <tr>
+                      <td><%= payment.stripe_card_id %></td>
+                      <td><%= payment.number %></td>
+                      <td><%= payment.created_at.strftime("%Y %b %d - %H:%M") %></td>
+                    </tr>
+                <% end %>
+                </tbody>
+              </table>
+          <% end %>
+        </div>
+      </div>
+    </li>
+  </ul>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-xs-6">
+        <%= link_to admin_users_path, class: 'btn btn-default' do %>
+            <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back
+        <% end %>
+        <%= link_to edit_admin_user_path(@user), class: 'btn btn-default' do %>
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+        <% end %>
+      </div>
+      <div class="col-xs-6 text-right">
+        <%= link_to admin_user_path(@user), method: :delete, data: {confirm: 'Are you sure?'}, class: 'btn btn-danger' do %>
+            <i class="glyphicon glyphicon-trash"></i>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
 
-<p>
-  <strong>E-mail:</strong>
-  <%= @user.email %>
-</p>
 
-<p>
-  <strong>Name:</strong>
-  <%= @user.name %>
-</p>
-
-<p>
-  <strong>Mobile:</strong>
-  <%= @user.mobile %>
-</p>
-
-<p>
-  <strong>Active:</strong>
-  <%= @user.active %>
-</p>
-<p>
-  <strong>Activation code:</strong>
-  <%= @user.code %>
-</p>
-
-<p>
-  <strong>Addresses:</strong>
-<ul>
-  <% @user.addresses.each do |address| %>
-      <li><%= link_to address.line_1 + ' - ' + address.postcode, admin_address_url(address) %></li>
-  <% end %>
-</ul>
-</p>
-
-<p>
-  <strong>Roles:</strong>
-  <%= @user.roles.map(&:name).join(" - ") %>
-</p>
-
-<p>
-  <strong>Stripe Id:</strong>
-  <%= @user.stripe_id %>
-</p>
-
-<p>
-  <strong>
-    Stripe Cards:
-  </strong>
-  <% unless @user.payments.blank? %>
-    <table border="1" class="list-table">
-      <thead>
-      <tr>
-        <th>Stripe Id</th>
-        <th>Last 4</th>
-        <th>Create Date</th>
-      </tr>
-      </thead>
-      <tbody>
-      <% @user.payments.each do |payment| %>
-          <tr>
-            <td><%= payment.stripe_card_id %></td>
-            <td><%= payment.number %></td>
-            <td><%= payment.created_at.strftime("%Y %b %d - %H:%M") %></td>
-          </tr>
-      <% end %>
-      </tbody>
-    </table>
-<% end %>
-</p>
-
-<%= link_to 'Edit', edit_admin_user_path(@user) %>
-<%= link_to 'Back', admin_users_path %>

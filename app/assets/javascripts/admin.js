@@ -22,10 +22,10 @@ var addNestedField = function ($anchorNode, parentEntity, nestedEntity, fieldNam
         newId = parentEntity + '_' + nestedEntity + '_attributes_' + lastSum + '_' + fields[i];
         newNm = parentEntity + '[' + nestedEntity + '_attributes][' + lastSum + '][' + fields[i] + ']';
         $anchorNode.parent().append(
-            $('<div>', {'class': 'field'}).append(
+            $('<div>', {'class': 'form-group'}).append(
                 $('<label>', {'for': newId}).html(fields[i].capitalise()),
                 $('<br>'),
-                $('<input>', {'id': newId, 'name': newNm, 'type': 'text'})
+                $('<input>', {'id': newId, 'name': newNm, 'type': 'text', 'class' : 'form-control'})
             )
         );
     }
