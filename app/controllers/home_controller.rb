@@ -1,7 +1,7 @@
 require 'mailchimp'
 
 class HomeController < ApplicationController
-  before_action :check_the_gate, :except => [:mailing_list_signup]
+  before_action :check_the_gate, :except => [:mailing_list_signup, :warehouses]
 
   def index
 
@@ -70,6 +70,10 @@ class HomeController < ApplicationController
   end
 
   def terms
+  end
+
+  def aidani
+    render layout: 'aidani'
   end
 
   def mailing_list_signup
