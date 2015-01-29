@@ -23,6 +23,15 @@
 //= require delivery
 //= require device
 //= require orders
+//= require bootstrap-sprockets
+//= require drew/jpreloader.min
+//= require drew/jquery.counterup.min
+//= require drew/jquery.inview.min
+//= require drew/jquery.nav.min
+//= require drew/jquery.stellar.min
+//= require drew/picturefill.min
+//= require drew/smoothscroll.min
+//= require home
 
 var events = [];
 

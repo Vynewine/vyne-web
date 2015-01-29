@@ -45,6 +45,8 @@ module Vyne
     # config.i18n.default_locale = :de
     config.serve_static_assets = true
 
+    config.sass.load_paths << File.expand_path('../../vendor/assets/stylesheets/')
+
     Dir.glob("#{Rails.root}/app/assets/images/**/").each do |path|
       config.assets.paths << path
     end

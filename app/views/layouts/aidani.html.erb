@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Vyne - Wine on demand from local merchants</title>
+  <meta charset="utf-8">
+  <%= stylesheet_link_tag 'aidani', media: 'all' %>
+  <%= csrf_meta_tags %>
+  <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="/favicon-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="/favicon-160x160.png" sizes="160x160">
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+  <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+  <meta name="msapplication-TileColor" content="#000000">
+  <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type='text/css'>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type='text/css'>
+
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+  <script type="text/javascript">
+      window.analytics=window.analytics||[],window.analytics.methods=["identify","group","track","page","pageview","alias","ready","on","once","off","trackLink","trackForm","trackClick","trackSubmit"],window.analytics.factory=function(t){return function(){var a=Array.prototype.slice.call(arguments);return a.unshift(t),window.analytics.push(a),window.analytics}};for(var i=0;i<window.analytics.methods.length;i++){var key=window.analytics.methods[i];window.analytics[key]=window.analytics.factory(key)}window.analytics.load=function(t){if(!document.getElementById("analytics-js")){var a=document.createElement("script");a.type="text/javascript",a.id="analytics-js",a.async=!0,a.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n)}},window.analytics.SNIPPET_VERSION="2.0.9",
+              window.analytics.load("<%= Rails.application.config.segment_io_write_key %>");
+      window.analytics.page();
+  </script>
+
+  <% if content_for?(:head) %>
+      <%= yield(:head) %>
+  <% end %>
+
+</head>
+<body class="<%= params[:controller] %><% if user_signed_in? %> logged-in<% end %> enable-animations enable-preloader">
+
+
+
+    <%= yield %>
+
+
+
+<%= javascript_include_tag 'application' %>
+
+</body>
+</html>

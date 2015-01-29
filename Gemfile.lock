@@ -153,6 +153,8 @@ GEM
     fog-xml (0.1.1)
       fog-core
       nokogiri (~> 1.5, >= 1.5.11)
+    font-awesome-rails (4.3.0.0)
+      railties (>= 3.2, < 5.0)
     formatador (0.2.5)
     gcm (0.0.9)
       httparty
@@ -225,6 +227,7 @@ GEM
       net-ssh (>= 2.6.5)
     net-ssh (2.9.2)
     netrc (0.7.9)
+    newrelic_rpm (3.9.8.273)
     nokogiri (1.6.3.1)
       mini_portile (= 0.6.0)
     options (2.3.2)
@@ -407,6 +410,7 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   devise
   faye-websocket
+  font-awesome-rails
   gcm
   google-api-client
   jbuilder (~> 2.0)
@@ -415,6 +419,7 @@ DEPENDENCIES
   mailchimp-api
   mandrill-api
   mocha
+  newrelic_rpm
   paranoia (~> 2.0)
   paranoia_uniqueness_validator (= 1.1.0)
   pg

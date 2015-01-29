@@ -34,6 +34,9 @@ Rails.application.routes.draw do
   # Hooks:
   post 'hooks/updateorder'
 
+  #New Home Page
+  get '/aidani' => 'home#aidani'
+
 
   # ------------
 
