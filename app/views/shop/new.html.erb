@@ -235,7 +235,7 @@
               <div class="prefs-list-container">
                 <ul id="wine-list" class="prefs-list prefs-list-bottom cf">
                   <% @types.each do |type| %>
-                    <% if type.id != 9 %>
+                    <% if type.id != 9 && type.id != 11 %>
                     <li id="winetype-<%= type.id %>">
                       <a href="">
                         <%= image_tag "icons/wine/"+type.name.gsub(/(((\s)&?)\s?)/, "_").downcase+".png", :alt => "image description" %>
