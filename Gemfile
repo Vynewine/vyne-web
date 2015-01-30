@@ -112,7 +112,7 @@ gem 'puma'
 
 group :production do
   # Web Monitoring with New Relic
-  gem 'newrelic_rpm'
+  # gem 'newrelic_rpm'
   # Performance monitoring
   # gem 'skylight'
 end

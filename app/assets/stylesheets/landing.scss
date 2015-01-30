@@ -116,7 +116,7 @@ iframe {
 	width: 70px;
 	height: 70px;
 	border-radius: 50%;
-	font-size: 42px;
+	font-size: 50px;
 	line-height: 70px;
 	vertical-align: middle;
 	text-align: center;
@@ -700,7 +700,7 @@ iframe {
  * ========================================
  */
 .hero-section {
-	padding: 160px 0;
+	padding: 100px 0;
 	text-align: center;
 }
 .hero-section:before {
@@ -733,7 +733,7 @@ iframe {
 }
 .hero-section form {
 	background-color: #f6f6f6;
-	padding: 30px;
+	padding: 5px 20px 5px 20px;
 }
 .section-gray.hero-section form {
 	background-color: #fff;
@@ -782,7 +782,7 @@ iframe {
 }
 @media ( max-width: 991px ) {
 	.hero-section {
-		padding: 120px 0;
+		padding: 90px 0;
 	}
 	.hero-section.hero-fullscreen {
 		height: auto;
@@ -792,9 +792,15 @@ iframe {
 	}
 }
 
+@media ( max-width: 414px ) {
+  .hero-section {
+    padding: 50px 0;
+  }
+}
+
 /* HERO LAYOUT: FULLSCREEN CTA (SIMPLE) */
 .hero-layout-simple .section-background-image {
-	background-image: url(asset-path('drew/backgrounds/hero-bg--center-headline.jpg'));
+	background-image: url(asset-path('landing/wine_tasting.jpg'));
 	background-repeat: no-repeat;
 	background-size: cover;
 	opacity: 0.3;
@@ -803,17 +809,17 @@ iframe {
 	text-align: center;
 }
 .hero-layout-simple .hero-title {
-	font-size: 64px;
+	font-size: 54px;
 	line-height: 1.15;
 }
 @media ( max-width: 991px ) {
 	.hero-layout-simple .hero-title {
-		font-size: 56px;
+		font-size: 46px;
 	}
 }
 @media ( max-width: 767px ) {
 	.hero-layout-simple .hero-title {
-		font-size: 48px;
+		font-size: 38px;
 	}
 	.hero-layout-simple .hero-tagline {
 		font-size: 18px;
@@ -821,7 +827,7 @@ iframe {
 }
 @media ( max-width: 479px ) {
 	.hero-layout-simple .hero-title {
-		font-size: 40px;
+		font-size: 30px;
 	}
 	.hero-layout-simple .hero-tagline {
 		font-size: 16px;
@@ -1101,7 +1107,7 @@ iframe {
  * ========================================
  */
 .numbers-section .section-background-image {
-	background-image: url(asset-path('drew/backgrounds/numbers-bg.jpg'));
+	background-image: url(asset-path('walkthrough/onee@2x.jpg'));
 	background-repeat: no-repeat;
 	background-size: cover;
 	opacity: 0.2;
@@ -1222,7 +1228,7 @@ iframe {
  * ========================================
  */
 .two-cols-description-image {
-	background-image: url(asset-path('drew/backgrounds/two-cols-description-bg.jpg'));
+	background-image: url(asset-path('landing/vines.jpg'));
 	background-repeat: no-repeat;
 	background-size: cover;
 	padding-top: 37.5%;
