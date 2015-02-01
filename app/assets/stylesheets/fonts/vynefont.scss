@@ -23,6 +23,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.vyneicon-winelist:before {
+  content: "\e604";
+}
+
 .vyneicon-chicken:before {
   content: "\e600";
 }
