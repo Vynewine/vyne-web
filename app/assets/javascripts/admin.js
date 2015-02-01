@@ -25,7 +25,7 @@ var addNestedField = function ($anchorNode, parentEntity, nestedEntity, fieldNam
             $('<div>', {'class': 'form-group'}).append(
                 $('<label>', {'for': newId}).html(fields[i].capitalise()),
                 $('<br>'),
-                $('<input>', {'id': newId, 'name': newNm, 'type': 'text', 'class' : 'form-control'})
+                $('<input>', {'id': newId, 'name': newNm, 'type': 'text', 'class': 'form-control'})
             )
         );
     }
@@ -275,18 +275,18 @@ var adminReady = function () {
             $note.focus();
         });
 
-        $('#advisory-note-form').submit(function(e) {
+        $('#advisory-note-form').submit(function (e) {
             e.preventDefault();
             $('#advisory-note').val($('#advisory-note-text').val());
             $('#update-form').submit();
         });
 
-        $('#edit-advisory-note-btn').click(function(e) {
+        $('#edit-advisory-note-btn').click(function (e) {
             e.preventDefault();
 
             var existingNote = $('#existing-advisory-note').val();
             var $editNote = $('#edit-advisory-note-text');
-            if(existingNote) {
+            if (existingNote) {
                 $editNote.val(existingNote);
             }
 
@@ -294,11 +294,11 @@ var adminReady = function () {
         });
 
         $('#edit-advisory-note-modal').on('shown.bs.modal', function () {
-            var $note =  $('#edit-advisory-note-text');
+            var $note = $('#edit-advisory-note-text');
             $note.focus();
         });
 
-        $('#edit-advisory-note-form').submit(function(e) {
+        $('#edit-advisory-note-form').submit(function (e) {
             e.preventDefault();
             $('#advisory-note').val($('#edit-advisory-note-text').val());
             $('#update-form').submit();

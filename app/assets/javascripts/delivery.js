@@ -1,13 +1,12 @@
-var ready = function() {
-    if ($('body.delivery').length && areas.length > 0) {
+var ready = function () {
+    if (($('body.delivery').length || $('div.delivery').length) && areas.length > 0) {
 
-        var map = L.map('map', {zoomControl: false}).setView([51.514525, -0.1050393], 12);
+        var map = L.map('map', {zoomControl: false, scrollWheelZoom: false}).setView([51.514525, -0.1050393], 12);
 
         map.addControl(L.control.zoom({position: 'topright'}));
 
         var gl = new L.Google('ROAD');
         map.addLayer(gl);
-
 
         var outside = [
             [0, -90],
@@ -16,7 +15,7 @@ var ready = function() {
             [90, 90]
         ];
 
-        L.polygon([ outside , areas ]).addTo(map).setStyle(
+        L.polygon([outside, areas]).addTo(map).setStyle(
             {
                 color: '#009ee0',
                 opacity: 0.8,

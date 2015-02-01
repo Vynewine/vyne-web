@@ -337,13 +337,13 @@ iframe {
 	color: #888;
 }
 .form-control:-moz-placeholder {
-	color: #888;  
+	color: #888;
 }
 .form-control::-moz-placeholder {
-	color: #888;  
+	color: #888;
 }
 .form-control:-ms-input-placeholder {
-	color: #888;  
+	color: #888;
 }
 .form-control:focus {
 	-webkit-box-shadow: none;
@@ -729,7 +729,7 @@ iframe {
 	position: relative;
 	z-index: 1;
 	vertical-align: middle;
-	display: inline-block;	
+	display: inline-block;
 }
 .hero-section form {
 	background-color: #f6f6f6;
@@ -1088,7 +1088,7 @@ iframe {
 .section-dark .hiw-item-icon {
 	border-color: #222;
 }
-.section-dark .hiw-item.even .hiw-item-icon {	
+.section-dark .hiw-item.even .hiw-item-icon {
 	border-color: #292929;
 }
 .section-accent .hiw-item-icon {
@@ -1447,6 +1447,40 @@ iframe {
 	border-color: inherit;
 	opacity: 0.4;
 }
+
+/**
+ * ========================================
+ * DELIVERY
+ * ========================================
+ */
+
+.delivery-section {
+  padding-bottom: 50px;
+}
+
+.delivery-scooter {
+	position: absolute;
+	left: 50%;
+	margin: -35px 0 0 -50px;
+	display: block;
+	border: 5px solid #fff;
+	border-radius: 10px;
+	color: #fff;
+	font-family: "Montserrat", sans-serif;
+	font-size: 36px;
+	font-weight: bold;
+	line-height: 60px;
+	text-align: center;
+    background-color: #A32438;
+
+}
+
+.delivery-scooter img {
+  width: 75px;
+  height: 44px;
+  margin: 10px;
+}
+
 
 /**
  * ========================================

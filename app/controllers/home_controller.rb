@@ -73,6 +73,9 @@ class HomeController < ApplicationController
   end
 
   def aidani
+
+    @areas = Warehouse.delivery_areas
+
     render layout: 'aidani'
   end
 
