@@ -8,6 +8,11 @@ var ready = function () {
         var gl = new L.Google('ROAD');
         map.addLayer(gl);
 
+        if($('body.mobile-device').length) {
+            map.dragging.disable();
+            map.tap.disable()
+        }
+
         var outside = [
             [0, -90],
             [0, 90],
