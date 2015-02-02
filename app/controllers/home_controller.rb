@@ -1,7 +1,7 @@
 require 'mailchimp'
 
 class HomeController < ApplicationController
-  before_action :check_the_gate, :except => [:mailing_list_signup, :warehouses]
+  before_action :check_the_gate, :except => [:mailing_list_signup, :warehouses, :gate, :aidani]
 
   layout 'aidani', :only => [ :index ]
 
@@ -82,6 +82,10 @@ class HomeController < ApplicationController
     @areas = Warehouse.delivery_areas
 
     render layout: 'aidani'
+  end
+
+  def gate
+
   end
 
   def mailing_list_signup

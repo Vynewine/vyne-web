@@ -30,7 +30,7 @@ class ApplicationController < ActionController::Base
       end
 
       if params[:invite_code].blank?
-        render '/home/gate'
+        redirect_to gate_path
         return
       end
 
@@ -39,7 +39,7 @@ class ApplicationController < ActionController::Base
           cookies[:invite_code] = {:value => Rails.application.config.invite_code, :expires => 3.months.from_now}
           return
         else
-          render '/home/gate'
+          redirect_to gate_path
           return
         end
       end

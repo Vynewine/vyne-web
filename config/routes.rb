@@ -30,6 +30,7 @@ Rails.application.routes.draw do
 
   #T&C
   get '/tc' => 'home#terms'
+  get '/gate' => 'home#gate'
 
   # Hooks:
   post 'hooks/updateorder'
