@@ -3,6 +3,8 @@ require 'mailchimp'
 class HomeController < ApplicationController
   before_action :check_the_gate, :except => [:mailing_list_signup, :warehouses]
 
+  layout 'aidani', :only => [ :index ]
+
   def index
 
     unless params['device'].blank?
@@ -24,10 +26,13 @@ class HomeController < ApplicationController
         sign_out current_user
         redirect_to login_path, alert: 'Please contact Vyne to setup this device'
         return
-      else
-        redirect_to neworder_path
       end
     end
+
+    @areas = Warehouse.delivery_areas
+
+    render 'aidani'
+
   end
 
   def code
