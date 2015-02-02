@@ -606,7 +606,7 @@ var adminReady = function () {
 var renderWarehouse = function () {
     if ($('body.admin_warehouses').length) {
 
-        var map = L.map('map').setView([warehouseLatitude, warehouseLongitude], 12);
+        var map = L.map('map', { scrollWheelZoom: false}).setView([warehouseLatitude, warehouseLongitude], 12);
 
         var gl = new L.Google('ROAD');
         map.addLayer(gl);

@@ -144,7 +144,7 @@ var ready = function () {
             },
             scrollChange: function ($currentListItem) {
                 if ($currentListItem.find('a').attr('href') === '#discover') {
-                    switchText();
+                    //This can be used to enable something when user scrolls to this section
                 }
             }
         });
@@ -259,10 +259,18 @@ var ready = function () {
         if (!textChanged) {
             textChanged = true;
             var id = 0;
-            var total = $('span[class^="switch-text-"]').length;
-            var pagingInterval = setInterval(function () {
+            var total = $('span[class^="switch-text-"]').length - 1;
+            setInterval(function () {
+
                 var $currentText = $('.switch-text-' + id);
                 var $nextTextToShow = $('.switch-text-' + (id + 1));
+
+                if (id >= total) {
+                    $currentText = $('.switch-text-' + total);
+                    $nextTextToShow = $('.switch-text-0');
+                    id = -1;
+                }
+
                 var $switchTextContainer = $('.switch-text');
                 $switchTextContainer.css({"width": $currentText.width() + 'px'});
                 var width = $nextTextToShow.width();
@@ -270,21 +278,16 @@ var ready = function () {
                 $currentText.fadeOut(function () {
                     $('.switch-text').animate({
                         width: width + 'px'
-                    }, 100, function () {
-                        $nextTextToShow.fadeIn(200).css('visibility', 'visible');
+                    }, 500, function () {
+                        $nextTextToShow.fadeIn(400).css('visibility', 'visible');
                         id++;
-                        if (id >= total - 1) {
-                            clearInterval(pagingInterval);
-                        }
                     });
                 });
-            }, 1000);
+            }, 2000);
         }
     };
 
-    $('#discover-link').click(function () {
-        switchText();
-    });
+    switchText();
 
 };
 

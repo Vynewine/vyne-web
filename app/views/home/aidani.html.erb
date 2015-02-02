@@ -22,7 +22,7 @@
 
         <!-- HEADER LOGO -->
         <a class="navbar-logo navbar-brand anchor-link" href="#hero">
-          <img src="<%= asset_path('logo@2x.png') %>" srcset="<%= asset_path('logo@2x.png') %> 2x" alt="Drew">
+          <img src="<%= asset_path('logo@2x.png') %>" srcset="<%= asset_path('logo@2x.png') %> 2x" alt="Vyne">
         </a>
 
       </div>
@@ -35,10 +35,27 @@
           <li><a href="#hero" class="hidden">Top</a></li>
 
           <li><a href="#how-it-works">How it Works</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#discover" id="discover-link">Discover</a></li>
-          <li><a href="#pricing">Pricing</a></li>
-          <li><a href="#delivery">Coverage Map</a></li>
+          <li><a href="#about">Discover</a></li>
+
+          <% if user_signed_in? %>
+
+              <li>
+                <%= link_to 'My wines', mywines_path, data: { no_turbolink: true } %>
+              </li>
+
+              <% if current_user.has_role?(:supplier) ||
+                      current_user.has_role?(:admin) ||
+                      current_user.has_role?(:superadmin)
+              %>
+                  <li>
+                    <%= link_to 'Admin', admin_root_path %>
+                  </li>
+              <% end %>
+          <% else %>
+              <li>
+                <%= link_to 'Sign in', login_path, data: { no_turbolink: true } %>
+              </li>
+          <% end %>
 
           <!-- HEADER ACTION BUTTON -->
           <li class="header-action-button"><a href="#hero" class="btn btn-primary">Check Availability</a></li>
@@ -75,14 +92,11 @@
       <div class="hero-content">
         <div class="row">
           <div class="col-md-10 col-md-offset-1">
-
             <div class="hero-heading" data-animation="fadeIn">
-              <h1 class="hero-title">Wine from London’s top cellars</h1>
-
+              <h1 class="hero-title">Wine delivered from London’s top cellars</h1>
               <h3 class="hero-tagline">
-                Chosen for you by sommeliers <i>live</i> &amp; delivered in under an hour
+                Chosen for you <i>live</i> by sommeliers  &amp; delivered in minutes
               </h3>
-
             </div>
           </div>
         </div>
@@ -90,7 +104,7 @@
           <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12 col-xs-offset-0">
             <p class="hero-buttons">
 
-            <form action="/shop/neworder" id="postcode-check" method="GET" class="form">
+            <form action="/shop/neworder" id="postcode-check" method="GET" class="form home-form">
               <div class="form-group">
                 <input type="text" class="form-control" id="filterPostcode" placeholder="Enter postcode (e.g. SW1A 1AA)" name="postcode" autocomplete="off"/>
               </div>
@@ -156,13 +170,13 @@
         <!-- HOW IT WORKS - ITEM 3 -->
         <div class="col-md-3 col-sm-6" data-animation="fadeIn">
           <div class="hiw-item">
-            <img class="hiw-item-picture" src="<%= asset_path('landing/advice.jpg') %>" alt="">
+            <img class="hiw-item-picture" src="<%= asset_path('landing/screenshot.jpg') %>" alt="">
 
             <div class="hiw-item-text">
               <span class="hiw-item-icon">3</span>
-              <h4 class="hiw-item-title">Real-time communication</h4>
+              <h4 class="hiw-item-title">Review selection</h4>
 
-              <p class="hiw-item-description">You’ll see the selection in minutes & have an opportunity to review.
+              <p class="hiw-item-description">You’ll see the selection in minutes & have an opportunity to review it. <br/>
                 Ask for something else if you want.</p>
             </div>
           </div>
@@ -177,8 +191,8 @@
               <span class="hiw-item-icon">4</span>
               <h4 class="hiw-item-title">Delivery</h4>
 
-              <p class="hiw-item-description">Delivered fast!
-                We’ll message you with a tracking map. Watch your wine come towards you.</p>
+              <p class="hiw-item-description">Delivered fast! <br/>
+                We’ll message you with a tracking map. <br/> Watch your wine come towards you.</p>
             </div>
           </div>
         </div>
@@ -195,7 +209,7 @@
 
     <div class="container">
 
-      <h2 class="section-heading text-center">About Vyne</h2>
+      <h2 class="section-heading text-center">Wine advice tailored to your evening</h2>
 
       <div class="about-row row">
 
@@ -206,13 +220,17 @@
 
         <!-- DESCRIPTION TEXT -->
         <div class="about-text col-md-6">
-          <p class="lead">Wine advice tailored to <i>your evening</i>
-          </p>
-
-          <p>Chosen to your requirements by expert merchants importing directly
+          <p class="lead">Chosen to your requirements by expert merchants importing directly
             from the world’s best estates & supplying London’s top restaurants.
           </p>
+
           <ul class="icon-list">
+            <li>
+              <span class="icon-list-icon vyneicon-burgundy" data-animation="bounceIn"></span>
+              <h4 class="icon-list-title">Choose a price range</h4>
+
+              <p style="height: 50px">The sommelier will find a match within your range.</p>
+            </li>
             <li>
               <span class="icon-list-icon vyneicon-chicken" data-animation="bounceIn"></span>
               <h4 class="icon-list-title">Matched to your meal</h4>
@@ -221,19 +239,14 @@
             </li>
             <li>
               <span class="icon-list-icon vyneicon-withfriends" data-animation="bounceIn"></span>
-              <h4 class="icon-list-title">Any occasion</h4>
+              <h4 class="icon-list-title">... or your occasion</h4>
 
               <p style="height: 50px">Whether you’re on a date, night-in, party with friends or for a gift.</p>
             </li>
-            <li>
-              <span class="icon-list-icon vyneicon-burgundy" data-animation="bounceIn"></span>
-              <h4 class="icon-list-title">Choose a price range</h4>
 
-              <p style="height: 50px">The sommelier will find a match within your range.</p>
-            </li>
             <li>
               <span class="icon-list-icon vyneicon-winelist" data-animation="bounceIn"></span>
-              <h4 class="icon-list-title">Have something in mind already?</h4>
+              <h4 class="icon-list-title">... or maybe you have something in mind already?</h4>
 
               <p style="height: 50px">Enter a more specific wine type if you know what you want.
                 e.g. Chardonnay, Barolo, or Left-Bank Bordeaux.</p>
@@ -249,12 +262,23 @@
 
   <!-- HEADLINE
 			================================= -->
-  <section id="headline" class="headline-section section-gray section">
+  <section id="headline" class="headline-section section" style="padding: 10px">
 
     <div class="container">
       <div class="row">
         <div class="col-md-10 col-md-offset-1">
-          <h2 class="section-heading text-center"></h2>
+          <h2 class="section-heading text-center">
+            <span class="test-break">
+              Discover<br class="break-or-not"/>
+              <span class="switch-text">
+                <span class="switch-text-0">unique</span>
+                <span class="switch-text-1 collapse">rare</span>
+                <span class="switch-text-2 collapse" style="white-space: nowrap;">small production</span>
+                <span class="switch-text-3 collapse" style="text-decoration: underline white-space: nowrap;">michelin&#8209;quality</span>
+              </span>
+              <br class="break-or-not"/>wines
+            </span>
+          </h2>
         </div>
       </div>
     </div>
@@ -277,25 +301,12 @@
 
           <div class="two-cols-description-text-inner">
 
-            <h2 class="section-heading text-left">
+            <h2 class="section-heading text-left">Quality you can’t find at the large retailers. <br/>
+              From the world’s most cherished vineyards.</h2>
 
-            <span>
-              Discover
-              <span class="switch-text">
-                <span class="switch-text-0">unique</span>
-                <span class="switch-text-1 collapse">rare</span>
-                <span class="switch-text-2 collapse" style="white-space: nowrap;">small production</span>
-                <span class="switch-text-3 collapse" style="text-decoration: underline white-space: nowrap;">michelin&#8209;quality</span>
-              </span>
-              wines
-            </span>
-            </h2>
 
-            <ul class="nice-list">
-              <li>Quality you can’t find at the large retailers.</li>
-              <li>From the world’s most cherished vineyards.</li>
-              <li>And definitely not at the supermarket!</li>
-            </ul>
+              <p>And definitely not at the supermarket!</p>
+
 
           </div>
 
@@ -307,11 +318,11 @@
 
   </section>
 
-  <section id="break" class="video-section section-gray section">
+  <section id="break" class="video-section section-gray section" style="padding-bottom: 10px">
 
     <div class="container">
 
-      <h2 class="section-heading text-center">Pricing</h2>
+      <h2 class="section-heading text-center">You select a price range</h2>
 
     </div>
   </section>
@@ -329,7 +340,6 @@
 
     <div class="container">
 
-      <h2 class="section-heading text-center">You select a price range</h2>
 
       <div class="numbers-row row">
 
@@ -379,25 +389,7 @@
       </div>
 
     </div>
-    <div class="container">
 
-      <div class="row">
-        <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12 col-xs-offset-0">
-          <p class="hero-buttons">
-
-          <form action="/shop/neworder" id="postcode-check" method="GET" class="form">
-            <div class="form-group">
-              <input type="text" class="form-control" id="filterPostcode" placeholder="Enter postcode (e.g. SW1A 1AA)" name="postcode" autocomplete="off"/>
-            </div>
-            <div class="form-group form-group-submit">
-              <input type="submit" class="btn btn-primary btn-lg btn-block" value="Check Availability"/>
-            </div>
-          </form>
-          </p>
-        </div>
-      </div>
-
-    </div>
 
   </section>
 
@@ -415,9 +407,7 @@
             <div class="col-md-12 col-sm-12" data-animation="fadeIn">
               <div class="hiw-item">
                 <div id="map" style="width: 100%; height: 500px;"></div>
-                <div class="delivery-scooter">
-                  <img class="" src="<%= asset_path('landing/scooter-white.png') %>" alt="">
-                </div>
+                <span class="delivery-bicycle"><i class=" vyneicon-bicycle"></i></span>
               </div>
             </div>
           </div>
@@ -436,17 +426,52 @@
 
     <div class="container">
 
+      <div class="row">
+        <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12 col-xs-offset-0">
+
+
+          <form action="/shop/neworder" id="postcode-check" method="GET" class="form footer-form home-form">
+            <div class="form-group">
+              <input type="text" class="form-control" id="filterPostcode" placeholder="Enter postcode (e.g. SW1A 1AA)" name="postcode" autocomplete="off"/>
+            </div>
+            <div class="form-group form-group-submit">
+              <input type="submit" class="btn btn-primary btn-lg btn-block" value="Check Availability"/>
+            </div>
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="container">
+
       <div class="footer-socmed">
         <a href="#" target="_blank"><span class="fa fa-facebook"></span></a>
         <a href="#" target="_blank"><span class="fa fa-twitter"></span></a>
         <a href="#" target="_blank"><span class="fa fa-instagram"></span></a>
-        <a href="#" target="_blank"><span class="fa fa-pinterest"></span></a>
       </div>
 
+    </div>
+
+
+    <div class="container footer-links">
+      <div class="row">
+        <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12 col-xs-offset-0">
+          <% if has_invitation_code %>
+              <a href="https://vyne.zendesk.com/">Help</a>
+          <% end %>
+          <a href="/tc" data-no-turbolink="true">Terms</a>
+          <a href="/jobs" data-no-turbolink="true">Jobs</a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="container">
       <div class="footer-copyright">
         &copy; 2015 Vyne
       </div>
-
     </div>
 
   </section>
