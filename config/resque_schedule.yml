@@ -11,7 +11,7 @@ queue_courier_location:
   description: "Queueing courier location."
 
 queue_order_reminder_notification:
-  every: 30s
+  every: 60s
   class: "OrderReminderNotification"
   args:
   description: "Queueing order reminder notification."

@@ -67,7 +67,7 @@ Rails.application.configure do
   # Mailchimp
   config.mailchimp_key = '218800eead6b63a85a54db6df3eaedc4-us8'
 
-  # Currrent Delivery Distance
+  # Currrent Delivery Distance (Miles)
   config.max_delivery_distance = 3
 
   # Vyne order internal notification email
