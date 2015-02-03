@@ -30,8 +30,7 @@ class CourierLocation
 
             unless order.delivery_courier.blank?
               if order.delivery_courier['lat'].to_s != courier_info[:data][:lat].to_s
-                log '############## Courier '  + courier_info[:data][:name] + ' Location Changed ##############'
-                log courier_info[:data][:lat].to_s + ' - ' + courier_info[:data][:lng].to_s
+                log 'Courier '  + courier_info[:data][:name] + ' Location Changed: lat/lng' + courier_info[:data][:lat].to_s + ', ' + courier_info[:data][:lng].to_s
               end
             end
 
