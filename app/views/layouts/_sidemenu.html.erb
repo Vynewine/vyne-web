@@ -9,15 +9,15 @@
                   current_user.has_role?(:superadmin)
           %>
               <li class="sign-in">
-                <%= link_to 'Admin', admin_root_path %>
+                <%= link_to 'Admin', admin_root_path, data: { no_turbolink: true } %>
               </li>
           <% end %>
       <% else %>
           <li class="sign-in">
-            <%= link_to "Sign in", login_path %>
+            <%= link_to "Sign in", login_path, data: { no_turbolink: true } %>
           </li>
       <% end %>
-      <li><a href="/" class="promotions">Home</a></li>
+      <li><a href="/" class="promotions" data-no-turbolink="true">Home</a></li>
       <% if user_signed_in? %>
           <li>
             <%= link_to 'My wines', mywines_path, :class => 'history' %>

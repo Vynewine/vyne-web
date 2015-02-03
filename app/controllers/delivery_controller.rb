@@ -10,7 +10,12 @@ class DeliveryController < ApplicationController
   end
 
   def get_courier_location
-    order = Order.find_by(id: params[:id], client_id: current_user)
+    if current_user.admin?
+      order = Order.find_by(id: params[:id])
+    else
+      order = Order.find_by(id: params[:id], client_id: current_user)
+    end
+
     if order.blank?
       render json: ['404'], status: :not_found
       return
