@@ -44,6 +44,7 @@ module OrderHelper
 
     if order.save
       WebNotificationDispatcher.publish([order.warehouse.id], 'You have order(s) ready for packing', :packing_orders)
+      WebNotificationDispatcher.publish([order.warehouse.id], "Courier Job for order: #{order.id.to_s} created", :courier_job_created, 'admin')
     else
       response[:errors] << order.errors
     end

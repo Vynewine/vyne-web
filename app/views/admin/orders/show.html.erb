@@ -43,7 +43,7 @@
         </li>
         <li class="list-group-item">
           <div class="row">
-            <div class="col-xs-12">
+            <div class="col-xs-6">
               <strong>Delivery:</strong>
               <% if @order.delivery_token.blank? %>
                   <span class="to-do">Delivery not scheduled</span>
@@ -52,6 +52,12 @@
               <% end %>
               <% unless @order.delivery_cost.blank? %>
                   (£<%= @order.delivery_cost %>)
+              <% end %>
+            </div>
+            <div class="col-xs-6">
+              <strong>Customer Post Code:</strong>
+              <% unless @order.address.blank? %>
+                  <%= @order.address.postcode %>
               <% end %>
             </div>
           </div>
@@ -190,7 +196,7 @@
           </td>
           <td>
             <% if item.price.blank? %>
-            -
+                -
             <% else %>
                 £<%= '%.2f' % item.price %>
             <% end %>
@@ -246,7 +252,7 @@
                   <% if @order.delivery_provider == Order.delivery_types[:google_coordinate] %>
                       <%= link_to 'Schedule Shutl', admin_advise_choose_path(:order => @order.id), {:class => 'btn btn-primary'} %>
                   <% else %>
-                      <% #TODO Schedule Google Coordinate   %>
+                      <% #TODO Schedule Google Coordinate    %>
                   <% end %>
               <% end %>
 

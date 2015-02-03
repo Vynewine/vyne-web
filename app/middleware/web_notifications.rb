@@ -80,13 +80,20 @@ class WebNotifications
               puts "#{TAG} redis message #{msg}"
               message = JSON.parse(msg)
               @clients.each do |client|
-                if client[:warehouses][0] == 'admin'
-                  client[:websocket].send(msg)
+                if message['recipients'].blank?
+                  if client[:warehouses][0] == 'admin'
+                    client[:websocket].send(msg)
+                  else
+                    unless ((client[:warehouses].map { |w| w.to_i }) & (message['warehouses'].split(',').map { |w| w.to_i })).empty?
+                      client[:websocket].send(msg)
+                    end
+                  end
                 else
-                  unless ((client[:warehouses].map{|w| w.to_i }) & (message['warehouses'].split(',').map{|w| w.to_i })).empty?
+                  if client[:warehouses][0] == message['recipients']
                     client[:websocket].send(msg)
                   end
                 end
+
               end
             end
           end

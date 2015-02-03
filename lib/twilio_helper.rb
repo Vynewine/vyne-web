@@ -107,7 +107,7 @@ module TwilioHelper
       @client = Twilio::REST::Client.new account_sid, auth_token
 
       message = @client.account.messages.create(
-          :body => 'Your wine is in its way. Please be available to collect from our courier. Track progress here: ' + order_link.to_s,
+          :body => 'Your wine is on its way. Please be available to collect from our courier. Track progress here: ' + order_link.to_s,
           :to => order.client.mobile,
           :from => twilio_number
       )
