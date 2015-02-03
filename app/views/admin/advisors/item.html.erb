@@ -69,11 +69,15 @@
         <li class="list-group-item">
           <div class="row">
             <div class="col-xs-12">
-              <div class="input-group">
-                <input type="text" id="search-wine" autocomplete="off" placeholder="Search wines..." class="form-control">
+              <div class="">
+                <form class="input-group">
+                  <input type="text" id="search-wine" autocomplete="off" placeholder="Search wines..." class="form-control">
                 <span class="input-group-addon">
-                    <input type="checkbox" id="tick-sing" name="single"> Single estate
+                    <input type="checkbox" id="tick-sing" name="single"/> Single estate
                   </span>
+                  <input type="submit" id="search-button" class="btn btn-primary form-control" value="Search"/>
+                </form>
+
               </div>
             </div>
           </div>
@@ -100,6 +104,8 @@
     </div>
   </div>
 </div>
+
+<span id="debug"></span>
 
 <div class="panel panel-default">
   <div class="panel-heading">

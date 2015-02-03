@@ -265,10 +265,12 @@ var adminReady = function () {
             modal.find('#modal-inventory').attr('href', '/admin/inventories/' + inventoryId);
         });
 
+
         $('#wine-advisory-note-modal').on('show.bs.modal', function (event) {
             var $tr = $(event.relatedTarget).closest('tr');
             var wine = $tr.data('id');
             $('#wine-id').val(wine);
+
 
         }).on('shown.bs.modal', function () {
             var $note = $(this).find('#advisory-note-text');
@@ -423,6 +425,12 @@ var adminReady = function () {
             // console.log('not okay');
         };
 
+        $('#search-button').click(function(e) {
+            e.preventDefault();
+            $('#search-wine').blur();
+            sortKeyWords();
+        });
+
         var findKeywords = function (keywords) {
             var categories = [];
             $.each($('.tick-category'), function () {
@@ -561,12 +569,6 @@ var adminReady = function () {
         /**
          * Search field:
          */
-        $searchField.typeWatch({
-            highlight: true,
-            wait: 800,
-            captureLength: -1,
-            callback: sortKeyWords
-        });
 
         $('.tick-category').change(function () {
             sortKeyWords();
