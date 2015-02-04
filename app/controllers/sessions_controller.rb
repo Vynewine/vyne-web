@@ -21,7 +21,7 @@ class SessionsController < Devise::SessionsController
     end
 
     respond_to do |format|
-      format.html { redirect_to home_index_path }
+      format.html { redirect_to stored_location_for(:user) || home_index_path }
       format.json {
         render :json => {
                    :success => true,
