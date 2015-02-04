@@ -20,10 +20,10 @@
       <li><a href="/" class="promotions" data-no-turbolink="true">Home</a></li>
       <% if user_signed_in? %>
           <li>
-            <%= link_to 'My wines', mywines_path, :class => 'history' %>
+            <%= link_to 'My wines', mywines_path, :class => 'history', data: { no_turbolink: true } %>
           </li>
       <% end %>
-      <li><a href="/delivery">Coverage Map</a></li>
+      <li><a href="/delivery" data-no-turbolink="true">Coverage Map</a></li>
 
       <% if has_invitation_code %>
           <li><a href="https://vyne.zendesk.com/">Help</a></li>
