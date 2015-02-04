@@ -487,6 +487,10 @@ $(function () {
         $('.bottle-info').removeClass('active');
     });
 
+    $('.not-in-stock').click(function (e) {
+        $('.bottle-info').removeClass('active');
+    });
+
     $('.select-bottle').click(function (e) {
         e.preventDefault();
         $('.bottle-info').removeClass('active');

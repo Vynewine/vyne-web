@@ -74,7 +74,7 @@ Rails.application.configure do
   config.order_notification = 'jakub-order-notification-for-vyne@vyne.london'
 
   # Require invitation code to access the site.
-  config.enable_invite_code = 'true'
+  config.enable_invite_code = 'false'
   config.invite_code = 'timeforvyne'
 
   # Googe GCM

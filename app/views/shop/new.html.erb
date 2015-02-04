@@ -78,7 +78,7 @@
         <h3 class="subttitle"></h3>
 
         <ul class="bottle-list cf">
-      
+
         <% @categories.each do |category| %>
           <li class="bottle">
             <a href="#" class="bottle-link"
@@ -88,27 +88,35 @@
               <span class="label"><%= category.name %></span>
               <span class="description"><%= category.summary %></span>
             </a>
+
             <div class="bottle-info"
                  data-category-id="<%= category.id %>"
                  data-price-min="<%= category.price_min %>"
                  data-price-max="<%= category.price_max %>"
             >
-              <div class="bottle-info-bg"></div>
-              <div class="bottle-info-content">
-                <div class="close">
-                  <div class="line"></div>
-                  <div class="line"></div>
-                </div>
-                <%= image_tag "icons/wine/bottle#{category.price}.png", :alt => "wine bottle" %>
-                <span class="label"><%= category.name %></span>
-                <span class="price">£<%= category.price %></span>
+              <% if category.id == 1 %>
+                  <%= image_tag 'select/house-coming-soon.jpg',
+                                :alt => 'House Wine Coming Soon',
+                                :class => 'not-in-stock' %>
+              <% else %>
+                  <div class="bottle-info-bg"></div>
+                  <div class="bottle-info-content">
+                    <div class="close">
+                      <div class="line"></div>
+                      <div class="line"></div>
+                    </div>
+                    <%= image_tag "icons/wine/bottle#{category.price}.png", :alt => "wine bottle" %>
+                    <span class="label"><%= category.name %></span>
+                    <span class="price">£<%= category.price %></span>
 
-                <span class="description">Entry-level to best wine regions.</span>
-                <div class="full-description">
-                  <%= category.description.html_safe %>
-                </div>
-                <a href="" class="btn select-bottle">Choose bottle</a>
-              </div>
+                    <span class="description">Entry-level to best wine regions.</span>
+
+                    <div class="full-description">
+                      <%= category.description.html_safe %>
+                    </div>
+                    <a href="" class="btn select-bottle">Choose bottle</a>
+                  </div>
+              <% end %>
             </div>
           </li>
         <% end %>
@@ -439,7 +447,7 @@
                 cardNumber = "**** ****** #{a.number}"
               else
                 cardNumber = "**** **** **** #{a.number}"
-              end  
+              end
               paymentCards.push([cardNumber, a.id])
             end
           end

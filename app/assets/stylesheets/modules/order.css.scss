@@ -332,13 +332,14 @@
                                         right: -14px;
                                         z-index: 99;
                                         @include scale(0);
+                                        cursor: pointer;
 
                                         .line {
                                             position: relative;
                                             top: 11px;
                                             left: 12px;
-                                            width: 22px;
-                                            height: 1px;
+                                            width: 23px;
+                                            height: 2px;
                                             background: white;
                                             box-shadow: 0 0 6px rgba(0,0,0,0.5);
 
@@ -395,6 +396,15 @@
                                         img {
                                             width: 100px;
                                             height: auto;
+
+                                            &.not-in-stock {
+                                                margin-top: -17px;
+                                                margin-left: -17px;
+                                                width: 300px;
+                                                height: auto;
+                                                cursor:pointer;
+
+                                            }
                                         }
 
                                         span {

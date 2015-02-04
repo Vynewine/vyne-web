@@ -107,13 +107,13 @@ module InventoryImporter
   def self.assign_category(categories, cost)
     cost_decimal = cost.to_f
     case
-      when cost_decimal > 10 && cost_decimal < 15.0
+      when cost_decimal >= 10 && cost_decimal <= 15.0
         return categories.select{ |category| category.name == 'House' }
-      when cost_decimal >= 15.01 && cost_decimal < 20.0
+      when cost_decimal >= 15.01 && cost_decimal <= 20.0
         return categories.select{ |category| category.name == 'Reserve' }
-      when cost_decimal >= 20.01 && cost_decimal < 30.0
+      when cost_decimal >= 20.01 && cost_decimal <= 30.0
         return categories.select{ |category| category.name == 'Fine' }
-      when cost_decimal >= 30.01 && cost_decimal < 50.0
+      when cost_decimal >= 30.01 && cost_decimal <= 50.0
         return categories.select{ |category| category.name == 'Cellar' }
     end
     return [nil]
