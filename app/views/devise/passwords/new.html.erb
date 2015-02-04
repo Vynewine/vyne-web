@@ -1,12 +1,18 @@
-<h2>Forgot your password?</h2>
 
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
-  <%= devise_error_messages! %>
+<div class="inner wrapper wrapper-large">
+  <h2>Forgot your password?</h2>
 
-  <div><%= f.label :email %><br />
-  <%= f.email_field :email, autofocus: true %></div>
+  <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+      <%= devise_error_messages! %>
 
-  <div><%= f.submit "Send me reset password instructions" %></div>
-<% end %>
+      <div>
+        <%= f.email_field :email, autofocus: true, :placeholder => 'example@gmail.com' %></div>
 
-<%= render "devise/shared/links" %>
+      <div><%= f.submit 'Reset password' %></div>
+  <% end %>
+  <div class="form-links">
+    <%= render "devise/shared/links" %>
+  </div>
+
+</div>
+
