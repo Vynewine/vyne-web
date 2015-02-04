@@ -62,8 +62,9 @@
 
         <thead>
         <tr>
-          <th>Vendor Sku</th>
-          <th>Wine</th>
+          <th>Sku</th>
+          <th>Wine / Vintage / Producer / Location / Type</th>
+          <th>Composition</th>
           <th>Category</th>
           <th>Cost</th>
           <th>Quantity</th>
@@ -75,7 +76,13 @@
         <% @inventories.each do |inventory| %>
             <tr>
               <td><%= inventory.vendor_sku %></td>
-              <td><%= inventory.wine.name %></td>
+              <td>
+                <%= "#{inventory.wine.name} / #{inventory.wine.txt_vintage} /
+                    #{inventory.wine.producer.name} / #{inventory.wine.location} / #{inventory.wine.type.name}" %>
+              </td>
+              <td>
+                <%= inventory.wine.composition %>
+              </td>
               <td><%= if inventory.category.nil? then
                         ' - '
                       else

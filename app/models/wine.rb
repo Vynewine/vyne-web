@@ -159,4 +159,26 @@ class Wine < ActiveRecord::Base
     name
   end
 
+  def location
+    location = []
+
+    unless producer.blank?
+      location << producer.country.name
+    end
+
+    unless region.blank?
+      location << region.name
+    end
+
+    unless subregion.blank?
+      location << subregion.name
+    end
+
+    unless appellation.blank?
+      location << appellation.name
+    end
+
+    location.join(', ')
+  end
+
 end
