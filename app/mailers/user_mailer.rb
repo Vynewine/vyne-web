@@ -19,7 +19,7 @@ module UserMailer
       template_name = 'orderplaced-1tochv1'
       message = {
           :subject => 'Order Placed with Vyne. No: ' + order.id.to_s,
-          :from_email => 'checkout@vyne.london',
+          :from_email => 'checkout@vyne.co.uk',
           :from_name => 'Vyne Checkout',
           :to => [
               {
@@ -78,7 +78,7 @@ module UserMailer
       template_name = 'orderplaced-1tochv1'
       message = {
           :subject => 'Client: ' + order.client.name + ' - ' + order.client.email + ' Placed Order No: ' + order.id.to_s,
-          :from_email => 'checkout@vyne.london',
+          :from_email => 'checkout@vyne.co.uk',
           :from_name => 'Vyne Checkout',
           :to => [
               {
@@ -158,7 +158,7 @@ module UserMailer
       template_name = 'receipt-2tftochv1'
       message = {
           :subject => 'Your Receipt. Order No: ' + order.id.to_s,
-          :from_email => 'checkout@vyne.london',
+          :from_email => 'checkout@vyne.co.uk',
           :from_name => 'Vyne Checkout',
           :to => [
               {
@@ -249,7 +249,7 @@ module UserMailer
       template_name = 'merchant-order-confirmation-5tmsmov1'
       message = {
           :subject => 'Vyne Order No: ' + order.id.to_s,
-          :from_email => 'merchant-order@vyne.london',
+          :from_email => 'merchant-order@vyne.co.uk',
           :from_name => 'Vyne Merchant Team',
           :to => [
               {
@@ -296,7 +296,7 @@ module UserMailer
     template_name = 'coverage-apology-order-at-desk-1cnps'
     message = {
         :subject => 'Order wine at your desk',
-        :from_email => 'comingsoon@vyne.london',
+        :from_email => 'comingsoon@vyne.co.uk',
         :from_name => 'Vyne Drinkers',
         :to => [
             {
@@ -322,10 +322,10 @@ module UserMailer
   def coming_soon_near_you(email)
 
     mandrill = Mandrill::API.new Rails.application.config.mandrill
-    template_name = 'coverage-apology-1cpcs'
+    template_name = 'coverage-apology-order-at-desk-1cnps-mailchimp'
     message = {
         :subject => 'Vyne Coming Soon',
-        :from_email => 'comingsoon@vyne.london',
+        :from_email => 'comingsoon@vyne.co.uk',
         :from_name => 'Vyne Drinkers',
         :to => [
             {
@@ -366,7 +366,7 @@ module UserMailer
       template_name = 'cancellation-2scch'
       message = {
           :subject => 'Your Vyne Order No: ' + order.id.to_s + ' has been cancelled.',
-          :from_email => 'checkout@vyne.london',
+          :from_email => 'checkout@vyne.co.uk',
           :from_name => 'Vyne Checkout',
           :to => [
               {
