@@ -175,7 +175,7 @@ module CoordinateHelper
           worker_email = URI::encode(courier['name'])
           minute_ago = 10.minutes.ago.to_i * 1000
 
-          response = RestClient.get "https://www.googleapis.com/coordinate/v1/teams/#{team_id}/workers/#{worker_email}/locations?startTimestampMs=#{minute_ago.to_s}&maxResults=10",
+          response = RestClient.get "https://www.googleapis.com/coordinate/v1/teams/#{team_id}/workers/#{worker_email}/locations?startTimestampMs=#{minute_ago.to_s}&maxResults=1000",
                                     {
                                         'Authorization' => "Bearer #{token}",
                                         'User-Agent' => 'Vyne Admin/1.0.0'
