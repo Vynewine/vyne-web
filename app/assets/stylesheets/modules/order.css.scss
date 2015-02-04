@@ -678,7 +678,6 @@
                         .order-table {
                             width: 100%;
                             text-align: left;
-                            margin-bottom: 100px;
 
                             .order-table-bottle-price {
                               padding: 0;
@@ -825,12 +824,11 @@
                         z-index: 99;
                         width: 280px;
                         display: none;
-                        position: fixed;
                         padding: 2rem 0;
                         background: rgba(0, 0, 0, 0.9);
 
                         &.ios {
-                            position: absolute;
+
                         }
                     }
 

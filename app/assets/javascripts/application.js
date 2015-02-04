@@ -739,6 +739,7 @@ $(function () {
         if (!$('.order-bottle').length) {
             $('.no-bottles').show();
             $('.add-bottle').hide();
+
             resetEventsForEmptyCart();
         } else if ($('.order-bottle').length == 1) {
             $('.add-bottle').show();
@@ -1319,6 +1320,7 @@ function calculateTotalCost() {
 
     var $deliveryCost = $('.delivery-cost');
     var $totalCost = $('.total-cost');
+    var $btnCheckout = $('.btn-checkout');
 
     if (wines.length > 0) {
         $deliveryCost.find('.price').text(deliveryCost.toFixed(2));
@@ -1328,6 +1330,7 @@ function calculateTotalCost() {
     } else {
         $deliveryCost.hide();
         $totalCost.hide();
+        $btnCheckout.hide();
     }
 
     var bottlesInTheCart = $('.order-bottle').length;
