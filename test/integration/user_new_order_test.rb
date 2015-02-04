@@ -26,7 +26,6 @@ class UserNewOrderTest < ActiveSupport::TestCase
 
     @driver.get(@base_url + '/')
 
-    enter_promo_code
     enter_postcode_first_page('n17rj')
     select_bottle_for_category(2)
     select_wine_by_occasion
@@ -46,7 +45,6 @@ class UserNewOrderTest < ActiveSupport::TestCase
 
     @driver.get(@base_url + '/')
 
-    enter_promo_code
     enter_postcode_first_page('n17rj')
     select_bottle_for_category(2)
     select_wine_by_occasion
@@ -66,7 +64,7 @@ class UserNewOrderTest < ActiveSupport::TestCase
 
     @driver.get(@base_url + '/')
 
-    enter_promo_code
+
     enter_postcode_first_page('n17rj')
     select_bottle_for_category(2)
     select_wine_by_occasion
@@ -89,7 +87,6 @@ class UserNewOrderTest < ActiveSupport::TestCase
 
     @driver.get(@base_url + '/')
 
-    enter_promo_code
     enter_postcode_first_page('n17rj')
     select_bottle_for_category(2)
     select_wine_by_occasion

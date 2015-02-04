@@ -13,6 +13,7 @@ class HomeController < ApplicationController
 
     if !cookies[:device].blank? && !user_signed_in?
       redirect_to login_path, alert: 'Please contact Vyne to setup this device'
+      return
     end
 
     if user_signed_in?
