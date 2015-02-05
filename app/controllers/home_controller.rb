@@ -59,14 +59,12 @@ class HomeController < ApplicationController
   end
 
   def warehouses
-    @warehouses = Warehouse.where(:active => true)
-    max_distance = Rails.application.config.max_delivery_distance
     warehouses = {warehouses: []}
+    @warehouses = Warehouse.closest_to(params[:lat], params[:lng])
     @warehouses.each do |warehouse|
       warehouses[:warehouses] << {
           id: warehouse.id,
           address: warehouse.address.postcode,
-          distance: max_distance,
           is_open: warehouse.is_open,
           opening_time: warehouse.today_opening_time,
           closing_time: warehouse.today_closing_time

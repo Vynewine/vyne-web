@@ -35,7 +35,9 @@ class Warehouse < ActiveRecord::Base
     else
       # Select agenda for today for a warehouse
       agenda = self.agendas.select { |agenda| agenda.day == local_time.wday }.first
-      unless agenda.blank?
+      if agenda.blank?
+        false
+      else
         # get date time for agenda
         # trick is to use current local date and agenda's time
         agenda_open_time = Time.parse(agenda.opening_time)
@@ -175,6 +177,21 @@ class Warehouse < ActiveRecord::Base
     end
 
     areas
+  end
 
+  # Find closest warehouse delivering to lat/lng area
+  def self.closest_to(lat, lng)
+
+
+    point = "'POINT(#{lng} #{lat})'"
+
+
+
+    warehouses = Warehouse.find_by_sql("select w.* from warehouses w
+                          join addresses a on w.address_id = a.id
+                          where ST_Contains(w.delivery_area, #{point})
+                          and w.active = true
+                          order by ST_Distance (#{point}, a.coordinates) asc")
+    warehouses
   end
 end

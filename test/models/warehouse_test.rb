@@ -1,6 +1,7 @@
 require 'test_helper'
 require 'rgeo-geojson'
 require 'json'
+require 'mocha/test_unit'
 
 class WarehouseTest < ActiveSupport::TestCase
   test 'Can save delivery area' do
@@ -221,12 +222,237 @@ class WarehouseTest < ActiveSupport::TestCase
   end
 
   test 'Create polygon around warehouse' do
-
     points = circle_path({:lng => -0.108105959289054, :lat => 51.5200685165148}, 4023, 30, true)
     points.each do |point|
       puts '[' + point[1].to_s + ', ' + point[0].to_s + '],'
     end
   end
+
+  test 'Will find warehouse for client within delivery area' do
+
+    address_01 = Address.create!({
+                                     :line_1 => '41a Farringdon St',
+                                     :postcode => 'EC4A 4AN',
+                                     :coordinates => 'POINT(-0.105019 51.517125)'
+                                 })
+    warehouse_01 = Warehouse.create!({
+                                         :title => 'New Warehouse 1',
+                                         :email => 'vyne@vyne.london',
+                                         :phone => '07718225201',
+                                         :address => address_01,
+                                         :delivery_area => 'POLYGON((-0.105019 51.55330470820611, -0.04687851649324394 51.517110630598836, -0.10501899999999999 51.48094529179389, -0.16315948350675605 51.517110630598836))',
+                                         :active => true
+                                     })
+
+    set_open_agenda(warehouse_01)
+
+
+    found_warehouse = Warehouse.closest_to(51.517125, -0.105019)
+
+    assert_equal(warehouse_01, found_warehouse.first)
+
+  end
+
+  test 'Will not find warehouse for client outside of the delivery area' do
+    address_01 = Address.create!({
+                                     :line_1 => '41a Farringdon St',
+                                     :postcode => 'EC4A 4AN',
+                                     :coordinates => 'POINT(-0.105019 51.517125)'
+                                 })
+    warehouse_01 = Warehouse.create!({
+                          :title => 'New Warehouse 1',
+                          :email => 'vyne@vyne.london',
+                          :phone => '07718225201',
+                          :address => address_01,
+                          :delivery_area => 'POLYGON((-0.105019 51.55330470820611, -0.04687851649324394 51.517110630598836, -0.10501899999999999 51.48094529179389, -0.16315948350675605 51.517110630598836))',
+                          :active => true
+                      })
+
+    set_open_agenda(warehouse_01)
+
+
+    found_warehouse = Warehouse.closest_to(51.519559, -0.164076)
+
+    assert_equal(0, found_warehouse.count)
+  end
+
+  test 'Will find closest warehouse if client within area of two warehouses' do
+    far_address = Address.create!({
+                                      :line_1 => '41a Farringdon St',
+                                      :postcode => 'EC4A 4AN',
+                                      :coordinates => 'POINT(-0.105019 51.517125)'
+                                  })
+    far_warehouse = Warehouse.create!({
+                                          :title => 'New Warehouse 1',
+                                          :email => 'vyne@vyne.london',
+                                          :phone => '07718225201',
+                                          :address => far_address,
+                                          :delivery_area => 'POLYGON((-0.105019 51.55330470820611, -0.04687851649324394 51.517110630598836, -0.10501899999999999 51.48094529179389, -0.16315948350675605 51.517110630598836))',
+                                          :active => true
+                                      })
+
+    set_open_agenda(far_warehouse)
+
+    close_address = Address.create!({
+                                        :line_1 => '41a Farringdon St',
+                                        :postcode => 'EC4A 4AN',
+                                        :coordinates => 'POINT(-0.15343 51.535287)'
+
+                                    })
+    close_warehouse = Warehouse.create!({
+                                            :title => 'New Warehouse 1',
+                                            :email => 'vyne@vyne.london',
+                                            :phone => '07718225201',
+                                            :address => close_address,
+                                            :delivery_area => 'POLYGON((-0.15343 51.57146670820611, -0.09526632073465373 51.53527262124437, -0.15343 51.499107291793884, -0.21159367926534628 51.53527262124437))',
+                                            :active => true
+                                        })
+
+    set_open_agenda(close_warehouse)
+
+
+    found_warehouse = Warehouse.closest_to(51.532108, -0.134439)
+    found_far_warehouse = Warehouse.closest_to(51.523589, -0.116303)
+
+    assert_equal(close_warehouse, found_warehouse.first)
+    assert_equal(far_warehouse, found_far_warehouse.first)
+
+  end
+
+  test 'Will not find inactive warehouse for client within delivery area' do
+
+    address_01 = Address.create!({
+                                     :line_1 => '41a Farringdon St',
+                                     :postcode => 'EC4A 4AN',
+                                     :coordinates => 'POINT(-0.105019 51.517125)'
+                                 })
+    warehouse_01 = Warehouse.create!({
+                          :title => 'New Warehouse 1',
+                          :email => 'vyne@vyne.london',
+                          :phone => '07718225201',
+                          :address => address_01,
+                          :delivery_area => 'POLYGON((-0.105019 51.55330470820611, -0.04687851649324394 51.517110630598836, -0.10501899999999999 51.48094529179389, -0.16315948350675605 51.517110630598836))',
+                          :active => false
+                      })
+
+    set_open_agenda(warehouse_01)
+
+
+    found_warehouse = Warehouse.closest_to(51.517125, -0.105019)
+
+    assert(0, found_warehouse.count)
+
+  end
+
+  test 'Will find farther warehouse if closer one is inactive' do
+    far_address = Address.create!({
+                                      :line_1 => '41a Farringdon St',
+                                      :postcode => 'EC4A 4AN',
+                                      :coordinates => 'POINT(-0.105019 51.517125)'
+                                  })
+    far_warehouse = Warehouse.create!({
+                                          :title => 'New Warehouse 1',
+                                          :email => 'vyne@vyne.london',
+                                          :phone => '07718225201',
+                                          :address => far_address,
+                                          :delivery_area => 'POLYGON((-0.105019 51.55330470820611, -0.04687851649324394 51.517110630598836, -0.10501899999999999 51.48094529179389, -0.16315948350675605 51.517110630598836))',
+                                          :active => true
+                                      })
+
+    set_open_agenda(far_warehouse)
+
+    close_address = Address.create!({
+                                        :line_1 => '41a Farringdon St',
+                                        :postcode => 'EC4A 4AN',
+                                        :coordinates => 'POINT(-0.15343 51.535287)'
+
+                                    })
+    close_warehouse = Warehouse.create!({
+                                            :title => 'New Warehouse 2',
+                                            :email => 'vyne@vyne.london',
+                                            :phone => '07718225201',
+                                            :address => close_address,
+                                            :delivery_area => 'POLYGON((-0.15343 51.57146670820611, -0.09526632073465373 51.53527262124437, -0.15343 51.499107291793884, -0.21159367926534628 51.53527262124437))',
+                                            :active => false
+                                        })
+
+    set_open_agenda(close_warehouse)
+
+    found_warehouse = Warehouse.closest_to(51.532108, -0.134439)
+    found_far_warehouse = Warehouse.closest_to(51.523589, -0.116303)
+
+    assert_equal(1, found_warehouse.count)
+    assert_equal(1, found_far_warehouse.count)
+    assert_equal(far_warehouse, found_warehouse.first)
+    assert_equal(far_warehouse, found_far_warehouse.first)
+
+  end
+
+  test 'Will find farther warehouse if closer one is closed' do
+    far_address = Address.create!({
+                                      :line_1 => '41a Farringdon St',
+                                      :postcode => 'EC4A 4AN',
+                                      :coordinates => 'POINT(-0.105019 51.517125)'
+                                  })
+    far_warehouse = Warehouse.create!({
+                                          :title => 'New Warehouse 1',
+                                          :email => 'vyne@vyne.london',
+                                          :phone => '07718225201',
+                                          :address => far_address,
+                                          :delivery_area => 'POLYGON((-0.105019 51.55330470820611, -0.04687851649324394 51.517110630598836, -0.10501899999999999 51.48094529179389, -0.16315948350675605 51.517110630598836))',
+                                          :active => true
+                                      })
+
+    set_open_agenda(far_warehouse)
+
+
+
+    close_address = Address.create!({
+                                        :line_1 => '41a Farringdon St',
+                                        :postcode => 'EC4A 4AN',
+                                        :coordinates => 'POINT(-0.15343 51.535287)'
+
+                                    })
+    close_warehouse = Warehouse.create!({
+                                            :title => 'New Warehouse 2',
+                                            :email => 'vyne@vyne.london',
+                                            :phone => '07718225201',
+                                            :address => close_address,
+                                            :delivery_area => 'POLYGON((-0.15343 51.57146670820611, -0.09526632073465373 51.53527262124437, -0.15343 51.499107291793884, -0.21159367926534628 51.53527262124437))',
+                                            :active => true
+                                        })
+
+    set_closed_agenda(close_warehouse)
+
+    found_warehouse = Warehouse.closest_to(51.532108, -0.134439)
+    found_far_warehouse = Warehouse.closest_to(51.523589, -0.116303)
+
+    assert_equal(false, found_warehouse.first.is_open)
+    assert_equal(far_warehouse, found_warehouse.second)
+    assert_equal(far_warehouse, found_far_warehouse.first)
+
+  end
+
+  def set_open_agenda(warehouse)
+    Agenda.create!({
+                       :day => Time.now.wday,
+                       :opening => 0000,
+                       :closing => 2359,
+                       :warehouse => warehouse
+                   })
+
+  end
+
+  def set_closed_agenda(warehouse)
+    Agenda.create!({
+                       :day => 1.day.ago.wday,
+                       :opening => 0000,
+                       :closing => 2359,
+                       :warehouse => warehouse
+                   })
+
+  end
+
 
   # Handy radius to polygon function from
   # https://gist.github.com/straydogstudio/4992733
@@ -247,6 +473,6 @@ class WarehouseTest < ActiveSupport::TestCase
     center_lng = center[:lng]
     lat = radius/(r_e*d2r)
     lng = radius/(r_e*Math.cos(d2r*center_lat)*d2r)
-    multipliers.map {|m| [center_lat + m[0]*lat, center_lng + m[1]*lng]}
+    multipliers.map { |m| [center_lat + m[0]*lat, center_lng + m[1]*lng] }
   end
 end

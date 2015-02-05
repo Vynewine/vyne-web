@@ -263,69 +263,97 @@ $(document).ready(function () {
 
             var mapUtil = new MapUtility();
 
-            mapUtil.calculateDistanceForAllWarehouses(postcode, function (delivery) {
-                $('#initial-postcode-lookup').hide();
-                $('#filterPostcode').show();
-                if (delivery.available) {
+            mapUtil.locate(postcode, function (address) {
 
-                    analytics.track('Postcode lookup', {
-                        postcode: postcode,
-                        status: 'Delivery available'
-                    });
+                if (address.status === 'OK') {
+                    var warehouseResource = "/warehouses/addresses.json";
 
-                    var openedWarehouses = delivery.warehouses.filter(function (warehouse) {
-                        return warehouse.is_open
-                    });
+                    $.get(warehouseResource,
+                        {
+                            lat: address.results[0].geometry.location.lat,
+                            lng: address.results[0].geometry.location.lng
+                        },
+                        function (delivery) {
 
-                    var closedWarehouses = delivery.warehouses.filter(function (warehouse) {
-                        return warehouse.is_open === false;
-                    });
+                            $('#initial-postcode-lookup').hide();
+                            $('#filterPostcode').show();
+                            if (delivery.warehouses.length) {
 
-                    if (openedWarehouses.length > 0) {
+                                analytics.track('Postcode lookup', {
+                                    postcode: postcode,
+                                    status: 'Delivery available'
+                                });
 
-                        $slideable.removeClass('slideup');
+                                var openedWarehouses = delivery.warehouses.filter(function (warehouse) {
+                                    return warehouse.is_open
+                                });
 
-                        $notavailable.hide();
-                        $('.opening-times').hide();
+                                var closedWarehouses = delivery.warehouses.filter(function (warehouse) {
+                                    return warehouse.is_open === false;
+                                });
 
-                        $feedback.css({'display': 'block '});
-                        $('#use-postcode').css({'display': 'inline-block '});
+                                if (openedWarehouses.length > 0) {
 
-                        $feedback.removeClass('error');
-                        $feedback.html("VYNE delivers to this area.");
+                                    $slideable.removeClass('slideup');
 
-                        $('#warehouses').val('{"warehouses":' + JSON.stringify(openedWarehouses) + '}');
+                                    $notavailable.hide();
+                                    $('.opening-times').hide();
 
-                    } else {
-                        $('#sign-up-closed').val(true);
-                        $slideable.addClass('slideup');
-                        $('.opening-times').hide();
-                        $notavailable.show();
-                        var openingHours = '12:00 - 21:00';
-                        if (closedWarehouses.length > 0) {
-                            openingHours = closedWarehouses[0].opening_time + ' - ' + closedWarehouses[0].closing_time
-                        }
-                        $('#opening-hours').text(openingHours);
-                        $('.closed').show();
-                        $('.outside').hide();
-                    }
+                                    $feedback.css({'display': 'block '});
+                                    $('#use-postcode').css({'display': 'inline-block '});
 
+                                    $feedback.removeClass('error');
+                                    $feedback.html("VYNE delivers to this area.");
+
+                                    $('#warehouses').val('{"warehouses":' + JSON.stringify(openedWarehouses) + '}');
+
+                                } else {
+                                    $('#sign-up-closed').val(true);
+                                    $slideable.addClass('slideup');
+                                    $('.opening-times').hide();
+                                    $notavailable.show();
+                                    var openingHours = '12:00 - 21:00';
+                                    if (closedWarehouses.length > 0) {
+                                        openingHours = closedWarehouses[0].opening_time + ' - ' + closedWarehouses[0].closing_time
+                                    }
+                                    $('#opening-hours').text(openingHours);
+                                    $('.closed').show();
+                                    $('.outside').hide();
+                                }
+
+                            } else {
+                                noDelivery();
+                            }
+                        });
                 } else {
-                    $slideable.addClass('slideup');
-                    $notavailable.show();
-                    $('.outside').show();
-                    $('.closed').hide();
-                    $feedback.hide().addClass('error');
-                    $feedback.html("VYNE does NOT deliver to this area!");
-                    $('#use-postcode').css({'display': 'none'});
-                    analytics.track('Postcode lookup', {
-                        postcode: postcode,
-                        status: 'Delivery not available'
-                    });
+                    noDelivery();
                 }
             });
         }
     });
+
+    var noDelivery = function () {
+
+        // Postcode sliable panel
+        var $slideable = $('#postcode-panel').find('.slideable');
+        // Feedback area:
+        var $feedback = $('#filterPostcodeMessage');
+        //Not available
+        var $notavailable = $('.not-available');
+
+        $slideable.addClass('slideup');
+        $notavailable.show();
+        $('.outside').show();
+        $('.closed').hide();
+        $feedback.hide().addClass('error');
+        $feedback.html("VYNE does NOT deliver to this area!");
+        $('#use-postcode').css({'display': 'none'});
+
+        analytics.track('Postcode lookup', {
+            postcode: postcode,
+            status: 'Delivery not available'
+        });
+    };
 
     /**
      * Field masks:
