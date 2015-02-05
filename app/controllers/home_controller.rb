@@ -59,6 +59,12 @@ class HomeController < ApplicationController
   end
 
   def warehouses
+
+    if params[:lat].blank? || params[:lng].blank?
+      render :json => {}
+      return
+    end
+
     warehouses = {warehouses: []}
     @warehouses = Warehouse.closest_to(params[:lat], params[:lng])
     @warehouses.each do |warehouse|

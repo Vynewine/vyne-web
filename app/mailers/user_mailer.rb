@@ -293,7 +293,7 @@ module UserMailer
   def order_at_your_desk(email)
 
     mandrill = Mandrill::API.new Rails.application.config.mandrill
-    template_name = 'coverage-apology-order-at-desk-1cnps'
+    template_name = 'coverage-apology-order-at-desk-1cnps-mailchimp'
     message = {
         :subject => 'Order wine at your desk',
         :from_email => 'comingsoon@vyne.co.uk',
@@ -306,7 +306,6 @@ module UserMailer
         ]
     }
 
-
     mandrill.messages.send_template template_name, nil, message
 
   rescue Mandrill::Error => exception
@@ -315,8 +314,6 @@ module UserMailer
     message = "Error occurred while sending email order_at_your_desk: #{exception.class} - #{exception.message} - for user: #{email}"
     Rails.logger.error message
     Rails.logger.error exception.backtrace
-  ensure
-    log 'done here'
   end
 
   def coming_soon_near_you(email)
