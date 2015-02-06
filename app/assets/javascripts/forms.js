@@ -299,8 +299,8 @@ $(document).ready(function () {
                                     $notavailable.hide();
                                     $('.opening-times').hide();
 
-                                    $feedback.css({'display': 'block '});
-                                    $('#use-postcode').css({'display': 'inline-block '});
+                                    $feedback.css({'display': 'block'});
+                                    $('#use-postcode').css({'display': 'inline'});
 
                                     $feedback.removeClass('error');
                                     $feedback.html("VYNE delivers to this area.");
