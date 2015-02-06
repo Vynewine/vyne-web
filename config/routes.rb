@@ -136,7 +136,7 @@ Rails.application.routes.draw do
         post 'packing_complete'
         get 'refresh_all'
         get 'order_counts'
-        post 'increment_cancel_count'
+        post 'increment_notification_count'
       end
     end
     resources :payments

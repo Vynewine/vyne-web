@@ -9,6 +9,7 @@ var setCountDown = function (time) {
     if (time > 0) {
         var minutes = Math.floor(time / 60);
         var seconds = time - minutes * 60;
+        var minuteText = '00';
 
         setInterval(function () {
             $('#counter-text').fadeIn('slow');
@@ -27,12 +28,12 @@ var setCountDown = function (time) {
                 }
             }
             if (minutes > 0) {
-                var minute_text = minutes < 10 ? '0' + minutes : minutes;
+                 minuteText = minutes < 10 ? '0' + minutes : minutes;
             } else {
-                var minute_text = '00';
+                minuteText = '00';
             }
-            var second_text = seconds < 10 ? '0' + seconds : seconds;
-            counter.html(minute_text + ':' + second_text);
+            var secondText = seconds < 10 ? '0' + seconds : seconds;
+            counter.html(minuteText + ':' + secondText);
             seconds--;
         }, 1000);
     }
@@ -59,7 +60,11 @@ var ready = function () {
                             }
                             break;
                         case 'packing':
-                            setOrderView('order-advised');
+                            if (orderData.status !== 'packing') {
+                                location.reload();
+                            } else {
+                                setOrderView('order-advised');
+                            }
                             break;
                         case 'pickup':
                             setOrderView('order-pickup');
@@ -70,6 +75,10 @@ var ready = function () {
                             break;
                         case 'delivered':
                             setOrderView('order-delivered');
+                            clearInterval(scheduleCheckOrderStatus);
+                            break;
+                        case 'payment failed':
+                            setOrderView('order-payment-failed');
                             break;
                         default:
                             setOrderView('order-placed');
@@ -98,14 +107,14 @@ var ready = function () {
             $('#order-in-transit').removeClass('active');
             $('#order-delivered').removeClass('active');
             $('#order-advised').removeClass('active');
+            $('#order-payment-failed').removeClass('active');
         };
 
-        setInterval(function () {
+        var scheduleCheckOrderStatus = setInterval(function () {
             checkOrderStatus();
         }, 10000);
 
         setCountDown(orderChangeTimeOutSeconds);
-
 
         var map;
         var wineMarker;
@@ -220,6 +229,25 @@ var ready = function () {
             renderMap(orderData);
         }
 
+        var $acceptOrder = $('#accept-order');
+        var $processingOrder = $('.processing-order');
+
+
+
+        $acceptOrder.click(function(e) {
+            e.preventDefault();
+            $.get('/orders/' +  orderId + '/accept' , function (data) {
+                if(data.success) {
+                    $('.can-edit-order').slideToggle(function() {
+                        $processingOrder.slideDown();
+                        var checkOrder = setInterval(function () {
+                            checkOrderStatus();
+                            clearInterval(checkOrder);
+                        }, 4000);
+                    });
+                }
+            });
+        });
     }
 
     if ($('body.orders').length && typeof(substitutionOrderId) !== 'undefined') {

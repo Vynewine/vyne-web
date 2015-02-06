@@ -13,7 +13,7 @@ class Admin::OrdersController < ApplicationController
                     :refresh_all => 'update',
                     :notification => 'update',
                     :order_counts => 'read',
-                    :increment_cancel_count => 'update'
+                    :increment_notification_count => 'update'
 
 
   # GET /orders
@@ -39,9 +39,14 @@ class Admin::OrdersController < ApplicationController
       if params[:status] == Status.statuses[:cancelled].to_s
         session[:cancel_count] = 0
       end
+
+      if params[:status] == Status.statuses[:payment_failed].to_s
+        session[:payment_failed_count] = 0
+      end
     end
 
     @actionable_order_counts[:cancel_count] = session[:cancel_count].blank? ? 0 : session[:cancel_count]
+
   end
 
   def show
@@ -198,8 +203,15 @@ class Admin::OrdersController < ApplicationController
     render json: {success: true, actionable_order_counts: actionable_order_counts}, status: :ok
   end
 
-  def increment_cancel_count
-    session[:cancel_count] = session[:cancel_count].blank? ? 1 : session[:cancel_count] += 1
+  def increment_notification_count
+
+    case params[:notification]
+      when 'cancel'
+        session[:cancel_count] = session[:cancel_count].blank? ? 1 : session[:cancel_count] += 1
+      else
+        logger.warn 'Unknown notification'
+    end
+
     render json: {success: true}, status: :ok
   end
 

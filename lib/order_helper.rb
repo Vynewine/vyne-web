@@ -26,25 +26,25 @@ module OrderHelper
           order.charge_id = results[:data].id
         else
           response[:errors] = results[:errors]
+          log_error(response[:errors].join(', '))
           order.status_id = Status.statuses[:payment_failed]
           return response
         end
       end
-
-      unless order.charge_id.blank?
-        order.status_id = Status.statuses[:packing]
-        #TODO Need to handle errors here
-        CoordinateHelper.schedule_job(order)
-      end
-
     else
       message = "Can't charge already charged order: " + order.id.to_s
       response[:errors] << message
     end
 
+    unless order.charge_id.blank?
+      order.status_id = Status.statuses[:packing]
+      #TODO Need to handle errors here
+      CoordinateHelper.schedule_job(order)
+    end
+
     if order.save
       WebNotificationDispatcher.publish([order.warehouse.id], 'You have order(s) ready for packing', :packing_orders)
-      WebNotificationDispatcher.publish([order.warehouse.id], "Courier Job for order: #{order.id.to_s} created", :courier_job_created, 'admin')
+
     else
       response[:errors] << order.errors
     end

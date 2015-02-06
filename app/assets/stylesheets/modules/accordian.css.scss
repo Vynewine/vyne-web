@@ -87,6 +87,11 @@
                 font-size: 16px;
                 text-decoration: underline;
             }
+
+            .loading
+            {
+                background: url(asset-path('spinner-transparent.gif')) no-repeat center;
+            }
         }
 
         &.active {

@@ -98,7 +98,8 @@ class Order < ActiveRecord::Base
         :packing => 0,
         :advised => 0,
         :in_transit => 0,
-        :pickup => 0
+        :pickup => 0,
+        :payment_failed => 0
     }
 
     unless warehouses.blank? && !is_admin
@@ -108,7 +109,8 @@ class Order < ActiveRecord::Base
           Status.statuses[:packing],
           Status.statuses[:advised],
           Status.statuses[:in_transit],
-          Status.statuses[:pickup]
+          Status.statuses[:pickup],
+          Status.statuses[:payment_failed]
       ]
 
       if is_admin
@@ -129,6 +131,8 @@ class Order < ActiveRecord::Base
             counts[:in_transit] += 1
           when Status.statuses[:pickup]
             counts[:pickup] += 1
+          when Status.statuses[:payment_failed]
+            counts[:payment_failed] += 1
         end
       end
     end

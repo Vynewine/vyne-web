@@ -9,11 +9,28 @@
   <div class="order-confirmation-content wrapper">
 
     <% if @order.status_id == Status.statuses[:cancelled] || params[:cancelled] == 'true' %>
-        <div class="cancel" style="padding: 20px;text-align: center">
-        Your order has been cancelled.
+        <div class="cancel" style="padding: 20px;text-align: center;">
+          Your order has been cancelled.
         </div>
     <% else %>
         <ul class="accordian" id="order-views">
+          <li class="accordian-item
+        <% if @order.status_id == Status.statuses[:payment_failed] %> active
+        <% end %>" id="order-payment-failed">
+            <div class="line"></div>
+
+            <div class="accordian-item-content">
+
+              <h3>
+                Payment for your order #<%= @order.id.to_s %> failed
+                <br/>
+                Please contact Vyne at:
+                <br/>
+                020 3355 4338
+              </h3>
+
+            </div>
+          </li>
           <li class="accordian-item
         <% if @order.status_id == Status.statuses[:pending] %> active
         <% end %>" id="order-placed">
@@ -106,7 +123,6 @@
         </ul>
     <% end %>
   </div>
-
 </div>
 
 <script>

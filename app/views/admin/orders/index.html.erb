@@ -8,7 +8,7 @@
           <% end %> >
             <a href="<%= admin_orders_path(:status => Status.statuses[:pending]) %>">
               Pending <span id="badge-pending" class="label label-success label-as-badge"
-                    style="display: <%= @actionable_order_counts[:pending] == 0 ? 'none' : 'inline' %>;"><%= @actionable_order_counts[:pending] %></span>
+                            style="display: <%= @actionable_order_counts[:pending] == 0 ? 'none' : 'inline' %>;"><%= @actionable_order_counts[:pending] %></span>
             </a>
           </li>
           <li
@@ -16,7 +16,7 @@
           <% end %>>
             <a href="<%= admin_orders_path(:status => Status.statuses[:advised]) %>">
               Advised <span id="badge-advised" class="label label-default label-as-badge"
-                        style="display: <%= @actionable_order_counts[:advised] == 0 ? 'none' : 'inline' %>;"><%= @actionable_order_counts[:advised] %></span>
+                            style="display: <%= @actionable_order_counts[:advised] == 0 ? 'none' : 'inline' %>;"><%= @actionable_order_counts[:advised] %></span>
             </a>
           </li>
           <li
@@ -24,7 +24,7 @@
           <% end %>>
             <a href="<%= admin_orders_path(:status => Status.statuses[:packing]) %>">
               Packing <span id="badge-packing" class="label label-success label-as-badge"
-                        style="display: <%= @actionable_order_counts[:packing] == 0 ? 'none' : 'inline' %>;"><%= @actionable_order_counts[:packing] %></span>
+                            style="display: <%= @actionable_order_counts[:packing] == 0 ? 'none' : 'inline' %>;"><%= @actionable_order_counts[:packing] %></span>
             </a>
           </li>
           <li
@@ -32,7 +32,7 @@
           <% end %> >
             <a href="<%= admin_orders_path(:status => Status.statuses[:pickup]) %>">
               Pickup <span id="badge-pickup" class="label label-default label-as-badge"
-                        style="display: <%= @actionable_order_counts[:pickup] == 0 ? 'none' : 'inline' %>;"><%= @actionable_order_counts[:pickup] %></span>
+                           style="display: <%= @actionable_order_counts[:pickup] == 0 ? 'none' : 'inline' %>;"><%= @actionable_order_counts[:pickup] %></span>
             </a>
           </li>
           <li
@@ -40,7 +40,7 @@
           <% end %>>
             <a href="<%= admin_orders_path(:status => Status.statuses[:in_transit]) %>">
               Transit <span id="badge-in-transit" class="label label-default label-as-badge"
-                        style="display: <%= @actionable_order_counts[:in_transit] == 0 ? 'none' : 'inline' %>;"><%= @actionable_order_counts[:in_transit] %></span>
+                            style="display: <%= @actionable_order_counts[:in_transit] == 0 ? 'none' : 'inline' %>;"><%= @actionable_order_counts[:in_transit] %></span>
             </a>
           </li>
           <li
@@ -53,14 +53,18 @@
           <% end %>>
             <a href="<%= admin_orders_path(:status => Status.statuses[:cancelled]) %>">
               Cancelled <span id="badge-cancelled" class="label label-warning label-as-badge"
-                            style="display: <%= @actionable_order_counts[:cancel_count] == 0 ? 'none' : 'inline' %>;"><%= @actionable_order_counts[:cancel_count] %></span>
+                              style="display: <%= @actionable_order_counts[:cancel_count] == 0 ? 'none' : 'inline' %>;"><%= @actionable_order_counts[:cancel_count] %></span>
             </a>
           </li>
           <% if user_is_admin %>
               <li
               <% if params[:status] == Status.statuses[:payment_failed].to_s %> class="active"
               <% end %>>
-                <%= link_to 'Payment Failed', admin_orders_path(:status => Status.statuses[:payment_failed]) %>
+                <a href="<%= admin_orders_path(:status => Status.statuses[:payment_failed]) %>">
+                  Payment Failed <span id="badge-payment-failed" class="label label-danger label-as-badge"
+                                       style="display: <%= @actionable_order_counts[:payment_failed] == 0 ? 'none' : 'inline' %>;"
+                ><%= @actionable_order_counts[:payment_failed] %></span>
+                </a>
               </li>
               <li
               <% if params[:status] == Status.statuses[:created].to_s %> class="active"
@@ -164,5 +168,5 @@
 
 
 <script>
-  var currentStatus = <%= params[:status].blank? ? 1 : params[:status] %>;
+    var currentStatus = <%= params[:status].blank? ? 1 : params[:status] %>;
 </script>

@@ -76,13 +76,13 @@ module CoordinateHelper
                                  'customerPhoneNumber' => order.client.mobile
                              })
 
-    Rails.logger.debug result
-
     body = JSON.parse(result.body)
 
     order.delivery_token = body['id']
     order.delivery_status = body
     order.delivery_provider = 'google_coordinate'
+
+    WebNotificationDispatcher.publish([order.warehouse.id], "Courier Job for order: #{order.id.to_s} created", :courier_job_created, 'admin')
   end
 
   def self.cancel_job(order)

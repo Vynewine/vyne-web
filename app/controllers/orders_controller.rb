@@ -143,17 +143,14 @@ class OrdersController < ApplicationController
     end
 
     if @order.blank?
-      render :status => :forbidden, :text => 'Forbidden fruit'
+      render :json => {:errors => ['Forbidden fruit']}, :status => :forbidden
       return
     end
 
     Resque.remove_delayed(OrderConfirmation, :order_id => @order.id, :admin => @order.client.admin?)
-    results = OrderHelper.confirm_order(@order, @order.client.admin?)
+    Resque.enqueue(OrderConfirmation, :order_id => @order.id, :admin => @order.client.admin?)
 
-    if results[:errors].blank?
-      redirect_to order_path(@order)
-    else
-      @errors = results[:errors]
-    end
+    render :json => {:success => true}
+
   end
 end

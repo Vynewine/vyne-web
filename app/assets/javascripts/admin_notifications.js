@@ -14,7 +14,7 @@ var setupNotifications = function () {
         var data = JSON.parse(message.data);
 
         if (data.type === 'cancel_orders') {
-            $.post('/admin/orders/increment_cancel_count', function(){
+            $.post('/admin/orders/increment_notification_count', { notification: 'cancel' }, function(){
                 $(document).trigger("orderChange", [data.type]);
             });
         }
@@ -43,6 +43,10 @@ var setupNotifications = function () {
                     visual_type = 'warning';
                 }
 
+                if (data.type === 'payment_failed') {
+                    visual_type = 'danger';
+                }
+
                 var notification = $.growl({
                     message: styleMessage(data.text)
                 }, {
@@ -61,6 +65,7 @@ var setupNotifications = function () {
             case 'new_order':
             case 'packing_orders':
             case 'order_change':
+            case 'payment_failed':
                 $(document).trigger("orderChange", [data.type]);
                 break;
 

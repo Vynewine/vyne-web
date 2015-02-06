@@ -22,49 +22,25 @@ var updateOrderBadgeCounts = function (type) {
             var $inTransit = $('#badge-in-transit');
             var $pickup = $('#badge-pickup');
             var $cancelled = $('#badge-cancelled');
+            var $paymentFailed = $('#badge-payment-failed');
 
-            if (data.actionable_order_counts.pending > 0) {
-                $pending.css('display', 'inline');
-                $pending.text(data.actionable_order_counts.pending);
-            } else {
-                $pending.css('display', 'none');
-            }
-
-            if (data.actionable_order_counts.packing > 0) {
-                $packing.css('display', 'inline');
-                $packing.text(data.actionable_order_counts.packing);
-            } else {
-                $packing.css('display', 'none');
-            }
-
-            if (data.actionable_order_counts.advised > 0) {
-                $advised.css('display', 'inline');
-                $advised.text(data.actionable_order_counts.advised);
-            } else {
-                $advised.css('display', 'none');
-            }
-
-            if (data.actionable_order_counts.in_transit > 0) {
-                $inTransit.css('display', 'inline');
-                $inTransit.text(data.actionable_order_counts.in_transit);
-            } else {
-                $inTransit.css('display', 'none');
-            }
-
-            if (data.actionable_order_counts.pickup > 0) {
-                $pickup.css('display', 'inline');
-                $pickup.text(data.actionable_order_counts.pickup);
-            } else {
-                $pickup.css('display', 'none');
-            }
-
-            if (data.actionable_order_counts.cancel_count > 0) {
-                $cancelled.css('display', 'inline');
-                $cancelled.text(data.actionable_order_counts.cancel_count);
-            } else {
-                $cancelled.css('display', 'none');
-            }
+            updateBadge(data.actionable_order_counts.pending, $pending);
+            updateBadge(data.actionable_order_counts.packing, $packing);
+            updateBadge(data.actionable_order_counts.advised, $advised);
+            updateBadge(data.actionable_order_counts.in_transit, $inTransit);
+            updateBadge(data.actionable_order_counts.pickup, $pickup);
+            updateBadge(data.actionable_order_counts.cancel_count, $cancelled);
+            updateBadge(data.actionable_order_counts.payment_failed, $paymentFailed);
         });
+    }
+};
+
+var updateBadge = function(count, control) {
+    if (count > 0) {
+        control.css('display', 'inline');
+        control.text(count);
+    } else {
+        control.css('display', 'none');
     }
 };
 

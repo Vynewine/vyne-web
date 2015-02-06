@@ -2,12 +2,18 @@
 
     <p class="note">An expert at <strong><%= @order.warehouse.title %></strong> has chosen your wine.</p>
     <% if @order.order_change_timeout_seconds > 0 %>
-        <p class="note">Please review your order.</p>
-        <% if @order.can_request_substitution? %>
-            <p class="note">You may request changes to the selection below.</p>
-        <% end %>
-        <div style="margin-top: 10px; margin-bottom: 10px">
-          <a href="/orders/<%= @order.id %>/accept" class="btn btn__full-width" id="accept-order">Accept Order</a>
+        <div class="can-edit-order">
+          <p class="note">Please review your order.</p>
+          <% if @order.can_request_substitution? %>
+              <p class="note">You may request changes to the selection below.</p>
+          <% end %>
+          <div style="margin-top: 10px; margin-bottom: 10px">
+            <a href="#" class="btn btn__full-width" id="accept-order">Accept Order</a>
+          </div>
+        </div>
+        <div class="processing-order" style="display:none;">
+          <div class="note">Thank you for accepting your order.</div>
+          <div class="loading" style="height: 45px"></div>
         </div>
     <% else %>
         <hr class="divider">
@@ -42,6 +48,9 @@
               <span>Appellation:</span> <%= item.wine.appellation.name %><%= item.wine.appellation.classification.blank? ? '' : " (#{item.wine.appellation.classification})" %>
               <br/>
           <% end %>
+          <% unless item.advisory_note.blank? %>
+            <span>Merchant Note:</span> <%= item.advisory_note %><br/>
+          <% end %>
           <span>Price:</span> £<%= '%.2f' % item.price %>
         </div>
 
@@ -54,26 +63,27 @@
     <div class="total">Total (inc. delivery and VAT): £<%= '%.2f' % @order.total_price %></div>
     <hr class="divider">
     <% if @order.order_change_timeout_seconds > 0 %>
-
-        <div class="total" style="margin-bottom: 10px;">
-          <div id="counter-text" style="display: none; text-align: center"> This order will be scheduled for delivery
-            in:
-            <span id="counter"></span>
-          </div>
+    <div class="can-edit-order">
+      <div class="total" style="margin-bottom: 10px;">
+        <div id="counter-text" style="display: none; text-align: center"> This order will be scheduled for delivery
+          in:
+          <span id="counter"></span>
         </div>
+      </div>
 
-        <div style="margin-top: 10px">
-          <% if @order.can_request_substitution? %>
-              <a href="/orders/<%= @order.id %>/substitution_request" class="btn btn__small btn__full-width btn__gray">
-                Change wine choice
-              </a>
-          <% end %>
-        </div>
+      <div style="margin-top: 10px">
+        <% if @order.can_request_substitution? %>
+            <a href="/orders/<%= @order.id %>/substitution_request" class="btn btn__small btn__full-width btn__gray">
+              Change wine choice
+            </a>
+        <% end %>
+      </div>
 
-        <div style="margin-top: 10px">
-          <a href="/orders/<%= @order.id %>/cancellation_request" class="btn btn__small btn__full-width btn__gray">Cancel
-            Order</a>
-        </div>
+      <div style="margin-top: 10px">
+        <a href="/orders/<%= @order.id %>/cancellation_request" class="btn btn__small btn__full-width btn__gray">Cancel
+          Order</a>
+      </div>
+    </div>
 
     <% end %>
 <% end %>
