@@ -1,81 +1,70 @@
 <%= form_for([:admin, @warehouse]) do |f| %>
-    <% if @warehouse.errors.any? %>
-        <div id="error_explanation">
-          <h2><%= pluralize(@warehouse.errors.count, "error") %> prohibited this warehouse from being saved:</h2>
 
-          <ul>
-            <% @warehouse.errors.full_messages.each do |message| %>
-                <li><%= message %></li>
-            <% end %>
-          </ul>
-        </div>
-    <% end %>
-
-    <div class="field">
+    <div class="form-group">
       <%= f.label :title %>
       <br/>
-      <%= f.text_field :title %>
+      <%= f.text_field :title, :class => 'form-control' %>
     </div>
-    <div class="field">
+    <div class="form-group">
       <%= f.label :email %>
       <br/>
-      <%= f.text_field :email %>
+      <%= f.text_field :email, :class => 'form-control' %>
     </div>
-    <div class="field">
+    <div class="form-group">
       <%= f.label :phone %>
       <br/>
-      <%= f.text_field :phone %>
+      <%= f.text_field :phone, :class => 'form-control' %>
     </div>
 
-    <div class="field">
+    <div class="form-group">
       <%= f.label :active %>
       <br/>
       <%= f.check_box :active %>
     </div>
 
-    <div class="field">
+    <div class="form-group">
       <%= f.label :address_id %>
       <br/>
       <%= f.fields_for :address do |a| %>
-          <div class="field">
+          <div class="form-group">
             <%= a.label :line_1 %>
             <br/>
-            <%= a.text_field :line_1 %>
+            <%= a.text_field :line_1, :class => 'form-control' %>
           </div>
-          <div class="field">
+          <div class="form-group">
             <%= a.label :line_2 %>
             <br/>
-            <%= a.text_field :line_2 %>
+            <%= a.text_field :line_2, :class => 'form-control' %>
           </div>
-          <div class="field">
+          <div class="form-group">
             <%= a.label :postcode %>
             <br/>
-            <%= a.text_field :postcode %>
+            <%= a.text_field :postcode, :class => 'form-control' %>
           </div>
-          <div class="field">
+          <div class="form-group">
             <%= a.label :longitude %>
             <br/>
-            <%= a.text_field :longitude %>
+            <%= a.text_field :longitude, :class => 'form-control' %>
           </div>
-          <div class="field">
+          <div class="form-group">
             <%= a.label :latitude %>
             <br/>
-            <%= a.text_field :latitude %>
+            <%= a.text_field :latitude, :class => 'form-control' %>
           </div>
       <% end %>
     </div>
 
     <div class="field">
-      Users
+      <strong>Users</strong>
 
       <% unless @warehouse.users.blank? %>
-          <table border="1" class="list-table">
+          <table border="1" class="table table-bordered">
             <thead>
             <tr>
               <th>Id</th>
               <th>E-mail</th>
               <th>Name</th>
-              <th></th>
+              <th>Unassign</th>
             </tr>
             </thead>
 
@@ -86,8 +75,10 @@
                   <td><%= user.email %></td>
                   <td><%= user.name %></td>
                   <td class="button-wrapper">
-                    <%= link_to admin_warehouse_remove_user_path(@warehouse, :user_id => user.id), method: :post, data: {confirm: 'Are you sure you want to disassociate user:' + user.name + ' from this warehouse?'} do %>
-                        <i class="flaticon stroke trash-2"></i>
+                    <%= link_to admin_warehouse_remove_user_path(@warehouse, :user_id => user.id), method: :post,
+                                data: {confirm: 'Are you sure you want to disassociate user:' + user.name + ' from this warehouse?'},
+                                class: 'btn btn-default' do %>
+                        <i class="fa fa-times"></i>
                     <% end %>
                   </td>
                 </tr>
@@ -97,7 +88,7 @@
       <% end %>
 
       <p>
-        Assign user to this warehouse<br/>
+        <strong>Assign user to this warehouse</strong><br/>
 
         <%
            users_options = []
@@ -107,69 +98,97 @@
              end
            end
         %>
-        <%= select_tag 'user_id', options_for_select(users_options), :prompt => 'Assign User' %>
+        <%= select_tag 'user_id', options_for_select(users_options), :prompt => 'Assign User', :class => 'form-control' %>
 
       </p>
     </div>
 
-    <div class="field">
+
+
+    <div class="form-group">
+      <%= f.label :agenda %>
+      <br/>
+
+      <table border="1" class="table table-bordered">
+        <thead>
+        <tr>
+          <th>Day</th>
+          <th>Opens Today</th>
+          <th>Opening</th>
+          <th>Closing</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <% if @agendas %>
+            <% agendaCounter = 0 %>
+
+            <% @agendas.each do |a| %>
+                <input type="hidden" name="warehouse[agendas_attributes][<%= agendaCounter %>][id]" value="<%= a.id %>"/>
+                <input type="hidden" name="warehouse[agendas_attributes][<%= agendaCounter %>][day]" value="<%= a.day %>"/>
+
+                <tr>
+                  <td>
+                    <strong><%= a.day_name %></strong>
+                  </td>
+                  <td>
+
+                    <input type="hidden" name="warehouse[agendas_attributes][<%= agendaCounter %>][opens_today]" value="false"/>
+                    <input type="checkbox" name="warehouse[agendas_attributes][<%= agendaCounter %>][opens_today]" <%= a.opens_today ? 'checked' : '' %>>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" name="warehouse[agendas_attributes][<%= agendaCounter %>][opening]" value="<%= a.opening %>"/>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" name="warehouse[agendas_attributes][<%= agendaCounter %>][closing]" value="<%= a.closing %>"/>
+                  </td>
+                </tr>
+
+                <% agendaCounter += 1 %>
+            <% end %>
+        <% else %>
+            <% for i in 0..6 do %>
+                <input type="hidden" name="warehouse[agendas_attributes][<%= i %>][day]" value="<%= i %>"/>
+                <tr>
+                  <td>
+                    <%= Date::DAYNAMES[i] %>
+                  </td>
+                  <td>
+                    <input type="checkbox" name="warehouse[agendas_attributes][<%= i %>][opens_today]" checked>
+                  </td>
+                  <td>
+                    <input type="text" name="warehouse[agendas_attributes][<%= i %>][opening]" value="900"/>
+                  </td>
+                  <td>
+                    <input type="text" name="warehouse[agendas_attributes][<%= i %>][closing]" value="1800"/>
+                  </td>
+                  </tr>
+            <% end %>
+        <% end %>
+
+        </tbody>
+      </table>
+    </div>
+    <div class="form-group">
       <%= f.label :delivery_area %>
       <br/>
-      <textarea id="area" name="warehouse[delivery_area]" cols="50" rows="20"></textarea>
+      <textarea id="area" name="warehouse[delivery_area]" cols="50" rows="20" class="form-control lat-lng"></textarea>
       <script>
           var area = '<%= @warehouse.area %>';
           area = area.replace('[[', '[[\n');
           area = area.replace(']]]', ']\n]]');
-          area = area.replace(/],/g, '],\n');
+
           $('#area').val(area);
       </script>
     </div>
-
-    <div class="field">
-      <%= f.label :agenda %>
-      <br/>
-      <% if @agendas %>
-          <% agendaCounter = 0 %>
-
-
-          <% @agendas.each do |a| %>
-              <h4><%= a.day_name %></h4>
-              <input type="hidden" name="warehouse[agendas_attributes][<%= agendaCounter %>][id]" value="<%= a.id %>"/>
-              <input type="hidden" name="warehouse[agendas_attributes][<%= agendaCounter %>][day]" value="<%= a.day %>"/>
-
-              <div class="field">
-                <label for="warehouse[agendas_attributes][<%= agendaCounter %>][opening]">Opening</label><br/>
-                <input type="text" name="warehouse[agendas_attributes][<%= agendaCounter %>][opening]" value="<%= a.opening %>"/>
-              </div>
-              <div class="field">
-                <label for="warehouse[agendas_attributes][<%= agendaCounter %>][closing]">Closing</label><br/>
-                <input type="text" name="warehouse[agendas_attributes][<%= agendaCounter %>][closing]" value="<%= a.closing %>"/>
-              </div>
-              <% agendaCounter += 1 %>
-          <% end %>
-      <% else %>
-          <% for i in 0..6 do %>
-              <h4><%= Date::DAYNAMES[i] %></h4>
-              <input type="hidden" name="warehouse[agendas_attributes][<%= i %>][day]" value="<%= i %>"/>
-
-              <div class="field">
-                <label for="warehouse[agendas_attributes][<%= i %>][opening]">Opening</label><br/>
-                <input type="text" name="warehouse[agendas_attributes][<%= i %>][opening]" value="900"/>
-              </div>
-              <div class="field">
-                <label for="warehouse[agendas_attributes][<%= i %>][closing]">Closing</label><br/>
-                <input type="text" name="warehouse[agendas_attributes][<%= i %>][closing]" value="1800"/>
-              </div>
-          <% end %>
-      <% end %>
-    </div>
-    <div>
+    <div class="form-group">
       <p>
-        Update Shutl Record
+        <strong>Update Shutl Record on save </strong>
+          <br/>
         <%= check_box_tag 'update_shutl' %>
       </p>
     </div>
     <div class="actions">
-      <%= f.submit %>
+      <%= f.submit(:class => 'btn btn-success') %>
     </div>
 <% end %>

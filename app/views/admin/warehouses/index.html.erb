@@ -1,7 +1,10 @@
-<h1>Listing warehouses</h1>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Warehouses</h3>
+  </div>
 
-<table border="1" class="list-table">
-  <thead>
+  <table class="table table-bordered">
+    <thead>
     <tr>
       <th>Id</th>
       <th>Title</th>
@@ -10,48 +13,46 @@
       <th>Phone</th>
       <th>Address</th>
       <th>Registered with Shutl</th>
-      <th colspan="3"></th>
+      <th></th>
     </tr>
-  </thead>
+    </thead>
 
-  <tbody>
+    <tbody>
     <% @warehouses.each do |warehouse| %>
-      <tr>
-        <td><%= warehouse.id %></td>
-        <td><%= warehouse.title %></td>
-        <td><%= warehouse.active %></td>
-        <td><%= warehouse.email %></td>
-        <td><%= warehouse.phone %></td>
-        <td>
-          <% if warehouse.address %>
-          <%= warehouse.address.full %>
-          <% else %>
-          -
-          <% end %>
-        </td>
-        <td>
-          <%= warehouse.registered_with_shutl == true %>
-        </td>
-        <td class="button-wrapper">
-          <%= link_to admin_warehouse_path(warehouse) do %>
-            <i class="flaticon stroke zoom-1"></i>
-          <% end %>
-        </td>
-        <td class="button-wrapper">
-          <%= link_to edit_admin_warehouse_path(warehouse) do %>
-            <i class="flaticon stroke pencil-2"></i>
-          <% end %>
-        </td>
-        <td class="button-wrapper">
-          <%= link_to admin_warehouse_path(warehouse), method: :delete, data: { confirm: 'Are you sure?' } do %>
-            <i class="flaticon stroke trash-2"></i>
-          <% end %>
-        </td>
-      </tr>
+        <tr>
+          <td><%= warehouse.id %></td>
+          <td>
+            <%= link_to admin_warehouse_path(warehouse) do %>
+                <%= warehouse.title %>
+                <% end %>
+          </td>
+          <td><%= warehouse.active %></td>
+          <td><%= warehouse.email %></td>
+          <td><%= warehouse.phone %></td>
+          <td>
+            <% if warehouse.address %>
+                <%= warehouse.address.full %>
+            <% else %>
+                -
+            <% end %>
+          </td>
+          <td>
+            <%= warehouse.registered_with_shutl == true %>
+          </td>
+          <td class="button-wrapper">
+            <%= link_to admin_warehouse_path(warehouse), class: 'btn btn-default' do %>
+                <i class="glyphicon glyphicon-search"></i>
+            <% end %>
+          </td>
+        </tr>
     <% end %>
-  </tbody>
-</table>
 
-<br>
+    </tbody>
+  </table>
 
-<%= link_to 'New Warehouse', new_admin_warehouse_path %>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <%= link_to 'New Warehouse', new_admin_warehouse_path, :class => 'btn btn-primary' %>
+    </li>
+  </ul>
+</div>

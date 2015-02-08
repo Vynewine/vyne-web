@@ -1,16 +1,17 @@
-//= require jquery.typewatch
+//= require jquery
 //= require jquery_ujs
 //= require turbolinks
 //= require library
-//= require jquery.typewatch
 //= require vendor/leaflet-0.7.3/leaflet.js
 //= require vendor/leaflet-plugins-1.2.0/layer/tile/Google
 //= require bootstrap-sprockets
 //= require local_time
 //= require bootstrap_growl/bootstrap-growl.min
-//= require admin_orders
 //= require reconnecting-websocket/reconnecting-websocket
-//= require admin_notifications
+//= require admin/orders
+//= require admin/notifications
+//= require admin/warehouses
+
 
 var advisor = advisor || null;
 
@@ -605,34 +606,5 @@ var adminReady = function () {
     }
 };
 
-var renderWarehouse = function () {
-    if ($('body.admin_warehouses').length) {
-
-        var map = L.map('map', { scrollWheelZoom: false}).setView([warehouseLatitude, warehouseLongitude], 12);
-
-        var gl = new L.Google('ROAD');
-        map.addLayer(gl);
-
-        var outside = [
-            [0, -90],
-            [0, 90],
-            [90, -90],
-            [90, 90]
-        ];
-
-        L.polygon([outside, deliveryArea]).addTo(map).setStyle(
-            {
-                color: '#009ee0',
-                opacity: 0.8,
-                weight: 2,
-                fillColor: '#e8f8ff',
-                fillOpacity: 0.45
-            });
-    }
-};
-
 $(document).ready(adminReady);
 $(document).on('page:load', adminReady);
-
-$(document).ready(renderWarehouse);
-$(document).on('page:load', renderWarehouse);

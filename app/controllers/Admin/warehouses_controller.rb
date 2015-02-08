@@ -7,6 +7,7 @@ class Admin::WarehousesController < ApplicationController
   before_action :authenticate_user!
   authorize_actions_for SupplierAuthorizer # Triggers user check
   before_action :set_warehouse, only: [:show, :edit, :update, :destroy]
+  authority_actions :shutl => 'read'
 
   # GET /warehouses
   # GET /warehouses.json
@@ -18,14 +19,6 @@ class Admin::WarehousesController < ApplicationController
   # GET /warehouses/1.json
   def show
     @agendas = @warehouse.agendas.order('day ASC')
-    if @warehouse.registered_with_shutl
-      shutl_info = get_warehouse_info_from_shutl(@warehouse)
-      if shutl_info[:errors].blank?
-        @shutl_info = shutl_info[:data].to_json
-      else
-        @shutl_info = shutl_info[:errors].join(', ')
-      end
-    end
   end
 
   # GET /warehouses/new
@@ -131,6 +124,18 @@ class Admin::WarehousesController < ApplicationController
     redirect_to edit_admin_warehouse_path(@warehouse)
   end
 
+  def shutl
+    @warehouse = Warehouse.find(params[:warehouse_id])
+    if @warehouse.registered_with_shutl
+      shutl_info = get_warehouse_info_from_shutl(@warehouse)
+      if shutl_info[:errors].blank?
+        @shutl_info = shutl_info[:data].to_json
+      else
+        @shutl_info = shutl_info[:errors].join(', ')
+      end
+    end
+  end
+
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_warehouse
@@ -145,7 +150,7 @@ class Admin::WarehousesController < ApplicationController
         :phone,
         :active,
         address_attributes: [:id, :line_1, :postcode, :line_2, :company_name, :longitude, :latitude],
-        agendas_attributes: [:id, :day, :opening, :closing]
+        agendas_attributes: [:id, :day, :opening, :closing, :opens_today]
     )
   end
 

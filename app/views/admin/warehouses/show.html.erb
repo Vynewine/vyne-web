@@ -1,101 +1,150 @@
-<% content_for :head do %>
-    <script src="https://maps.google.com/maps/api/js?v=3&sensor=false"></script>
-<% end %>
+<div class="warehouse-details"></div>
 
-<p>
-  <strong>Title:</strong>
-  <%= @warehouse.title %>
-</p>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Warehouse Details</h3>
+  </div>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-xs-6">
+          <strong>Title:</strong>
+          <%= @warehouse.title %>
+        </div>
+        <div class="col-xs-6">
+          <strong>Active</strong>
+          <%= @warehouse.active %>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-xs-6">
+          <strong>Email:</strong>
+          <%= @warehouse.email %>
+        </div>
+        <div class="col-xs-6">
+          <strong>Phone:</strong>
+          <%= @warehouse.phone %>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-xs-6">
+          <strong>Address:</strong>
+          <% unless @warehouse.address.blank? %>
+              <%= link_to admin_address_path(@warehouse.address) do %>
+                  <%= @warehouse.address.line_1 %>
+                  <%= @warehouse.address.line_2 %>
+                  <%= @warehouse.address.postcode %>
+              <% end %>
 
-<p>
-  <strong>Active</strong>
-  <%= @warehouse.active %>
-</p>
+              <% unless @warehouse.address.coordinates.blank? %>
+                  (<%= 'lat/lng: ' + @warehouse.address.latitude.to_s + ', ' + @warehouse.address.longitude.to_s %>)
+              <% end %>
+          <% end %>
+        </div>
+        <div class="col-xs-6">
+          <strong>Users:</strong><br/>
+          <% if @warehouse.users.blank? %>
+              <strong>No users assigned to this warehouse</strong>
+          <% else %>
+              <% @warehouse.users.each do |user| %>
+                  <div>
+                    <%= link_to admin_user_path(user) do %>
+                        <%= user.name %> - <%= user.email %>
+                    <% end %>
+                  </div>
+              <% end %>
+          <% end %>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Delivery Hours:</strong>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <% @agendas.each do |agenda| %>
+              <%= agenda.day_name %>:
+              <% if agenda.opens_today %>
+                  <%= agenda.opening_time %> - <%= agenda.closing_time %>
+              <% else %>
+                    Closed
+              <% end %>
+              <br/>
+          <% end %>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Delivery Area</strong>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
 
-<p>
-  <strong>Email:</strong>
-  <%= @warehouse.email %>
-</p>
+        <% if @warehouse.delivery_area.blank? || @warehouse.address.blank? %>
+            <div class="col-md-12 delivery-map">
+              Not Set
+            </div>
+        <% else %>
+            <div class="col-md-12 delivery-map" style="margin: -15px 0 -10px 0">
+              <div id="map" style="width: 100%; height: 500px;"></div>
+              <script>
+                  var warehouseLatitude = <%= @warehouse.address.latitude %>;
+                  var warehouseLongitude = <%= @warehouse.address.longitude %>;
+                  var deliveryArea = [<% @warehouse.delivery_area.exterior_ring.points.each do |point| %> [<%= point.y %>, <%= point.x %>], <% end %>];
+              </script>
+            </div>
+        <% end %>
 
-<p>
-  <strong>Phone:</strong>
-  <%= @warehouse.phone %>
-</p>
-
-<p>
-  <strong>Address:</strong>
-  <% unless @warehouse.address.blank? %>
-      <%= @warehouse.address.line_1 %>
-      <%= @warehouse.address.line_2 %>
-      <%= @warehouse.address.postcode %>
-      <% unless @warehouse.address.coordinates.blank? %>
-          (<%= 'lat/lng: ' + @warehouse.address.latitude.to_s + ', ' + @warehouse.address.longitude.to_s %>)
-      <% end %>
-  <% end %>
-</p>
-
-<p>
-  <strong>Users:</strong><br/>
-  <% if @warehouse.users.blank? %>
-      No users assigned to this warehouse
-  <% else %>
-      <% @warehouse.users.each do |user| %>
-          <%= user.name %> - <%= user.email %>
-      <% end %>
-  <% end %>
-</p>
-
-<p>
-  <strong>Agenda:</strong>
-  <% @agendas.each do |agenda| %>
-    <dl>
-      <dt><%= agenda.day_name %></dt>
-      <dd><%= agenda.opening_time %> - <%= agenda.closing_time %></dd>
-    </dl>
-<% end %>
-</p>
-
-<section>
-  <div class="row">
-    <div class="col-md-12">
-      <strong>Delivery Area</strong>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-xs-12">
+          <strong>Shutl Info</strong>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-xs-12">
+          <% if @warehouse.registered_with_shutl %>
+              <%= link_to 'Shutl Info', admin_warehouse_shutl_path(@warehouse), class: 'btn btn-default' %>
+          <% else %>
+              Not Registered with Shutl. Update Warehouse to register it.
+          <% end %>
+        </div>
+      </div>
+    </li>
+  </ul>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-xs-6">
+        <%= link_to admin_warehouses_path, class: 'btn btn-default' do %>
+            <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back To Warehouses
+        <% end %>
+        <%= link_to edit_admin_warehouse_path(@warehouse), class: 'btn btn-default' do %>
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+        <% end %>
+      </div>
+      <div class="col-xs-6 text-right">
+        <%= link_to admin_warehouse_path(@warehouse), method: :delete, data: {confirm: 'Are you sure?'}, class: 'btn btn-danger' do %>
+            <i class="glyphicon glyphicon-trash"></i>
+        <% end %>
+      </div>
     </div>
   </div>
+</div>
 
-  <div class="row">
-    <div class="col-md-12 delivery-map">
-      <% if @warehouse.delivery_area.blank? || @warehouse.address.blank? %>
-          Not Set
-      <% else %>
-          <div id="map" style="width: 100%; height: 500px;"></div>
-          <script>
-              var warehouseLatitude = <%= @warehouse.address.latitude %>;
-              var warehouseLongitude = <%= @warehouse.address.longitude %>;
-              var deliveryArea = [<% @warehouse.delivery_area.exterior_ring.points.each do |point| %> [<%= point.y %>, <%= point.x %>], <% end %>];
-          </script>
-      <% end %>
-    </div>
-  </div>
-</section>
-<p>
-  <strong>Shutl Info</strong>
-
-  Registered with Shutl: <%= @warehouse.registered_with_shutl == true %>
-
-  <% if @warehouse.registered_with_shutl %>
-      <% unless @shutl_info.blank? %>
-        <div id="shutl-info" style="white-space: pre; font-family: monospace;"></div>
-        <script>
-            var shutlInfo = JSON.parse('<%= @shutl_info.html_safe %>');
-            $('#shutl-info').text(JSON.stringify(shutlInfo, null, 4));
-        </script>
-    <% end %>
-
-
-<% else %>
-    Not Registered with Shutl. Update Warehouse to register it.
-<% end %>
-</p>
-
-<%= link_to 'Edit', edit_admin_warehouse_path(@warehouse) %>
-<%= link_to 'Back', admin_warehouses_path %>

@@ -126,6 +126,7 @@ Rails.application.routes.draw do
     resources :addresses
     resources :warehouses do
       post :remove_user
+      get :shutl
     end
     resources :orders do
       post 'cancel'

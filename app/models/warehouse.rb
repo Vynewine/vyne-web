@@ -37,7 +37,10 @@ class Warehouse < ActiveRecord::Base
       agenda = self.agendas.select { |agenda| agenda.day == local_time.wday }.first
       if agenda.blank?
         false
+      elsif !agenda.opens_today
+        false
       else
+
         # get date time for agenda
         # trick is to use current local date and agenda's time
         agenda_open_time = Time.parse(agenda.opening_time)
@@ -84,6 +87,72 @@ class Warehouse < ActiveRecord::Base
       closing_time = Time.parse(agenda.closing_time)
       "#{closing_time.hour < 10 ? '0' + closing_time.hour.to_s : closing_time.hour.to_s}:#{closing_time.min < 10 ? '0' + closing_time.min.to_s : closing_time.min.to_s}"
     end
+  end
+
+  def opens_today
+    agenda = self.agendas.select { |agenda| agenda.day == local_time.wday }.first
+    if agenda.blank?
+      false
+    else
+      if agenda.opens_today
+        closing_time = Time.parse(today_closing_time)
+        if local_time < closing_time
+          true
+        else
+          false
+        end
+      else
+        false
+      end
+    end
+  end
+
+  def next_open_day
+    today = local_time.wday
+    if today == 6 # Saturday
+      next_day = 0 # Sunday
+    else
+      next_day = today + 1
+    end
+
+    7.times do
+      next_agenda = self.agendas.select { |agenda| agenda.day == next_day }.first
+
+      unless next_agenda.blank?
+        if next_agenda.opens_today
+          return next_agenda.day
+        end
+      end
+
+      next_day += 1
+      if next_day == 6
+        next_day = 0
+      end
+    end
+  end
+
+  def next_open_day_opening_time
+    agenda = self.agendas.select { |agenda| agenda.day == next_open_day }.first
+
+    if agenda.blank?
+      'N/A'
+    else
+      opening_time = Time.parse(agenda.opening_time)
+      "#{opening_time.hour < 10 ? '0' + opening_time.hour.to_s : opening_time.hour.to_s}:#{opening_time.min < 10 ? '0' + opening_time.min.to_s : opening_time.min.to_s}"
+    end
+
+  end
+
+  def next_open_day_closing_time
+    agenda = self.agendas.select { |agenda| agenda.day == next_open_day }.first
+
+    if agenda.blank?
+      'N/A'
+    else
+      opening_time = Time.parse(agenda.closing_time)
+      "#{opening_time.hour < 10 ? '0' + opening_time.hour.to_s : opening_time.hour.to_s}:#{opening_time.min < 10 ? '0' + opening_time.min.to_s : opening_time.min.to_s}"
+    end
+
   end
 
   def local_time
@@ -181,12 +250,7 @@ class Warehouse < ActiveRecord::Base
 
   # Find closest warehouse delivering to lat/lng area
   def self.closest_to(lat, lng)
-
-
     point = "'POINT(#{lng} #{lat})'"
-
-
-
     warehouses = Warehouse.find_by_sql("select w.* from warehouses w
                           join addresses a on w.address_id = a.id
                           where ST_Contains(w.delivery_area, #{point})

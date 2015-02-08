@@ -8,6 +8,6 @@ Rails.application.config.assets.version = '2.0'
 # Rails.application.config.assets.precompile += %w( search.js )
 Rails.application.config.assets.precompile += %w( admin.css )
 
-Rails.application.config.assets.precompile += %w( admin.js )
+Rails.application.config.assets.precompile += %w( admin/admin.js )
 
 Rails.application.config.assets.precompile += %w( aidani.css )

@@ -1,0 +1,43 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Shutl Info</h3>
+  </div>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-xs-12">
+          <% if @warehouse.registered_with_shutl %>
+              <% unless @shutl_info.blank? %>
+                  <div id="shutl-info" style="white-space: pre; font-family: monospace;"></div>
+                  <script>
+                      var shutlInfo = JSON.parse('<%= @shutl_info.html_safe %>');
+                      $('#shutl-info').text(JSON.stringify(shutlInfo, null, 4));
+                  </script>
+              <% end %>
+          <% else %>
+              Not Registered with Shutl. Update Warehouse to register it.
+          <% end %>
+        </div>
+      </div>
+    </li>
+  </ul>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-xs-6">
+        <%= link_to admin_warehouse_path(@warehouse), class: 'btn btn-default' do %>
+            <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back To Warehouse
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+

@@ -260,13 +260,13 @@ class WarehouseTest < ActiveSupport::TestCase
                                      :coordinates => 'POINT(-0.105019 51.517125)'
                                  })
     warehouse_01 = Warehouse.create!({
-                          :title => 'New Warehouse 1',
-                          :email => 'vyne@vyne.london',
-                          :phone => '07718225201',
-                          :address => address_01,
-                          :delivery_area => 'POLYGON((-0.105019 51.55330470820611, -0.04687851649324394 51.517110630598836, -0.10501899999999999 51.48094529179389, -0.16315948350675605 51.517110630598836))',
-                          :active => true
-                      })
+                                         :title => 'New Warehouse 1',
+                                         :email => 'vyne@vyne.london',
+                                         :phone => '07718225201',
+                                         :address => address_01,
+                                         :delivery_area => 'POLYGON((-0.105019 51.55330470820611, -0.04687851649324394 51.517110630598836, -0.10501899999999999 51.48094529179389, -0.16315948350675605 51.517110630598836))',
+                                         :active => true
+                                     })
 
     set_open_agenda(warehouse_01)
 
@@ -327,13 +327,13 @@ class WarehouseTest < ActiveSupport::TestCase
                                      :coordinates => 'POINT(-0.105019 51.517125)'
                                  })
     warehouse_01 = Warehouse.create!({
-                          :title => 'New Warehouse 1',
-                          :email => 'vyne@vyne.london',
-                          :phone => '07718225201',
-                          :address => address_01,
-                          :delivery_area => 'POLYGON((-0.105019 51.55330470820611, -0.04687851649324394 51.517110630598836, -0.10501899999999999 51.48094529179389, -0.16315948350675605 51.517110630598836))',
-                          :active => false
-                      })
+                                         :title => 'New Warehouse 1',
+                                         :email => 'vyne@vyne.london',
+                                         :phone => '07718225201',
+                                         :address => address_01,
+                                         :delivery_area => 'POLYGON((-0.105019 51.55330470820611, -0.04687851649324394 51.517110630598836, -0.10501899999999999 51.48094529179389, -0.16315948350675605 51.517110630598836))',
+                                         :active => false
+                                     })
 
     set_open_agenda(warehouse_01)
 
@@ -406,7 +406,6 @@ class WarehouseTest < ActiveSupport::TestCase
     set_open_agenda(far_warehouse)
 
 
-
     close_address = Address.create!({
                                         :line_1 => '41a Farringdon St',
                                         :postcode => 'EC4A 4AN',
@@ -432,6 +431,157 @@ class WarehouseTest < ActiveSupport::TestCase
     assert_equal(far_warehouse, found_far_warehouse.first)
 
   end
+
+  test 'Can get opening and closing times' do
+
+    warehouse = Warehouse.create!({
+                                      :title => 'Warehouse',
+                                      :email => 'warehouse@vyne.london',
+                                      :phone => '07718225201',
+                                      :address => addresses(:one)
+                                  })
+    Agenda.create!({
+                       :day => Date.today.wday,
+                       :opening => 1030,
+                       :closing => 2220,
+                       :warehouse => warehouse
+                   })
+
+    assert_equal('10:30', warehouse.today_opening_time)
+    assert_equal('22:20', warehouse.today_closing_time)
+
+
+  end
+
+  test 'Warehouse opens today' do
+
+    time_now = Time.parse('1996/01/01 12:00') #Monday
+    Time.stubs(:now).returns(time_now)
+
+    warehouse = Warehouse.create!({
+                                      :title => 'Warehouse',
+                                      :email => 'warehouse@vyne.london',
+                                      :phone => '07718225201',
+                                      :address => addresses(:one)
+                                  })
+    Agenda.create!({
+                       :day => time_now.wday,
+                       :opening => 1030,
+                       :closing => 2220,
+                       :warehouse => warehouse,
+                       :opens_today => true
+
+                   })
+    assert_equal(true, warehouse.opens_today)
+
+  end
+
+  test 'Warehouse is closed today' do
+    time_now = Time.parse('1996/01/01 12:00') #Monday
+    Time.stubs(:now).returns(time_now)
+
+    warehouse = Warehouse.create!({
+                                      :title => 'Warehouse',
+                                      :email => 'warehouse@vyne.london',
+                                      :phone => '07718225201',
+                                      :address => addresses(:one)
+                                  })
+    Agenda.create!({
+                       :day => time_now.wday,
+                       :opening => 1030,
+                       :closing => 2220,
+                       :warehouse => warehouse,
+                       :opens_today => false
+
+                   })
+    assert_equal(false, warehouse.opens_today)
+  end
+
+  test 'Warehouse is closed today after opening hours' do
+    time_now = Time.parse('1996/01/01 22:21') #Monday
+    Time.stubs(:now).returns(time_now)
+
+    warehouse = Warehouse.create!({
+                                      :title => 'Warehouse',
+                                      :email => 'warehouse@vyne.london',
+                                      :phone => '07718225201',
+                                      :address => addresses(:one)
+                                  })
+    Agenda.create!({
+                       :day => time_now.wday,
+                       :opening => 1030,
+                       :closing => 2220,
+                       :warehouse => warehouse,
+                       :opens_today => true
+                   })
+    assert_equal(false, warehouse.opens_today)
+  end
+
+  test 'Next open day is Tuesday' do
+    time_now = Time.parse('1996/01/01 22:15') #Monday
+    Time.stubs(:now).returns(time_now)
+
+    warehouse = Warehouse.create!({
+                                      :title => 'Warehouse',
+                                      :email => 'warehouse@vyne.london',
+                                      :phone => '07718225201',
+                                      :address => addresses(:one)
+                                  })
+    Agenda.create!({
+                       :day => time_now.wday,
+                       :opening => 1030,
+                       :closing => 2220,
+                       :warehouse => warehouse,
+                       :opens_today => true
+                   })
+
+    Agenda.create!({
+                       :day => time_now.wday + 1,
+                       :opening => 1130,
+                       :closing => 2230,
+                       :warehouse => warehouse,
+                       :opens_today => true
+                   })
+
+    assert_equal(2, warehouse.next_open_day)
+    assert_equal('11:30', warehouse.next_open_day_opening_time)
+    assert_equal('22:30', warehouse.next_open_day_closing_time)
+  end
+
+
+  test 'Next open day is Monday' do
+    time_now = Time.parse('1996/01/07 10:00') #Sunday
+    Time.stubs(:now).returns(time_now)
+
+
+    warehouse = Warehouse.create!({
+                                      :title => 'Warehouse',
+                                      :email => 'warehouse@vyne.london',
+                                      :phone => '07718225201',
+                                      :address => addresses(:one)
+                                  })
+
+    Agenda.create!({
+                       :day => time_now.wday,
+                       :opening => 1030,
+                       :closing => 2220,
+                       :warehouse => warehouse,
+                       :opens_today => true
+                   })
+
+    Agenda.create!({
+                       :day => time_now.wday + 1,
+                       :opening => 1032,
+                       :closing => 2221,
+                       :warehouse => warehouse,
+                       :opens_today => true
+                   })
+
+    assert_equal(1, warehouse.next_open_day)
+    assert_equal('10:32', warehouse.next_open_day_opening_time)
+    assert_equal('22:21', warehouse.next_open_day_closing_time)
+  end
+
 
   def set_open_agenda(warehouse)
     Agenda.create!({

@@ -312,9 +312,20 @@ $(document).ready(function () {
                                     $slideable.addClass('slideup');
                                     $('.opening-times').hide();
                                     $notavailable.show();
-                                    var openingHours = '12:00 - 21:00';
-                                    if (closedWarehouses.length > 0) {
-                                        openingHours = closedWarehouses[0].opening_time + ' - ' + closedWarehouses[0].closing_time
+                                    var openingHours = '';
+                                    //TODO: Get ones open today if any show opening time
+                                    //TODO: If none open today say we don't deliver today: 'We do deliver but warehouse is closed today'
+                                    //TODO: If more then one warehouse from area but one is open today and other is not need to use opend one
+                                    var warehousesOpeningLaterToday = closedWarehouses.filter(function (warehouse) {
+                                        return warehouse.opens_today === true;
+                                    });
+
+                                    if (warehousesOpeningLaterToday.length > 0) {
+                                        openingHours = 'today between ' + warehousesOpeningLaterToday[0].opening_time + ' - ' + warehousesOpeningLaterToday[0].closing_time
+                                    } else {
+                                        if (delivery.next_opening) {
+                                            openingHours = delivery.next_opening.week_day + ' ' + delivery.next_opening.opening_time + ' - ' + delivery.next_opening.closing_time;
+                                        }
                                     }
                                     $('#opening-hours').text(openingHours);
                                     $('.closed').show();

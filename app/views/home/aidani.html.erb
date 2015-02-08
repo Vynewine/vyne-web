@@ -48,7 +48,7 @@
                       current_user.has_role?(:superadmin)
               %>
                   <li>
-                    <%= link_to 'Admin', admin_root_path %>
+                    <%= link_to 'Admin', admin_root_path, data: { no_turbolink: true } %>
                   </li>
               <% end %>
 
