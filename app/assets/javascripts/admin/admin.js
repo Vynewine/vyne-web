@@ -1,4 +1,4 @@
-//= require jquery
+//= require jquery.typewatch
 //= require jquery_ujs
 //= require turbolinks
 //= require library
