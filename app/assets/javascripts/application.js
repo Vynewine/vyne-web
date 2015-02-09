@@ -14,7 +14,6 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require library
-//= require map
 //= require forms
 //= require vendor/maskedinput
 //= require vendor/swiper_min
@@ -367,8 +366,7 @@ $(function () {
                 case 'matchingWine':
                     clearPreferences();
                     break;
-                default:
-                    console.log('Can\'t handle event:' + event.type);
+
             }
         }
     });
@@ -387,7 +385,7 @@ $(function () {
         }
 
     } catch (err) {
-        console.log(err);
+        //
     }
 
     $('#order input').keypress(function (e) {
@@ -525,7 +523,9 @@ $(function () {
         e.preventDefault();
         $($(this).attr('href')).parent().find('.tab').removeClass('active');
         $($(this).attr('href')).addClass('active');
-        if ($(this).attr('href') == '#with-food') $('.prefs-overview').show();
+        if ($(this).attr('href') == '#with-food') {
+            $('.prefs-overview').toggle();
+        }
     });
 
     $('.tab-list.tab-list__horizontal li a').click(function (e) {

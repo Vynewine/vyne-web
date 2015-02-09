@@ -59,14 +59,14 @@
   </div>
 
   <% if params[:controller] == 'shop' %>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYpKRqaf8jYVoxl39_Y1mXnHZ9sJbBTHY"></script>
+    <script src="<%= Rails.application.config.google_maps_api_link %>"></script>
     <script src="https://js.stripe.com/v2/"></script>
     <script>
       Stripe.setPublishableKey('<%= Rails.application.config.stripe_key_publishable %>');
     </script>
   <% end %>
-
   <%= javascript_include_tag 'application' %>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajaxtransport-xdomainrequest/1.0.2/jquery.xdomainrequest.min.js"></script>
 
   <div style="display:none;"><%= params[:controller] %></div>
 

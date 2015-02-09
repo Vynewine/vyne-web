@@ -134,4 +134,7 @@ Rails.application.configure do
   config.twilio_auth_token = ENV['TWILIO_AUTH_TOKEN']
   config.twilio_number = ENV['TWILIO_NUMBER']
 
+  # Google Maps API
+  config.google_maps_api_link = 'https://maps.google.com/maps/api/js?v=3&sensor=false&key=AIzaSyD1woZtsHcnxYsO3iwD7P6MwYPKgt3FYSw'
+
 end

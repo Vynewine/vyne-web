@@ -62,7 +62,7 @@ class Warehouse < ActiveRecord::Base
         )
 
         # compare agenda open/close to local time
-        (agenda_open < local_time && agenda_close > local_time)
+        (agenda_open <= local_time && agenda_close >= local_time)
       end
     end
   end

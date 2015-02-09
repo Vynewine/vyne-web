@@ -261,17 +261,20 @@ $(document).ready(function () {
                 $errorList.empty().hide();
             }
 
-            var mapUtil = new MapUtility();
+            var filteredCode = postcode.toUpperCase().replace(/[^A-Z0-9]/g, "");
 
-            mapUtil.locate(postcode, function (address) {
+            var geocoder = new google.maps.Geocoder();
 
-                if (address.status === 'OK') {
+            geocoder.geocode({'address': 'London+' + filteredCode + '+UK'}, function (results, status) {
+
+                if (status == google.maps.GeocoderStatus.OK) {
+
                     var warehouseResource = "/warehouses/addresses.json";
 
                     $.get(warehouseResource,
                         {
-                            lat: address.results[0].geometry.location.lat,
-                            lng: address.results[0].geometry.location.lng
+                            lat: results[0].geometry.location.lat(),
+                            lng: results[0].geometry.location.lng()
                         },
                         function (delivery) {
 
@@ -313,9 +316,7 @@ $(document).ready(function () {
                                     $('.opening-times').hide();
                                     $notavailable.show();
                                     var openingHours = '';
-                                    //TODO: Get ones open today if any show opening time
-                                    //TODO: If none open today say we don't deliver today: 'We do deliver but warehouse is closed today'
-                                    //TODO: If more then one warehouse from area but one is open today and other is not need to use opend one
+
                                     var warehousesOpeningLaterToday = closedWarehouses.filter(function (warehouse) {
                                         return warehouse.opens_today === true;
                                     });

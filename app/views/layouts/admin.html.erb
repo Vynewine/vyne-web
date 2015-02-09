@@ -6,9 +6,9 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
   <script>
       var admin = true;
-      var enableNotifications = <%= ENV['ENABLE_WEB_NOTIFICATION'] %>;
+      var enableNotifications = <%= ENV['ENABLE_WEB_NOTIFICATION'].blank? ? 'false' : 'true' %>;
   </script>
-  <script src="https://maps.google.com/maps/api/js?v=3&sensor=false&key=AIzaSyAYpKRqaf8jYVoxl39_Y1mXnHZ9sJbBTHY"></script>
+  <script src="<%= Rails.application.config.google_maps_api_link %>"></script>
   <%= javascript_include_tag 'admin/admin', 'jquery.tokeninput', 'data-turbolinks-track' => true %>
 
   <%= csrf_meta_tags %>
