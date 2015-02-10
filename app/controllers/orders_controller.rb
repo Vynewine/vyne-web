@@ -41,6 +41,11 @@ class OrdersController < ApplicationController
       @order = Order.find_by(id: params[:order_id], client_id: current_user)
     end
 
+    if @order.blank?
+      render json: {}, status: :forbidden
+      return
+    end
+
     seconds_since_advisory = -1
 
     unless @order.advisory_completed_at.blank?

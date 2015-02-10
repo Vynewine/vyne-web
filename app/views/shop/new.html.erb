@@ -155,31 +155,34 @@
         </div>
 
         <div id="with-food" class="tab preferences-sub-panel">
-          <div class="food-limit"></div>
-          <h3 class="select-category">Select a category</h3>
-          <div class="prefs-list-container cf">
-            <ul id="food-list" class="tab-list prefs-list prefs-list-top cf">
-            <% allFood = @foods.clone.to_a %>
-            <% allFood.keep_if {|f| f.parent==0} %>
-            <% allFood.each do |parentFood| %>
-              <% if parentFood.name != "preparation" %>
-              <li id="food-<%= parentFood.id %>">
-                <a href="#<%= parentFood.name.gsub(/(((\s)&?)\s?)/, "_")%>">
-                  <%= image_tag "icons/food/"+parentFood.name.gsub(" & ", "_")+".png", :alt => "image description", :class => "logo" %>
-                  <span><%= parentFood.name %></span>
-                </a>
-              </li>
-              <% end %>
-            <% end %>
-            </ul>
+          <div class="food-limit">You've selected all 3 ingredients. Click icons below to change your selection or proceed to checkout.</div>
+          <div class="main-preferences">
+            <h3 class="select-category">Select <span id="food-category">a</span> category</h3>
+            <div class="prefs-list-container cf">
+              <ul id="food-list" class="tab-list prefs-list prefs-list-top cf">
+                <% allFood = @foods.clone.to_a %>
+                <% allFood.keep_if {|f| f.parent==0} %>
+                <% allFood.each do |parentFood| %>
+                    <% if parentFood.name != "preparation" %>
+                        <li id="food-<%= parentFood.id %>">
+                          <a href="#<%= parentFood.name.gsub(/(((\s)&?)\s?)/, "_")%>">
+                            <%= image_tag "icons/food/"+parentFood.name.gsub(" & ", "_")+".png", :alt => "image description", :class => "logo" %>
+                            <span><%= parentFood.name %></span>
+                          </a>
+                        </li>
+                    <% end %>
+                <% end %>
+              </ul>
+            </div>
           </div>
+
 
           <% nallFood = @foods.clone.to_a %>
           <% nallFood.keep_if {|f| f.parent==0} %>
           <% nallFood.each do |parentFood| %>
 
           <div id="<%= parentFood.name.gsub(/(((\s)&?)\s?)/, "_") %>" class="tab preferences-sub-sub-panel">
-            <!--<a href="#" class="back"></a>-->
+
             <% if parentFood.id == 4 %>
             <h3>How was it prepared?</h3>
             <% else %>
@@ -219,56 +222,58 @@
                 </div>
               </div>
 
-
+          <div class="prefs-overview">
+            <div class="prefs-overview-content">
+              <ul class="prefs-overview-list cf">
+                <li class="empty"><a href=""><span>1</span></a></li>
+                <li class="empty"><a href=""><span>2</span></a></li>
+                <li class="empty"><a href=""><span>3</span></a></li>
+              </ul>
+              <a href="#" id="select-preferences" class="btn btn__full-width next-slide" style="display: none">Review Order</a>
+            </div>
+          </div>
         </div>
 
         <div id="by-occasion" class="tab preferences-sub-panel">
           <div class="occasion-limit"></div>
-          <h3>Whats the occasion?</h3>
-          <div class="prefs-list-container">
-            <ul id="occasion-list" class="prefs-list prefs-list-top tab-list cf">
-              <% @occasions.each do |occasion| %>
-              <li id="occasion-<%= occasion.id %>">
-                <a href="#wine-type">
-                  <%= image_tag "icons/food/"+occasion.name.gsub(/(((\s)&?)\s?)/, "_").downcase+".png", :alt => "image description" %>
-                  <span><%= occasion.name %></span>
-                </a>
-              </li>
-              <% end %>
-            </ul>
+          <div class="main-preferences">
+            <h3>Whats the occasion?</h3>
 
-            <div id="wine-type" class="tab preferences-sub-sub-panel">
-              <h3>What type of Wine<br/> would you like?</h3>
-              <div class="prefs-list-container">
-                <ul id="wine-list" class="prefs-list prefs-list-bottom cf">
-                  <% @types.each do |type| %>
-                    <% if type.id != 9 && type.id != 11 %>
-                    <li id="winetype-<%= type.id %>">
-                      <a href="">
-                        <%= image_tag "icons/wine/"+type.name.gsub(/(((\s)&?)\s?)/, "_").downcase+".png", :alt => "image description" %>
-                        <span><%= type.name %></span>
+            <div class="prefs-list-container">
+              <ul id="occasion-list" class="prefs-list prefs-list-top tab-list cf">
+                <% @occasions.each do |occasion| %>
+                    <li id="occasion-<%= occasion.id %>">
+                      <a href="#wine-type">
+                        <%= image_tag "icons/food/"+occasion.name.gsub(/(((\s)&?)\s?)/, "_").downcase+".png", :alt => "image description" %>
+                        <span><%= occasion.name %></span>
                       </a>
                     </li>
-                    <% end %>
-                  <% end %>
-                </ul>
-              </div>
+                <% end %>
+              </ul>
             </div>
+          </div>
 
+          <div id="wine-type" class="tab preferences-sub-sub-panel">
+            <h3>What type of Wine<br/> would you like?</h3>
+            <div class="prefs-list-container">
+              <ul id="wine-list" class="prefs-list prefs-list-bottom cf">
+                <% @types.each do |type| %>
+                    <% if type.id != 9 && type.id != 11 %>
+                        <li id="winetype-<%= type.id %>">
+                          <a href="">
+                            <%= image_tag "icons/wine/"+type.name.gsub(/(((\s)&?)\s?)/, "_").downcase+".png", :alt => "image description" %>
+                            <span><%= type.name %></span>
+                          </a>
+                        </li>
+                    <% end %>
+                <% end %>
+              </ul>
+            </div>
           </div>
 
         </div>
 
-        <div class="prefs-overview">
-          <div class="prefs-overview-content wrapper wrapper-large">
-            <ul class="prefs-overview-list cf">
-              <li class="empty"><a href=""><span>1</span></a></li>
-              <li class="empty"><a href=""><span>2</span></a></li>
-              <li class="empty"><a href=""><span>3</span></a></li>
-            </ul>
-            <a href="#" id="select-preferences" class="btn btn__full-width next-slide">Review Order</a>
-          </div>
-        </div>
+
 
         <input type="hidden" name="wines" />
 

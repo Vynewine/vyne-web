@@ -176,11 +176,11 @@ $(function () {
 
     /* iOS Check */
     if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
-        $('.prefs-overview, .btn-checkout').addClass('ios');
+        //$('.prefs-overview, .btn-checkout').addClass('ios');
 
-        $('#preferences-panel').scroll(function (e) {
-            $('.prefs-overview').css({'bottom': -$(this).scrollTop()});
-        });
+        //$('#preferences-panel').scroll(function (e) {
+        //    $('.prefs-overview').css({'bottom': -$(this).scrollTop()});
+        //});
 
         $('#review-panel').scroll(function (e) {
             $('.btn-checkout').css({'bottom': -$(this).scrollTop()});
@@ -532,8 +532,9 @@ $(function () {
         e.preventDefault();
         $($(this).attr('href')).parent().find('.tab').removeClass('active');
         $($(this).attr('href')).addClass('active');
-        if ($(this).attr('href') == '#with-food') {
-            $('.prefs-overview').toggle();
+
+        if($(this).parent().parent().parent().find('#food-list').length > 0 || $(this).parent().parent().parent().find('#occasion-list').length > 0) {
+            $('.main-preferences').hide();
         }
     });
 
@@ -548,6 +549,8 @@ $(function () {
             type: 'matchingWine',
             name: $(this).attr('href').replace('#', '')
         });
+
+        $('#matching-wine').hide();
     });
 
     $('.back').click(function (e) {
@@ -643,7 +646,7 @@ $(function () {
         if (!$this.parent().hasClass('selected')) {
 
             if ($this.closest('.tab').attr('id') == 'preparation') {
-                $img = $this.find('img').clone();
+                var $img = $this.find('img').clone();
                 var prepID = $this.closest('li').attr('id').split('-')[1];
                 var prepName = $(this).find('span').text();
                 $('#food-item-' + parentid).after($img.addClass('food-prep').attr('id', parentid));
@@ -651,25 +654,50 @@ $(function () {
                 $('#food-item-' + parentid).closest('li').append($('<span/>', {text: prepName}).addClass('prep-name-text'));
             } else if ($this.closest('ul').attr('id') == 'wine-list') {
                 //Add the food to the wine object
-                wines[wineCount].wineType.id = id; //.split('-')[1];
+                wines[wineCount].wineType.id = id;
                 wines[wineCount].wineType.name = name;
             } else {
                 //Add the food to our mini review bar at the bottom
-                $img = $this.find('img').clone();
+                var $img = $this.find('img').clone();
                 $img.attr('id', 'food-item-' + id);
-                $empty = $('.prefs-overview-list .empty').first();
+                var $empty = $('.prefs-overview-list .empty').first();
                 $empty.find('span').replaceWith($img);
                 $empty.append($('<span/>', {text: name}).addClass('food-name')).removeClass('empty');
 
                 $this.parent().addClass('selected');
             }
 
-            if ($('.prefs-overview-list .empty').length == 0 && $this.attr('href') != '#preparation') $('.food-limit').show();
+            var numberOfNotSelectedFoodCategories = $('.prefs-overview-list').find('.empty').length;
+            var $foodCategoryText = $('#food-category');
+
+            if (numberOfNotSelectedFoodCategories < 3) {
+                $('#select-preferences').show();
+            }
+
+            switch(numberOfNotSelectedFoodCategories) {
+                case 3:
+                    $foodCategoryText.text('a');
+                    break;
+                case 2:
+                    $foodCategoryText.text('second');
+                    break;
+                case 1:
+                    $foodCategoryText.text('third');
+                    break;
+            }
+
+            if (numberOfNotSelectedFoodCategories == 0 && $this.attr('href') != '#preparation') {
+                $('.food-limit').show();
+                $foodCategoryText.text('a');
+            }
 
             $this.closest('.tab').removeClass('active');
 
+            if ($('.tab.preferences-sub-sub-panel.active').length === 0) {
+                $('.main-preferences').show();
+            }
+
             if ($this.closest('ul').attr('id') == 'wine-list') {
-                //$('#select-preferences').click();
                 orderSwiper.swipeNext();
                 createCartPage(wines, wineCount);
             }
@@ -692,6 +720,25 @@ $(function () {
             $('#food-' + $foodid[2]).removeClass('selected');
             $('.food-limit').hide();
             $this.parent().addClass('empty').empty().append('<a href=""><span>+</span></a>');
+        }
+
+        var numberNotSelectedFoods = $('.prefs-overview-list').find('.empty').length;
+        var $foodCategoryText = $('#food-category');
+
+        switch(numberNotSelectedFoods) {
+            case 3:
+                $foodCategoryText.text('a');
+                break;
+            case 2:
+                $foodCategoryText.text('second');
+                break;
+            case 1:
+                $foodCategoryText.text('third');
+                break;
+        }
+
+        if (numberNotSelectedFoods === 3) {
+            $('#select-preferences').hide();
         }
     });
 
@@ -1124,7 +1171,7 @@ var postCodeLookup = function (postcode) {
 
     var apiUrl = 'https://api.ideal-postcodes.co.uk/v1/postcodes/' + postcode;
 
-    $.getJSON(apiUrl,
+    $.get(apiUrl,
         {
             api_key: 'ak_i1kkwsp8EIoMBD8vWt8q9NZSG74De'
         },
@@ -1283,11 +1330,13 @@ function createCartPage(wines, wineCount) {
 
 var clearPreferences = function () {
     $('.tab').removeClass('active');
-    $('.prefs-overview, .food-limit, .occasion-limit').hide();
+    $('.food-limit, .occasion-limit').hide();
     $('.prefs-list li').removeClass('selected');
     $('.prefs-overview-list li').empty().append('<a href=""><span>+</span></a>').removeClass('empty').addClass('empty');
     $('input[name="specific-wine"]').val('');
-
+    $('#matching-wine').show();
+    $('.main-preferences').show();
+    $('#select-preferences').hide();
     cleanupEvents();
 };
 
