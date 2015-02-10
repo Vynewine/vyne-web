@@ -11,9 +11,12 @@
 @mixin transform($transforms) {
 	-moz-transform: $transforms;
 	-o-transform: $transforms;
-	-ms-transform: $transforms;
 	-webkit-transform: $transforms;
 	transform: $transforms;
+}
+
+@mixin ms-transform($transforms) {
+    -ms-transform: $transforms;
 }
 // rotate
 @mixin rotate ($deg) {
@@ -27,6 +30,7 @@
 // translate
 @mixin translate ($x, $y) {
 	@include transform(translate($x, $y));
+    @include ms-transform(translate($x * 2, $y));
 }
 // skew
 @mixin skew ($x, $y) {

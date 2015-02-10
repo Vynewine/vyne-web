@@ -31,6 +31,7 @@
 //= require drew/jquery.stellar.min
 //= require drew/picturefill.min
 //= require drew/smoothscroll.min
+//= require mathiasbynens/jquery.placeholder
 //= require home
 
 
@@ -170,6 +171,9 @@ $('#sign-up-home-submit').click(function (e) {
 
 $(function () {
 
+    // IE 9 Placeholder Polyfill
+    $('input, textarea').placeholder({customClass: 'ie-placeholder'});
+
     /* iOS Check */
     if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
         $('.prefs-overview, .btn-checkout').addClass('ios');
@@ -306,9 +310,6 @@ $(function () {
     checkWidth();
     $(window).resize(checkWidth);
 
-
-    /* Order */
-
     //Initialising order slider
     orderSwiper = $('#order').swiper({
         mode: 'horizontal',
@@ -338,9 +339,17 @@ $(function () {
         },
         onSlideChangeEnd: function (swiper) {
             //Remove registration panel. User successfully registered or signed by this point.
+
             if (swiper.getSlide(swiper.previousIndex).id === 'register-panel') {
                 swiper.removeSlide(swiper.previousIndex);
-                swiper.swipeTo(swiper.activeIndex - 1, 0, false);
+
+                if (ieVersion() > 0 && ieVersion() < 11) {
+                    setTimeout(function () {
+                        swiper.swipeTo(swiper.previousIndex - 1, 0, false);
+                    }, 0);
+                } else {
+                    swiper.swipeTo(swiper.previousIndex - 1, 0, false);
+                }
             }
         }
     });
@@ -1310,7 +1319,7 @@ function calculateTotalCost() {
     var totalMaximum = 0.00;
     var deliveryCost = 2.50;
 
-    $(wines).each(function(index, wine) {
+    $(wines).each(function (index, wine) {
         totalMinimum += parseFloat(wine.priceMin);
         totalMaximum += parseFloat(wine.priceMax);
     });

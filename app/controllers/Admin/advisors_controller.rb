@@ -13,11 +13,6 @@ class Admin::AdvisorsController < ApplicationController
   authorize_actions_for SupplierAuthorizer # Triggers user check
   respond_to :html, :js
 
-  def index
-    @orders = Order.where(status_id: [1]).order(:id) # Ignores delivered and cancelled
-    @categories = Category.all
-  end
-
   def item
     @order_item = OrderItem.find(params[:id])
     @order = @order_item.order
@@ -148,11 +143,6 @@ class Admin::AdvisorsController < ApplicationController
       end
     else
       @message = order.errors
-    end
-
-    if @message == 'Success'
-      order_receipt(order)
-      merchant_order_confirmation(order)
     end
 
     respond_to do |format|

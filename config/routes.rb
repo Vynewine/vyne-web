@@ -154,7 +154,6 @@ Rails.application.routes.draw do
       end
     end
     post '/orders/list' => 'orders#list'
-    get 'advise/index' => 'advisors#index'
     get 'advise/choose' => 'advisors#choose'
     get 'advise/item/:id' => 'advisors#item'
     post 'advise/item/:id' => 'advisors#update'

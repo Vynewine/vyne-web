@@ -26,3 +26,7 @@ sunspot-solr-*.pid
 wine_data.csv
 public/uploads/*
 .env
+server.crt
+server.csr
+server.key
+server.orig.key
