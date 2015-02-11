@@ -2,6 +2,7 @@ last_lat_time = Date.now();
 last_lng_time = Date.now();
 last_lat = 0;
 last_lng = 0;
+var requestSubstitution;
 
 var interval;
 
@@ -256,24 +257,23 @@ var ready = function () {
 
         var substitutions = [];
 
-        $("[name='order_item']").click(function (e) {
-            e.preventDefault();
-            var $link = $(this);
-            var id = $link.data('id');
+        requestSubstitution = function(itemId) {
+
             $('#error').hide();
-            $('#substitution-reason-' + id).toggle();
-            if ($link.text() === 'Change') {
-                substitutions.push(id);
-                $link.text('Cancel');
+            $('#substitution-reason-' + itemId).toggle();
+            var $link = $('#request-' + itemId);
+            if ($link.val() === 'Change') {
+                substitutions.push(itemId);
+                $link.val('Cancel');
             } else {
-                $link.text('Change');
-                var index = $.inArray(id, substitutions);
+                $link.val('Change');
+                var index = $.inArray(itemId, substitutions);
                 if (index > -1) {
-                    $('#reason-error-' + id).hide();
+                    $('#reason-error-' + itemId).hide();
                     substitutions.splice(index, 1);
                 }
             }
-        });
+        };
 
         $('#substitutions-form').submit(function (e) {
 
