@@ -40,7 +40,7 @@ var setCountDown = function (time) {
     }
 };
 
-var ready = function () {
+var ordersJsReady = function () {
     if ($('body.orders').length && typeof(orderId) !== 'undefined') {
         var currentStatus = '';
 
@@ -329,5 +329,5 @@ var ready = function () {
 
 };
 
-$(document).on('page:load', ready);
-$(document).ready(ready);
+$(document).on('page:load', ordersJsReady);
+$(document).ready(ordersJsReady);

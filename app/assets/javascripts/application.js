@@ -12,7 +12,6 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require turbolinks
 //= require library
 //= require forms
 //= require vendor/maskedinput
@@ -33,7 +32,20 @@
 //= require drew/smoothscroll.min
 //= require mathiasbynens/jquery.placeholder
 //= require home
+//= require availability
 
+/**
+ * Turbolinks always at the end of all scripts.
+ */
+//= require turbolinks
+
+/**
+ * Triger Analytics for turbolinks pages
+ */
+
+$(document).on('ready page:change', function() {
+    analytics.page();
+});
 
 /**
  * =======================================

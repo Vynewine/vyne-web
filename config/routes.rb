@@ -38,10 +38,9 @@ Rails.application.routes.draw do
   #New Home Page
   get '/aidani' => 'home#aidani'
 
-
   # ------------
 
-  resources :promotions, :share, :help, :jobs
+  resources :promotions, :share, :help, :jobs, :availability
   resources :delivery do
     collection do
       get 'get_courier_location'
