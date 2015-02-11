@@ -253,6 +253,8 @@ $(document).ready(function () {
                 $errorList.empty().show();
                 $errorList.append('<li>Not a valid postcode</li>');
                 $feedback.css({'display': 'none'});
+                $('#initial-postcode-lookup').hide();
+                $('#filterPostcode').show();
                 return;
             } else {
                 $(this).val(validPostcode);
