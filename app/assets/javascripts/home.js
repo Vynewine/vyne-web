@@ -139,8 +139,11 @@ var ready = function () {
     if ($.fn.onePageNav) {
         $('#header-nav').onePageNav({
             scrollSpeed: 1000,
+            filter: ':not(.external)',
             begin: function () {
-                $('#navigation').collapse('toggle');
+                if($(window).width() <= 991) {
+                    $('#navigation').collapse('toggle');
+                }
             },
             scrollChange: function ($currentListItem) {
                 if ($currentListItem.find('a').attr('href') === '#discover') {

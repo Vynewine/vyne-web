@@ -1,13 +1,9 @@
 class DeliveryController < ApplicationController
   include CoordinateHelper
 
-  before_action :authenticate_user!, :except => [:index]
-  authorize_actions_for UserAuthorizer, :except => [:index]
+  before_action :authenticate_user!
+  authorize_actions_for UserAuthorizer
   authority_actions :get_courier_location => 'read'
-
-  def index
-    @areas = Warehouse.delivery_areas
-  end
 
   def get_courier_location
     if current_user.admin?
