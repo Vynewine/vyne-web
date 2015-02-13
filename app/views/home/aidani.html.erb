@@ -35,9 +35,10 @@
         <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12 col-xs-offset-0">
           <p class="hero-buttons">
 
-          <form action="/shop/neworder" id="postcode-check" method="GET" class="form home-form">
+          <form action="/availability" id="postcode-check" class="form home-form">
+            <p id="postcode-error" class="animated fadeIn text-danger" style="display: none">Not a valid postcode</p>
             <div class="form-group">
-              <input type="text" class="form-control" id="filterPostcode" placeholder="Enter postcode (e.g. EC4Y 8AU)" name="postcode" autocomplete="off"/>
+              <input type="text" class="form-control postcode-input" id="filterPostcode" placeholder="Enter postcode (e.g. EC4Y 8AU)" name="postcode" autocomplete="off"/>
             </div>
             <div class="form-group form-group-submit">
               <input type="submit" class="btn btn-primary btn-lg btn-block" value="Check Availability"/>
@@ -364,7 +365,7 @@
       <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12 col-xs-offset-0">
 
 
-        <form action="/shop/neworder" id="postcode-check" method="GET" class="form footer-form home-form">
+        <form action="/shop/neworder" id="postcode-check-bottom" method="GET" class="form footer-form home-form">
           <div class="form-group">
             <input type="text" class="form-control" id="filterPostcode" placeholder="Enter postcode (e.g. SW1A 1AA)" name="postcode" autocomplete="off"/>
           </div>

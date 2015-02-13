@@ -17,9 +17,19 @@ var homeJsReady = function () {
      */
 
     if ($('body.home').length) {
-        var drew = {
-            headerFloatingHeight: 60
-        };
+
+        $('#postcode-check').submit(function (event) {
+            event.preventDefault();
+            var postcodeField = $('#filterPostcode');
+            var postcode = postcodeField.val().toUpperCase().trim();
+            var validation = validatePostcode(postcode);
+            if (validation) {
+                postcodeField.val(validation);
+                this.submit();
+            } else {
+                $('#postcode-error').show();
+            }
+        });
 
         /**
          * =======================================

@@ -131,3 +131,6 @@ gem 'rack-timeout'
 
 # New Landing Page Fonts
 gem 'font-awesome-rails'
+
+# React
+gem 'react-rails', '~> 0.12.0.0'
