@@ -78,6 +78,8 @@ module CoordinateHelper
 
     body = JSON.parse(result.body)
 
+    log body
+
     order.delivery_token = body['id']
     order.delivery_status = body
     order.delivery_provider = 'google_coordinate'
