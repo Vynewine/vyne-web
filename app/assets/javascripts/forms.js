@@ -271,12 +271,15 @@ $(document).ready(function () {
 
                 if (status == google.maps.GeocoderStatus.OK) {
 
+                    var lat = results[0].geometry.location.lat();
+                    var lng = results[0].geometry.location.lng();
+
                     var warehouseResource = "/warehouses/addresses.json";
 
                     $.get(warehouseResource,
                         {
-                            lat: results[0].geometry.location.lat(),
-                            lng: results[0].geometry.location.lng()
+                            lat: lat,
+                            lng: lng
                         },
                         function (delivery) {
 

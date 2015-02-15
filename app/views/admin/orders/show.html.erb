@@ -249,10 +249,12 @@
               <% end %>
 
               <% if @order.status_id != Status.statuses[:cancelled] %>
-                  <% if @order.delivery_provider == Order.delivery_types[:google_coordinate] %>
+                  <% if [Status.statuses[:advised], Status.statuses[:packing], Status.statuses[:pickup]].include?(@order.status.id) %>
                       <%= link_to 'Schedule Shutl', admin_advise_choose_path(:order => @order.id), {:class => 'btn btn-primary'} %>
-                  <% else %>
-                      <% #TODO Schedule Google Coordinate    %>
+                      <%= link_to 'Schedule G-Coordinate', admin_order_schedule_google_coordinate_path(@order), {
+                                                                 :method => :post,
+                                                                 :class => 'btn btn-primary'
+                                                         } %>
                   <% end %>
               <% end %>
 

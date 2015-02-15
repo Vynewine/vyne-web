@@ -533,7 +533,7 @@ $(function () {
         $($(this).attr('href')).parent().find('.tab').removeClass('active');
         $($(this).attr('href')).addClass('active');
 
-        if($(this).parent().parent().parent().find('#food-list').length > 0 || $(this).parent().parent().parent().find('#occasion-list').length > 0) {
+        if ($(this).parent().parent().parent().find('#food-list').length > 0 || $(this).parent().parent().parent().find('#occasion-list').length > 0) {
             $('.main-preferences').hide();
         }
     });
@@ -674,7 +674,7 @@ $(function () {
                 $('#select-preferences').show();
             }
 
-            switch(numberOfNotSelectedFoodCategories) {
+            switch (numberOfNotSelectedFoodCategories) {
                 case 3:
                     $foodCategoryText.text('a');
                     break;
@@ -725,7 +725,7 @@ $(function () {
         var numberNotSelectedFoods = $('.prefs-overview-list').find('.empty').length;
         var $foodCategoryText = $('#food-category');
 
-        switch(numberNotSelectedFoods) {
+        switch (numberNotSelectedFoods) {
             case 3:
                 $foodCategoryText.text('a');
                 break;
@@ -1034,15 +1034,47 @@ $(function () {
 
         e.preventDefault();
 
-        var address_line_1 = $('#addr-line-1').val();
-        var address_line_2 = $('#addr-line-2').val();
-        var address_lat = $('#addr-lat').val();
-        var address_lng = $('#addr-lng').val();
-        var company_name = $('#addr-company-name').val();
-        var address_p = $('#addr-pc').val();
-        var mobile = $('#mobile').val();
-        var address_id = $('#address-id').val();
-        var new_address = $('#new-address').val();
+        //var address_line_1 = $('#addr-line-1').val()
+        //var address_line_2 = $('#addr-line-2').val();
+        //var address_lat = $('#addr-lat').val();
+        //var address_lng = $('#addr-lng').val();
+        //var company_name = $('#addr-company-name').val();
+        //var address_p = $('#addr-pc').val();
+        //var mobile = $('#mobile').val();
+        //var address_id = $('#address-id').val();
+        //var new_address = $('#new-address').val();
+
+
+        var address = {
+            address_line_1: $('#addr-line-1').val(),
+            address_line_2: $('#addr-line-2').val(),
+            address_lat: $('#addr-lat').val(),
+            address_lng: $('#addr-lng').val(),
+            company_name: $('#addr-company-name').val(),
+            address_p: $('#addr-pc').val(),
+            mobile: $('#mobile').val(),
+            address_id: $('#address-id').val(),
+            new_address: $('#new-address').val()
+        };
+
+        if (address.address_lat === "" || address.address_lng === "") {
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({'address': 'London+' + address.address_line_1 + '+' + address.address_line_2 + '+UK'}, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+
+                    address.address_lat = results[0].geometry.location.lat();
+                    address.address_lng = results[0].geometry.location.lng();
+
+                }
+                createAddress(address);
+            });
+
+        } else {
+            createAddress(address);
+        }
+    });
+
+    var createAddress = function (address) {
 
         var $errorList = $('#address-errors');
 
@@ -1053,15 +1085,15 @@ $(function () {
             },
             url: '/signup/address',
             data: {
-                address_line_1: address_line_1,
-                address_line_2: address_line_2,
-                company_name: company_name,
-                address_p: address_p,
-                mobile: mobile,
-                address_id: address_id,
-                new_address: new_address,
-                address_lat: address_lat,
-                address_lng: address_lng
+                address_line_1: address.address_line_1,
+                address_line_2: address.address_line_2,
+                company_name: address.company_name,
+                address_p: address.address_p,
+                mobile: address.mobile,
+                address_id: address.address_id,
+                new_address: address.new_address,
+                address_lat: address.address_lat,
+                address_lng: address.address_lng
             },
             error: function (data) {
 
@@ -1094,18 +1126,18 @@ $(function () {
 
                 $errorList.empty().hide();
 
-                if (address_id !== '' && address_id !== '0') {
+                if (address.address_id !== '' && address.address_id !== '0') {
                     analytics.track('Address updated', {
-                        address_street: address_line_1,
-                        address_postcode: address_p,
-                        mobile: mobile,
+                        address_street: address.address_line_1,
+                        address_postcode: address.address_p,
+                        mobile: address.mobile,
                         id: data.id
                     });
                 } else {
                     analytics.track('Address created', {
-                        address_street: address_line_1,
-                        address_postcode: address_p,
-                        mobile: mobile,
+                        address_street: address.address_line_1,
+                        address_postcode: address.address_p,
+                        mobile: address.mobile,
                         id: data.id
                     });
                 }
@@ -1114,7 +1146,7 @@ $(function () {
                 orderSwiper.swipeNext();
             }
         });
-    });
+    };
 
     /**
      * Lookup valid addresses for a post code

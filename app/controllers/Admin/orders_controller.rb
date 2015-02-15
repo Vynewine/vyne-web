@@ -13,7 +13,8 @@ class Admin::OrdersController < ApplicationController
                     :refresh_all => 'update',
                     :notification => 'update',
                     :order_counts => 'read',
-                    :increment_notification_count => 'update'
+                    :increment_notification_count => 'update',
+                    :schedule_google_coordinate => 'create'
 
 
   # GET /orders
@@ -213,6 +214,17 @@ class Admin::OrdersController < ApplicationController
     end
 
     render json: {success: true}, status: :ok
+  end
+
+  def schedule_google_coordinate
+    @order = Order.find(params[:order_id])
+    CoordinateHelper.schedule_job(@order)
+    if @order.save
+      WebNotificationDispatcher.publish([@order.warehouse.id], '', :order_change)
+      redirect_to admin_orders_url(:status => @order.status_id), :flash => {:notice => 'Google Coordinate Job Created'}
+    else
+      redirect_to [:admin, @order], :flash => {:error => @order.errors.full_messages().join(', ')}
+    end
   end
 
   private
