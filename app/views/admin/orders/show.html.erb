@@ -110,7 +110,7 @@
                 <li class="list-group-item">
                   <div class="row">
                     <div class="col-xs-6">
-                      <strong>Address:</strong>
+                      <strong><%= link_to 'Address:', admin_address_url(@order.address) %></strong>
                       <% if @order.address %>
                           <a target="_blank"
                              href="https://www.google.co.uk/maps/place/<%= @order.address.full %>">
