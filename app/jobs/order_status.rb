@@ -1,7 +1,7 @@
 class OrderStatus
   @queue = :order_status
 
-  @logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
+  @logger = Logging.logger['OrderStatusJob']
 
   def self.perform
     orders_in_process = Order.where(:status => [Status.statuses[:pickup], Status.statuses[:in_transit]], :delivery_provider => Order.delivery_types[:google_coordinate]).count
@@ -44,14 +44,14 @@ class OrderStatus
             if order.save
               log "Successfully saved order #{order.id.to_s}"
             else
-              log 'Failed to process orders status update: ' + order.errors.join(', ')
+              log_error 'Failed to process orders status update: ' + order.errors.join(', ')
             end
           end
         end
 
         log 'Successfully updated status for ' + orders_in_process.to_s + ' orders.'
       else
-        log 'Failed to process orders status update: ' + jobs[:errors].join(', ')
+        log_error 'Failed to process orders status update: ' + jobs[:errors].join(', ')
       end
     else
       log 'Nothing to process'
@@ -59,6 +59,10 @@ class OrderStatus
   end
 
   def self.log(message)
-    @logger.tagged('Order Status Job') { @logger.info message }
+    @logger.info message
+  end
+
+  def self.log_error(message)
+    @logger.error message
   end
 end

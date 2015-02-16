@@ -3,7 +3,7 @@ include CoordinateHelper
 class CourierLocation
   @queue = :courier_location
 
-  @logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
+  @logger = Logging.logger['CourierLocationJob']
 
   def self.perform
     orders_in_transit = Order.where(:status => Status.statuses[:in_transit])
@@ -45,6 +45,6 @@ class CourierLocation
   end
 
   def self.log(message)
-    @logger.tagged('Courier Location Job') { @logger.info message }
+    @logger.info message
   end
 end

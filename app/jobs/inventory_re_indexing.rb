@@ -1,7 +1,7 @@
 class InventoryReIndexing
 
   @queue = :re_indexing
-  @logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
+  @logger = Logging.logger['InventoryReIndexingJob']
   TAG = 'Inventory Re-Indexing'
 
   def self.perform (wines)
@@ -17,7 +17,7 @@ class InventoryReIndexing
   end
 
   def self.log(message)
-    @logger.tagged(TAG) { @logger.info message }
+    @logger.info message
   end
 
 end

@@ -2,8 +2,7 @@ class OrderEmailNotification
 
   @queue = :order_notifications
 
-  @logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
-  TAG = 'Order Email Notification Job'
+  @logger = Logging.logger['OrderEmailNotificationJob']
 
   def self.perform (order_id, notification_name)
     log "Processing email notification job: #{notification_name} - for order id: #{order_id.to_s}"
@@ -12,6 +11,6 @@ class OrderEmailNotification
   end
 
   def self.log(message)
-    @logger.tagged(TAG) { @logger.info message }
+    @logger.info message
   end
 end

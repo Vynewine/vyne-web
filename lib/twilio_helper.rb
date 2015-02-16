@@ -1,7 +1,6 @@
 module TwilioHelper
 
-  @logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
-  TAG = 'Twilio Helper'
+  @logger = Logging.logger['TwilioHelper']
 
   def self.order_receipt(order_id)
 
@@ -124,10 +123,10 @@ module TwilioHelper
   end
 
   def self.log(message)
-    @logger.tagged(TAG) { @logger.info message }
+    @logger.info message
   end
 
   def self.log_error(message)
-    @logger.tagged(TAG) { @logger.error message }
+    @logger.error message
   end
 end

@@ -1,8 +1,7 @@
 module OrderReminderNotification
   @queue = :order_notifications
 
-  @logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
-  TAG = 'Order Reminder Notification'
+  @logger = Logging.logger['OrderReminderNotificationJob']
 
   def self.perform
 
@@ -39,10 +38,10 @@ module OrderReminderNotification
   end
 
   def self.log(message)
-    @logger.tagged(TAG) { @logger.info message }
+    @logger.info message
   end
 
   def self.log_error(message)
-    @logger.tagged(TAG) { @logger.error message }
+    @logger.error message
   end
 end

@@ -131,3 +131,5 @@ gem 'rack-timeout'
 
 # New Landing Page Fonts
 gem 'font-awesome-rails'
+
+gem 'logging-rails', :require => 'logging/rails'
