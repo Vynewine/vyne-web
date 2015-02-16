@@ -813,14 +813,26 @@ iframe {
         padding: 5px 20px 5px 20px;
     }
 
-    .app-label-success {
-        background-color: #5CB85C;
+    .app-label {
+
         color: white;
         margin-top: -15px;
         padding: 15px;
         font-family: "Montserrat", sans-serif;
         letter-spacing: 0.05em;
         text-transform: uppercase;
+
+        &.success {
+            background-color: #5CB85C;
+        }
+
+        &.danger {
+            background-color: #a94442;
+        }
+
+        &.loading {
+            background-color: #000000;
+        }
     }
 
 
@@ -834,9 +846,9 @@ iframe {
         width: 300px;
     }
 
-    @media (max-width: 320px) {
+    @media (max-width: 375px) {
         .app-btn {
-            width: 250px;
+            width: 265px;
         }
     }
 
@@ -1903,4 +1915,22 @@ body.enable-preloader {
     top: 0;
     overflow: hidden;
     text-align: center;
+}
+
+.example-enter {
+    opacity: 0.01;
+    transition: opacity .5s ease-in;
+}
+
+.example-enter.example-enter-active {
+    opacity: 1;
+}
+
+.example-leave {
+    opacity: 1;
+    transition: opacity .5s ease-in;
+}
+
+.example-leave.example-leave-active {
+    opacity: 0.01;
 }

@@ -83,6 +83,7 @@ Rails.application.routes.draw do
     # get 'list' => 'shop#list'
     get 'show' => 'shop#show'
     get 'neworder' => 'shop#new'
+    post 'neworder' => 'shop#new'
     get 'confirmed' => 'shop#confirmed'
     get 'edit' => 'shop#edit'
     post 'create' => 'shop#create'

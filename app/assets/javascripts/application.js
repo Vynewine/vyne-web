@@ -32,7 +32,7 @@
 //= require drew/smoothscroll.min
 //= require mathiasbynens/jquery.placeholder
 //= require home
-//= require availability
+
 //= require react
 //= require app
 
@@ -1136,7 +1136,7 @@ $(function () {
     var verifyAddress = function () {
 
         if ($('#address-id').val() === 0 || $('#address-id').val() === '') {
-            var initialPostCode = $('#filterPostcode').val();
+            var initialPostCode = $('#addr-pc').val();
 
             //Preselect existing address for logged-in users
             var existingAddresses = $('#order-address').find('option');

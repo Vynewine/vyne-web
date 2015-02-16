@@ -97,5 +97,5 @@ Rails.application.configure do
   config.google_maps_api_link = 'https://maps.google.com/maps/api/js?v=3&sensor=false'
 
   config.react.variant = :development
-
+  config.react.addons = true
 end

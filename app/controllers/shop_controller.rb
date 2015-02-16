@@ -39,6 +39,18 @@ class ShopController < ApplicationController
     @occasions = Occasion.all.order(:id)
     @types = Type.all.order(:id)
     @preparations = Preparation.all.order(:id)
+
+    unless params[:warehouses].blank?
+      session[:warehouses] = params[:warehouses]
+    end
+
+    unless params[:selected_slot].blank?
+      session[:selected_slot] = params[:selected_slot]
+    end
+
+    @warehouses = session[:warehouses]
+    @selected_slot = session[:selected_slot]
+
   end
 
   # GET /orders/confirmed
