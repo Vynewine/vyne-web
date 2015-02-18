@@ -50,6 +50,36 @@ warehouse_two_tuesday:
   live_delivery_from: "17:00"
   live_delivery_to: "19:00"
 
+warehouse_two_wednesday:
+  warehouse: two
+  day: 3
+  opens_today: false
+
+warehouse_two_thursday:
+  warehouse: two
+  day: 4
+  opens_today: false
+
+warehouse_two_friday:
+  warehouse: two
+  day: 5
+  opens_today: false
+
+warehouse_two_saturday:
+  warehouse: two
+  day: 6
+  opens_today: false
+
+warehouse_two_sunday:
+  warehouse: two
+  day: 0
+  opens_today: false
+
+warehouse_three_monday:
+  warehouse: three
+  day: 1
+  opens_today: false
+
 warehouse_three_tuesday:
   warehouse: three
   day: 2 # Tuesday
@@ -73,5 +103,20 @@ warehouse_three_wednesday:
 warehouse_three_thursday:
   warehouse: three
   day: 4 # Thursday
-  opening: 1700
-  closing: 2000
+  opens_today: false
+
+warehouse_three_friday:
+  warehouse: three
+  day: 5
+  opens_today: false
+
+warehouse_three_saturday:
+  warehouse: three
+  day: 6
+  opens_today: false
+
+warehouse_three_sunday:
+  warehouse: three
+  day: 0
+  opens_today: false
+

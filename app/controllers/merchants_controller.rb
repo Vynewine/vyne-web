@@ -6,66 +6,66 @@ class MerchantsController < ApplicationController
       return
     end
 
+    warehouse_info = {today_warehouse: {}, next_open_warehouse: {}, delivery_slots: []}
 
-    @warehouses = Warehouse.closest_to(params[:lat], params[:lng])
-    warehouses = {warehouses: [], next_opening: {}, delivery_slots: []}
-    first_day_delivery_slots = []
-    second_day_delivery_slots = []
-    warehouse_local_time = nil
-    last_midnight = nil
-    next_day = nil
+    warehouses = Warehouse.delivering_to(params[:lat], params[:lng])
 
-    unless @warehouses.blank?
-      @warehouses.each do |warehouse|
-        warehouses[:warehouses] << {
-            id: warehouse.id,
-            address: warehouse.address.postcode,
-            is_open: warehouse.is_open_for_live_delivery,
-            opening_time: warehouse.today_opening_time,
-            closing_time: warehouse.today_closing_time,
-            opens_today: warehouse.opens_today,
-            title: warehouse.title
-        }
+    unless warehouses.blank?
 
-        if warehouse_local_time.nil?
-          warehouse_local_time = warehouse.local_time
-        end
+      closest_warehouse = select_closest_warehouse(warehouses, params[:lat], params[:lng])
 
-        if last_midnight.nil?
-          last_midnight = warehouse_local_time.change(:hour => 0)
-        end
+      warehouse_info[:today_warehouse] = {
+          id: closest_warehouse.id,
+          address: closest_warehouse.address.postcode,
+          is_open: closest_warehouse.is_open_for_live_delivery,
+          opening_time: closest_warehouse.today_opening_time,
+          closing_time: closest_warehouse.today_closing_time,
+          opens_today: closest_warehouse.opens_today,
+          title: closest_warehouse.title
+      }
 
+      warehouse_info[:next_open_warehouse] = next_open_warehouse(warehouses)
 
-        if first_day_delivery_slots.blank?
-          7.times do |i|
-            if i == 0
-              first_day_delivery_slots = warehouse.get_delivery_blocks(warehouse_local_time)
-            else
-              if first_day_delivery_slots.blank?
-                first_day_delivery_slots = warehouse.get_delivery_blocks(last_midnight + (i).day)
-              else
-                next_day = last_midnight + (i).day
-                break
-              end
-            end
-          end
-        end
-
-        if second_day_delivery_slots.blank?
-          second_day_delivery_slots = warehouse.get_delivery_blocks(next_day)
-        end
-
-      end
-
-      warehouses[:next_opening] = next_open_warehouse(@warehouses)
-
-      warehouses[:delivery_slots] = first_day_delivery_slots + second_day_delivery_slots
+      warehouse_info[:delivery_slots] = get_delivery_slots(warehouses)
 
     end
-    render :json => warehouses
+    render :json => warehouse_info
   end
 
   private
+
+  def select_closest_warehouse(warehouses, lat, lng)
+    final_warehouse = nil
+    distance = nil
+    is_open = false
+    opens_today = false
+    warehouses.each do |warehouse|
+      current_distance = warehouse.distance_from(lat, lng)
+      if final_warehouse.blank?
+        final_warehouse = warehouse
+        distance = current_distance
+        is_open = warehouse.is_open_for_live_delivery
+        opens_today = warehouse.opens_today
+      else
+        if distance > current_distance ||
+            (!is_open && warehouse.is_open_for_live_delivery) ||
+            (!opens_today && warehouse.opens_today)
+
+          if is_open && !warehouse.is_open_for_live_delivery
+            break
+          end
+
+          if opens_today && !warehouse.opens_today
+            break
+          end
+
+          final_warehouse = warehouse
+          distance = current_distance
+        end
+      end
+    end
+    final_warehouse
+  end
 
   def next_open_warehouse(warehouses)
 
@@ -98,17 +98,66 @@ class MerchantsController < ApplicationController
 
   end
 
-  # Only future delivery slots
-  # By closest warehouse
-  # Array of warehouse Ids and Slots
-  # Only slots for next available date
-  # Don't mix dates - it can only be less slots left for today or only next day slots.
-  def future_delivery_slots(warehouses)
-    [
-        {day: 'Monday', date: '2015/02/15', from: '13:00', to: '14:00', full: true, warehouse_id: 1},
-        {day: 'Monday', date: '2015/02/15', from: '14:00', to: '15:00', full: true, warehouse_id: 1},
-        {day: 'Monday', date: '2015/02/15', from: '15:00', to: '16:00', full: false, warehouse_id: 2},
-        {day: 'Monday', date: '2015/02/15', from: '16:00', to: '17:00', full: true, warehouse_id: 1}
-    ]
+  def get_delivery_slots(warehouses)
+
+    first_day_delivery_slots = []
+    second_day_delivery_slots = []
+    warehouse_local_time = local_time
+    last_midnight = nil
+    next_day = nil
+
+    if last_midnight.nil?
+      last_midnight = warehouse_local_time.change(:hour => 0)
+    end
+
+    if first_day_delivery_slots.blank?
+      7.times do |i|
+
+        if i == 0
+          warehouse = get_open_warehouse_for_day(warehouses, warehouse_local_time)
+          unless warehouse.blank?
+            first_day_delivery_slots = warehouse.get_delivery_blocks(warehouse_local_time)
+          end
+        else
+          if first_day_delivery_slots.blank?
+            warehouse = get_open_warehouse_for_day(warehouses, (last_midnight + (i).day))
+            unless warehouse.blank?
+              first_day_delivery_slots = warehouse.get_delivery_blocks(last_midnight + (i).day)
+            end
+          else
+            next_day = last_midnight + (i).day
+            break
+          end
+        end
+      end
+    end
+
+    if second_day_delivery_slots.blank?
+      warehouse = get_open_warehouse_for_day(warehouses, next_day)
+      unless warehouse.blank?
+        second_day_delivery_slots = warehouse.get_delivery_blocks(next_day)
+      end
+    end
+
+    first_day_delivery_slots + second_day_delivery_slots
   end
+
+  def get_open_warehouse_for_day(warehouses, day)
+    open_warehouse = nil
+    warehouses.each do |warehouse|
+      if warehouse.is_open_on_day(day) && open_warehouse.blank?
+        open_warehouse = warehouse
+      end
+    end
+    open_warehouse
+  end
+
+  def local_time
+    #TODO: In the future we'll make time zone identifier configurable
+    time_zone_identifier = 'Europe/London'
+    tz = TZInfo::Timezone.get(time_zone_identifier)
+    # current local time
+    tz.utc_to_local(Time.now.getutc)
+  end
+
 end

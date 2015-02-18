@@ -118,6 +118,10 @@ class Agenda < ActiveRecord::Base
 
   def available_delivery_blocks(time)
 
+    unless opens_today
+      return []
+    end
+
     # Reset date to compare with Postgres Time
     time = time.change(:month => 1, :day => 1, :year => 2000)
 

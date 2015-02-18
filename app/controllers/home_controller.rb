@@ -66,7 +66,7 @@ class HomeController < ApplicationController
     end
 
     warehouses = {warehouses: [], next_opening: {}}
-    @warehouses = Warehouse.closest_to(params[:lat], params[:lng])
+    @warehouses = Warehouse.delivering_to(params[:lat], params[:lng])
 
     unless @warehouses.blank?
       @warehouses.each do |warehouse|

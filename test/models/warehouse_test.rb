@@ -239,7 +239,7 @@ class WarehouseTest < ActiveSupport::TestCase
     set_open_agenda(warehouse_01)
 
 
-    found_warehouse = Warehouse.closest_to(51.517125, -0.105019)
+    found_warehouse = Warehouse.delivering_to(51.517125, -0.105019)
 
     assert_equal(warehouse_01, found_warehouse.first)
 
@@ -263,7 +263,7 @@ class WarehouseTest < ActiveSupport::TestCase
     set_open_agenda(warehouse_01)
 
 
-    found_warehouse = Warehouse.closest_to(51.519559, -0.164076)
+    found_warehouse = Warehouse.delivering_to(51.519559, -0.164076)
 
     assert_equal(0, found_warehouse.count)
   end
@@ -303,8 +303,8 @@ class WarehouseTest < ActiveSupport::TestCase
     set_open_agenda(close_warehouse)
 
 
-    found_warehouse = Warehouse.closest_to(51.532108, -0.134439)
-    found_far_warehouse = Warehouse.closest_to(51.523589, -0.116303)
+    found_warehouse = Warehouse.delivering_to(51.532108, -0.134439)
+    found_far_warehouse = Warehouse.delivering_to(51.523589, -0.116303)
 
     assert_equal(close_warehouse, found_warehouse.first)
     assert_equal(far_warehouse, found_far_warehouse.first)
@@ -330,7 +330,7 @@ class WarehouseTest < ActiveSupport::TestCase
     set_open_agenda(warehouse_01)
 
 
-    found_warehouse = Warehouse.closest_to(51.517125, -0.105019)
+    found_warehouse = Warehouse.delivering_to(51.517125, -0.105019)
 
     assert(0, found_warehouse.count)
 
@@ -370,8 +370,8 @@ class WarehouseTest < ActiveSupport::TestCase
 
     set_open_agenda(close_warehouse)
 
-    found_warehouse = Warehouse.closest_to(51.532108, -0.134439)
-    found_far_warehouse = Warehouse.closest_to(51.523589, -0.116303)
+    found_warehouse = Warehouse.delivering_to(51.532108, -0.134439)
+    found_far_warehouse = Warehouse.delivering_to(51.523589, -0.116303)
 
     assert_equal(1, found_warehouse.count)
     assert_equal(1, found_far_warehouse.count)
@@ -415,8 +415,8 @@ class WarehouseTest < ActiveSupport::TestCase
 
     set_closed_agenda(close_warehouse)
 
-    found_warehouse = Warehouse.closest_to(51.532108, -0.134439)
-    found_far_warehouse = Warehouse.closest_to(51.523589, -0.116303)
+    found_warehouse = Warehouse.delivering_to(51.532108, -0.134439)
+    found_far_warehouse = Warehouse.delivering_to(51.523589, -0.116303)
 
     assert_equal(false, found_warehouse.first.is_open)
     assert_equal(far_warehouse, found_warehouse.second)
@@ -644,5 +644,12 @@ class WarehouseTest < ActiveSupport::TestCase
     assert_equal(fourth_count, find_slot(slots, '17:00', '18:00'))
     assert_equal(fifth_count, find_slot(slots, '18:00', '19:00'))
     assert_equal(sixth_count, find_slot(slots, '19:00', '20:00'))
+  end
+
+  test 'Can calculate distance between warehouse and customer' do
+    warehouse_one = warehouses(:two)
+    warehouse_two = warehouses(:three)
+    address = addresses(:five)
+    assert(warehouse_one.distance_from(address.latitude, address.longitude) < warehouse_two.distance_from(address.latitude, address.longitude))
   end
 end

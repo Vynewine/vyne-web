@@ -96,6 +96,15 @@ class Warehouse < ActiveRecord::Base
     end
   end
 
+  def is_open_on_day (day)
+    agenda = self.agendas.select { |agenda| agenda.day == day.wday }.first
+    if agenda.blank?
+      false
+    else
+      agenda.opens_today
+    end
+  end
+
   def today_opening_time
     # Select agenda for today for a warehouse
     agenda = self.agendas.select { |agenda| agenda.day == local_time.wday }.first
@@ -157,25 +166,17 @@ class Warehouse < ActiveRecord::Base
   def next_open_day_opening_time
     agenda = self.agendas.select { |agenda| agenda.day == next_open_day }.first
 
-    if agenda.blank?
-      'N/A'
-    else
-      opening_time = Time.parse(agenda.opening_time)
-      "#{opening_time.hour < 10 ? '0' + opening_time.hour.to_s : opening_time.hour.to_s}:#{opening_time.min < 10 ? '0' + opening_time.min.to_s : opening_time.min.to_s}"
+    unless agenda.blank? || agenda.live_delivery_from.blank?
+      agenda.live_delivery_from.strftime('%H:%M')
     end
-
   end
 
   def next_open_day_closing_time
     agenda = self.agendas.select { |agenda| agenda.day == next_open_day }.first
 
-    if agenda.blank?
-      'N/A'
-    else
-      opening_time = Time.parse(agenda.closing_time)
-      "#{opening_time.hour < 10 ? '0' + opening_time.hour.to_s : opening_time.hour.to_s}:#{opening_time.min < 10 ? '0' + opening_time.min.to_s : opening_time.min.to_s}"
+    unless agenda.blank? || agenda.live_delivery_to.blank?
+      agenda.live_delivery_to.strftime('%H:%M')
     end
-
   end
 
   def local_time
@@ -272,7 +273,7 @@ class Warehouse < ActiveRecord::Base
   end
 
   # Find closest warehouse delivering to lat/lng area
-  def self.closest_to(lat, lng)
+  def self.delivering_to(lat, lng)
     point = "'POINT(#{lng} #{lat})'"
     warehouses = Warehouse.find_by_sql("select w.* from warehouses w
                           join addresses a on w.address_id = a.id
@@ -282,9 +283,16 @@ class Warehouse < ActiveRecord::Base
     warehouses
   end
 
+  def distance_from(lat, lng)
+    unless address.blank? || address.coordinates.blank?
+      factory = RGeo::Geographic.spherical_factory
+      point = factory.point(lng, lat)
+      point.distance(address.coordinates)
+    end
+  end
+
   def get_delivery_blocks(time)
 
-    puts json: time
     agenda = self.agendas.select { |agenda| agenda.day == time.wday }.first
     unless agenda.blank?
       blocks = agenda.available_delivery_blocks(time)
@@ -296,7 +304,8 @@ class Warehouse < ActiveRecord::Base
               :to => block[:to],
               :date => time.strftime('%F'),
               :day => Date::DAYNAMES[time.wday],
-              :warehouse_id => self.id
+              :warehouse_id => self.id,
+              :title => self.title
           }
         end
       end
