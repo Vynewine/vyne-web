@@ -20,7 +20,7 @@ class MerchantsController < ApplicationController
         warehouses[:warehouses] << {
             id: warehouse.id,
             address: warehouse.address.postcode,
-            is_open: warehouse.is_open,
+            is_open: warehouse.is_open_for_live_delivery,
             opening_time: warehouse.today_opening_time,
             closing_time: warehouse.today_closing_time,
             opens_today: warehouse.opens_today,
@@ -37,7 +37,7 @@ class MerchantsController < ApplicationController
 
 
         if first_day_delivery_slots.blank?
-          6.times do |i|
+          7.times do |i|
             if i == 0
               first_day_delivery_slots = warehouse.get_delivery_blocks(warehouse_local_time)
             else
@@ -67,40 +67,35 @@ class MerchantsController < ApplicationController
 
   private
 
-  def local_time
-    #TODO: In the future we'll make time zone identifier configurable
-    time_zone_identifier = 'Europe/London'
-    tz = TZInfo::Timezone.get(time_zone_identifier)
-    # current local time
-    tz.utc_to_local(Time.now.getutc)
-  end
-
   def next_open_warehouse(warehouses)
 
-    today = local_time.wday
-    if today == 6 # Saturday
-      next_day = 0 # Sunday
-    else
-      next_day = today + 1
-    end
-
-    7.times do
-
-      next_warehouse = warehouses.select { |w| w.next_open_day == next_day }.first
-      unless next_warehouse.blank?
-        return {
-            :day => next_warehouse.next_open_day,
-            :week_day => Date::DAYNAMES[next_warehouse.next_open_day],
-            :opening_time => next_warehouse.next_open_day_opening_time,
-            :closing_time => next_warehouse.next_open_day_closing_time
-        }
+    unless warehouses.blank?
+      today = warehouses[0].local_time.wday
+      if today == 6 # Saturday
+        next_day = 0 # Sunday
+      else
+        next_day = today + 1
       end
 
-      next_day += 1
-      if next_day == 6
-        next_day = 0
+      7.times do
+
+        next_warehouse = warehouses.select { |w| w.next_open_day == next_day }.first
+        unless next_warehouse.blank?
+          return {
+              :day => next_warehouse.next_open_day,
+              :week_day => Date::DAYNAMES[next_warehouse.next_open_day],
+              :opening_time => next_warehouse.next_open_day_opening_time,
+              :closing_time => next_warehouse.next_open_day_closing_time
+          }
+        end
+
+        next_day += 1
+        if next_day == 6
+          next_day = 0
+        end
       end
     end
+
   end
 
   # Only future delivery slots

@@ -69,3 +69,9 @@ warehouse_three_wednesday:
   delivery_slots_to: "17:00"
   live_delivery_from: "17:00"
   live_delivery_to: "18:00"
+
+warehouse_three_thursday:
+  warehouse: three
+  day: 4 # Thursday
+  opening: 1700
+  closing: 2000

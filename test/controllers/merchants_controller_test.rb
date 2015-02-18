@@ -42,10 +42,23 @@ class MerchantsControllerTest < ActionController::TestCase
     get :index, { lat: address.latitude, lng: address.longitude }
     warehouse_info = JSON.parse(@response.body)
 
-    puts warehouse_info['delivery_slots']
+    puts JSON.pretty_generate(warehouse_info)
 
     assert_slots(warehouse_info['delivery_slots'], '1996-01-02', 1,1,1,1,1,0)
     assert_slots(warehouse_info['delivery_slots'], '1996-01-03', 0,1,1,1,0,0)
+  end
+
+  test 'Should return slots for next two days from warehouse three' do
+    time_now = Time.parse('1996/01/04 09:00') # Thursday
+    address = addresses(:six)
+    Time.stubs(:now).returns(time_now)
+    get :index, { lat: address.latitude, lng: address.longitude }
+    warehouse_info = JSON.parse(@response.body)
+
+    puts JSON.pretty_generate(warehouse_info)
+
+    assert_slots(warehouse_info['delivery_slots'], '1996-01-09', 1,1,1,1,1,1)
+    assert_slots(warehouse_info['delivery_slots'], '1996-01-10', 0,1,1,1,0,0)
   end
 
   def find_slot(slots, from, to, date)
@@ -60,5 +73,4 @@ class MerchantsControllerTest < ActionController::TestCase
     assert_equal(fifth_count, find_slot(slots, '18:00', '19:00', date))
     assert_equal(sixth_count, find_slot(slots, '19:00', '20:00', date))
   end
-
 end

@@ -73,7 +73,7 @@ class HomeController < ApplicationController
         warehouses[:warehouses] << {
             id: warehouse.id,
             address: warehouse.address.postcode,
-            is_open: warehouse.is_open,
+            is_open: warehouse.is_open_for_live_delivery,
             opening_time: warehouse.today_opening_time,
             closing_time: warehouse.today_closing_time,
             opens_today: warehouse.opens_today,

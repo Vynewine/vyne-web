@@ -16,11 +16,15 @@ class Agenda < ActiveRecord::Base
   end
 
   def opening_time
-    ("%04d" % opening).insert(2, ":")
+    unless live_delivery_from.blank?
+      live_delivery_from.strftime('%H:%M')
+    end
   end
 
   def closing_time
-    ("%04d" % closing).insert(2, ":")
+    unless live_delivery_to.blank?
+      live_delivery_to.strftime('%H:%M')
+    end
   end
 
   def shutl_time(a)
@@ -42,19 +46,27 @@ class Agenda < ActiveRecord::Base
   # We need to round up opening and rond down closing times to the nearest hour
 
   def block_delivery_start_time
-    delivery_slots_from.round_up(60.minutes)
+    unless delivery_slots_from.blank?
+      delivery_slots_from.round_up(60.minutes)
+    end
   end
 
   def block_delivery_end_time
-    delivery_slots_to.floor(60.minutes)
+    unless delivery_slots_to.blank?
+      delivery_slots_to.floor(60.minutes)
+    end
   end
 
   def live_delivery_block_start_time
-    live_delivery_from.round_up(60.minutes)
+    unless live_delivery_from.blank?
+      live_delivery_from.round_up(60.minutes)
+    end
   end
 
   def live_delivery_block_end_time
-    live_delivery_to.floor(60.minutes)
+    unless live_delivery_to.blank?
+      live_delivery_to.floor(60.minutes)
+    end
   end
 
   # Block slots are slots that can only be booked in advance and don't follow love delivery
@@ -62,19 +74,21 @@ class Agenda < ActiveRecord::Base
   def block_slots
     slots = []
 
-    available_hours = block_delivery_end_time - block_delivery_start_time
+    unless block_delivery_end_time.blank? || block_delivery_start_time.blank?
 
-    number_of_slots = available_hours / 60.minutes
+      available_hours = block_delivery_end_time - block_delivery_start_time
 
-    number_of_slots.to_i.times do |i|
-      slots << {
-          from: block_delivery_start_time + i.hours,
-          to: block_delivery_start_time + (i + 1).hours
-      }
+      number_of_slots = available_hours / 60.minutes
+
+      number_of_slots.to_i.times do |i|
+        slots << {
+            from: block_delivery_start_time + i.hours,
+            to: block_delivery_start_time + (i + 1).hours
+        }
+      end
     end
 
     slots
-
   end
 
   # Live slots are slots that can be book in advance but we can also deliver live.
@@ -82,15 +96,17 @@ class Agenda < ActiveRecord::Base
   def live_slots
     slots = []
 
-    available_hours = live_delivery_block_end_time - live_delivery_block_start_time
+    unless live_delivery_block_end_time.blank? || live_delivery_block_start_time.blank?
+      available_hours = live_delivery_block_end_time - live_delivery_block_start_time
 
-    number_of_slots = available_hours / 60.minutes
+      number_of_slots = available_hours / 60.minutes
 
-    number_of_slots.to_i.times do |i|
-      slots << {
-          from: live_delivery_block_start_time + i.hours,
-          to: live_delivery_block_start_time + (i + 1).hours
-      }
+      number_of_slots.to_i.times do |i|
+        slots << {
+            from: live_delivery_block_start_time + i.hours,
+            to: live_delivery_block_start_time + (i + 1).hours
+        }
+      end
     end
 
     slots
