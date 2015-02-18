@@ -110,13 +110,10 @@ class WarehouseTest < ActiveSupport::TestCase
     new_warehouse = Warehouse.find(warehouse.id)
 
 
-    new_warehouse.delivery_area.exterior_ring.points.each do |point|
-      puts point.x
-      puts point.y
-    end
+    assert(new_warehouse.delivery_area.exterior_ring.points.count > 0)
   end
 
-  test 'Can convert delivery area to json' do
+  test 'Can convert delivery area from and to json' do
     coordinates = '[[[-0.125141, 51.510612], [-0.122995, 51.517342], [-0.127974, 51.521348], [-0.125141, 51.510612]]]'
 
     warehouse = Warehouse.create!({
@@ -129,7 +126,7 @@ class WarehouseTest < ActiveSupport::TestCase
 
     new_warehouse = Warehouse.find(warehouse.id)
 
-    puts new_warehouse.area
+    assert_equal(coordinates, new_warehouse.area)
 
   end
 
@@ -158,7 +155,6 @@ class WarehouseTest < ActiveSupport::TestCase
     unless delivery_areas.blank?
       if delivery_areas.is_a?(RGeo::Cartesian::MultiPolygonImpl)
         delivery_areas.each do |polygon|
-          puts 'sweet new polygon'
           polygon.exterior_ring.points.each do |point|
             puts point.x.to_s + ', ' + point.y.to_s
           end
@@ -215,10 +211,6 @@ class WarehouseTest < ActiveSupport::TestCase
         end
       end
     end
-  end
-
-  test 'Can get delivery area without blowing up' do
-    Warehouse.delivery_area_by_city
   end
 
   test 'Create polygon around warehouse' do
@@ -582,7 +574,6 @@ class WarehouseTest < ActiveSupport::TestCase
     assert_equal('22:21', warehouse.next_open_day_closing_time)
   end
 
-
   def set_open_agenda(warehouse)
     Agenda.create!({
                        :day => Time.now.wday,
@@ -624,5 +615,34 @@ class WarehouseTest < ActiveSupport::TestCase
     lat = radius/(r_e*d2r)
     lng = radius/(r_e*Math.cos(d2r*center_lat)*d2r)
     multipliers.map { |m| [center_lat + m[0]*lat, center_lng + m[1]*lng] }
+  end
+
+  test 'Can get available delivery blocks for Monday' do
+    time_now = Time.parse('1996/01/01 9:00') #Monday
+    Time.stubs(:now).returns(time_now)
+    warehouse = warehouses(:two)
+    available_slots = warehouse.get_delivery_blocks(warehouse.local_time)
+    assert_slots(available_slots, 1,1,1,1,1,1)
+  end
+
+  test 'Can get available delivery blocks for Tuesday' do
+    time_now = Time.parse('1996/01/01 00:00') #Monday
+    Time.stubs(:now).returns(time_now)
+    warehouse = warehouses(:two)
+    available_slots = warehouse.get_delivery_blocks(warehouse.local_time + 1.day)
+    assert_slots(available_slots, 1,1,1,1,1,0)
+  end
+
+  def find_slot(slots, from, to)
+    slots.select { |slot| slot[:from] == from && slot[:to] == to }.count
+  end
+
+  def assert_slots(slots, first_count, second_count, third_count, fourth_count, fifth_count, sixth_count)
+    assert_equal(first_count, find_slot(slots, '14:00', '15:00'))
+    assert_equal(second_count, find_slot(slots, '15:00', '16:00'))
+    assert_equal(third_count, find_slot(slots, '16:00', '17:00'))
+    assert_equal(fourth_count, find_slot(slots, '17:00', '18:00'))
+    assert_equal(fifth_count, find_slot(slots, '18:00', '19:00'))
+    assert_equal(sixth_count, find_slot(slots, '19:00', '20:00'))
   end
 end

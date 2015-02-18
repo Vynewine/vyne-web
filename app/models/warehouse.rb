@@ -258,4 +258,25 @@ class Warehouse < ActiveRecord::Base
                           order by ST_Distance (#{point}, a.coordinates) asc")
     warehouses
   end
+
+  def get_delivery_blocks(time)
+
+    agenda = self.agendas.select { |agenda| agenda.day == time.wday }.first
+    unless agenda.blank?
+      blocks = agenda.available_delivery_blocks(time)
+
+      unless blocks.blank?
+        blocks.map do |block|
+          {
+              :from => block[:from],
+              :to => block[:to],
+              :date => time.strftime('%F'),
+              :day => Date::DAYNAMES[time.wday],
+              :warehouse_id => self.id
+          }
+        end
+      end
+    end
+  end
+
 end

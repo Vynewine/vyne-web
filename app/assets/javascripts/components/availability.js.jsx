@@ -122,7 +122,7 @@ var ChooseDeliveryMethod = React.createClass({
 
             this.setState({
                 warehousesWithBookableSlots: nextProps.deliveryOptions.warehouses.filter(function (warehouse) {
-                    return warehouse.bookable_slots && warehouse.bookable_slots.length > 0
+                    return warehouse.delivery_slots && warehouse.delivery_slots.length > 0
                 })
             });
         }
@@ -205,7 +205,8 @@ var ChooseBookingSlot = React.createClass({
     },
     render: function () {
 
-        var deliverySlots = this.props.deliveryOptions.warehouses[0].bookable_slots.map(function (slot) {
+        //TODO: There can be more than one warehouse with slots available
+        var deliverySlots = this.props.deliveryOptions.warehouses[0].delivery_slots.map(function (slot) {
 
             return (
                 <button key={slot.from}
@@ -316,8 +317,8 @@ var Availability = React.createClass({
 
 var checkWarehouseAvailability = function (postcode, callback) {
 
-    callback(delOptions);
-    return;
+    //callback(delOptions);
+    //return;
 
     analytics.track('Postcode lookup', {
         postcode: postcode
@@ -350,7 +351,7 @@ var delOptions = {
             "opening_time": "09:00",
             "closing_time": "23:00",
             "opens_today": true,
-            "bookable_slots": [
+            "delivery_slots": [
                 {"day": "Monday", "from": "13:00", "to": "14:00", "available": true},
                 {"day": "Monday", "from": "14:00", "to": "15:00", "available": true},
                 {"day": "Monday", "from": "15:00", "to": "16:00", "available": false},
@@ -371,7 +372,13 @@ var delOptions = {
         "week_day": "Saturday",
         "opening_time": "09:00",
         "closing_time": "18:00"
-    }
+    },
+    "delivery_slots": [
+        {"day": "Monday", "date": "2015/02/15", "from": "13:00", "to": "14:00", "full": true, "warehouse_id": 1},
+        {"day": "Monday", "date": "2015/02/15", "from": "14:00", "to": "15:00", "full": true, "warehouse_id": 1},
+        {"day": "Monday", "date": "2015/02/15", "from": "15:00", "to": "16:00", "full": false, "warehouse_id": 2},
+        {"day": "Monday", "date": "2015/02/15", "from": "16:00", "to": "17:00", "full": true, "warehouse_id": 1}
+    ]
 };
 
 

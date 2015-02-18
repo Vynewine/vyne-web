@@ -6,11 +6,32 @@ one:
   email: jakub.borys@gmail.com
 
 two:
-  title: Vynz Warehouse
+  title: Vynz QH Soho
   address: two
   email: jakub.borys@gmail.com
+  active: true
+  # Center point 51.5151555 0.13487209999993865 - 200 meters radius
+  delivery_area: POLYGON((-0.13487209999993865 51.51695414321184,
+                          -0.13198182001976805 51.515155464488586,
+                          -0.13487209999993865 51.51335685678817,
+                          -0.1377623799801093 51.515155464488586,
+                          -0.13487209999993865 51.51695414321184))
+
+  #Point in warehouse two only: lng: -0.13331719999996494 lat: 51.5151128
+
+
 
 three:
   title: Vyne Warehouse Central
   address: three
   email: vyne.warehouse.central@vyne.london
+  active: true
+  # Center point 51.5145034 -0.13684439999997267 - 200 meters radius
+  delivery_area: POLYGON((-0.13684439999997267 51.51630204321184,
+                          -0.13395416139631752 51.51450336448941,
+                          -0.13684439999997267 51.51270475678816,
+                          -0.13973463860362778 51.51450336448941,
+                          -0.13684439999997267 51.51630204321184))
+
+# Point in warehouse three only: lng: -0.13768049999998766 lat: 51.5134376
+# Point within both location above: lng: -0.13554969999995592 lat: 51.5151483
