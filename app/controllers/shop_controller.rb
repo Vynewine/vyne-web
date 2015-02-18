@@ -79,8 +79,9 @@ class ShopController < ApplicationController
 
       # Assign Warehouse
 
-
       warehouses = ''
+      warehouse_info = nil
+
       if params.has_key?(:warehouse)
 
         warehouse_info = JSON.parse params[:warehouse]
@@ -128,6 +129,8 @@ class ShopController < ApplicationController
         return
       end
 
+
+      schedule_date = nil
 
       # Check if order is realtime or a scheduled order.
       if warehouse_info.blank? || warehouse_info['schedule_date'].blank?

@@ -39,7 +39,7 @@ class MerchantsControllerTest < ActionController::TestCase
     address = addresses(:five)
     get :index, {lat: address.latitude, lng: address.longitude}
 
-    #puts JSON.pretty_generate(JSON.parse(@response.body))
+    puts JSON.pretty_generate(JSON.parse(@response.body))
 
     response = JSON.parse(@response.body)
 

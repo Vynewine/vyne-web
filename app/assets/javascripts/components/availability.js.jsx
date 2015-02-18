@@ -343,41 +343,110 @@ var checkWarehouseAvailability = function (postcode, callback) {
     });
 };
 var delOptions = {
-    "warehouses": [
-        {
-            "id": 4,
-            "address": "EC4A 4AN",
-            "is_open": true,
-            "opening_time": "09:00",
-            "closing_time": "23:00",
-            "opens_today": true,
-            "delivery_slots": [
-                {"day": "Monday", "from": "13:00", "to": "14:00", "available": true},
-                {"day": "Monday", "from": "14:00", "to": "15:00", "available": true},
-                {"day": "Monday", "from": "15:00", "to": "16:00", "available": false},
-                {"day": "Monday", "from": "16:00", "to": "17:00", "available": true}
-            ]
-        },
-        {
-            "id": 1,
-            "address": "EC3V 1LR",
-            "is_open": false,
-            "opening_time": "09:00",
-            "closing_time": "20:00",
-            "opens_today": true
-        }
-    ],
-    "next_opening": {
-        "day": 6,
-        "week_day": "Saturday",
-        "opening_time": "09:00",
-        "closing_time": "18:00"
+    "today_warehouse": {
+        "id": 1,
+        "address": "W1F 8BH",
+        "is_open": false,
+        "opening_time": "17:00",
+        "closing_time": "20:30",
+        "opens_today": true,
+        "title": "Vynz QH Soho"
+    },
+    "next_open_warehouse": {
+        "day": 1,
+        "week_day": "Monday",
+        "opening_time": "17:00",
+        "closing_time": "20:30"
     },
     "delivery_slots": [
-        {"day": "Monday", "date": "2015/02/15", "from": "13:00", "to": "14:00", "full": true, "warehouse_id": 1},
-        {"day": "Monday", "date": "2015/02/15", "from": "14:00", "to": "15:00", "full": true, "warehouse_id": 1},
-        {"day": "Monday", "date": "2015/02/15", "from": "15:00", "to": "16:00", "full": false, "warehouse_id": 2},
-        {"day": "Monday", "date": "2015/02/15", "from": "16:00", "to": "17:00", "full": true, "warehouse_id": 1}
+        {
+            "from": "14:00",
+            "to": "15:00",
+            "date": "2015-02-18",
+            "day": "Wednesday",
+            "warehouse_id": 298486374,
+            "title": "Vynz QH Soho"
+        },
+        {
+            "from": "15:00",
+            "to": "16:00",
+            "date": "1996-01-08",
+            "day": "Monday",
+            "warehouse_id": 298486374,
+            "title": "Vynz QH Soho"
+        },
+        {
+            "from": "16:00",
+            "to": "17:00",
+            "date": "1996-01-08",
+            "day": "Monday",
+            "warehouse_id": 298486374,
+            "title": "Vynz QH Soho"
+        },
+        {
+            "from": "17:00",
+            "to": "18:00",
+            "date": "1996-01-08",
+            "day": "Monday",
+            "warehouse_id": 298486374,
+            "title": "Vynz QH Soho"
+        },
+        {
+            "from": "18:00",
+            "to": "19:00",
+            "date": "1996-01-08",
+            "day": "Monday",
+            "warehouse_id": 298486374,
+            "title": "Vynz QH Soho"
+        },
+        {
+            "from": "19:00",
+            "to": "20:00",
+            "date": "1996-01-08",
+            "day": "Monday",
+            "warehouse_id": 298486374,
+            "title": "Vynz QH Soho"
+        },
+        {
+            "from": "14:00",
+            "to": "15:00",
+            "date": "1996-01-09",
+            "day": "Tuesday",
+            "warehouse_id": 298486374,
+            "title": "Vynz QH Soho"
+        },
+        {
+            "from": "15:00",
+            "to": "16:00",
+            "date": "1996-01-09",
+            "day": "Tuesday",
+            "warehouse_id": 298486374,
+            "title": "Vynz QH Soho"
+        },
+        {
+            "from": "16:00",
+            "to": "17:00",
+            "date": "1996-01-09",
+            "day": "Tuesday",
+            "warehouse_id": 298486374,
+            "title": "Vynz QH Soho"
+        },
+        {
+            "from": "17:00",
+            "to": "18:00",
+            "date": "1996-01-09",
+            "day": "Tuesday",
+            "warehouse_id": 298486374,
+            "title": "Vynz QH Soho"
+        },
+        {
+            "from": "18:00",
+            "to": "19:00",
+            "date": "1996-01-09",
+            "day": "Tuesday",
+            "warehouse_id": 298486374,
+            "title": "Vynz QH Soho"
+        }
     ]
 };
 

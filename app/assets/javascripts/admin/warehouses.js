@@ -23,6 +23,12 @@ var renderWarehouse = function () {
                     fillColor: '#e8f8ff',
                     fillOpacity: 0.45
                 });
+
+            var warehouseIcon = L.icon({
+                iconUrl: '/winebar.png',
+                iconSize: [32, 32]
+            });
+            L.marker([warehouseLatitude, warehouseLongitude], {icon: warehouseIcon}).addTo(map);
         }
 
     }

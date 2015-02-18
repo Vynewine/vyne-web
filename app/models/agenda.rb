@@ -126,10 +126,9 @@ class Agenda < ActiveRecord::Base
     time = time.change(:month => 1, :day => 1, :year => 2000)
 
     lead_time_for_block_time_slots = 2.hours
-    lead_time_for_live_time_slots = 1.hour
 
     all_slots = block_slots.select { |slot| slot[:from] >= (time + lead_time_for_block_time_slots) } +
-        live_slots.select { |slot| slot[:from] >= (time + lead_time_for_live_time_slots) }
+        live_slots.select { |slot| slot[:from] >= (time) }
 
     all_slots.map do |slot|
       {

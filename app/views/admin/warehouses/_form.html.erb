@@ -116,6 +116,10 @@
           <th>Opens Today</th>
           <th>Opening</th>
           <th>Closing</th>
+          <th>Booked Delivery Starts</th>
+          <th>Booked Delivery Ends</th>
+          <th>Live Delivery Starts</th>
+          <th>Live Delivery Ends</th>
         </tr>
         </thead>
 
@@ -141,6 +145,26 @@
                   </td>
                   <td>
                     <input type="text" class="form-control" name="warehouse[agendas_attributes][<%= agendaCounter %>][closing]" value="<%= a.closing %>"/>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control"
+                           name="warehouse[agendas_attributes][<%= agendaCounter %>][delivery_slots_from]"
+                           value="<%= a.delivery_slots_from.blank? ? '' : a.delivery_slots_from.strftime('%H:%M') %>"/>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control"
+                           name="warehouse[agendas_attributes][<%= agendaCounter %>][delivery_slots_to]"
+                           value="<%= a.delivery_slots_to.blank? ? '' : a.delivery_slots_to.strftime('%H:%M') %>"/>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control"
+                           name="warehouse[agendas_attributes][<%= agendaCounter %>][live_delivery_from]"
+                           value="<%= a.live_delivery_from.blank? ? '' :  a.live_delivery_from.strftime('%H:%M') %>"/>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control"
+                           name="warehouse[agendas_attributes][<%= agendaCounter %>][live_delivery_to]"
+                           value="<%= a.live_delivery_to.blank? ? '' :  a.live_delivery_to.strftime('%H:%M') %>"/>
                   </td>
                 </tr>
 

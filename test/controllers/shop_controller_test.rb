@@ -169,8 +169,8 @@ class ShopControllerTest < ActionController::TestCase
   test 'Will create order for booked slot' do
 
     post :create, post_data_new
-
     order = Order.find_by client: @userOne
+    assert_equal(Status.statuses[:created], order.status_id)
 
   end
 

@@ -141,7 +141,8 @@ class AgendaTest < ActiveSupport::TestCase
     @time_now = Time.parse('1996/01/01 16:01') #Monday
     agenda = agendas(:warehouse_two_monday)
     available_slots = agenda.available_delivery_blocks(@time_now)
-    assert_slots(available_slots, 0,0,0,0,1,1)
+    puts available_slots
+    assert_slots(available_slots, 0,0,0,1,1,1)
   end
 
   def find_slot(slots, from, to)
@@ -149,11 +150,11 @@ class AgendaTest < ActiveSupport::TestCase
   end
 
   def assert_slots(slots, first_count, second_count, third_count, fourth_count, fifth_count, sixth_count)
-    assert_equal(first_count, find_slot(slots, '14:00', '15:00'))
-    assert_equal(second_count, find_slot(slots, '15:00', '16:00'))
-    assert_equal(third_count, find_slot(slots, '16:00', '17:00'))
-    assert_equal(fourth_count, find_slot(slots, '17:00', '18:00'))
-    assert_equal(fifth_count, find_slot(slots, '18:00', '19:00'))
-    assert_equal(sixth_count, find_slot(slots, '19:00', '20:00'))
+    assert_equal(first_count, find_slot(slots, '14:00', '15:00'), "Expected #{first_count} count for slot 14:00 to 15:00")
+    assert_equal(second_count, find_slot(slots, '15:00', '16:00'), "Expected #{second_count} count for slot 15:00 to 16:00")
+    assert_equal(third_count, find_slot(slots, '16:00', '17:00'), "Expected #{third_count} count for slot 16:00 to 17:00")
+    assert_equal(fourth_count, find_slot(slots, '17:00', '18:00'), "Expected #{fourth_count} count for slot 17:00 to 18:00")
+    assert_equal(fifth_count, find_slot(slots, '18:00', '19:00'), "Expected #{fifth_count} count for slot 18:00 to 19:00")
+    assert_equal(sixth_count, find_slot(slots, '19:00', '20:00'), "Expected #{sixth_count} count for slot 19:00 to 20:00")
   end
 end
