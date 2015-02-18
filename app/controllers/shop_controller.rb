@@ -155,7 +155,7 @@ class ShopController < ApplicationController
           # Admin UI Web Notification
           WebNotificationDispatcher.publish([@order.warehouse.id], "New order placed. Id: #{@order.id}", :new_order)
         else
-          Resque.enqueue_at(schedule_date, OrderFulfilment, @order.id)
+          Resque.enqueue_at(schedule_date, OrderFulfilment, :order_id => @order.id)
         end
 
         render :json => @order.to_json
