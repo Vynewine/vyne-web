@@ -4,8 +4,7 @@ require 'erb'
 
 module WebNotificationDispatcher
 
-  @logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
-  TAG = 'Web Notification Dispatcher'
+  @logger = Logging.logger['WebNotificationDispatcher']
 
   def self.publish(warehouse_ids, notification, type = :default, recipients = '' )
 
@@ -22,7 +21,7 @@ module WebNotificationDispatcher
     rescue Exception => exception
       error_message = "Error occurred dispatching web notification: #{exception.class} - #{exception.message}"
       log_error error_message
-      log_error exception.backtrace
+      log_error exception
     end
   end
 
@@ -34,10 +33,10 @@ module WebNotificationDispatcher
   end
 
   def self.log(message)
-    @logger.tagged(TAG) { @logger.info message }
+    @logger.info message
   end
 
   def self.log_error(message)
-    @logger.tagged(TAG) { @logger.error message }
+    @logger.error message
   end
 end

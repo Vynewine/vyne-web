@@ -134,3 +134,5 @@ gem 'font-awesome-rails'
 
 # React
 gem 'react-rails', '~> 0.12.0.0'
+
+gem 'logging-rails', :require => 'logging/rails'

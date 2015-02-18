@@ -110,9 +110,20 @@
                 <li class="list-group-item">
                   <div class="row">
                     <div class="col-xs-6">
-                      <strong>Address:</strong>
+                      <strong><%= link_to 'Address:', admin_address_url(@order.address) %></strong>
                       <% if @order.address %>
-                          <%= @order.address.full %>
+                          <a target="_blank"
+                             href="https://www.google.co.uk/maps/place/<%= @order.address.full %>">
+                            <%= @order.address.full %>
+                          </a>
+                      <% end %>
+                      <% if @order.address.latitude == '' || @order.address.longitude == '' %>
+                        <span class="to-do"> Incomplete address. Lat/Lng missing.</span>
+                      <% else %>
+                         <br/>lat/lng: <a target="_blank"
+                             href="https://www.google.co.uk/maps/place/<%= @order.address.latitude %>,<%= @order.address.longitude%>">
+                            <%= @order.address.latitude %>/<%= @order.address.longitude%>
+                          </a>
                       <% end %>
                     </div>
                     <div class="col-xs-6">
@@ -249,10 +260,12 @@
               <% end %>
 
               <% if @order.status_id != Status.statuses[:cancelled] %>
-                  <% if @order.delivery_provider == Order.delivery_types[:google_coordinate] %>
+                  <% if [Status.statuses[:advised], Status.statuses[:packing], Status.statuses[:pickup]].include?(@order.status.id) %>
                       <%= link_to 'Schedule Shutl', admin_advise_choose_path(:order => @order.id), {:class => 'btn btn-primary'} %>
-                  <% else %>
-                      <% #TODO Schedule Google Coordinate    %>
+                      <%= link_to 'Schedule G-Coordinate', admin_order_schedule_google_coordinate_path(@order), {
+                                                                 :method => :post,
+                                                                 :class => 'btn btn-primary'
+                                                         } %>
                   <% end %>
               <% end %>
 

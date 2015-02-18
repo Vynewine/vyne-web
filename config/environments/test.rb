@@ -42,6 +42,11 @@ Rails.application.configure do
   # In production, :host should be set to the actual host of your application.
 
   config.log_level = :error
+  # Set the logging destination(s)
+  config.log_to = %w[stdout]
+
+  # Show the logging configuration on STDOUT
+  config.show_log_configuration = true
 
   # Mandrill API
   config.mandrill = 'ipcLBLgQRHya2q3jvpPQsw'

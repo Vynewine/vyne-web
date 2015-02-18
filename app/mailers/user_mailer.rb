@@ -3,8 +3,7 @@ require 'erb'
 
 module UserMailer
 
-  @logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
-  TAG = 'User Mailer'
+  @logger = Logging.logger['UserMailer']
 
   def self.first_time_ordered(order)
 
@@ -424,10 +423,10 @@ module UserMailer
   private
 
   def self.log(message)
-    @logger.tagged(TAG) { @logger.info message }
+    @logger.info message
   end
 
   def self.log_error(message)
-    @logger.tagged(TAG) { @logger.error message }
+    @logger.error message
   end
 end

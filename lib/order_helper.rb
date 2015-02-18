@@ -1,7 +1,6 @@
 module OrderHelper
 
-  @logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
-  TAG = 'Order Helper'
+  @logger = Logging.logger['OrderHelper']
 
 
   def self.confirm_order(order, admin)
@@ -57,10 +56,10 @@ module OrderHelper
 
 
   def self.log(message)
-    @logger.tagged(TAG) { @logger.info message }
+    @logger.info message
   end
 
   def self.log_error(message)
-    @logger.tagged(TAG) { @logger.error message }
+    @logger.error message
   end
 end

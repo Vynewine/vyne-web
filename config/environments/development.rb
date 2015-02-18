@@ -98,4 +98,11 @@ Rails.application.configure do
 
   config.react.variant = :development
   config.react.addons = true
+  
+  # Set the logging destination(s)
+  config.log_to = %w[stdout]
+
+  # Show the logging configuration on STDOUT
+  config.show_log_configuration = true
+
 end

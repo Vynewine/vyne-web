@@ -98,7 +98,7 @@ class WebNotifications
             end
           end
         rescue Exception => exception
-          puts "#{TAG} Exception from Redis Subscriber #{exception.class} - #{exception.message}"
+          puts "#{TAG} ERROR Exception from Redis Subscriber #{exception.class} - #{exception.message}"
           puts "#{TAG} #{exception.backtrace}"
           @subscribed = false
         end

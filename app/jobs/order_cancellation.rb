@@ -6,8 +6,7 @@ class OrderCancellation
 
   @queue = :order_cancellations
 
-  @logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
-  TAG = 'Order Cancellations'
+  @logger = Logging.logger['OrderCancellationJob']
 
   def self.perform (order_id, reason)
     log 'Processing order cancellation for order id: ' + order_id.to_s
@@ -67,11 +66,11 @@ class OrderCancellation
   end
 
   def self.log(message)
-    @logger.tagged(TAG) { @logger.info message }
+    @logger.info message
   end
 
   def self.log_error(message)
-    @logger.tagged(TAG) { @logger.error message }
+    @logger.error message
   end
 
 end

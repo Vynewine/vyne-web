@@ -9,6 +9,8 @@ module CoordinateHelper
   APP_NAME = 'Vyne Admin'
   APP_VERSION = '1.0.0'
 
+  @logger = Logging.logger['CoordinateHelper']
+
 
   def self.google_client
 
@@ -78,6 +80,8 @@ module CoordinateHelper
 
     body = JSON.parse(result.body)
 
+    log body
+
     order.delivery_token = body['id']
     order.delivery_status = body
     order.delivery_provider = 'google_coordinate'
@@ -100,7 +104,7 @@ module CoordinateHelper
 
       google_token = Token.find_by_key(GOOGLE_COORDINATE_TOKEN)
       token = google_token.fresh_token
-      puts token
+      log token
       team_id = Rails.application.config.google_coordinate_team_id
 
       response = RestClient.put("https://www.googleapis.com/coordinate/v1/teams/#{team_id}/jobs/#{order.delivery_token}?progress=OBSOLETE", {},
@@ -113,8 +117,8 @@ module CoordinateHelper
 
     rescue Exception => exception
       message = "Error occurred while canceling Google Coordinate Job: #{exception.class} - #{exception.message}"
-      Rails.logger.error message
-      Rails.logger.error exception.backtrace
+      log_error message
+      log_error exception
       result[:errors] << message
     ensure
       return result
@@ -145,8 +149,8 @@ module CoordinateHelper
 
     rescue Exception => exception
       message = "Error occurred while retrieving Job Status from Google Coordinate: #{exception.class} - #{exception.message}"
-      Rails.logger.error message
-      Rails.logger.error exception.backtrace
+      log_error message
+      log_error exception
       result[:errors] << message
     ensure
       return result
@@ -219,8 +223,8 @@ module CoordinateHelper
 
     rescue Exception => exception
       message = "Error occurred while retrieving Courier Status: #{exception.class} - #{exception.message}"
-      Rails.logger.error message
-      Rails.logger.error exception.backtrace
+      log_error message
+      log_error exception
       result[:errors] << message
     ensure
       return result
@@ -268,8 +272,8 @@ module CoordinateHelper
 
     rescue Exception => exception
       message = "Error occurred while retrieving Jobs status: #{exception.class} - #{exception.message}"
-      Rails.logger.error message
-      Rails.logger.error exception.backtrace
+      log_error message
+      log_error exception
       result[:errors] << message
     ensure
       return result
@@ -288,11 +292,12 @@ module CoordinateHelper
   end
 
   def self.log(message)
-    logger.tagged('Coordinate Helper') { @logger.info message }
+    @logger.info message
   end
 
-  def self.logger
-    @logger ||= ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
+  def self.log_error(message)
+    @logger.error message
   end
+
 
 end

@@ -133,6 +133,7 @@ Rails.application.routes.draw do
       post 'charge'
       post 'send_receipt'
       post 'finished_advice'
+      post 'schedule_google_coordinate'
       collection do
         post 'packing_complete'
         get 'refresh_all'
