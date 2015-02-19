@@ -19,6 +19,8 @@
 //= require vendor/idangerous.swiper.hashnav
 //= require vendor/leaflet-0.7.3/leaflet.js
 //= require vendor/leaflet-plugins-1.2.0/layer/tile/Google
+//= require carhartl/jquery.cookie.js
+//= require moment
 //= require delivery
 //= require device
 //= require orders
@@ -115,22 +117,6 @@ var wineCount = 0;
 var secondBottle = false;
 var orderSwiper;
 
-
-$('#invite-code').keyup(function (event) {
-    if (event.target.value.length > 0) {
-        $('#submit-invite-code').show();
-        $('#invite-missing').hide();
-    } else {
-        $('#submit-invite-code').hide();
-        $('#invite-missing').show();
-    }
-});
-
-$('#invite-not-available').click(function (e) {
-    e.preventDefault();
-    $('#invite-form').hide();
-    $('#sign-up-home-form').show();
-});
 
 $('#sign-up-home-submit').click(function (e) {
     e.preventDefault();
@@ -397,19 +383,6 @@ $(function () {
 
     /* Availabilty */
 
-    //Get the postcode form the URL using query params
-    try {
-        var queryHash = getUrlVars();
-        if (getUrlVars()["postcode"]) {
-            $('#filterPostcode').val(getUrlVars()["postcode"].replace('+', ' ').toUpperCase().trim());
-        } else {
-            $('#initial-postcode-lookup').hide();
-            $('#filterPostcode').show();
-        }
-
-    } catch (err) {
-        //
-    }
 
     $('#order input').keypress(function (e) {
         if (e.which == 13) {

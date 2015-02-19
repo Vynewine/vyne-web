@@ -5,9 +5,14 @@ var CheckPostcode = React.createClass({
     getInitialState: function () {
         return {
             showErrorLabel: false,
-            filterPostcode: this.props.initialFilterPostcode,
+            filterPostcode: $.cookie('postcode'),
             typingTimer: null
         };
+    },
+    componentDidMount: function () {
+        if (this.state.filterPostcode) {
+            this.props.onPostcodeChange(this.state.filterPostcode);
+        }
     },
     handleChange: function (event) {
 
@@ -54,33 +59,19 @@ var CheckPostcode = React.createClass({
             display: this.state.showErrorLabel ? 'block' : 'none'
         };
 
-        var openedWarehouses = [];
-        var closedWarehouses = [];
-
-        if (this.props.deliveryOptions.warehouses) {
-            openedWarehouses = this.props.deliveryOptions.warehouses.filter(function (warehouse) {
-                return warehouse.is_open
-            });
-
-            closedWarehouses = this.props.deliveryOptions.warehouses.map(function (warehouse) {
-                return warehouse.is_open === false;
-            });
-        }
-
         var labelClass = 'app-label loading';
-        var labelText = 'Checking';
+        var labelText = 'Please enter your postcode';
 
         if (this.isMounted()) {
-            if (openedWarehouses.length > 0) {
-                labelClass = 'app-label success fadeIn';
-                labelText = 'Vyne delivers to your area';
-            } else if (closedWarehouses.length > 0) {
-                labelClass = 'app-label danger';
-                labelText = 'All closed';
-            }
-            else {
-                labelClass = 'app-label danger';
-                labelText = 'We don\'t deliver';
+
+            if (this.props.deliveryOptions.today_warehouse) {
+                if (!this.props.deliveryOptions.today_warehouse.id) {
+                    labelClass = 'app-label danger';
+                    labelText = 'We don\'t deliver';
+                } else {
+                    labelClass = 'app-label success fadeIn';
+                    labelText = 'Vyne delivers to your area';
+                }
             }
         }
 
@@ -103,47 +94,35 @@ var CheckPostcode = React.createClass({
     }
 });
 
-var ChooseDeliveryMethod = React.createClass({
+var LiveDelivery = React.createClass({
     getInitialState: function () {
         return {
-            openedWarehouses: [],
-            warehousesWithBookableSlots: [],
+            warehouse: {},
+            liveDeliveryEnabled: false,
             filterPostcode: this.props.initialFilterPostcode
         };
     },
     componentWillReceiveProps: function (nextProps) {
-        if (nextProps.deliveryOptions.warehouses) {
+        if (nextProps.deliveryOptions.today_warehouse.id) {
 
             this.setState({
-                openedWarehouses: nextProps.deliveryOptions.warehouses.filter(function (warehouse) {
-                    return warehouse.is_open
-                })
-            });
-
-            this.setState({
-                warehousesWithBookableSlots: nextProps.deliveryOptions.warehouses.filter(function (warehouse) {
-                    return warehouse.delivery_slots && warehouse.delivery_slots.length > 0
-                })
+                warehouse: nextProps.deliveryOptions.today_warehouse,
+                liveDeliveryEnabled: nextProps.deliveryOptions.today_warehouse.is_open
             });
         }
-    },
-    deliverLater: function () {
-        this.props.onPageChange('choseSlot', this.state.warehousesWithBookableSlots)
     },
     render: function () {
 
         var deliverNow = '';
-        var deliverLater = '';
-        var or = '';
 
-        if (this.state.openedWarehouses.length) {
+        if (this.state.liveDeliveryEnabled) {
             deliverNow = (
                 <div>
                     <div className="form-group form-group-submit">
-                        <form method="post" action={"shop/neworder?postcode=" + (this.state.filterPostcode).replace(' ', '+')}>
+                        <form method="get" action="shop/neworder">
                             <button type="submit" className="btn btn-primary btn-lg app-btn">Now</button>
-                            <input name="warehouses" type="hidden" value={JSON.stringify({warehouses: this.state.openedWarehouses})} />
-                            <input name="authenticity_token" type="hidden" value={token} />
+                            <input name="warehouse_id" type="hidden" value={this.state.warehouse.id} />
+                            <input name="postcode" type="hidden" value={(this.state.filterPostcode)} />
                         </form>
                     </div>
                     <p>
@@ -153,7 +132,70 @@ var ChooseDeliveryMethod = React.createClass({
             );
         }
 
-        if (this.state.warehousesWithBookableSlots.length) {
+        return (
+            <div>
+            {deliverNow}
+            </div>
+        );
+    }
+});
+
+var BlockDelivery = React.createClass({
+    getInitialState: function () {
+        return {
+            warehouse: {},
+            filterPostcode: this.props.initialFilterPostcode,
+            deliverySlots: [],
+            liveDeliveryEnabled: false
+        };
+    },
+    componentWillReceiveProps: function (nextProps) {
+        if (nextProps.deliveryOptions.today_warehouse.id) {
+
+            var slots = nextProps.deliveryOptions.delivery_slots;
+            var slotDate = '';
+            var slotFrom = '';
+            var slotTo = '';
+
+            if(slots) {
+                slotDate = slots[0].date;
+                slotFrom = slots[0].from;
+                slotTo = slots[0].to;
+            }
+
+            this.setState({
+                warehouse: nextProps.deliveryOptions.today_warehouse,
+                deliverySlots: slots,
+                daytimeSlotsAvailable: nextProps.deliveryOptions.daytime_slots_available,
+                liveDeliveryEnabled: nextProps.deliveryOptions.today_warehouse.is_open,
+                slotDate: slotDate,
+                slotFrom: slotFrom,
+                slotTo: slotTo
+            });
+        }
+    },
+    selectSlot: function (event) {
+        var slot = $(event.target).find("option:selected").data('value');
+        this.setState({
+            selectedSlot: slot,
+            selectedSlotText: moment(slot.date).format('dddd MMMM Do') + ' between ' + slot.from + ' and ' + slot.to,
+            slotDate: slot.date,
+            slotFrom: slot.from,
+            slotTo: slot.to
+        });
+    },
+    render: function () {
+        var options = [];
+        var deliverLater = '';
+        var or = '';
+
+        if (this.state.deliverySlots.length) {
+
+            this.state.deliverySlots.map(function (slot) {
+                var key = slot.date + ',' + slot.from + ',' + slot.to;
+                options.push(<option key={key} data-value={JSON.stringify(slot)} value={key} >{slot.day} {slot.from} - {slot.to}</option>)
+            }.bind(this));
+
             deliverLater = (
                 <div>
                     <p>
@@ -162,14 +204,25 @@ var ChooseDeliveryMethod = React.createClass({
                         To your desk in Central London
                     </p>
 
+
                     <div className="form-group form-group-submit">
-                        <button type="submit" onClick={this.deliverLater} className="btn btn-primary btn-lg app-btn">Later</button>
+                        <form method="get" action="shop/neworder">
+                            <select className="form-control" onChange={this.selectSlot}>
+                            {options}
+                            </select>
+                            <input name="postcode" type="hidden" value={(this.state.filterPostcode)} />
+                            <input name="warehouse_id" type="hidden" value={this.state.warehouse.id} />
+                            <input name="slot_date" type="hidden" value={this.state.slotDate} />
+                            <input name="slot_from" type="hidden" value={this.state.slotFrom} />
+                            <input name="slot_to" type="hidden" value={this.state.slotTo} />
+                            <button type="submit" className="btn btn-primary btn-lg app-btn">Book a slot</button>
+                        </form>
                     </div>
                 </div>
             );
         }
 
-        if (this.state.openedWarehouses.length && this.state.warehousesWithBookableSlots.length) {
+        if (this.state.liveDeliveryEnabled && this.state.deliverySlots.length) {
             or = (
                 <div>
                     <h4 className="circled-text">or</h4>
@@ -179,77 +232,10 @@ var ChooseDeliveryMethod = React.createClass({
 
         return (
             <div>
-            {deliverNow}
             {or}
             {deliverLater}
             </div>
         );
-    }
-});
-
-var ChooseBookingSlot = React.createClass({
-
-    getInitialState: function () {
-        return {
-            fromSlot: '',
-            filterPostcode: this.props.initialFilterPostcode,
-            selectedSlot: '(Please select one of the available slots above)',
-            warehousesWithBookableSlots: []
-        };
-    },
-    selectSlot: function (fromSlot, slot) {
-        this.setState({
-            fromSlot: fromSlot,
-            selectedSlot: slot.day + ' ' + slot.from + ' ' + slot.to
-        });
-    },
-    render: function () {
-
-        //TODO: There can be more than one warehouse with slots available
-        var deliverySlots = this.props.deliveryOptions.warehouses[0].delivery_slots.map(function (slot) {
-
-            return (
-                <button key={slot.from}
-                    className={'btn btn-lg' + (slot.from === this.state.fromSlot ? ' btn-success' : ' btn-default')}
-                    disabled={!slot.available}
-                    onClick={this.selectSlot.bind(this, slot.from, slot)}
-                >
-                        {slot.day} {slot.from} - {slot.to}
-                    {slot.available ? '' : <br>(Full)</br> }
-                </button>
-            )
-        }.bind(this));
-
-        return (
-            <div>
-                <h4>
-                    Next available booking slots for  {this.state.filterPostcode}
-                </h4>
-
-                <div className="form-group small">
-                    Choose your delivery slot
-                </div>
-
-                <div className="btn-group-vertical">
-
-                {deliverySlots}
-
-                </div>
-
-                <h4>
-                    You selected: {this.state.selectedSlot}
-                </h4>
-
-                <div className="form-group form-group-submit">
-                    <form method="post" action={"shop/neworder?postcode=" + (this.state.filterPostcode).replace(' ', '+')}>
-                        <button type="submit" className="btn btn-primary btn-lg app-btn" disabled={!this.state.fromSlot}>Book Slot</button>
-                        <input name="warehouses" type="hidden" value={JSON.stringify({warehouses: this.props.warehousesWithBookableSlots})} />
-                        <input name="selected_slot" type="hidden" value={this.state.fromSlot} />
-                        <input name="authenticity_token" type="hidden" value={token} />
-                    </form>
-                </div>
-            </div>
-        )
     }
 });
 
@@ -260,8 +246,7 @@ var Availability = React.createClass({
 
     getInitialState: function () {
         return {
-            deliveryOptions: {},
-            currentPage: 'check'
+            deliveryOptions: {}
         };
     },
     loadData: function (postcode) {
@@ -278,47 +263,32 @@ var Availability = React.createClass({
     handlePostcodeChange: function (postcode) {
         this.loadData(postcode);
     },
-    handlePageChange: function (page, data) {
-        this.setState({
-            currentPage: page,
-            data: data
-        });
-    },
     render: function () {
-        var partial;
 
-        switch (this.state.currentPage) {
-            case 'check':
-                partial = (
-                    <div>
-                        <CheckPostcode
-                            initialFilterPostcode={this.props.initialFilterPostcode}
-                            onPostcodeChange={this.handlePostcodeChange}
-                            deliveryOptions={this.state.deliveryOptions}
-                        />
-                        <ChooseDeliveryMethod
-                            deliveryOptions={this.state.deliveryOptions}
-                            initialFilterPostcode={this.props.initialFilterPostcode}
-                            onPageChange={this.handlePageChange}
-                        />
-                    </div>);
-                break;
-            case 'choseSlot':
-                partial = <ChooseBookingSlot
+        return (
+            <div>
+                <CheckPostcode
+                    initialFilterPostcode={this.props.initialFilterPostcode}
+                    onPostcodeChange={this.handlePostcodeChange}
+                    deliveryOptions={this.state.deliveryOptions}
+                />
+                <LiveDelivery
                     deliveryOptions={this.state.deliveryOptions}
                     initialFilterPostcode={this.props.initialFilterPostcode}
-                    warehousesWithBookableSlots={this.state.data}
-                />;
-        }
-
-        return partial;
+                />
+                <BlockDelivery
+                    deliveryOptions={this.state.deliveryOptions}
+                    initialFilterPostcode={this.props.initialFilterPostcode}
+                />
+            </div>
+        );
     }
 });
 
 var checkWarehouseAvailability = function (postcode, callback) {
 
-    //callback(delOptions);
-    //return;
+    callback(delOptions);
+    return;
 
     analytics.track('Postcode lookup', {
         postcode: postcode
@@ -329,12 +299,13 @@ var checkWarehouseAvailability = function (postcode, callback) {
     geocoder.geocode({'address': 'London+' + postcode + '+UK'}, function (results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
 
-            var warehouseResource = "/warehouses/addresses.json";
+            var warehouseResource = "/merchants/";
 
             $.get(warehouseResource,
                 {
                     lat: results[0].geometry.location.lat(),
-                    lng: results[0].geometry.location.lng()
+                    lng: results[0].geometry.location.lng(),
+                    postcode: postcode
                 },
                 function (deliveryOptions) {
                     callback(deliveryOptions);
@@ -346,7 +317,7 @@ var delOptions = {
     "today_warehouse": {
         "id": 1,
         "address": "W1F 8BH",
-        "is_open": false,
+        "is_open": true,
         "opening_time": "17:00",
         "closing_time": "20:30",
         "opens_today": true,
@@ -358,11 +329,12 @@ var delOptions = {
         "opening_time": "17:00",
         "closing_time": "20:30"
     },
+    "daytime_slots_available": true,
     "delivery_slots": [
         {
-            "from": "14:00",
+            "from": "14:50",
             "to": "15:00",
-            "date": "2015-02-18",
+            "date": "2015-02-19",
             "day": "Wednesday",
             "warehouse_id": 298486374,
             "title": "Vynz QH Soho"
@@ -460,6 +432,10 @@ var renderAvailability = function () {
 
         if (queryHash["postcode"]) {
             postCode = getUrlVars()["postcode"].replace('+', ' ').toUpperCase().trim();
+        }
+
+        if (!postCode && $.cookie('postcode')) {
+            postCode = $.cookie('postcode')
         }
 
         React.render(<Availability initialFilterPostcode={postCode} />,

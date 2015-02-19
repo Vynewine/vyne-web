@@ -16,10 +16,10 @@ class OrderFulfilment
       Resque.enqueue(OrderEmailNotification, order.id, :merchant_order_confirmation)
 
       # Android Notification
-      Resque.enqueue(OrderNotification, 'You have a new order.', order.warehouse.devices.map { |device| device.registration_id })
+      Resque.enqueue(OrderNotification, 'Scheduled Order has just been processed.', order.warehouse.devices.map { |device| device.registration_id })
 
       # Admin UI Web Notification
-      WebNotificationDispatcher.publish([order.warehouse.id], "New order placed. Id: #{order.id}", :new_order)
+      WebNotificationDispatcher.publish([order.warehouse.id], "Scheduled Order processed. Id: #{order.id}", :new_order)
     else
       log_error order.errors
     end

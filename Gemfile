@@ -93,6 +93,7 @@ gem 'autoprefixer-rails'
 
 # Time conversion for UI
 gem 'local_time'
+gem 'momentjs-rails' , '~> 2.9.0'
 
 # Google API and OAuth
 gem 'google-api-client'

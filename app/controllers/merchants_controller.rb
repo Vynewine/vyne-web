@@ -6,7 +6,12 @@ class MerchantsController < ApplicationController
       return
     end
 
-    warehouse_info = {today_warehouse: {}, next_open_warehouse: {}, delivery_slots: []}
+    unless params[:postcode].blank?
+      cookies[:postcode] = params[:postcode]
+    end
+
+
+    warehouse_info = {today_warehouse: {}, next_open_warehouse: {}, delivery_slots: [], daytime_slots_available: false}
 
     warehouses = Warehouse.delivering_to(params[:lat], params[:lng])
 
@@ -27,6 +32,8 @@ class MerchantsController < ApplicationController
       warehouse_info[:next_open_warehouse] = next_open_warehouse(warehouses)
 
       warehouse_info[:delivery_slots] = get_delivery_slots(warehouses)
+
+      warehouse_info[:daytime_slots_available] = warehouse_info[:delivery_slots].blank? ? false : warehouse_info[:delivery_slots].select{|slot| slot[:type] == :daytime}.count > 0
 
     end
     render :json => warehouse_info

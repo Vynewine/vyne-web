@@ -40,17 +40,6 @@ class ShopController < ApplicationController
     @types = Type.all.order(:id)
     @preparations = Preparation.all.order(:id)
 
-    unless params[:warehouses].blank?
-      session[:warehouses] = params[:warehouses]
-    end
-
-    unless params[:selected_slot].blank?
-      session[:selected_slot] = params[:selected_slot]
-    end
-
-    @warehouses = session[:warehouses]
-    @selected_slot = session[:selected_slot]
-
   end
 
   # GET /orders/confirmed
@@ -77,33 +66,28 @@ class ShopController < ApplicationController
       address = Address.find(order_address)
       @order.address = address
 
+
+      warehouse_id = params[:warehouse_id]
+      slot_date = params[:slot_date]
+      slot_from = params[:slot_from]
+
+      @order.information = {
+          warehouse_id: warehouse_id,
+          slot_date: slot_date,
+          slot_from: slot_from,
+          slot_to: params[:slot_to]
+      }
+
       # Assign Warehouse
 
-      warehouses = ''
-      warehouse_info = nil
+      warehouse = Warehouse.find(warehouse_id)
 
-      if params.has_key?(:warehouse)
-
-        warehouse_info = JSON.parse params[:warehouse]
-
-        @order.information = params[:warehouse]
-
-        warehouse = Warehouse.find(warehouse_info['id'])
-
-        if warehouse.blank?
-          render json: ['Warehouse not valid'], status: :unprocessable_entity
-          return
-        else
-          @order.warehouse = warehouse
-        end
-
-        # TODO Remove
-      elsif params.has_key?(:warehouses)
-        warehouses = params[:warehouses]
-        @order.information = warehouses
-        @order.warehouse = assign_warehouse(warehouses)
+      if warehouse.blank?
+        render json: ['Warehouse not valid'], status: :unprocessable_entity
+        return
+      else
+        @order.warehouse = warehouse
       end
-
 
       # Add Order Items with Customer Preferences
       set_customer_preferences(@order, params[:wines])
@@ -129,14 +113,13 @@ class ShopController < ApplicationController
         return
       end
 
-
       schedule_date = nil
 
       # Check if order is realtime or a scheduled order.
-      if warehouse_info.blank? || warehouse_info['schedule_date'].blank?
+      if slot_date.blank?
         @order.status_id = Status.statuses[:pending]
       else
-        schedule_date = Time.parse(warehouse_info['schedule_date'] + ' ' + warehouse_info['schedule_time_from'])
+        schedule_date = Time.parse(slot_date + ' ' + slot_from)
       end
 
       if @order.save

@@ -83,7 +83,8 @@ class Agenda < ActiveRecord::Base
       number_of_slots.to_i.times do |i|
         slots << {
             from: block_delivery_start_time + i.hours,
-            to: block_delivery_start_time + (i + 1).hours
+            to: block_delivery_start_time + (i + 1).hours,
+            type: :daytime
         }
       end
     end
@@ -104,7 +105,8 @@ class Agenda < ActiveRecord::Base
       number_of_slots.to_i.times do |i|
         slots << {
             from: live_delivery_block_start_time + i.hours,
-            to: live_delivery_block_start_time + (i + 1).hours
+            to: live_delivery_block_start_time + (i + 1).hours,
+            type: :live
         }
       end
     end
@@ -133,7 +135,8 @@ class Agenda < ActiveRecord::Base
     all_slots.map do |slot|
       {
           :from => slot[:from].strftime('%H:%M'),
-          :to => slot[:to].strftime('%H:%M')
+          :to => slot[:to].strftime('%H:%M'),
+          :type => slot[:type]
       }
     end
   end

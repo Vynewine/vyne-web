@@ -51,7 +51,7 @@ class Admin::OrdersController < ApplicationController
   end
 
   def show
-    @warehouses = Warehouse.find(@order.information['warehouses'].map { |warehouse| warehouse['id'] })
+
   end
 
   # GET /orders/new

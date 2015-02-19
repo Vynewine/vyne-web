@@ -305,7 +305,8 @@ class Warehouse < ActiveRecord::Base
               :date => time.strftime('%F'),
               :day => Date::DAYNAMES[time.wday],
               :warehouse_id => self.id,
-              :title => self.title
+              :title => self.title,
+              :type => block[:type]
           }
         end
       end

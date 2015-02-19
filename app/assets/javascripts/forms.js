@@ -379,11 +379,14 @@ if ($('body.shop').length) {
         var new_brand = $('#new-brand').val();
         var expm = $('#expm').val();
         var expy = $('#expy').val();
-        var warehouses = $('#warehouses').val();
+        var warehouse_id = $('#warehouse_id').val();
         var wines = $('input[name="wines"]').val();
         var address_id = $('#address-id').val();
         var stripe_token = $('#stripe-token').val();
         var $errorList = $('#payment-errors');
+        var slot_date = $('#slot_date').val();
+        var slot_from = $('#slot_from').val();
+        var slot_to = $('#slot_to').val();
 
         $.ajax({
             type: "POST",
@@ -397,10 +400,13 @@ if ($('body.shop').length) {
                 new_brand: new_brand,
                 expm: expm,
                 expy: expy,
-                warehouses: warehouses,
+                warehouse_id: warehouse_id,
                 wines: wines,
                 address_id: address_id,
-                stripe_token: stripe_token
+                stripe_token: stripe_token,
+                slot_date: slot_date,
+                slot_from: slot_from,
+                slot_to: slot_to
             },
             error: function (data) {
 

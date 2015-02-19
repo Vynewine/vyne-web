@@ -18,8 +18,11 @@
     <div class="swiper-overlay"></div>
 
 
-    <input type="hidden" id="warehouses" name="warehouses" class="hidden" value="<%= @warehouses %>"/>
-      <input type="hidden" id="selected-slot" name="selected_slot" class="hidden" value="<%= @selected_slot %>"/>
+      <input type="hidden" id="warehouse_id" name="warehouse_id"  value="<%= params[:warehouse_id] %>"/>
+      <input type="hidden" id="slot_date" name="slot_date" value="<%= params[:slot_date] %>"/>
+      <input type="hidden" id="slot_from" name="slot_from" value="<%= params[:slot_from] %>"/>
+      <input type="hidden" id="slot_to" name="slot_to" value="<%= params[:slot_to] %>"/>
+      <input type="hidden" id="filterPostcode" name="filterPostcode" value="<%= params[:postcode] %>"/>
 
     <%# ============================= Select Bottle ============================= %>
 
