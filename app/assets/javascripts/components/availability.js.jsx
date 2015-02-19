@@ -5,7 +5,7 @@ var CheckPostcode = React.createClass({
     getInitialState: function () {
         return {
             showErrorLabel: false,
-            filterPostcode: $.cookie('postcode'),
+            filterPostcode: this.props.initialFilterPostcode || $.cookie('postcode'),
             typingTimer: null
         };
     },
@@ -67,7 +67,7 @@ var CheckPostcode = React.createClass({
             if (this.props.deliveryOptions.today_warehouse) {
                 if (!this.props.deliveryOptions.today_warehouse.id) {
                     labelClass = 'app-label danger';
-                    labelText = 'We don\'t deliver';
+                    labelText = 'Not available in your area yet';
                 } else {
                     labelClass = 'app-label success fadeIn';
                     labelText = 'Vyne delivers to your area';
@@ -99,7 +99,8 @@ var LiveDelivery = React.createClass({
         return {
             warehouse: {},
             liveDeliveryEnabled: false,
-            filterPostcode: this.props.initialFilterPostcode
+            filterPostcode: this.props.initialFilterPostcode,
+            nextOpenWarehouse: {}
         };
     },
     componentWillReceiveProps: function (nextProps) {
@@ -107,7 +108,8 @@ var LiveDelivery = React.createClass({
 
             this.setState({
                 warehouse: nextProps.deliveryOptions.today_warehouse,
-                liveDeliveryEnabled: nextProps.deliveryOptions.today_warehouse.is_open
+                liveDeliveryEnabled: nextProps.deliveryOptions.today_warehouse.is_open,
+                nextOpenWarehouse: nextProps.deliveryOptions.next_open_warehouse
             });
         }
     },
@@ -125,12 +127,31 @@ var LiveDelivery = React.createClass({
                             <input name="postcode" type="hidden" value={(this.state.filterPostcode)} />
                         </form>
                     </div>
+
+                        <h4>Delivery in minutes</h4>
+
                     <p>
-                        Delivery in minutes
                     </p>
                 </div>
             );
+        } else if (this.state.warehouse.opens_today && this.state.warehouse.opening_time) {
+            deliverNow = (
+                <h4>
+                    Instant delivery is only available in your area
+                    <br/>
+                    between {this.state.warehouse.opening_time}-{this.state.warehouse.closing_time}
+                </h4>
+            );
+        } else if (this.state.nextOpenWarehouse && this.state.nextOpenWarehouse.opening_time) {
+            deliverNow = (
+                <h4>
+                    Next instant delivery to your area will be on {this.state.nextOpenWarehouse.week_day}
+                    <br/>
+                    between {this.state.nextOpenWarehouse.opening_time}-{this.state.nextOpenWarehouse.closing_time}
+                </h4>
+            );
         }
+
 
         return (
             <div>
@@ -156,11 +177,13 @@ var BlockDelivery = React.createClass({
             var slotDate = '';
             var slotFrom = '';
             var slotTo = '';
+            var slotWarehouse = '';
 
-            if(slots) {
+            if (slots) {
                 slotDate = slots[0].date;
                 slotFrom = slots[0].from;
                 slotTo = slots[0].to;
+                slotWarehouse = slots[0].warehouse_id;
             }
 
             this.setState({
@@ -170,7 +193,8 @@ var BlockDelivery = React.createClass({
                 liveDeliveryEnabled: nextProps.deliveryOptions.today_warehouse.is_open,
                 slotDate: slotDate,
                 slotFrom: slotFrom,
-                slotTo: slotTo
+                slotTo: slotTo,
+                slotWarehouse: slotWarehouse
             });
         }
     },
@@ -181,13 +205,15 @@ var BlockDelivery = React.createClass({
             selectedSlotText: moment(slot.date).format('dddd MMMM Do') + ' between ' + slot.from + ' and ' + slot.to,
             slotDate: slot.date,
             slotFrom: slot.from,
-            slotTo: slot.to
+            slotTo: slot.to,
+            slotWarehouse: slot.warehouse_id
         });
     },
     render: function () {
         var options = [];
         var deliverLater = '';
         var or = '';
+        var slotsMessage = '';
 
         if (this.state.deliverySlots.length) {
 
@@ -196,37 +222,78 @@ var BlockDelivery = React.createClass({
                 options.push(<option key={key} data-value={JSON.stringify(slot)} value={key} >{slot.day} {slot.from} - {slot.to}</option>)
             }.bind(this));
 
+
+            if (this.state.daytimeSlotsAvailable && this.state.warehouse.opens_today) {
+                slotsMessage = (
+                    <div>
+                        <p>
+                        </p>
+
+                        <h4> Book one of the slots below </h4>
+
+                    </div>
+                );
+            } else if (!this.state.warehouse.opens_today) {
+                slotsMessage = (
+                    <div>
+                        <p>
+                        </p>
+                        <h4> Book in advance for later delivery</h4>
+                    </div>
+                );
+            }
+            else {
+                slotsMessage = (
+                    <div>
+                        <p>
+                        </p>
+                        <h4>
+                            Work in Central London&#63;
+                            <br/>
+                            Enter your work postcode for&nbsp;
+                            <strong>bookable daytime slots today</strong>
+                        </h4>
+                        <p>
+                            <h4 className="circled-text">or</h4>
+                        </p>
+                        <h4>Book one of the evening slots below</h4>
+                    </div>
+                );
+            }
+
             deliverLater = (
                 <div>
-                    <p>
-                        Book Daytime Slot
-                        <br/>
-                        To your desk in Central London
-                    </p>
 
+                {slotsMessage}
 
-                    <div className="form-group form-group-submit">
-                        <form method="get" action="shop/neworder">
-                            <select className="form-control" onChange={this.selectSlot}>
+                    <form method="get" action="shop/neworder">
+                        <div className="form-group">
+                            <select className="form-control app-btn" onChange={this.selectSlot}>
                             {options}
                             </select>
-                            <input name="postcode" type="hidden" value={(this.state.filterPostcode)} />
-                            <input name="warehouse_id" type="hidden" value={this.state.warehouse.id} />
-                            <input name="slot_date" type="hidden" value={this.state.slotDate} />
-                            <input name="slot_from" type="hidden" value={this.state.slotFrom} />
-                            <input name="slot_to" type="hidden" value={this.state.slotTo} />
-                            <button type="submit" className="btn btn-primary btn-lg app-btn">Book a slot</button>
-                        </form>
-                    </div>
+                        </div>
+
+                        <input name="postcode" type="hidden" value={(this.state.filterPostcode)} />
+                        <input name="warehouse_id" type="hidden" value={this.state.slotWarehouse} />
+                        <input name="slot_date" type="hidden" value={this.state.slotDate} />
+                        <input name="slot_from" type="hidden" value={this.state.slotFrom} />
+                        <input name="slot_to" type="hidden" value={this.state.slotTo} />
+                        <div className="form-group">
+                            <button type="submit" className="btn btn-primary btn-lg app-btn">Book Now</button>
+                        </div>
+                    </form>
                 </div>
+
             );
         }
 
         if (this.state.liveDeliveryEnabled && this.state.deliverySlots.length) {
             or = (
+
                 <div>
                     <h4 className="circled-text">or</h4>
                 </div>
+
             );
         }
 
@@ -237,6 +304,63 @@ var BlockDelivery = React.createClass({
             </div>
         );
     }
+});
+
+var MailingList = React.createClass({
+    getInitialState: function () {
+        return {
+            shouldSignUpForList: false
+        };
+    },
+    componentWillReceiveProps: function (nextProps) {
+        if (!nextProps.deliveryOptions.today_warehouse.id) {
+
+            this.setState({
+                shouldSignUpForList: true
+            });
+        }
+    },
+    render: function () {
+
+        var signupForm = '';
+
+        if (this.state.shouldSignUpForList) {
+            signupForm = (
+                <div>
+                    <h4>
+                        Work in Central London&#63;
+                        <br/>
+                        Enter your work postcode for&nbsp;
+                        <strong>bookable daytime slots</strong>
+                    </h4>
+
+
+                    <div className="form-group form-group-submit">
+
+                        <form method="get" action="shop/neworder">
+                            <h4>
+
+                                Or we can let you know when we’re coming your way
+
+                            </h4>
+                            <div className="form-group">
+                                <input className="form-control app-btn postcode-input" type="text" placeholder="Email" />
+                            </div>
+                            <button type="submit" className="btn btn-primary btn-lg app-btn">Sign Up</button>
+                        </form>
+                    </div>
+
+                </div>
+            );
+        }
+
+        return (
+            <div>
+            {signupForm}
+            </div>
+        );
+    }
+
 });
 
 /**
@@ -280,6 +404,10 @@ var Availability = React.createClass({
                     deliveryOptions={this.state.deliveryOptions}
                     initialFilterPostcode={this.props.initialFilterPostcode}
                 />
+                <MailingList
+                    deliveryOptions={this.state.deliveryOptions}
+                    initialFilterPostcode={this.props.initialFilterPostcode}
+                />
             </div>
         );
     }
@@ -287,7 +415,32 @@ var Availability = React.createClass({
 
 var checkWarehouseAvailability = function (postcode, callback) {
 
-    callback(delOptions);
+    //We deliver to your area Now
+    //Have daytime and evening bookable slots
+    //callback(scenario_01);
+
+    //We don't deliver to your area Now
+    //We will deliver later today
+    //Have daytime and evening bookable slots
+    //callback(scenario_02);
+
+    //We don't deliver to your area Now
+    //We will deliver later today
+    //Have only evening bookable slots
+    //callback(scenario_03);
+
+    //We don't deliver to your area Now
+    //We are closed in your area today
+    //Have daytime and evening bookable slots for other days
+    //callback(scenario_04);
+
+    //We don't deliver to your area Now
+    //We are closed in your area today
+    //Have only evening bookable slots for other days
+    //callback(scenario_05);
+
+    //We don't deliver to your area yet at all
+    callback(scenario_06);
     return;
 
     analytics.track('Postcode lookup', {
@@ -313,115 +466,6 @@ var checkWarehouseAvailability = function (postcode, callback) {
         }
     });
 };
-var delOptions = {
-    "today_warehouse": {
-        "id": 1,
-        "address": "W1F 8BH",
-        "is_open": true,
-        "opening_time": "17:00",
-        "closing_time": "20:30",
-        "opens_today": true,
-        "title": "Vynz QH Soho"
-    },
-    "next_open_warehouse": {
-        "day": 1,
-        "week_day": "Monday",
-        "opening_time": "17:00",
-        "closing_time": "20:30"
-    },
-    "daytime_slots_available": true,
-    "delivery_slots": [
-        {
-            "from": "14:50",
-            "to": "15:00",
-            "date": "2015-02-19",
-            "day": "Wednesday",
-            "warehouse_id": 298486374,
-            "title": "Vynz QH Soho"
-        },
-        {
-            "from": "15:00",
-            "to": "16:00",
-            "date": "1996-01-08",
-            "day": "Monday",
-            "warehouse_id": 298486374,
-            "title": "Vynz QH Soho"
-        },
-        {
-            "from": "16:00",
-            "to": "17:00",
-            "date": "1996-01-08",
-            "day": "Monday",
-            "warehouse_id": 298486374,
-            "title": "Vynz QH Soho"
-        },
-        {
-            "from": "17:00",
-            "to": "18:00",
-            "date": "1996-01-08",
-            "day": "Monday",
-            "warehouse_id": 298486374,
-            "title": "Vynz QH Soho"
-        },
-        {
-            "from": "18:00",
-            "to": "19:00",
-            "date": "1996-01-08",
-            "day": "Monday",
-            "warehouse_id": 298486374,
-            "title": "Vynz QH Soho"
-        },
-        {
-            "from": "19:00",
-            "to": "20:00",
-            "date": "1996-01-08",
-            "day": "Monday",
-            "warehouse_id": 298486374,
-            "title": "Vynz QH Soho"
-        },
-        {
-            "from": "14:00",
-            "to": "15:00",
-            "date": "1996-01-09",
-            "day": "Tuesday",
-            "warehouse_id": 298486374,
-            "title": "Vynz QH Soho"
-        },
-        {
-            "from": "15:00",
-            "to": "16:00",
-            "date": "1996-01-09",
-            "day": "Tuesday",
-            "warehouse_id": 298486374,
-            "title": "Vynz QH Soho"
-        },
-        {
-            "from": "16:00",
-            "to": "17:00",
-            "date": "1996-01-09",
-            "day": "Tuesday",
-            "warehouse_id": 298486374,
-            "title": "Vynz QH Soho"
-        },
-        {
-            "from": "17:00",
-            "to": "18:00",
-            "date": "1996-01-09",
-            "day": "Tuesday",
-            "warehouse_id": 298486374,
-            "title": "Vynz QH Soho"
-        },
-        {
-            "from": "18:00",
-            "to": "19:00",
-            "date": "1996-01-09",
-            "day": "Tuesday",
-            "warehouse_id": 298486374,
-            "title": "Vynz QH Soho"
-        }
-    ]
-};
-
 
 var renderAvailability = function () {
 
@@ -445,3 +489,82 @@ var renderAvailability = function () {
 
 $(document).on('page:load', renderAvailability);
 $(document).ready(renderAvailability);
+
+var delOptions = {
+    "today_warehouse": {
+        "id": 1,
+        "address": "W1F 8BH",
+        "is_open": true,
+        "opening_time": "17:00",
+        "closing_time": "20:30",
+        "opens_today": true,
+        "title": "Vynz QH Soho"
+    },
+    "next_open_warehouse": {
+        "day": 1,
+        "week_day": "Monday",
+        "opening_time": "17:00",
+        "closing_time": "20:30"
+    },
+    "daytime_slots_available": true,
+    "delivery_slots": [
+        {
+            "from": "14:00",
+            "to": "15:00",
+            "date": "2015-02-22",
+            "day": "Wednesday",
+            "warehouse_id": 1,
+            "title": "Vynz QH Soho"
+        },
+        {
+            "from": "15:00",
+            "to": "16:00",
+            "date": "2015-12-22",
+            "day": "Wednesday",
+            "warehouse_id": 4,
+            "title": "Vynz QH Soho"
+        },
+        {
+            "from": "14:00",
+            "to": "15:00",
+            "date": "2015-12-23",
+            "day": "Thursday",
+            "warehouse_id": 1,
+            "title": "Vynz QH Soho"
+        },
+        {
+            "from": "15:00",
+            "to": "16:00",
+            "date": "2015-12-23",
+            "day": "Thursday",
+            "warehouse_id": 4,
+            "title": "Vynz QH Soho"
+        }
+
+    ]
+};
+
+
+var scenario_01 = delOptions;
+
+var scenario_02 = $.extend(true, {}, delOptions);
+scenario_02.today_warehouse.is_open = false;
+
+
+var scenario_03 = $.extend(true, {}, delOptions);
+scenario_03.today_warehouse.is_open = false;
+scenario_03.daytime_slots_available = false;
+
+var scenario_04 = $.extend(true, {}, delOptions);
+scenario_04.today_warehouse.is_open = false;
+scenario_04.today_warehouse.opens_today = false;
+
+var scenario_05 = $.extend(true, {}, delOptions);
+scenario_05.today_warehouse.is_open = false;
+scenario_05.today_warehouse.opens_today = false;
+scenario_05.daytime_slots_available = false;
+
+
+var scenario_06 = $.extend(true, {}, delOptions);
+scenario_06.today_warehouse = {};
+scenario_06.next_open_warehouse = {};
