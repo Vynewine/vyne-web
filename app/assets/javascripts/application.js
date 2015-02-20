@@ -211,7 +211,7 @@ $(function () {
 
             resetEventsForCart();
 
-            orderSwiper.swipeTo(3, 500, false);
+            orderSwiper.swipeTo(2, 500, false);
             $('.btn-checkout').show();
 
         }
@@ -736,7 +736,7 @@ $(function () {
     $('.add-bottle-link').click(function (e) {
         e.preventDefault();
 
-        orderSwiper.swipeTo(1, 500);
+        orderSwiper.swipeTo(0, 500);
         $('.add-bottle, .btn-checkout').hide();
 
         if ($(this).closest('tr').hasClass('no-bottles')) {
