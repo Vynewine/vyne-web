@@ -32,6 +32,35 @@
             </div>
           </li>
           <li class="accordian-item
+        <% if @order.status_id == Status.statuses[:created] %> active
+        <% end %>" id="order-created">
+            <div class="line"></div>
+            
+
+            <div class="accordian-item-content">
+              <div class="line"></div>
+
+
+              <h3>Thanks for ordering</h3>
+
+              <% unless @order.order_schedule.blank? %>
+
+                  <p class="delivery-note">Your order will be delivered on <strong><%= local_time(@order.order_schedule[:from], '%B %d') %>
+                    between <%= local_time(@order.order_schedule[:from], '%l:%M %p') %>
+                    and <%= local_time(@order.order_schedule[:to], '%l:%M %p') %></strong>
+                  </p>
+
+                  <p class="delivery-note">We will notify you when our sommelier chooses your wine based on the preferences provided</p>
+                  <p class="delivery-note">
+                    <strong>You will be able to review order before delivery</strong>
+                  </p>
+
+              <% end %>
+
+
+            </div>
+          </li>
+          <li class="accordian-item
         <% if @order.status_id == Status.statuses[:pending] %> active
         <% end %>" id="order-placed">
             <div class="line"></div>

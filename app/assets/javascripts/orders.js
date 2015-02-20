@@ -40,7 +40,7 @@ var setCountDown = function (time) {
     }
 };
 
-var ready = function () {
+var ordersJsReady = function () {
     if ($('body.orders').length && typeof(orderId) !== 'undefined') {
         var currentStatus = '';
 
@@ -81,6 +81,9 @@ var ready = function () {
                         case 'payment failed':
                             setOrderView('order-payment-failed');
                             break;
+                        case 'created':
+                            setOrderView('order-created');
+                            break;
                         default:
                             setOrderView('order-placed');
                             break;
@@ -109,6 +112,7 @@ var ready = function () {
             $('#order-delivered').removeClass('active');
             $('#order-advised').removeClass('active');
             $('#order-payment-failed').removeClass('active');
+            $('#order-created').removeClass('active');
         };
 
         var scheduleCheckOrderStatus = setInterval(function () {
@@ -329,5 +333,5 @@ var ready = function () {
 
 };
 
-$(document).on('page:load', ready);
-$(document).ready(ready);
+$(document).on('page:load', ordersJsReady);
+$(document).ready(ordersJsReady);

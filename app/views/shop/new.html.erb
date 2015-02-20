@@ -17,56 +17,12 @@
     <div class="swiper-wrapper">
     <div class="swiper-overlay"></div>
 
-    <%# ============================ Address check ============================ %>
 
-    <div id="postcode-panel" class="order-panel swiper-slide noSwipingClass" data-hash="postcode">
-      <div class="order-panel-content wrapper">
-        <div class="slideable">
-          <h2 class="title">Availability</h2>
-          <p>Check whether we deliver to your location</p>
-          <div style="height: 55px" id="initial-postcode-lookup" class="opening-times loading">
-
-          </div>
-          <input type="text" id="filterPostcode" style="display:none;" placeholder="Enter postcode" autocomplete="off"/>
-          <ul class="errors" id="postcode-errors" style="display:none;"></ul>
-
-          <span id="filterPostcodeMessage" class="message"></span>
-          <a href="" id="use-postcode" class="btn next-slide">Choose wine</a>
-          <div class="not-available">
-            <div class="outside">
-              <h3>Not yet available in your area</h3>
-              <p>We're expanding the service throughtout London in the coming weeks.</p>
-              <p>As a thank you for waiting, we'll give you a free bottle with your first order when we we're available in your postcode.</p>
-            </div>
-            <div class="closed">
-              <h3>We deliver wine in your area, but your local wine cellars are closed</h3>
-              <p>The cellars are currently closed in your area, come back <span id="opening-hours"></span>.</p>
-              <p>We can drop you an email if the opening hours are extended.</p>
-            </div>
-            <div id="sign-up-panel">
-              <div id="sign-up-panel-form">
-                <ul class="errors" id="sign-up-errors"></ul>
-                <input type="hidden" id="sign-up-distances">
-                <input type="email" id="sign-up-email" name="email" placeholder="Email" />
-                <input type="hidden" id="sign-up-closed" name="closed" value="false" />
-                <input type="submit" id="sign-up-submit" value="Let me know"/>
-              </div>
-              <div id="sign-up-panel-thank-you" style="display:none; height: 45px" class="opening-times loading">
-
-              </div>
-              <div style="padding-top: 10px; color: #959595">
-                <%= link_to 'Coverage Map', delivery_index_path, { style: 'color: gray' } %>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Hidden fields -->
-      <input type="hidden" id="warehouses" name="warehouses" class="hidden" />
-
-    </div>
-
+      <input type="hidden" id="warehouse_id" name="warehouse_id"  value="<%= params[:warehouse_id] %>"/>
+      <input type="hidden" id="slot_date" name="slot_date" value="<%= params[:slot_date] %>"/>
+      <input type="hidden" id="slot_from" name="slot_from" value="<%= params[:slot_from] %>"/>
+      <input type="hidden" id="slot_to" name="slot_to" value="<%= params[:slot_to] %>"/>
+      <input type="hidden" id="filterPostcode" name="filterPostcode" value="<%= params[:postcode] %>"/>
 
     <%# ============================= Select Bottle ============================= %>
 
@@ -320,6 +276,7 @@
           </tr>
         </table>
 
+        <span id="future-delivery-notice" style="display: none; font-size: 15px;"></span>
         <div class="btn-checkout">
           <a href="" id="checkout" class="next-slide btn btn__full-width">Finalise Order</a>
         </div>
@@ -396,7 +353,7 @@
 
         <div id="new_delivery_address" style="display:none;">
           <div style="margin-bottom: 10px; text-align: center">
-            <span>Your Postcode: <span style="text-transform: uppercase;" id="addr-pc-text"></span></span>
+            <span>Your Postcode: <span style="text-transform: uppercase;" id="addr-pc-text"><%= params[:postcode]%></span></span>
           </div>
           <div>
             <select id="suggested-addresses">
@@ -410,7 +367,8 @@
           <input id="addr-company-name" name="address_company_name" placeholder="Company Name"/>
           </div>
           <div>
-            <input type="hidden" id="addr-pc" name="address_p" placeholder="Postcode" disabled="disabled"/>
+            <input type="hidden" id="addr-pc" name="address_p" placeholder="Postcode" disabled="disabled"
+                   value="<%= params[:postcode] %>"/>
           </div>
           <div><span>Your mobile to ensure fast delivery</span></div>
           <div><input type="text" id="mobile" name="mobile" placeholder="Mobile Number" /></div>

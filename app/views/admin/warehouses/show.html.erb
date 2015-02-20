@@ -71,15 +71,51 @@
     <li class="list-group-item">
       <div class="row">
         <div class="col-md-12">
-          <% @agendas.each do |agenda| %>
-              <%= agenda.day_name %>:
-              <% if agenda.opens_today %>
-                  <%= agenda.opening_time %> - <%= agenda.closing_time %>
-              <% else %>
-                    Closed
-              <% end %>
-              <br/>
-          <% end %>
+          <table border="1" class="table table-bordered">
+            <thead>
+            <tr>
+              <th>Day</th>
+              <th>Opens Today</th>
+              <th>Opening</th>
+              <th>Closing</th>
+              <th>Booked Delivery Starts</th>
+              <th>Booked Delivery Ends</th>
+              <th>Live Delivery Starts</th>
+              <th>Live Delivery Ends</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <% @agendas.each do |agenda| %>
+                <tr>
+                  <td>
+                    <%= agenda.day_name %>
+                  </td>
+                  <td>
+                    <%= agenda.opens_today ? 'Open' : 'Closed' %>
+                  </td>
+                  <td>
+                    <%= agenda.opening_time %>
+                  </td>
+                  <td>
+                    <%= agenda.closing_time %>
+                  </td>
+                  <td>
+                    <%= agenda.delivery_slots_from.blank? ? '' : agenda.delivery_slots_from.strftime('%H:%M') %>
+                  </td>
+                  <td>
+                    <%= agenda.delivery_slots_to.blank? ? '' : agenda.delivery_slots_to.strftime('%H:%M') %>
+                  </td>
+                  <td>
+                    <%= agenda.live_delivery_from.blank? ? '' :  agenda.live_delivery_from.strftime('%H:%M') %>
+                  </td>
+                  <td>
+                    <%= agenda.live_delivery_to.blank? ? '' :  agenda.live_delivery_to.strftime('%H:%M') %>
+                  </td>
+                </tr>
+            <% end %>
+            </tbody>
+          </table>
         </div>
       </div>
     </li>

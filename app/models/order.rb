@@ -91,6 +91,15 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def order_schedule
+    unless information.blank? || information['slot_date'].blank?
+      {
+          from: Time.parse(information['slot_date'] + ' ' + information['slot_from']),
+          to: Time.parse(information['slot_date'] + ' ' + information['slot_to'])
+      }
+    end
+  end
+
   def self.actionable_order_counts(warehouses, is_admin)
 
     counts = {

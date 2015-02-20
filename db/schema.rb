@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150208092908) do
+ActiveRecord::Schema.define(version: 20150216180242) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,7 +52,11 @@ ActiveRecord::Schema.define(version: 20150208092908) do
     t.integer  "closing"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "opens_today",  default: true
+    t.boolean  "opens_today",         default: true
+    t.time     "delivery_slots_from"
+    t.time     "delivery_slots_to"
+    t.time     "live_delivery_from"
+    t.time     "live_delivery_two"
   end
 
   add_index "agendas", ["closing"], :name => "index_agendas_on_closing"

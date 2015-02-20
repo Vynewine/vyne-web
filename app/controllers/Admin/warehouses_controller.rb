@@ -150,7 +150,8 @@ class Admin::WarehousesController < ApplicationController
         :phone,
         :active,
         address_attributes: [:id, :line_1, :postcode, :line_2, :company_name, :longitude, :latitude],
-        agendas_attributes: [:id, :day, :opening, :closing, :opens_today]
+        agendas_attributes: [:id, :day, :opening, :closing, :opens_today,
+                             :delivery_slots_from, :delivery_slots_to, :live_delivery_from, :live_delivery_to]
     )
   end
 

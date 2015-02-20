@@ -39,6 +39,7 @@ class ShopController < ApplicationController
     @occasions = Occasion.all.order(:id)
     @types = Type.all.order(:id)
     @preparations = Preparation.all.order(:id)
+
   end
 
   # GET /orders/confirmed
@@ -65,12 +66,27 @@ class ShopController < ApplicationController
       address = Address.find(order_address)
       @order.address = address
 
+
+      warehouse_id = params[:warehouse_id]
+      slot_date = params[:slot_date]
+      slot_from = params[:slot_from]
+
+      @order.information = {
+          warehouse_id: warehouse_id,
+          slot_date: slot_date,
+          slot_from: slot_from,
+          slot_to: params[:slot_to]
+      }
+
       # Assign Warehouse
-      warehouses = ''
-      if params.has_key?(:warehouses)
-        warehouses = params[:warehouses]
-        @order.information = warehouses
-        @order.warehouse = assign_warehouse(warehouses)
+
+      warehouse = Warehouse.find(warehouse_id)
+
+      if warehouse.blank?
+        render json: ['Warehouse not valid'], status: :unprocessable_entity
+        return
+      else
+        @order.warehouse = warehouse
       end
 
       # Add Order Items with Customer Preferences
@@ -91,22 +107,39 @@ class ShopController < ApplicationController
 
       # Create Stripe Customer
       payment_results = create_stripe_customer(@order)
-      if payment_results.blank?
-        @order.status_id = Status.statuses[:pending]
-      else
+      unless payment_results.blank?
         logger.error payment_results
         render json: payment_results, status: :unprocessable_entity
         return
       end
 
+      schedule_date = nil
+
+      # Check if order is realtime or a scheduled order.
+      if slot_date.blank?
+        @order.status_id = Status.statuses[:pending]
+      else
+        schedule_date = Time.parse(slot_date + ' ' + slot_from)
+      end
+
       if @order.save
-
+        # Client Email
         Resque.enqueue(OrderEmailNotification, @order.id, :first_time_ordered)
+        # Vyne Email
         Resque.enqueue(OrderEmailNotification, @order.id, :order_notification)
-        Resque.enqueue(OrderEmailNotification, @order.id, :merchant_order_confirmation)
-        Resque.enqueue(OrderNotification, 'You have a new order.', @order.warehouse.devices.map { |device| device.registration_id })
 
-        WebNotificationDispatcher.publish([@order.warehouse.id], "New order placed. Id: #{@order.id}", :new_order)
+        if schedule_date.blank?
+          # Merchant Email
+          Resque.enqueue(OrderEmailNotification, @order.id, :merchant_order_confirmation)
+
+          # Android Notification
+          Resque.enqueue(OrderNotification, 'You have a new order.', @order.warehouse.devices.map { |device| device.registration_id })
+
+          # Admin UI Web Notification
+          WebNotificationDispatcher.publish([@order.warehouse.id], "New order placed. Id: #{@order.id}", :new_order)
+        else
+          Resque.enqueue_at(schedule_date, OrderFulfilment, :order_id => @order.id)
+        end
 
         render :json => @order.to_json
       else

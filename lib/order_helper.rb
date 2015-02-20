@@ -43,7 +43,6 @@ module OrderHelper
 
     if order.save
       WebNotificationDispatcher.publish([order.warehouse.id], 'You have order(s) ready for packing', :packing_orders)
-
     else
       response[:errors] << order.errors
     end

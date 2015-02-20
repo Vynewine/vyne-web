@@ -96,10 +96,13 @@ Rails.application.configure do
   # Google Maps API
   config.google_maps_api_link = 'https://maps.google.com/maps/api/js?v=3&sensor=false'
 
-
+  config.react.variant = :development
+  config.react.addons = true
+  
   # Set the logging destination(s)
   config.log_to = %w[stdout]
 
   # Show the logging configuration on STDOUT
   config.show_log_configuration = true
+
 end

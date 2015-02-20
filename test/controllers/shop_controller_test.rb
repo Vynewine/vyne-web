@@ -55,7 +55,7 @@ class ShopControllerTest < ActionController::TestCase
     StripeMock.stop
   end
 
-  test 'should create order for food matching' do
+  test 'Will create order for food matching' do
 
     wines = [
         {
@@ -82,12 +82,12 @@ class ShopControllerTest < ActionController::TestCase
     payment = Payment.find_by user: @userOne
     order = Order.find_by client: @userOne
 
-    assert_redirected_to order
-    assert_response(:redirect, message = nil)
+    puts @response.body
+
     assert_equal(order.payment, payment)
     assert_equal(order.client, @userOne)
     assert_equal(payment.user, @userOne)
-    expected_information= {"warehouses" => [{"id" => warehouses(:one).id, "distance" => 1.914}, {"id" => warehouses(:two).id, "distance" => 2.123}]}
+    expected_information = {"warehouses" => [{"id" => warehouses(:one).id, "distance" => 1.914}, {"id" => warehouses(:two).id, "distance" => 2.123}]}
     assert_equal(expected_information, order.information)
     assert_equal(2, order.order_items.count, 'There should be 2 order items')
     categories = order.order_items.map { |c| c.category.id }
@@ -95,7 +95,7 @@ class ShopControllerTest < ActionController::TestCase
     assert(!order.address.nil?, 'Order should have address assigned')
   end
 
-  test 'should create order for occasion matching' do
+  test 'Will create order for occasion matching' do
 
     wines = [
         {
@@ -112,13 +112,12 @@ class ShopControllerTest < ActionController::TestCase
 
     order = Order.find_by client: @userOne
 
-    assert_redirected_to order
     assert_equal(occasions(:one), order.order_items[0].occasion)
     assert_equal(types(:one), order.order_items[0].type)
 
   end
 
-  test 'should create order for specific wine' do
+  test 'Will create order for specific wine' do
 
     wines = [
         {
@@ -133,44 +132,8 @@ class ShopControllerTest < ActionController::TestCase
     post :create, @request_data
 
     order = Order.find_by client: @userOne
-    assert_redirected_to order
+
     assert_equal('Chateauneuf-du-Pape', order.order_items[0].specific_wine)
-  end
-
-  test 'will get discount on second bottle' do
-    wines = [
-        {
-            :quantity => 1,
-            :food => [{:id => 10}, {:id => 33}],
-            :category => categories(:house).id
-
-        },
-        {
-            :quantity => 1,
-            :food => [{:id => 10}, {:id => 33}],
-            :category => categories(:house).id
-        }
-    ]
-
-    @request_data[:wines] = wines.to_json
-
-    post :create, @request_data
-
-    order = Order.find_by client: @userOne
-
-    assert(order.order_items.count == 2, 'Order should have 2 order items')
-    assert_equal(25, order.total_price.to_i, 'Order total price should be 25')
-
-  end
-
-  test 'ui post' do
-
-    post :create, post_data
-
-    order = Order.find_by client: @userOne
-
-    puts json: order.order_items
-
   end
 
   test 'Will handle stripe errors' do
@@ -181,7 +144,6 @@ class ShopControllerTest < ActionController::TestCase
     post :create, post_data
 
     assert_equal('Error occurred while creating customer with Stripe', JSON.parse(response.body)[0])
-    assert_equal("Stripe::AuthenticationError - No API key provided. Set your API key using \"Stripe.api_key = \u003cAPI-KEY\u003e\". You can generate API keys from the Stripe web interface. See https://stripe.com/api for details, or email support@stripe.com if you have any questions.", JSON.parse(response.body)[1])
 
     #Reset Stripe Key for all other tests.
     Rails.application.config.stripe_key = stripe_key
@@ -204,6 +166,14 @@ class ShopControllerTest < ActionController::TestCase
     assert_equal(warehouse_two, saved_order.warehouse)
   end
 
+  test 'Will create order for booked slot' do
+
+    post :create, post_data_new
+    order = Order.find_by client: @userOne
+    assert_equal(Status.statuses[:created], order.status_id)
+
+  end
+
 
   def post_data
     {
@@ -222,6 +192,29 @@ class ShopControllerTest < ActionController::TestCase
       }]',
         'address_s' => '',
         'address_d' => '',
+        'address_id' => addresses(:one).id,
+        'old_card' => '0',
+        'new_card' => '1111',
+        'new_brand' => '1',
+        'stripeToken' => 'tok_14tFx92eZvKYlo2CxthO99kb'
+    }
+  end
+
+  def post_data_new
+    {
+        'warehouse' => '{"id":' + warehouses(:two).id.to_s + ',
+                        "schedule_date": "2015-02-15", "schedule_time_from": "12:00", "schedule_time_to": "13:00"}',
+        'wines' => '[
+      {
+        "quantity":1, "category":"' + categories(:house).id.to_s + '",
+        "label":"House", "price":"£15", "specificWine":"",
+        "food":[{"id":"14","name":"fish"}, {"id":"35", "name":"herbs"}, {"id":"10", "name":"cured meat"} ],"occasion":[]
+      },
+      {
+        "quantity":1, "category":"' + categories(:reserve).id.to_s + '",
+        "label":"Reserve","price":"£20", "specificWine":"",
+        "food":[{"id":"14", "name":"fish"}, {"id":"18","name":"hard cheese"},{"id":"38","name":"pasta"}], "occasion":[]
+      }]',
         'address_id' => addresses(:one).id,
         'old_card' => '0',
         'new_card' => '1111',

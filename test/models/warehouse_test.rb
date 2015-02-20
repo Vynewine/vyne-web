@@ -110,13 +110,10 @@ class WarehouseTest < ActiveSupport::TestCase
     new_warehouse = Warehouse.find(warehouse.id)
 
 
-    new_warehouse.delivery_area.exterior_ring.points.each do |point|
-      puts point.x
-      puts point.y
-    end
+    assert(new_warehouse.delivery_area.exterior_ring.points.count > 0)
   end
 
-  test 'Can convert delivery area to json' do
+  test 'Can convert delivery area from and to json' do
     coordinates = '[[[-0.125141, 51.510612], [-0.122995, 51.517342], [-0.127974, 51.521348], [-0.125141, 51.510612]]]'
 
     warehouse = Warehouse.create!({
@@ -129,7 +126,7 @@ class WarehouseTest < ActiveSupport::TestCase
 
     new_warehouse = Warehouse.find(warehouse.id)
 
-    puts new_warehouse.area
+    assert_equal(coordinates, new_warehouse.area)
 
   end
 
@@ -158,7 +155,6 @@ class WarehouseTest < ActiveSupport::TestCase
     unless delivery_areas.blank?
       if delivery_areas.is_a?(RGeo::Cartesian::MultiPolygonImpl)
         delivery_areas.each do |polygon|
-          puts 'sweet new polygon'
           polygon.exterior_ring.points.each do |point|
             puts point.x.to_s + ', ' + point.y.to_s
           end
@@ -217,10 +213,6 @@ class WarehouseTest < ActiveSupport::TestCase
     end
   end
 
-  test 'Can get delivery area without blowing up' do
-    Warehouse.delivery_area_by_city
-  end
-
   test 'Create polygon around warehouse' do
     points = circle_path({:lng => -0.108105959289054, :lat => 51.5200685165148}, 4023, 30, true)
     points.each do |point|
@@ -247,7 +239,7 @@ class WarehouseTest < ActiveSupport::TestCase
     set_open_agenda(warehouse_01)
 
 
-    found_warehouse = Warehouse.closest_to(51.517125, -0.105019)
+    found_warehouse = Warehouse.delivering_to(51.517125, -0.105019)
 
     assert_equal(warehouse_01, found_warehouse.first)
 
@@ -271,7 +263,7 @@ class WarehouseTest < ActiveSupport::TestCase
     set_open_agenda(warehouse_01)
 
 
-    found_warehouse = Warehouse.closest_to(51.519559, -0.164076)
+    found_warehouse = Warehouse.delivering_to(51.519559, -0.164076)
 
     assert_equal(0, found_warehouse.count)
   end
@@ -311,8 +303,8 @@ class WarehouseTest < ActiveSupport::TestCase
     set_open_agenda(close_warehouse)
 
 
-    found_warehouse = Warehouse.closest_to(51.532108, -0.134439)
-    found_far_warehouse = Warehouse.closest_to(51.523589, -0.116303)
+    found_warehouse = Warehouse.delivering_to(51.532108, -0.134439)
+    found_far_warehouse = Warehouse.delivering_to(51.523589, -0.116303)
 
     assert_equal(close_warehouse, found_warehouse.first)
     assert_equal(far_warehouse, found_far_warehouse.first)
@@ -338,7 +330,7 @@ class WarehouseTest < ActiveSupport::TestCase
     set_open_agenda(warehouse_01)
 
 
-    found_warehouse = Warehouse.closest_to(51.517125, -0.105019)
+    found_warehouse = Warehouse.delivering_to(51.517125, -0.105019)
 
     assert(0, found_warehouse.count)
 
@@ -378,8 +370,8 @@ class WarehouseTest < ActiveSupport::TestCase
 
     set_open_agenda(close_warehouse)
 
-    found_warehouse = Warehouse.closest_to(51.532108, -0.134439)
-    found_far_warehouse = Warehouse.closest_to(51.523589, -0.116303)
+    found_warehouse = Warehouse.delivering_to(51.532108, -0.134439)
+    found_far_warehouse = Warehouse.delivering_to(51.523589, -0.116303)
 
     assert_equal(1, found_warehouse.count)
     assert_equal(1, found_far_warehouse.count)
@@ -423,8 +415,8 @@ class WarehouseTest < ActiveSupport::TestCase
 
     set_closed_agenda(close_warehouse)
 
-    found_warehouse = Warehouse.closest_to(51.532108, -0.134439)
-    found_far_warehouse = Warehouse.closest_to(51.523589, -0.116303)
+    found_warehouse = Warehouse.delivering_to(51.532108, -0.134439)
+    found_far_warehouse = Warehouse.delivering_to(51.523589, -0.116303)
 
     assert_equal(false, found_warehouse.first.is_open)
     assert_equal(far_warehouse, found_warehouse.second)
@@ -582,7 +574,6 @@ class WarehouseTest < ActiveSupport::TestCase
     assert_equal('22:21', warehouse.next_open_day_closing_time)
   end
 
-
   def set_open_agenda(warehouse)
     Agenda.create!({
                        :day => Time.now.wday,
@@ -624,5 +615,41 @@ class WarehouseTest < ActiveSupport::TestCase
     lat = radius/(r_e*d2r)
     lng = radius/(r_e*Math.cos(d2r*center_lat)*d2r)
     multipliers.map { |m| [center_lat + m[0]*lat, center_lng + m[1]*lng] }
+  end
+
+  test 'Can get available delivery blocks for Monday' do
+    time_now = Time.parse('1996/01/01 9:00') #Monday
+    Time.stubs(:now).returns(time_now)
+    warehouse = warehouses(:two)
+    available_slots = warehouse.get_delivery_blocks(warehouse.local_time)
+    assert_slots(available_slots, 1,1,1,1,1,1)
+  end
+
+  test 'Can get available delivery blocks for Tuesday' do
+    time_now = Time.parse('1996/01/01 00:00') #Monday
+    Time.stubs(:now).returns(time_now)
+    warehouse = warehouses(:two)
+    available_slots = warehouse.get_delivery_blocks(warehouse.local_time + 1.day)
+    assert_slots(available_slots, 1,1,1,1,1,0)
+  end
+
+  def find_slot(slots, from, to)
+    slots.select { |slot| slot[:from] == from && slot[:to] == to }.count
+  end
+
+  def assert_slots(slots, first_count, second_count, third_count, fourth_count, fifth_count, sixth_count)
+    assert_equal(first_count, find_slot(slots, '14:00', '15:00'))
+    assert_equal(second_count, find_slot(slots, '15:00', '16:00'))
+    assert_equal(third_count, find_slot(slots, '16:00', '17:00'))
+    assert_equal(fourth_count, find_slot(slots, '17:00', '18:00'))
+    assert_equal(fifth_count, find_slot(slots, '18:00', '19:00'))
+    assert_equal(sixth_count, find_slot(slots, '19:00', '20:00'))
+  end
+
+  test 'Can calculate distance between warehouse and customer' do
+    warehouse_one = warehouses(:two)
+    warehouse_two = warehouses(:three)
+    address = addresses(:five)
+    assert(warehouse_one.distance_from(address.latitude, address.longitude) < warehouse_two.distance_from(address.latitude, address.longitude))
   end
 end

@@ -1,347 +1,280 @@
-<div id="document" class="document delivery">
+<!-- HERO
+================================= -->
+<section id="hero" class="hero-section hero-layout-simple hero-fullscreen section section-dark">
 
-  <!-- HEADER
-  ================================= -->
-  <header id="header" class="header-section section section-dark navbar navbar-fixed-top">
+  <div class="section-background">
 
-    <div class="container-fluid">
+    <!-- IMAGE BACKGROUND -->
+    <div class="section-background-image parallax-background" data-stellar-background-ratio="0.4"></div>
 
-      <div class="navbar-header navbar-left">
+    <!-- VIDEO BACKGROUND -->
+    <!-- <div class="section-background-video section-background-dot-overlay parallax" data-stellar-ratio="0.4">
+        <video preload="auto" autoplay loop muted poster="images/backgrounds/video-fallback-bg.jpg">
+            <source type="video/mp4" src="videos/video-bg.mp4">
+            <source type="video/ogg" src="videos/video-bg.ogv">
+            <source type="video/webm" src="videos/video-bg.webm">
+        </video>
+    </div> -->
 
-        <!-- RESPONSIVE MENU BUTTON -->
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
+  </div>
 
-        <!-- HEADER LOGO -->
-        <a class="navbar-logo navbar-brand anchor-link" href="#hero">
-          <img src="<%= asset_path('logo@2x.png') %>" srcset="<%= asset_path('logo@2x.png') %> 2x" alt="Vyne">
-        </a>
+  <div class="container">
+    <div class="hero-content">
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <div class="hero-heading animated fadeIn">
+            <h1 class="hero-title">Wine delivered from London’s top cellars</h1>
 
-      </div>
-
-      <nav id="navigation" class="navigation navbar-collapse collapse navbar-right">
-
-        <!-- NAVIGATION LINKS -->
-        <ul id="header-nav" class="nav navbar-nav">
-
-          <li><a href="#hero" class="hidden">Top</a></li>
-
-          <li><a href="#how-it-works">How it Works</a></li>
-          <li><a href="#about">Discover</a></li>
-
-          <% if user_signed_in? %>
-
-              <li>
-                <%= link_to 'My wines', mywines_path, data: { no_turbolink: true }, class: 'external' %>
-              </li>
-
-              <% if current_user.has_role?(:supplier) ||
-                      current_user.has_role?(:admin) ||
-                      current_user.has_role?(:superadmin)
-              %>
-                  <li>
-                    <%= link_to 'Admin', admin_root_path, data: { no_turbolink: true }, class: 'external' %>
-                  </li>
-              <% end %>
-
-              <li>
-                <%= link_to 'Sign out', logout_path, :method => :delete, class: 'external' %>
-              </li>
-
-          <% else %>
-              <li>
-                <%= link_to 'Sign in', login_path, data: { no_turbolink: true }, class: 'external' %>
-              </li>
-          <% end %>
-
-          <!-- HEADER ACTION BUTTON -->
-          <li class="header-action-button"><a href="#hero" class="btn btn-primary">Check Availability</a></li>
-
-        </ul>
-
-      </nav>
-
-    </div>
-
-  </header>
-
-  <!-- HERO
-  ================================= -->
-  <section id="hero" class="hero-section hero-layout-simple hero-fullscreen section section-dark">
-
-    <div class="section-background">
-
-      <!-- IMAGE BACKGROUND -->
-      <div class="section-background-image parallax-background" data-stellar-background-ratio="0.4"></div>
-
-      <!-- VIDEO BACKGROUND -->
-      <!-- <div class="section-background-video section-background-dot-overlay parallax" data-stellar-ratio="0.4">
-          <video preload="auto" autoplay loop muted poster="images/backgrounds/video-fallback-bg.jpg">
-              <source type="video/mp4" src="videos/video-bg.mp4">
-              <source type="video/ogg" src="videos/video-bg.ogv">
-              <source type="video/webm" src="videos/video-bg.webm">
-          </video>
-      </div> -->
-
-    </div>
-
-    <div class="container">
-      <div class="hero-content">
-        <div class="row">
-          <div class="col-md-10 col-md-offset-1">
-            <div class="hero-heading">
-              <h1 class="hero-title">Wine delivered from London’s top cellars</h1>
-              <h3 class="hero-tagline">
-                Chosen for you <i>live</i> by sommeliers  &amp; delivered in minutes
-              </h3>
-            </div>
+            <h3 class="hero-tagline">
+              Chosen for you <i>live</i> by sommeliers &amp; delivered in minutes
+            </h3>
           </div>
         </div>
-        <div class="row">
-          <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12 col-xs-offset-0">
-            <p class="hero-buttons">
+      </div>
+      <div class="row">
+        <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12 col-xs-offset-0">
+          <p class="hero-buttons">
 
-            <form action="/shop/neworder" id="postcode-check" method="GET" class="form home-form">
-              <div class="form-group">
-                <input type="text" class="form-control" id="filterPostcode" placeholder="Enter postcode (e.g. EC4Y 8AU)" name="postcode" autocomplete="off"/>
-              </div>
-              <div class="form-group form-group-submit">
-                <input type="submit" class="btn btn-primary btn-lg btn-block" value="Check Availability"/>
-              </div>
-            </form>
+          <form action="/availability" id="postcode-check" class="form home-form">
+            <p id="postcode-error" class="animated fadeIn text-danger" style="display: none">Not a valid postcode</p>
+            <div class="form-group">
+              <input type="text" class="form-control postcode-input" id="filterPostcode" placeholder="Enter postcode (e.g. EC4Y 8AU)" name="postcode" autocomplete="off"/>
+            </div>
+            <div class="form-group form-group-submit">
+              <input type="submit" class="btn btn-primary btn-lg btn-block" value="Check Availability"/>
+            </div>
+          </form>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO START LINK -->
+  <a href="#how-it-works" class="hero-start-link anchor-link"><span class="fa fa-angle-double-down"></span></a>
+
+</section>
+
+<!-- HOW IT WORKS
+================================= -->
+<section id="how-it-works" class="how-it-works-section section">
+
+  <div class="container-fluid">
+
+    <h2 class="section-heading text-center">How it Works</h2>
+
+    <div class="hiw-row row">
+
+      <!-- HOW IT WORKS - ITEM 1 -->
+      <div class="col-md-3 col-sm-6" data-animation="fadeIn">
+        <div class="hiw-item">
+          <img class="hiw-item-picture" src="<%= asset_path('landing/pairingalt@1x.jpg') %>"
+               srcset="<%= asset_path('landing/pairingalt@2x.jpg') %> 2x" alt="Wine Pairing">
+
+          <div class="hiw-item-text">
+            <span class="hiw-item-icon">1</span>
+            <h4 class="hiw-item-title">We understand your requirements</h4>
+
+            <p class="hiw-item-description">Tell us about your <strong>meal</strong>, <strong>occasion</strong>
+              or you can specify an <strong>exact wine</strong>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- HOW IT WORKS - ITEM 2 -->
+      <div class="col-md-3 col-sm-6" data-animation="fadeIn">
+        <div class="hiw-item even">
+          <img class="hiw-item-picture" src="<%= asset_path('landing/somm@1x.jpg') %>"
+               srcset="<%= asset_path('landing/somm@2x.jpg') %> 2x" alt="Personal Sommelier">
+
+          <div class="hiw-item-text">
+            <span class="hiw-item-icon">2</span>
+            <h4 class="hiw-item-title">Expert choice</h4>
+
+            <p class="hiw-item-description">Based on your requirements, selected <strong>immediately</strong>
+              by <strong>experts</strong> from local cellars.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="hidden-md hidden-lg clear"></div>
+
+      <!-- HOW IT WORKS - ITEM 3 -->
+      <div class="col-md-3 col-sm-6" data-animation="fadeIn">
+        <div class="hiw-item">
+          <img class="hiw-item-picture" src="<%= asset_path('landing/iphoneshot@1x.jpg') %>"
+               srcset="<%= asset_path('landing/iphoneshot@2x.jpg') %> 2x"
+               alt="">
+
+          <div class="hiw-item-text">
+            <span class="hiw-item-icon">3</span>
+            <h4 class="hiw-item-title">Review selection</h4>
+
+            <p class="hiw-item-description">You’ll see the selection in minutes & have an opportunity to
+              <strong>review it</strong>. <br/>
+              <em>Ask for something else if you want.</em></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- HOW IT WORKS - ITEM 4 -->
+      <div class="col-md-3 col-sm-6" data-animation="fadeIn">
+        <div class="hiw-item even">
+          <img class="hiw-item-picture" src="<%= asset_path('landing/delivery.jpg') %>" alt="">
+
+          <div class="hiw-item-text">
+            <span class="hiw-item-icon">4</span>
+            <h4 class="hiw-item-title">Delivery</h4>
+
+            <p class="hiw-item-description">Delivered fast! <br/>
+              We’ll message you with a <strong>tracking map</strong>. <br/> <em>Watch your wine come towards you.</em>
             </p>
           </div>
         </div>
       </div>
+
     </div>
 
-    <!-- HERO START LINK -->
-    <a href="#how-it-works" class="hero-start-link anchor-link"><span class="fa fa-angle-double-down"></span></a>
+  </div>
 
-  </section>
+</section>
 
-  <!-- HOW IT WORKS
-  ================================= -->
-  <section id="how-it-works" class="how-it-works-section section">
+<!-- DESCRIPTION
+================================= -->
+<section id="about" class="about-section section">
 
-    <div class="container-fluid">
+  <div class="container">
 
-      <h2 class="section-heading text-center">How it Works</h2>
+    <h2 class="section-heading text-center">Wine advice tailored to your evening</h2>
 
-      <div class="hiw-row row">
+    <div class="about-row row">
 
-        <!-- HOW IT WORKS - ITEM 1 -->
-        <div class="col-md-3 col-sm-6" data-animation="fadeIn">
-          <div class="hiw-item">
-            <img class="hiw-item-picture" src="<%= asset_path('landing/pairingalt@1x.jpg') %>"
-                 srcset="<%= asset_path('landing/pairingalt@2x.jpg') %> 2x" alt="Wine Pairing">
+      <!-- DESCRIPTION IMAGE -->
+      <div class="about-image col-md-6" data-animation="fadeIn">
+        <img src="<%= asset_path('landing/merchant.jpg') %>" alt="Description Image">
+      </div>
 
-            <div class="hiw-item-text">
-              <span class="hiw-item-icon">1</span>
-              <h4 class="hiw-item-title">We understand your requirements</h4>
+      <!-- DESCRIPTION TEXT -->
+      <div class="about-text col-md-6">
+        <p class="lead">Chosen to your requirements by expert merchants importing directly
+          from the world’s best estates & supplying London’s top restaurants.
+        </p>
+        <h4 class="icon-list-title">Matched to...</h4>
+        <ul class="icon-list">
 
-              <p class="hiw-item-description">Tell us about your <strong>meal</strong>, <strong>occasion</strong>
-                or you can specify an <strong>exact wine</strong>.</p>
-            </div>
-          </div>
-        </div>
 
-        <!-- HOW IT WORKS - ITEM 2 -->
-        <div class="col-md-3 col-sm-6" data-animation="fadeIn">
-          <div class="hiw-item even">
-            <img class="hiw-item-picture" src="<%= asset_path('landing/somm@1x.jpg') %>"
-                 srcset="<%= asset_path('landing/somm@2x.jpg') %> 2x" alt="Personal Sommelier">
+          <li>
+            <span class="icon-list-icon vyneicon-chicken" data-animation="bounceIn"></span>
+            <h4 class="icon-list-title">your meal</h4>
 
-            <div class="hiw-item-text">
-              <span class="hiw-item-icon">2</span>
-              <h4 class="hiw-item-title">Expert choice</h4>
+            <p style="height: 50px">Select up to 3 main ingredients of your meal for expert flavour matching.</p>
+          </li>
+          <li>
+            <span class="icon-list-icon vyneicon-withfriends" data-animation="bounceIn"></span>
+            <h4 class="icon-list-title">your occasion</h4>
 
-              <p class="hiw-item-description">Based on your requirements, selected <strong>immediately</strong>
-                by <strong>experts</strong> from local cellars.</p>
-            </div>
-          </div>
-        </div>
+            <p style="height: 50px">Whether you’re on a date, night-in, party with friends or for a gift.</p>
+          </li>
 
-        <div class="hidden-md hidden-lg clear"></div>
+          <li>
+            <span class="icon-list-icon vyneicon-winelist" data-animation="bounceIn"></span>
+            <h4 class="icon-list-title">... or know what you want already?</h4>
 
-        <!-- HOW IT WORKS - ITEM 3 -->
-        <div class="col-md-3 col-sm-6" data-animation="fadeIn">
-          <div class="hiw-item">
-            <img class="hiw-item-picture" src="<%= asset_path('landing/iphoneshot@1x.jpg') %>"
-                 srcset="<%= asset_path('landing/iphoneshot@2x.jpg') %> 2x"
-                 alt="">
-
-            <div class="hiw-item-text">
-              <span class="hiw-item-icon">3</span>
-              <h4 class="hiw-item-title">Review selection</h4>
-
-              <p class="hiw-item-description">You’ll see the selection in minutes & have an opportunity to <strong>review it</strong>. <br/>
-                <em>Ask for something else if you want.</em></p>
-            </div>
-          </div>
-        </div>
-
-        <!-- HOW IT WORKS - ITEM 4 -->
-        <div class="col-md-3 col-sm-6" data-animation="fadeIn">
-          <div class="hiw-item even">
-            <img class="hiw-item-picture" src="<%= asset_path('landing/delivery.jpg') %>" alt="">
-
-            <div class="hiw-item-text">
-              <span class="hiw-item-icon">4</span>
-              <h4 class="hiw-item-title">Delivery</h4>
-
-              <p class="hiw-item-description">Delivered fast! <br/>
-                We’ll message you with a <strong>tracking map</strong>. <br/> <em>Watch your wine come towards you.</em></p>
-            </div>
-          </div>
-        </div>
-
+            <p style="height: 50px">Enter a more specific wine type if you know what you want.
+              e.g. Chardonnay, Barolo, or Left-Bank Bordeaux.</p>
+          </li>
+        </ul>
       </div>
 
     </div>
 
-  </section>
+  </div>
 
-  <!-- DESCRIPTION
-  ================================= -->
-  <section id="about" class="about-section section">
+</section>
 
-    <div class="container">
+<section id="break" class="video-section section" style="padding: 10px 10px">
 
-      <h2 class="section-heading text-center">Wine advice tailored to your evening</h2>
+  <div class="container">
 
-      <div class="about-row row">
+    <h2 class="section-heading text-center">You select a price range</h2>
 
-        <!-- DESCRIPTION IMAGE -->
-        <div class="about-image col-md-6" data-animation="fadeIn">
-          <img src="<%= asset_path('landing/merchant.jpg') %>" alt="Description Image">
+  </div>
+</section>
+
+<!-- NUMBERS
+================================= -->
+<section id="pricing" class="numbers-section section-dark section">
+
+  <div class="section-background">
+
+    <!-- IMAGE BACKGROUND -->
+    <div class="section-background-image parallax-background" data-stellar-background-ratio="0.4"></div>
+
+  </div>
+
+  <div class="container">
+    <h2 class="section-heading text-center">The merchant will find a match <br/>within your range</h2>
+
+    <div class="numbers-row row">
+
+      <!-- NUMBERS - ITEM 1 -->
+      <div class="col-md-3 col-sm-6">
+        <div class="numbers-item">
+          <div class="numbers-item-counter">&pound;10-15</div>
+          <div class="numbers-item-caption">House</div>
+          <div>Producers with much higher quality than mass-produced wines you'll find in supermarkets.</div>
         </div>
+      </div>
 
-        <!-- DESCRIPTION TEXT -->
-        <div class="about-text col-md-6">
-          <p class="lead">Chosen to your requirements by expert merchants importing directly
-            from the world’s best estates & supplying London’s top restaurants.
-          </p>
-          <h4 class="icon-list-title">Matched to...</h4>
-          <ul class="icon-list">
-
-
-            <li>
-              <span class="icon-list-icon vyneicon-chicken" data-animation="bounceIn"></span>
-              <h4 class="icon-list-title">your meal</h4>
-
-              <p style="height: 50px">Select up to 3 main ingredients of your meal for expert flavour matching.</p>
-            </li>
-            <li>
-              <span class="icon-list-icon vyneicon-withfriends" data-animation="bounceIn"></span>
-              <h4 class="icon-list-title">your occasion</h4>
-
-              <p style="height: 50px">Whether you’re on a date, night-in, party with friends or for a gift.</p>
-            </li>
-
-            <li>
-              <span class="icon-list-icon vyneicon-winelist" data-animation="bounceIn"></span>
-              <h4 class="icon-list-title">... or know what you want already?</h4>
-
-              <p style="height: 50px">Enter a more specific wine type if you know what you want.
-                e.g. Chardonnay, Barolo, or Left-Bank Bordeaux.</p>
-            </li>
-          </ul>
+      <!-- NUMBERS - ITEM 2 -->
+      <div class="col-md-3 col-sm-6">
+        <div class="numbers-item">
+          <div class="numbers-item-counter">&pound;15-20</div>
+          <div class="numbers-item-caption">Reserve</div>
+          <div>An introduction to producers from the most sought after locations in the world's best wine regions,
+            with the most rigorous and premium production.
+          </div>
         </div>
+      </div>
 
+      <!-- NUMBERS - ITEM 3 -->
+      <div class="col-md-3 col-sm-6">
+        <div class="numbers-item">
+          <div class="numbers-item-counter">&pound;20-30</div>
+          <div class="numbers-item-caption">Fine</div>
+          <div>The most cherished locations in wine, producing critically acclaimed wines. Discover clarity of
+            flavours unique to the finest wines.
+          </div>
+        </div>
+      </div>
+
+      <!-- NUMBERS - ITEM 4 -->
+      <div class="col-md-3 col-sm-6">
+        <div class="numbers-item">
+          <div class="numbers-item-counter">&pound;30-50</div>
+          <div class="numbers-item-caption">Cellar</div>
+          <div>The best producers from wine's most sacred vineyards
+            <br/>
+            Cellar wines are chosen at the perfect age to fully experience greatness in winemaking
+          </div>
+        </div>
       </div>
 
     </div>
 
-  </section>
-
-  <section id="break" class="video-section section" style="padding: 10px 10px">
-
-    <div class="container">
-
-      <h2 class="section-heading text-center">You select a price range</h2>
-
-    </div>
-  </section>
-
-  <!-- NUMBERS
- ================================= -->
-  <section id="pricing" class="numbers-section section-dark section">
-
-    <div class="section-background">
-
-      <!-- IMAGE BACKGROUND -->
-      <div class="section-background-image parallax-background" data-stellar-background-ratio="0.4"></div>
-
-    </div>
-
-    <div class="container">
-      <h2 class="section-heading text-center">The merchant will find a match <br/>within your range</h2>
-
-      <div class="numbers-row row">
-
-        <!-- NUMBERS - ITEM 1 -->
-        <div class="col-md-3 col-sm-6">
-          <div class="numbers-item">
-            <div class="numbers-item-counter">&pound;10-15</div>
-            <div class="numbers-item-caption">House</div>
-            <div>Producers with much higher quality than mass-produced wines you'll find in supermarkets.</div>
-          </div>
-        </div>
-
-        <!-- NUMBERS - ITEM 2 -->
-        <div class="col-md-3 col-sm-6">
-          <div class="numbers-item">
-            <div class="numbers-item-counter">&pound;15-20</div>
-            <div class="numbers-item-caption">Reserve</div>
-            <div>An introduction to producers from the most sought after locations in the world's best wine regions,
-              with the most rigorous and premium production.
-            </div>
-          </div>
-        </div>
-
-        <!-- NUMBERS - ITEM 3 -->
-        <div class="col-md-3 col-sm-6">
-          <div class="numbers-item">
-            <div class="numbers-item-counter">&pound;20-30</div>
-            <div class="numbers-item-caption">Fine</div>
-            <div>The most cherished locations in wine, producing critically acclaimed wines. Discover clarity of
-              flavours unique to the finest wines.
-            </div>
-          </div>
-        </div>
-
-        <!-- NUMBERS - ITEM 4 -->
-        <div class="col-md-3 col-sm-6">
-          <div class="numbers-item">
-            <div class="numbers-item-counter">&pound;30-50</div>
-            <div class="numbers-item-caption">Cellar</div>
-            <div>The best producers from wine's most sacred vineyards
-              <br/>
-              Cellar wines are chosen at the perfect age to fully experience greatness in winemaking
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
+  </div>
 
 
-  </section>
+</section>
 
-  <!-- HEADLINE
-			================================= -->
-  <section id="headline" class="headline-section section" style="padding-bottom: 10px">
+<!-- HEADLINE
+          ================================= -->
+<section id="headline" class="headline-section section" style="padding-bottom: 10px">
 
-    <div class="container">
-      <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-          <h2 class="section-heading text-center">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <h2 class="section-heading text-center">
             <span class="test-break">
               Discover<br class="break-or-not"/>
               <span class="switch-text">
@@ -352,37 +285,35 @@
               </span>
               <br class="break-or-not"/>wines
             </span>
-          </h2>
-        </div>
+        </h2>
       </div>
     </div>
+  </div>
 
-  </section>
+</section>
 
-  <!-- TWO COLS DESCRIPTION SECTION
-			================================= -->
-  <section id="discover" class="two-cols-description-section section-accent section">
+<!-- TWO COLS DESCRIPTION SECTION
+          ================================= -->
+<section id="discover" class="two-cols-description-section section-accent section">
 
-    <div class="container-fluid">
+  <div class="container-fluid">
 
-      <div class="two-cols-description-row row">
+    <div class="two-cols-description-row row">
 
-        <!-- TWO COLS DESCRIPTION IMAGE -->
-        <div class="two-cols-description-image col-md-6 col-md-push-6"></div>
+      <!-- TWO COLS DESCRIPTION IMAGE -->
+      <div class="two-cols-description-image col-md-6 col-md-push-6"></div>
 
-        <!-- TWO COLS DESCRIPTION TEXT -->
-        <div class="two-cols-description-text col-md-6 col-md-pull-6">
+      <!-- TWO COLS DESCRIPTION TEXT -->
+      <div class="two-cols-description-text col-md-6 col-md-pull-6">
 
-          <div class="two-cols-description-text-inner">
+        <div class="two-cols-description-text-inner">
 
-            <h2 class="section-heading text-left">Quality you can’t find at the large retailers. <br/>
-              From the world’s most cherished vineyards.</h2>
-
-
-              <p>And definitely not at the supermarket!</p>
+          <h2 class="section-heading text-left">Quality you can’t find at the large retailers. <br/>
+            From the world’s most cherished vineyards.</h2>
 
 
-          </div>
+          <p>And definitely not at the supermarket!</p>
+
 
         </div>
 
@@ -390,93 +321,65 @@
 
     </div>
 
-  </section>
+  </div>
+
+</section>
 
 
 
 
 
-  <script>
-      var areas = [];
-  </script>
+<script>
+    var areas = [];
+</script>
 
-  <% unless @areas.blank? %>
+<% unless @areas.blank? %>
 
-      <section id="delivery" class="delivery-section section">
-        <div class="container-fluid">
-          <h2 class="section-heading text-center">We currently deliver within this area</h2>
-          <div class="hiw-row row">
-            <!-- HOW IT WORKS - ITEM 1 -->
-            <div class="col-md-12 col-sm-12" data-animation="fadeIn">
-              <div class="hiw-item">
-                <div id="map" style="width: 100%; height: 500px;"></div>
-                <span class="delivery-bicycle"><i class=" vyneicon-bicycle"></i></span>
-              </div>
+    <section id="delivery" class="delivery-section section">
+      <div class="container-fluid">
+        <h2 class="section-heading text-center">We currently deliver within this area</h2>
+
+        <div class="hiw-row row">
+          <!-- HOW IT WORKS - ITEM 1 -->
+          <div class="col-md-12 col-sm-12" data-animation="fadeIn">
+            <div class="hiw-item">
+              <div id="map" class="delivery" style="width: 100%; height: 500px;"></div>
+              <span class="delivery-bicycle"><i class=" vyneicon-bicycle"></i></span>
             </div>
           </div>
         </div>
-      </section>
-
-      <script>
-          areas = <%= @areas.html_safe %>;
-      </script>
-  <% end %>
-
-
-  <!-- FOOTER
-  ================================= -->
-  <section id="footer" class="footer-section section">
-
-    <div class="container">
-
-      <div class="row">
-        <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12 col-xs-offset-0">
-
-
-          <form action="/shop/neworder" id="postcode-check" method="GET" class="form footer-form home-form">
-            <div class="form-group">
-              <input type="text" class="form-control" id="filterPostcode" placeholder="Enter postcode (e.g. SW1A 1AA)" name="postcode" autocomplete="off"/>
-            </div>
-            <div class="form-group form-group-submit">
-              <input type="submit" class="btn btn-primary btn-lg btn-block" value="Check Availability"/>
-            </div>
-          </form>
-
-        </div>
       </div>
+    </section>
 
-    </div>
-
-    <div class="container">
-
-      <div class="footer-socmed">
-        <a href="https://www.facebook.com/pages/Vyne/364837310356393" target="_blank"><span class="fa fa-facebook"></span></a>
-        <a href="https://www.twitter.com/vynewine" target="_blank"><span class="fa fa-twitter"></span></a>
-        <a href="http://instagram.com/vynewine/" target="_blank"><span class="fa fa-instagram"></span></a>
-      </div>
-
-    </div>
+    <script>
+        areas = <%= @areas.html_safe %>;
+    </script>
+<% end %>
 
 
-    <div class="container footer-links">
-      <div class="row">
-        <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12 col-xs-offset-0">
-          <% if has_invitation_code %>
-              <a href="https://vyne.zendesk.com/">Help</a>
-          <% end %>
-          <a href="/tc" data-no-turbolink="true">Terms</a>
-          <a href="/jobs" data-no-turbolink="true">Jobs</a>
-        </div>
-      </div>
+<section id="footer" class="footer-section section" style="padding-top: 60px">
 
-    </div>
+  <div class="container">
 
-    <div class="container">
-      <div class="footer-copyright">
-        &copy; 2015 Vyne
+    <div class="row">
+      <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12 col-xs-offset-0">
+
+
+        <form action="/shop/neworder" id="postcode-check-bottom" method="GET" class="form footer-form home-form">
+          <div class="form-group">
+            <input type="text" class="form-control" id="filterPostcode" placeholder="Enter postcode (e.g. SW1A 1AA)" name="postcode" autocomplete="off"/>
+          </div>
+          <div class="form-group form-group-submit">
+            <input type="submit" class="btn btn-primary btn-lg btn-block" value="Check Availability"/>
+          </div>
+        </form>
+
       </div>
     </div>
+
+  </div>
 
   </section>
 
-</div>
+
+

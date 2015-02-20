@@ -1,0 +1,612 @@
+var token = $('meta[name="csrf-token"]').last().attr('content');
+
+var CheckPostcode = React.createClass({
+
+    getInitialState: function () {
+        return {
+            showErrorLabel: false,
+            filterPostcode: this.props.initialFilterPostcode || $.cookie('postcode'),
+            typingTimer: null
+        };
+    },
+    componentDidMount: function () {
+        if (this.state.filterPostcode) {
+            this.props.onPostcodeChange(this.state.filterPostcode);
+        }
+    },
+    handleChange: function (event) {
+
+        this.setState({filterPostcode: event.target.value});
+
+        var postcode = event.target.value.toUpperCase().trim();
+
+        if (this.state.typingTimer) {
+            clearTimeout(this.state.typingTimer);
+        }
+
+        /**
+         * Check validity of postcode only when user stops typing
+         */
+        this.setState({
+            typingTimer: setTimeout(function () {
+
+                if (postcode.length < 5) {
+                    this.setState({showErrorLabel: true});
+                    return;
+                }
+
+                var validated = validatePostcode(postcode);
+
+                if (validated) {
+
+                    /**
+                     * Handled in Availability component. Comes back via props deliveryOptions
+                     */
+                    this.props.onPostcodeChange(validated);
+
+                    this.setState({showErrorLabel: false});
+
+                } else {
+                    this.setState({showErrorLabel: true});
+                }
+            }.bind(this), 1000)
+        });
+
+    },
+    render: function () {
+
+        var errorLabelStyle = {
+            display: this.state.showErrorLabel ? 'block' : 'none'
+        };
+
+        var labelClass = 'app-label loading';
+        var labelText = 'Please enter your postcode';
+
+        if (this.isMounted()) {
+
+            if (this.props.deliveryOptions.today_warehouse) {
+                if (!this.props.deliveryOptions.today_warehouse.id) {
+                    labelClass = 'app-label danger';
+                    labelText = 'Not available in your area yet';
+                } else {
+                    labelClass = 'app-label success fadeIn';
+                    labelText = 'Vyne delivers to your area';
+                }
+            }
+        }
+
+        return (
+            <div>
+                <p className="animated fadeIn text-danger" style={errorLabelStyle}>Not a valid postcode</p>
+                <div className="form-group">
+                    <input type="text" className="form-control postcode-input"
+                        placeholder="Enter postcode (e.g. EC4Y 8AU)"
+                        onChange={this.handleChange}
+                        value={this.state.filterPostcode}
+                    />
+                </div>
+
+                <p className={labelClass}>
+                    {labelText}
+                </p>
+            </div>
+        );
+    }
+});
+
+var LiveDelivery = React.createClass({
+    getInitialState: function () {
+        return {
+            warehouse: {},
+            liveDeliveryEnabled: false,
+            filterPostcode: this.props.initialFilterPostcode,
+            nextOpenWarehouse: {}
+        };
+    },
+    componentWillReceiveProps: function (nextProps) {
+        if (nextProps.deliveryOptions.today_warehouse.id) {
+
+            this.setState({
+                warehouse: nextProps.deliveryOptions.today_warehouse,
+                liveDeliveryEnabled: nextProps.deliveryOptions.today_warehouse.is_open,
+                nextOpenWarehouse: nextProps.deliveryOptions.next_open_warehouse
+            });
+        }
+    },
+    render: function () {
+
+        var deliverNow = '';
+
+        if (this.state.liveDeliveryEnabled) {
+            deliverNow = (
+                <div>
+                    <div className="form-group form-group-submit">
+                        <form method="get" action="shop/neworder">
+                            <button type="submit" className="btn btn-primary btn-lg app-btn">Now</button>
+                            <input name="warehouse_id" type="hidden" value={this.state.warehouse.id} />
+                            <input name="postcode" type="hidden" value={(this.state.filterPostcode)} />
+                        </form>
+                    </div>
+
+                    <h4>Delivery in minutes</h4>
+
+                    <p>
+                    </p>
+                </div>
+            );
+        } else if (this.state.warehouse.opens_today && this.state.warehouse.opening_time) {
+            deliverNow = (
+                <h4>
+                    Instant delivery is only available in your area
+                    <br/>
+                    between {this.state.warehouse.opening_time}-{this.state.warehouse.closing_time}
+                </h4>
+            );
+        } else if (this.state.nextOpenWarehouse && this.state.nextOpenWarehouse.opening_time) {
+            deliverNow = (
+                <h4>
+                    Next instant delivery to your area will be on {this.state.nextOpenWarehouse.week_day}
+                    <br/>
+                    between {this.state.nextOpenWarehouse.opening_time}-{this.state.nextOpenWarehouse.closing_time}
+                </h4>
+            );
+        }
+
+
+        return (
+            <div>
+            {deliverNow}
+            </div>
+        );
+    }
+});
+
+var BlockDelivery = React.createClass({
+    getInitialState: function () {
+        return {
+            warehouse: {},
+            filterPostcode: this.props.initialFilterPostcode,
+            deliverySlots: [],
+            liveDeliveryEnabled: false
+        };
+    },
+    componentWillReceiveProps: function (nextProps) {
+        if (nextProps.deliveryOptions.today_warehouse.id) {
+
+            var slots = nextProps.deliveryOptions.delivery_slots;
+            var slotDate = '';
+            var slotFrom = '';
+            var slotTo = '';
+            var slotWarehouse = '';
+
+            if (slots) {
+                slotDate = slots[0].date;
+                slotFrom = slots[0].from;
+                slotTo = slots[0].to;
+                slotWarehouse = slots[0].warehouse_id;
+            }
+
+            this.setState({
+                warehouse: nextProps.deliveryOptions.today_warehouse,
+                deliverySlots: slots,
+                daytimeSlotsAvailable: nextProps.deliveryOptions.daytime_slots_available,
+                liveDeliveryEnabled: nextProps.deliveryOptions.today_warehouse.is_open,
+                slotDate: slotDate,
+                slotFrom: slotFrom,
+                slotTo: slotTo,
+                slotWarehouse: slotWarehouse
+            });
+        }
+    },
+    selectSlot: function (event) {
+        var slot = $(event.target).find("option:selected").data('value');
+        this.setState({
+            selectedSlot: slot,
+            selectedSlotText: moment(slot.date).format('dddd MMMM Do') + ' between ' + slot.from + ' and ' + slot.to,
+            slotDate: slot.date,
+            slotFrom: slot.from,
+            slotTo: slot.to,
+            slotWarehouse: slot.warehouse_id
+        });
+    },
+    render: function () {
+        var options = [];
+        var deliverLater = '';
+        var or = '';
+        var slotsMessage = '';
+
+        if (this.state.deliverySlots.length) {
+
+            this.state.deliverySlots.map(function (slot) {
+                var key = slot.date + ',' + slot.from + ',' + slot.to;
+                options.push(<option key={key} data-value={JSON.stringify(slot)} value={key} >{slot.day} {slot.from} - {slot.to}</option>)
+            }.bind(this));
+
+
+            if (this.state.daytimeSlotsAvailable && this.state.warehouse.opens_today) {
+                slotsMessage = (
+                    <div>
+                        <p>
+                        </p>
+
+                        <h4> Book one of the slots below </h4>
+
+                    </div>
+                );
+            } else if (!this.state.warehouse.opens_today) {
+                slotsMessage = (
+                    <div>
+                        <p>
+                        </p>
+                        <h4> Book in advance for later delivery</h4>
+                    </div>
+                );
+            }
+            else {
+                slotsMessage = (
+                    <div>
+                        <p>
+                        </p>
+                        <h4>
+                            Work in Central London&#63;
+                            <br/>
+                            Enter your work postcode for&nbsp;
+                            <strong>bookable daytime slots today</strong>
+                        </h4>
+                        <p>
+                            <h4 className="circled-text">or</h4>
+                        </p>
+                        <h4>Book one of the evening slots below</h4>
+                    </div>
+                );
+            }
+
+            deliverLater = (
+                <div>
+
+                {slotsMessage}
+
+                    <form method="get" action="shop/neworder">
+                        <div className="form-group">
+                            <select className="form-control app-btn" onChange={this.selectSlot}>
+                            {options}
+                            </select>
+                        </div>
+
+                        <input name="postcode" type="hidden" value={(this.state.filterPostcode)} />
+                        <input name="warehouse_id" type="hidden" value={this.state.slotWarehouse} />
+                        <input name="slot_date" type="hidden" value={this.state.slotDate} />
+                        <input name="slot_from" type="hidden" value={this.state.slotFrom} />
+                        <input name="slot_to" type="hidden" value={this.state.slotTo} />
+                        <div className="form-group">
+                            <button type="submit" className="btn btn-primary btn-lg app-btn">Book Now</button>
+                        </div>
+                    </form>
+                </div>
+
+            );
+        }
+
+        if (this.state.liveDeliveryEnabled && this.state.deliverySlots.length) {
+            or = (
+
+                <div>
+                    <h4 className="circled-text">or</h4>
+                </div>
+
+            );
+        }
+
+        return (
+            <div>
+            {or}
+            {deliverLater}
+            </div>
+        );
+    }
+});
+
+var MailingList = React.createClass({
+    getInitialState: function () {
+        return {
+            shouldSignUpForList: false,
+            email: '',
+            showThankYou: false
+        };
+    },
+    handleChange: function (event) {
+        this.setState({email: event.target.value});
+    },
+    componentWillReceiveProps: function (nextProps) {
+        if (!nextProps.deliveryOptions.today_warehouse.id) {
+
+            this.setState({
+                shouldSignUpForList: true
+            });
+        } else {
+            this.setState({
+                shouldSignUpForList: false
+            });
+        }
+    },
+    signUp: function (email) {
+        mailingListSignUp(email, function (error) {
+
+            if (error) {
+                this.setState({
+                    error: error
+                });
+            } else {
+                this.setState({
+                    shouldSignUpForList: false,
+                    showThankYou: true
+                });
+            }
+
+        }.bind(this));
+    },
+    render: function () {
+
+        var signupForm = '';
+        var error = '';
+
+        var errorLabelStyle = {
+            display: this.state.error ? 'block' : 'none'
+        };
+
+        if (this.state.error) {
+            error = (
+                <div>
+                    <p className="animated fadeIn text-danger" style={errorLabelStyle}>{this.state.error}</p>
+                    <p></p>
+                </div>
+            );
+        }
+
+        if (this.state.shouldSignUpForList && !this.state.showThankYou) {
+            signupForm = (
+                <div>
+                    <h4>
+                        Work in Central London&#63;
+                        <br/>
+                        Enter your work postcode for&nbsp;
+                        <strong>bookable daytime slots</strong>
+                    </h4>
+
+                    <div className="form-group form-group-submit">
+                        <h4>Or we can let you know when we’re coming your way</h4>
+                        <div className="form-group">
+                            <input
+                                className="form-control app-btn postcode-input"
+                                type="text"
+                                placeholder="Email"
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            className="btn btn-primary btn-lg app-btn"
+                            onClick={this.signUp.bind(this, this.state.email)}>Sign Up</button>
+
+                    </div>
+                {error}
+                </div>
+            );
+        } else if (this.state.showThankYou) {
+            signupForm = (
+                <h4>
+                    Thank you
+                </h4>
+            );
+        } else {
+            signupForm = '';
+        }
+
+        return (
+            <div>
+            {signupForm}
+            </div>
+        );
+    }
+
+});
+
+/**
+ * Top Level Controller View
+ */
+var Availability = React.createClass({
+
+    getInitialState: function () {
+        return {
+            deliveryOptions: {}
+        };
+    },
+    loadData: function (postcode) {
+        checkWarehouseAvailability(postcode, function (deliveryOptions) {
+            this.setState({deliveryOptions: deliveryOptions});
+        }.bind(this));
+    },
+    handlePostcodeChange: function (postcode) {
+        this.loadData(postcode);
+    },
+    render: function () {
+
+        return (
+            <div>
+                <CheckPostcode
+                    initialFilterPostcode={this.props.initialFilterPostcode}
+                    onPostcodeChange={this.handlePostcodeChange}
+                    deliveryOptions={this.state.deliveryOptions}
+                />
+                <LiveDelivery
+                    deliveryOptions={this.state.deliveryOptions}
+                    initialFilterPostcode={this.props.initialFilterPostcode}
+                />
+                <BlockDelivery
+                    deliveryOptions={this.state.deliveryOptions}
+                    initialFilterPostcode={this.props.initialFilterPostcode}
+                />
+                <MailingList
+                    deliveryOptions={this.state.deliveryOptions}
+                    initialFilterPostcode={this.props.initialFilterPostcode}
+                />
+            </div>
+        );
+    }
+});
+
+var checkWarehouseAvailability = function (postcode, callback) {
+
+    //We deliver to your area Now
+    //Have daytime and evening bookable slots
+    //callback(scenario_01);
+
+    //We don't deliver to your area Now
+    //We will deliver later today
+    //Have daytime and evening bookable slots
+    //callback(scenario_02);
+
+    //We don't deliver to your area Now
+    //We will deliver later today
+    //Have only evening bookable slots
+    //callback(scenario_03);
+
+    //We don't deliver to your area Now
+    //We are closed in your area today
+    //Have daytime and evening bookable slots for other days
+    //callback(scenario_04);
+
+    //We don't deliver to your area Now
+    //We are closed in your area today
+    //Have only evening bookable slots for other days
+    //callback(scenario_05);
+
+    //We don't deliver to your area yet at all
+    //callback(scenario_06);
+    //return;
+
+    analytics.track('Postcode lookup', {
+        postcode: postcode
+    });
+
+    var geocoder = new google.maps.Geocoder();
+
+    geocoder.geocode({'address': 'London+' + postcode + '+UK'}, function (results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+
+            var warehouseResource = "/merchants/";
+
+            $.get(warehouseResource,
+                {
+                    lat: results[0].geometry.location.lat(),
+                    lng: results[0].geometry.location.lng(),
+                    postcode: postcode
+                },
+                function (deliveryOptions) {
+                    callback(deliveryOptions);
+                });
+        }
+    });
+};
+
+var renderAvailability = function () {
+
+    if ($('body.availability').length) {
+
+        var postCode = '';
+        var queryHash = getUrlVars();
+
+        if (queryHash["postcode"]) {
+            postCode = getUrlVars()["postcode"].replace('+', ' ').toUpperCase().trim();
+        }
+
+        if (!postCode && $.cookie('postcode')) {
+            postCode = $.cookie('postcode')
+        }
+
+        React.render(<Availability initialFilterPostcode={postCode} />,
+            document.getElementById('availability-component'));
+    }
+};
+
+$(document).on('page:load', renderAvailability);
+$(document).ready(renderAvailability);
+
+var delOptions = {
+    "today_warehouse": {
+        "id": 1,
+        "address": "W1F 8BH",
+        "is_open": true,
+        "opening_time": "17:00",
+        "closing_time": "20:30",
+        "opens_today": true,
+        "title": "Vynz QH Soho"
+    },
+    "next_open_warehouse": {
+        "day": 1,
+        "week_day": "Monday",
+        "opening_time": "17:00",
+        "closing_time": "20:30"
+    },
+    "daytime_slots_available": true,
+    "delivery_slots": [
+        {
+            "from": "14:00",
+            "to": "15:00",
+            "date": "2015-02-22",
+            "day": "Wednesday",
+            "warehouse_id": 1,
+            "title": "Vynz QH Soho"
+        },
+        {
+            "from": "15:00",
+            "to": "16:00",
+            "date": "2015-12-22",
+            "day": "Wednesday",
+            "warehouse_id": 4,
+            "title": "Vynz QH Soho"
+        },
+        {
+            "from": "14:00",
+            "to": "15:00",
+            "date": "2015-12-23",
+            "day": "Thursday",
+            "warehouse_id": 1,
+            "title": "Vynz QH Soho"
+        },
+        {
+            "from": "15:00",
+            "to": "16:00",
+            "date": "2015-12-23",
+            "day": "Thursday",
+            "warehouse_id": 4,
+            "title": "Vynz QH Soho"
+        }
+
+    ]
+};
+
+
+var scenario_01 = delOptions;
+
+var scenario_02 = $.extend(true, {}, delOptions);
+scenario_02.today_warehouse.is_open = false;
+
+
+var scenario_03 = $.extend(true, {}, delOptions);
+scenario_03.today_warehouse.is_open = false;
+scenario_03.daytime_slots_available = false;
+
+var scenario_04 = $.extend(true, {}, delOptions);
+scenario_04.today_warehouse.is_open = false;
+scenario_04.today_warehouse.opens_today = false;
+
+var scenario_05 = $.extend(true, {}, delOptions);
+scenario_05.today_warehouse.is_open = false;
+scenario_05.today_warehouse.opens_today = false;
+scenario_05.daytime_slots_available = false;
+
+
+var scenario_06 = $.extend(true, {}, delOptions);
+scenario_06.today_warehouse = {};
+scenario_06.next_open_warehouse = {};

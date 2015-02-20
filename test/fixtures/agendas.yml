@@ -29,3 +29,98 @@ five:
   day: 4
   opening: 1200
   closing: 1800
+
+warehouse_two_monday:
+  warehouse: two
+  day: 1 # Monday
+  opening: 1700
+  closing: 2030
+  delivery_slots_from: "14:00"
+  delivery_slots_to: "17:00"
+  live_delivery_from: "17:00"
+  live_delivery_to: "20:30"
+
+warehouse_two_tuesday:
+  warehouse: two
+  day: 2 # Tuesday
+  opening: 1700
+  closing: 2000
+  delivery_slots_from: "14:00"
+  delivery_slots_to: "17:00"
+  live_delivery_from: "17:00"
+  live_delivery_to: "19:00"
+
+warehouse_two_wednesday:
+  warehouse: two
+  day: 3
+  opens_today: false
+
+warehouse_two_thursday:
+  warehouse: two
+  day: 4
+  opens_today: true
+  delivery_slots_from: "14:00"
+  delivery_slots_to: "17:00"
+  live_delivery_from: "17:00"
+  live_delivery_to: "19:00"
+
+warehouse_two_friday:
+  warehouse: two
+  day: 5
+  opens_today: false
+
+warehouse_two_saturday:
+  warehouse: two
+  day: 6
+  opens_today: false
+
+warehouse_two_sunday:
+  warehouse: two
+  day: 0
+  opens_today: false
+
+warehouse_three_monday:
+  warehouse: three
+  day: 1
+  opens_today: false
+
+warehouse_three_tuesday:
+  warehouse: three
+  day: 2 # Tuesday
+  opening: 1700
+  closing: 2000
+  delivery_slots_from: "14:00"
+  delivery_slots_to: "17:00"
+  live_delivery_from: "17:00"
+  live_delivery_to: "20:00"
+
+warehouse_three_wednesday:
+  warehouse: three
+  day: 3 # Wednesday
+  opening: 1700
+  closing: 2000
+  delivery_slots_from: "15:00"
+  delivery_slots_to: "17:00"
+  live_delivery_from: "17:00"
+  live_delivery_to: "18:00"
+
+warehouse_three_thursday:
+  warehouse: three
+  day: 4 # Thursday
+  opens_today: false
+
+warehouse_three_friday:
+  warehouse: three
+  day: 5
+  opens_today: false
+
+warehouse_three_saturday:
+  warehouse: three
+  day: 6
+  opens_today: false
+
+warehouse_three_sunday:
+  warehouse: three
+  day: 0
+  opens_today: false
+

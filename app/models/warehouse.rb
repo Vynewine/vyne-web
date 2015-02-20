@@ -29,6 +29,35 @@ class Warehouse < ActiveRecord::Base
     "vyne_store_#{id}"
   end
 
+  def is_open_for_live_delivery
+    if self.agendas.blank?
+      false
+    else
+      agenda = self.agendas.select { |agenda| agenda.day == local_time.wday }.first
+      if agenda.blank? || !agenda.opens_today || agenda.live_delivery_from.blank? || agenda.live_delivery_to.blank?
+        false
+      else
+        agenda_open = DateTime.new(local_time.year,
+                                   local_time.month,
+                                   local_time.day,
+                                   agenda.live_delivery_from.hour,
+                                   agenda.live_delivery_from.min,
+                                   agenda.live_delivery_from.sec
+        )
+
+        agenda_close = DateTime.new(local_time.year,
+                                    local_time.month,
+                                    local_time.day,
+                                    agenda.live_delivery_to.hour,
+                                    agenda.live_delivery_to.min,
+                                    agenda.live_delivery_to.sec
+        )
+
+        (agenda_open <= local_time && agenda_close >= local_time)
+      end
+    end
+  end
+
   def is_open
     if self.agendas.blank?
       false
@@ -67,31 +96,34 @@ class Warehouse < ActiveRecord::Base
     end
   end
 
+  def is_open_on_day (day)
+    agenda = self.agendas.select { |agenda| agenda.day == day.wday }.first
+    if agenda.blank?
+      false
+    else
+      agenda.opens_today
+    end
+  end
+
   def today_opening_time
     # Select agenda for today for a warehouse
     agenda = self.agendas.select { |agenda| agenda.day == local_time.wday }.first
-    if agenda.blank?
-      'N/A'
-    else
-      opening_time = Time.parse(agenda.opening_time)
-      "#{opening_time.hour < 10 ? '0' + opening_time.hour.to_s : opening_time.hour.to_s}:#{opening_time.min < 10 ? '0' + opening_time.min.to_s : opening_time.min.to_s}"
+    unless agenda.blank? || agenda.live_delivery_from.blank?
+      agenda.live_delivery_from.strftime('%H:%M')
     end
   end
 
   def today_closing_time
     # Select agenda for today for a warehouse
     agenda = self.agendas.select { |agenda| agenda.day == local_time.wday }.first
-    if agenda.blank?
-      'N/A'
-    else
-      closing_time = Time.parse(agenda.closing_time)
-      "#{closing_time.hour < 10 ? '0' + closing_time.hour.to_s : closing_time.hour.to_s}:#{closing_time.min < 10 ? '0' + closing_time.min.to_s : closing_time.min.to_s}"
+    unless agenda.blank? || agenda.live_delivery_to.blank?
+      agenda.live_delivery_to.strftime('%H:%M')
     end
   end
 
   def opens_today
     agenda = self.agendas.select { |agenda| agenda.day == local_time.wday }.first
-    if agenda.blank?
+    if agenda.blank? || today_closing_time.blank?
       false
     else
       if agenda.opens_today
@@ -134,25 +166,17 @@ class Warehouse < ActiveRecord::Base
   def next_open_day_opening_time
     agenda = self.agendas.select { |agenda| agenda.day == next_open_day }.first
 
-    if agenda.blank?
-      'N/A'
-    else
-      opening_time = Time.parse(agenda.opening_time)
-      "#{opening_time.hour < 10 ? '0' + opening_time.hour.to_s : opening_time.hour.to_s}:#{opening_time.min < 10 ? '0' + opening_time.min.to_s : opening_time.min.to_s}"
+    unless agenda.blank? || agenda.live_delivery_from.blank?
+      agenda.live_delivery_from.strftime('%H:%M')
     end
-
   end
 
   def next_open_day_closing_time
     agenda = self.agendas.select { |agenda| agenda.day == next_open_day }.first
 
-    if agenda.blank?
-      'N/A'
-    else
-      opening_time = Time.parse(agenda.closing_time)
-      "#{opening_time.hour < 10 ? '0' + opening_time.hour.to_s : opening_time.hour.to_s}:#{opening_time.min < 10 ? '0' + opening_time.min.to_s : opening_time.min.to_s}"
+    unless agenda.blank? || agenda.live_delivery_to.blank?
+      agenda.live_delivery_to.strftime('%H:%M')
     end
-
   end
 
   def local_time
@@ -249,7 +273,7 @@ class Warehouse < ActiveRecord::Base
   end
 
   # Find closest warehouse delivering to lat/lng area
-  def self.closest_to(lat, lng)
+  def self.delivering_to(lat, lng)
     point = "'POINT(#{lng} #{lat})'"
     warehouses = Warehouse.find_by_sql("select w.* from warehouses w
                           join addresses a on w.address_id = a.id
@@ -258,4 +282,35 @@ class Warehouse < ActiveRecord::Base
                           order by ST_Distance (#{point}, a.coordinates) asc")
     warehouses
   end
+
+  def distance_from(lat, lng)
+    unless address.blank? || address.coordinates.blank?
+      factory = RGeo::Geographic.spherical_factory
+      point = factory.point(lng, lat)
+      point.distance(address.coordinates)
+    end
+  end
+
+  def get_delivery_blocks(time)
+
+    agenda = self.agendas.select { |agenda| agenda.day == time.wday }.first
+    unless agenda.blank?
+      blocks = agenda.available_delivery_blocks(time)
+
+      unless blocks.blank?
+        blocks.map do |block|
+          {
+              :from => block[:from],
+              :to => block[:to],
+              :date => time.strftime('%F'),
+              :day => time.wday == local_time.wday ? 'Today' : Date::DAYNAMES[time.wday],
+              :warehouse_id => self.id,
+              :title => self.title,
+              :type => block[:type]
+          }
+        end
+      end
+    end
+  end
+
 end

@@ -3,7 +3,7 @@ require 'mailchimp'
 class HomeController < ApplicationController
   before_action :check_the_gate, :except => [:mailing_list_signup, :warehouses, :gate, :aidani]
 
-  layout 'aidani', :only => [ :index ]
+  layout 'aidani', :only => [:index]
 
   def index
 
@@ -66,26 +66,29 @@ class HomeController < ApplicationController
     end
 
     warehouses = {warehouses: [], next_opening: {}}
-    @warehouses = Warehouse.closest_to(params[:lat], params[:lng])
+    @warehouses = Warehouse.delivering_to(params[:lat], params[:lng])
 
     unless @warehouses.blank?
       @warehouses.each do |warehouse|
         warehouses[:warehouses] << {
             id: warehouse.id,
             address: warehouse.address.postcode,
-            is_open: warehouse.is_open,
+            is_open: warehouse.is_open_for_live_delivery,
             opening_time: warehouse.today_opening_time,
             closing_time: warehouse.today_closing_time,
-            opens_today: warehouse.opens_today
-        }
+            opens_today: warehouse.opens_today,
 
+
+        }
       end
 
       warehouses[:next_opening] = next_open_warehouse(@warehouses)
+
+      warehouses[:delivery_slots] = future_delivery_slots(@warehouses)
+
     end
     render :json => warehouses
   end
-
 
 
   def terms
@@ -163,7 +166,7 @@ class HomeController < ApplicationController
 
     7.times do
 
-      next_warehouse = warehouses.select{ |w| w.next_open_day == next_day}.first
+      next_warehouse = warehouses.select { |w| w.next_open_day == next_day }.first
       unless next_warehouse.blank?
         return {
             :day => next_warehouse.next_open_day,
@@ -189,4 +192,17 @@ class HomeController < ApplicationController
     tz.utc_to_local(Time.now.getutc)
   end
 
+  # Only future delivery slots
+  # By closest warehouse
+  # Array of warehouse Ids and Slots
+  # Only slots for next available date
+  # Don't mix dates - it can only be less slots left for today or only next day slots.
+  def future_delivery_slots(warehouses)
+    [
+        {day: 'Monday', date: '2015/02/15', from: '13:00', to: '14:00', full: true, warehouse_id: 1},
+        {day: 'Monday', date: '2015/02/15', from: '14:00', to: '15:00', full: true, warehouse_id: 1},
+        {day: 'Monday', date: '2015/02/15', from: '15:00', to: '16:00', full: false, warehouse_id: 2},
+        {day: 'Monday', date: '2015/02/15', from: '16:00', to: '17:00', full: true, warehouse_id: 1}
+    ]
+  end
 end

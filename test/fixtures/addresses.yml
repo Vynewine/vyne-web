@@ -4,14 +4,27 @@ one:
   line_1: Street1
   postcode: EC3V1LR
 
-two:
-  line_1: Street1
-  postcode: NW107ST
+two: #WeWork Soho
+  line_1: 2 Sheraton St
+  postcode: W1F 8BH
+  coordinates: POINT(-0.13487209999993865 51.5151555)
 
-three:
-  line_1: Street1
-  postcode: N17RJ
+three: #Bodean's BBQ!
+  line_1: 10 Poland Street
+  postcode: W1F 8PZ
+  coordinates: POINT(-0.13684439999997267 51.5145034)
 
-four:
-  line_1: Street1
-  postcode: N11QP
+four: #Pizza Express - WeWork Warehouse Delivers only
+  line_1: 10 Dean Street
+  postcode: W1D 3RW
+  coordinates: POINT(-0.13331719999996494 51.5151128)
+
+five: #Chipotle Mexican Grill - WeWork and Bodean's Warehouse Delivers, WeWork is closer
+  line_1: 181-185 Wardour Street
+  postcode: W1F 8ZA
+  coordinates: POINT(-0.13554969999995592 51.5151483)
+
+six: #Marshall Street Leisure Centre - Bodean's Warehouse Delivers only
+  line_1: 15 Marshall Street
+  postcode: W1F 7EL
+  coordinates: POINT(-0.13768049999998766 51.5134376)
