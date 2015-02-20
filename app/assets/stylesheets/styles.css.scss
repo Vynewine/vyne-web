@@ -852,7 +852,6 @@ iframe {
     .app-area {
         background-color: rgba(0, 0, 0, 0.8);
         padding: 5px 20px 1px 20px;
-
     }
 
     .app-btn {
@@ -863,6 +862,14 @@ iframe {
     @media (max-width: 375px) {
         .app-btn {
             width: 265px;
+        }
+
+        form {
+            padding: 0px 0 0px 0;
+        }
+
+        .app-area {
+            padding: 5px 10px 1px 10px;
         }
     }
 
