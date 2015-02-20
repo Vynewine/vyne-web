@@ -58,7 +58,11 @@ warehouse_two_wednesday:
 warehouse_two_thursday:
   warehouse: two
   day: 4
-  opens_today: false
+  opens_today: true
+  delivery_slots_from: "14:00"
+  delivery_slots_to: "17:00"
+  live_delivery_from: "17:00"
+  live_delivery_to: "19:00"
 
 warehouse_two_friday:
   warehouse: two

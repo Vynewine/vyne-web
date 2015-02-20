@@ -128,7 +128,7 @@ var LiveDelivery = React.createClass({
                         </form>
                     </div>
 
-                        <h4>Delivery in minutes</h4>
+                    <h4>Delivery in minutes</h4>
 
                     <p>
                     </p>
@@ -309,8 +309,13 @@ var BlockDelivery = React.createClass({
 var MailingList = React.createClass({
     getInitialState: function () {
         return {
-            shouldSignUpForList: false
+            shouldSignUpForList: false,
+            email: '',
+            showThankYou: false
         };
+    },
+    handleChange: function (event) {
+        this.setState({email: event.target.value});
     },
     componentWillReceiveProps: function (nextProps) {
         if (!nextProps.deliveryOptions.today_warehouse.id) {
@@ -320,11 +325,41 @@ var MailingList = React.createClass({
             });
         }
     },
+    signUp: function (email) {
+        mailingListSignUp(email, function (error) {
+
+            if (error) {
+                this.setState({
+                    error: error
+                });
+            } else {
+                this.setState({
+                    shouldSignUpForList: false,
+                    showThankYou: true
+                });
+            }
+
+        }.bind(this));
+    },
     render: function () {
 
         var signupForm = '';
+        var error = '';
 
-        if (this.state.shouldSignUpForList) {
+        var errorLabelStyle = {
+            display: this.state.error ? 'block' : 'none'
+        };
+
+        if (this.state.error) {
+            error = (
+                <div>
+                    <p className="animated fadeIn text-danger" style={errorLabelStyle}>{this.state.error}</p>
+                    <p></p>
+                </div>
+            );
+        }
+
+        if (this.state.shouldSignUpForList && !this.state.showThankYou) {
             signupForm = (
                 <div>
                     <h4>
@@ -334,23 +369,30 @@ var MailingList = React.createClass({
                         <strong>bookable daytime slots</strong>
                     </h4>
 
-
                     <div className="form-group form-group-submit">
+                        <h4>Or we can let you know when we’re coming your way</h4>
+                        <div className="form-group">
+                            <input
+                                className="form-control app-btn postcode-input"
+                                type="text"
+                                placeholder="Email"
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            className="btn btn-primary btn-lg app-btn"
+                            onClick={this.signUp.bind(this, this.state.email)}>Sign Up</button>
 
-                        <form method="get" action="shop/neworder">
-                            <h4>
-
-                                Or we can let you know when we’re coming your way
-
-                            </h4>
-                            <div className="form-group">
-                                <input className="form-control app-btn postcode-input" type="text" placeholder="Email" />
-                            </div>
-                            <button type="submit" className="btn btn-primary btn-lg app-btn">Sign Up</button>
-                        </form>
                     </div>
-
+                {error}
                 </div>
+            );
+        } else if (this.state.showThankYou) {
+            signupForm = (
+                <h4>
+                    Thank you
+                </h4>
             );
         }
 
@@ -377,12 +419,6 @@ var Availability = React.createClass({
         checkWarehouseAvailability(postcode, function (deliveryOptions) {
             this.setState({deliveryOptions: deliveryOptions});
         }.bind(this));
-    },
-    componentDidMount: function () {
-        var validated = validatePostcode(this.props.initialFilterPostcode);
-        if (validated) {
-            this.loadData(validated);
-        }
     },
     handlePostcodeChange: function (postcode) {
         this.loadData(postcode);
@@ -440,8 +476,8 @@ var checkWarehouseAvailability = function (postcode, callback) {
     //callback(scenario_05);
 
     //We don't deliver to your area yet at all
-    callback(scenario_06);
-    return;
+    //callback(scenario_06);
+    //return;
 
     analytics.track('Postcode lookup', {
         postcode: postcode

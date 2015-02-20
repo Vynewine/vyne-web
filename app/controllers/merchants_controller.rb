@@ -33,7 +33,7 @@ class MerchantsController < ApplicationController
 
       warehouse_info[:delivery_slots] = get_delivery_slots(warehouses)
 
-      warehouse_info[:daytime_slots_available] = warehouse_info[:delivery_slots].blank? ? false : warehouse_info[:delivery_slots].select{|slot| slot[:type] == :daytime}.count > 0
+      warehouse_info[:daytime_slots_available] = warehouse_info[:delivery_slots].blank? ? false : warehouse_info[:delivery_slots].select { |slot| slot[:type] == :daytime }.count > 0
 
     end
     render :json => warehouse_info
@@ -111,42 +111,23 @@ class MerchantsController < ApplicationController
     second_day_delivery_slots = []
     warehouse_local_time = local_time
     last_midnight = nil
-    next_day = nil
 
     if last_midnight.nil?
       last_midnight = warehouse_local_time.change(:hour => 0)
     end
 
-    if first_day_delivery_slots.blank?
-      6.times do |i|
-
-        if i == 0
-          warehouse = get_open_warehouse_for_day(warehouses, warehouse_local_time)
-          unless warehouse.blank?
-            first_day_delivery_slots = warehouse.get_delivery_blocks(warehouse_local_time)
-          end
-        else
-          if first_day_delivery_slots.blank?
-            warehouse = get_open_warehouse_for_day(warehouses, (last_midnight + (i).day))
-            unless warehouse.blank?
-              first_day_delivery_slots = warehouse.get_delivery_blocks(last_midnight + (i).day)
-              unless first_day_delivery_slots.blank?
-                next_day = last_midnight + (i).day
-                break
-              end
-            end
+    7.times do |i|
+      if i == 0
+        first_day_delivery_slots = get_warehouse_and_slots(warehouses, warehouse_local_time)
+      else
+        if first_day_delivery_slots.blank?
+          first_day_delivery_slots = get_warehouse_and_slots(warehouses, (last_midnight + (i).day))
+        elsif second_day_delivery_slots.blank?
+          second_day_delivery_slots = get_warehouse_and_slots(warehouses, (last_midnight + (i).day))
+          unless second_day_delivery_slots.blank?
+            break
           end
         end
-        if i == 5
-          next_day = last_midnight + (i + 1).day
-        end
-      end
-    end
-
-    if second_day_delivery_slots.blank?
-      warehouse = get_open_warehouse_for_day(warehouses, next_day)
-      unless warehouse.blank?
-        second_day_delivery_slots = warehouse.get_delivery_blocks(next_day)
       end
     end
 
@@ -163,8 +144,21 @@ class MerchantsController < ApplicationController
     first_slots + second_slots
   end
 
+  def get_warehouse_and_slots(warehouses, day)
+    open_warehouse = nil
+    warehouses.each do |warehouse|
+      if warehouse.is_open_on_day(day) && open_warehouse.blank?
+        open_warehouse = warehouse
+      end
+    end
+    if open_warehouse.blank?
+      nil
+    else
+      open_warehouse.get_delivery_blocks(day)
+    end
+  end
+
   def get_open_warehouse_for_day(warehouses, day)
-    puts jaon: day
     open_warehouse = nil
     warehouses.each do |warehouse|
       if warehouse.is_open_on_day(day) && open_warehouse.blank?

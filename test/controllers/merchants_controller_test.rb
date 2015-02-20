@@ -98,6 +98,17 @@ class MerchantsControllerTest < ActionController::TestCase
     assert_slots(warehouse_info['delivery_slots'], '1996-01-10', 0, 1, 1, 1, 0, 0)
   end
 
+  test 'Should return slots for today and Saturday from warehouse two' do
+    time_now = Time.parse('1996/01/04 16:00') # Thursday
+    address = addresses(:four)
+    Time.stubs(:now).returns(time_now)
+    get :index, {lat: address.latitude, lng: address.longitude}
+    warehouse_info = JSON.parse(@response.body)
+
+
+    puts JSON.pretty_generate(JSON.parse(@response.body))
+  end
+
   def find_slot(slots, from, to, date)
     slots.select { |slot| slot['from'] == from && slot['to'] == to && slot['date'] == date }.count
   end

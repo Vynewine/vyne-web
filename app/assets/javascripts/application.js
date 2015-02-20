@@ -117,12 +117,7 @@ var wineCount = 0;
 var secondBottle = false;
 var orderSwiper;
 
-
-$('#sign-up-home-submit').click(function (e) {
-    e.preventDefault();
-    var email = $('#sign-up-home-email').val();
-    var $error = $('#sign-up-home-errors');
-    var panelThankYou = $('#sign-up-home-thank-you');
+var mailingListSignUp = function(email, callback) {
 
     $.ajax({
         type: "POST",
@@ -138,35 +133,29 @@ $('#sign-up-home-submit').click(function (e) {
             if (data && data.responseJSON) {
                 var errors = data.responseJSON.errors;
                 if (errors) {
-                    error = errors.join(', ');
-                    $error.text(error);
+                    var error = errors.join(', ');
+                    callback(error);
                 }
             } else {
 
                 if (data.statusText) {
-                    $error.text(data.statusText);
+                    callback(data.statusText);
                 } else {
-                    $error.text('Error');
+                    callback('Error');
                 }
             }
-            $error.show();
 
         },
         success: function () {
 
-            panelThankYou.removeClass('loading');
-
-            $error.hide();
-            $('#sign-up-home-form').hide();
-            $('#sign-up-home-thank-you').show();
+            callback();
 
             analytics.track('User home mailing list sing up', {
                 email: email
             });
         }
     });
-
-});
+};
 
 
 $(function () {
@@ -389,70 +378,6 @@ $(function () {
             e.preventDefault();
         }
     });
-
-    /* Signup for mailing list */
-    $('#sign-up-submit').click(function (e) {
-        e.preventDefault();
-        var email = $('#sign-up-email').val();
-        var postcode = $('#filterPostcode').val();
-        var $errorList = $('#sign-up-errors');
-        var distances = $('#sign-up-distances').val();
-        var closed = $('#sign-up-closed').val();
-        var panel = $('#sign-up-panel-form');
-        var panelThankYou = $('#sign-up-panel-thank-you');
-
-
-        panel.hide();
-        panelThankYou.addClass('loading');
-        panelThankYou.show();
-
-        $.ajax({
-            type: "POST",
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').last().attr('content'))
-            },
-            url: '/signup/mailing_list_signup',
-            data: {
-                email: email,
-                list_key: 'coming-soon',
-                postcode: postcode,
-                distances: distances,
-                closed: closed
-            },
-            error: function (data) {
-
-                if (data) {
-                    var errors = data.responseJSON.errors;
-                    if (errors) {
-                        error = errors.join(', ');
-
-                        $errorList.empty().show();
-                        errors.forEach(function (error) {
-                            $errorList.append('<li>' + error + '</li>');
-                        });
-                    }
-                }
-
-                panelThankYou.hide();
-                panel.show();
-
-            },
-            success: function (data) {
-
-                panelThankYou.removeClass('loading');
-                panelThankYou.text('We\'ll be in touch...')
-
-                $errorList.empty();
-                $('#sign-up-panel-form').hide();
-                $('#sign-up-panel-thank-you').show();
-                analytics.track('User mailing list sing up', {
-                    email: email
-                });
-            }
-        });
-
-    });
-
 
     /* Select a Bottle */
 
@@ -1020,17 +945,6 @@ $(function () {
     $('#address-details').click(function (e) {
 
         e.preventDefault();
-
-        //var address_line_1 = $('#addr-line-1').val()
-        //var address_line_2 = $('#addr-line-2').val();
-        //var address_lat = $('#addr-lat').val();
-        //var address_lng = $('#addr-lng').val();
-        //var company_name = $('#addr-company-name').val();
-        //var address_p = $('#addr-pc').val();
-        //var mobile = $('#mobile').val();
-        //var address_id = $('#address-id').val();
-        //var new_address = $('#new-address').val();
-
 
         var address = {
             address_line_1: $('#addr-line-1').val(),
