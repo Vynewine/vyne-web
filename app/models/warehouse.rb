@@ -292,7 +292,7 @@ class Warehouse < ActiveRecord::Base
   end
 
   def get_delivery_blocks(time)
-    
+
     agenda = self.agendas.select { |agenda| agenda.day == time.wday }.first
     unless agenda.blank?
       blocks = agenda.available_delivery_blocks(time)

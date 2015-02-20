@@ -17,7 +17,6 @@ class Admin::AdvisorsController < ApplicationController
     @order_item = OrderItem.find(params[:id])
     @order = @order_item.order
     @categories = Category.all.order(:id)
-    @warehouses = Warehouse.where(:id => @order.information['warehouses'].map { |warehouse| warehouse['id'] })
   end
 
   def update

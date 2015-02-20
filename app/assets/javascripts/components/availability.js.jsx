@@ -323,6 +323,10 @@ var MailingList = React.createClass({
             this.setState({
                 shouldSignUpForList: true
             });
+        } else {
+            this.setState({
+                shouldSignUpForList: false
+            });
         }
     },
     signUp: function (email) {
@@ -394,6 +398,8 @@ var MailingList = React.createClass({
                     Thank you
                 </h4>
             );
+        } else {
+            signupForm = '';
         }
 
         return (

@@ -1259,6 +1259,22 @@ function createCartPage(wines, wineCount) {
     $('.btn-checkout').show();
 
     calculateTotalCost();
+
+    var deliveryDate = $('#slot_date').val();
+    var deliveryTimeFrom = $('#slot_from').val();
+    var deliveryTimeTo = $('#slot_to').val();
+
+    var $futureDeliveryNotice = $('#future-delivery-notice');
+
+    if(deliveryDate) {
+        var deliveryDateTime = moment(deliveryDate).format('dddd MMMM Do') +
+            ' between ' + moment(deliveryDate + ' ' + deliveryTimeFrom).format('h:mm a') + ' and ' +
+            moment(deliveryDate + ' ' + deliveryTimeTo).format('h:mm a');
+
+        $futureDeliveryNotice.text('Delivery Date: ' + deliveryDateTime);
+        $futureDeliveryNotice.show();
+    }
+
 }
 
 var clearPreferences = function () {

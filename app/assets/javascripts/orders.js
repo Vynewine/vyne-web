@@ -81,6 +81,9 @@ var ordersJsReady = function () {
                         case 'payment failed':
                             setOrderView('order-payment-failed');
                             break;
+                        case 'created':
+                            setOrderView('order-created');
+                            break;
                         default:
                             setOrderView('order-placed');
                             break;
@@ -109,6 +112,7 @@ var ordersJsReady = function () {
             $('#order-delivered').removeClass('active');
             $('#order-advised').removeClass('active');
             $('#order-payment-failed').removeClass('active');
+            $('#order-created').removeClass('active');
         };
 
         var scheduleCheckOrderStatus = setInterval(function () {
