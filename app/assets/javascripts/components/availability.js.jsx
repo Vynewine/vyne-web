@@ -229,7 +229,7 @@ var BlockDelivery = React.createClass({
                         <p>
                         </p>
 
-                        <h4> Book one of the slots below </h4>
+                        <h4> Book in advance for later delivery </h4>
 
                     </div>
                 );
