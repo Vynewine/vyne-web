@@ -9,20 +9,26 @@ class OrderFulfilment
 
     order = Order.find(args['order_id'])
 
-    order.status_id = Status.statuses[:pending]
+    if order.status_id == Status.statuses[:created]
 
-    if order.save
-      # Merchant Email
-      Resque.enqueue(OrderEmailNotification, order.id, :merchant_order_confirmation)
+      order.status_id = Status.statuses[:pending]
 
-      # Android Notification
-      Resque.enqueue(OrderNotification, 'Scheduled Order has just been processed.', order.warehouse.devices.map { |device| device.registration_id })
+      if order.save
+        # Merchant Email
+        Resque.enqueue(OrderEmailNotification, order.id, :merchant_order_confirmation)
 
-      # Admin UI Web Notification
-      WebNotificationDispatcher.publish([order.warehouse.id], "Scheduled Order processed. Id: #{order.id}", :new_order)
+        # Android Notification
+        Resque.enqueue(OrderNotification, 'Scheduled Order has just been processed.', order.warehouse.devices.map { |device| device.registration_id })
+
+        # Admin UI Web Notification
+        WebNotificationDispatcher.publish([order.warehouse.id], "Scheduled Order processed. Id: #{order.id}", :new_order)
+      else
+        log_error order.errors
+      end
     else
-      log_error order.errors
+      log "Order #{args['order_id']} not in created status"
     end
+
   end
 
   def self.log(message)
