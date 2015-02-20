@@ -142,7 +142,7 @@ class UserNewOrderTest < ActiveSupport::TestCase
     @driver.find_element(:id, 'filterPostcode').clear
     @driver.find_element(:id, 'filterPostcode').send_keys postcode
     @driver.find_element(:css, 'input[type=\'submit\']').click
-    @driver.find_element(:id, 'use-postcode').click
+    @driver.find_element(:xpath, "//button[contains(text(),'Now')]").click || @driver.find_element(:xpath, "//button[contains(text(),'Book Now')]").click
   end
 
   def select_bottle_for_category(category)

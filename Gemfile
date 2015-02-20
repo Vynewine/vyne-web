@@ -115,7 +115,7 @@ group :production do
   # Web Monitoring with New Relic
   # gem 'newrelic_rpm'
   # Performance monitoring
-  # gem 'skylight'
+  gem 'skylight'
 end
 
 # Well obvious

@@ -33,7 +33,13 @@ class MerchantsController < ApplicationController
 
       warehouse_info[:delivery_slots] = get_delivery_slots(warehouses)
 
-      warehouse_info[:daytime_slots_available] = warehouse_info[:delivery_slots].blank? ? false : warehouse_info[:delivery_slots].select { |slot| slot[:type] == :daytime }.count > 0
+      daytime_slots_available = false
+
+      unless warehouse_info[:delivery_slots].blank?
+        daytime_slots_available = warehouse_info[:delivery_slots].select { |slot| slot[:type] == :daytime }.count > 0
+      end
+
+      warehouse_info[:daytime_slots_available] = daytime_slots_available
 
       logger.info warehouse_info
 
@@ -90,6 +96,7 @@ class MerchantsController < ApplicationController
         tomorrow = last_midnight + (i + 1).day
         next_warehouse = warehouses.select { |w| w.is_open_on_day(tomorrow) }.first
         unless next_warehouse.blank?
+
           return {
               :day => tomorrow.wday,
               :week_day => Date::DAYNAMES[tomorrow.wday],
