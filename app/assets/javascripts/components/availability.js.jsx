@@ -223,7 +223,7 @@ var BlockDelivery = React.createClass({
             }.bind(this));
 
 
-            if (this.state.daytimeSlotsAvailable && this.state.warehouse.opens_today) {
+            if (this.state.daytimeSlotsAvailable && this.state.warehouse.opens_today || this.state.liveDeliveryEnabled) {
                 slotsMessage = (
                     <div>
                         <p>
@@ -233,16 +233,8 @@ var BlockDelivery = React.createClass({
 
                     </div>
                 );
-            } else if (!this.state.warehouse.opens_today) {
-                slotsMessage = (
-                    <div>
-                        <p>
-                        </p>
-                        <h4> Book in advance for later delivery</h4>
-                    </div>
-                );
             }
-            else {
+            else if (!this.state.daytimeSlotsAvailable && !this.state.liveDeliveryEnabled) {
                 slotsMessage = (
                     <div>
                         <p>
@@ -260,6 +252,16 @@ var BlockDelivery = React.createClass({
                     </div>
                 );
             }
+            else if (!this.state.warehouse.opens_today) {
+                slotsMessage = (
+                    <div>
+                        <p>
+                        </p>
+                        <h4> Book in advance for later delivery</h4>
+                    </div>
+                );
+            }
+
 
             deliverLater = (
                 <div>
@@ -485,6 +487,13 @@ var checkWarehouseAvailability = function (postcode, callback) {
     //callback(scenario_06);
     //return;
 
+    //We are open now
+    //No daytime delivery options
+    //callback(scenario_07);
+    //return;
+
+
+
     analytics.track('Postcode lookup', {
         postcode: postcode
     });
@@ -610,3 +619,69 @@ scenario_05.daytime_slots_available = false;
 var scenario_06 = $.extend(true, {}, delOptions);
 scenario_06.today_warehouse = {};
 scenario_06.next_open_warehouse = {};
+
+var scenario_07 = {
+    "today_warehouse": {
+        "id": 4,
+        "address": "W1F 8BH",
+        "is_open": true,
+        "opening_time": "11:00",
+        "closing_time": "13:30",
+        "opens_today": true,
+        "title": "Vyne HQ"
+    },
+    "next_open_warehouse": {
+        "day": 7,
+        "week_day": null,
+        "opening_time": null,
+        "closing_time": null
+    },
+    "delivery_slots": [
+        {
+            "from": "12:00",
+            "to": "13:00",
+            "date": "2015-02-20",
+            "day": "Today",
+            "warehouse_id": 4,
+            "title": "Vyne HQ",
+            "type": "live"
+        },
+        {
+            "from": "17:00",
+            "to": "18:00",
+            "date": "2015-02-25",
+            "day": "Wednesday",
+            "warehouse_id": 6,
+            "title": "The Winemakers Club",
+            "type": "live"
+        },
+        {
+            "from": "18:00",
+            "to": "19:00",
+            "date": "2015-02-25",
+            "day": "Wednesday",
+            "warehouse_id": 6,
+            "title": "The Winemakers Club",
+            "type": "live"
+        },
+        {
+            "from": "19:00",
+            "to": "20:00",
+            "date": "2015-02-25",
+            "day": "Wednesday",
+            "warehouse_id": 6,
+            "title": "The Winemakers Club",
+            "type": "live"
+        },
+        {
+            "from": "20:00",
+            "to": "21:00",
+            "date": "2015-02-25",
+            "day": "Wednesday",
+            "warehouse_id": 6,
+            "title": "The Winemakers Club",
+            "type": "live"
+        }
+    ],
+    "daytime_slots_available": false
+};

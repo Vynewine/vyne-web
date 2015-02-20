@@ -76,8 +76,6 @@
             <tr>
               <th>Day</th>
               <th>Opens Today</th>
-              <th>Opening</th>
-              <th>Closing</th>
               <th>Booked Delivery Starts</th>
               <th>Booked Delivery Ends</th>
               <th>Live Delivery Starts</th>
@@ -93,12 +91,6 @@
                   </td>
                   <td>
                     <%= agenda.opens_today ? 'Open' : 'Closed' %>
-                  </td>
-                  <td>
-                    <%= agenda.opening_time %>
-                  </td>
-                  <td>
-                    <%= agenda.closing_time %>
                   </td>
                   <td>
                     <%= agenda.delivery_slots_from.blank? ? '' : agenda.delivery_slots_from.strftime('%H:%M') %>

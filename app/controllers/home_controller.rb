@@ -58,39 +58,6 @@ class HomeController < ApplicationController
     end
   end
 
-  def warehouses
-
-    if params[:lat].blank? || params[:lng].blank?
-      render :json => {}
-      return
-    end
-
-    warehouses = {warehouses: [], next_opening: {}}
-    @warehouses = Warehouse.delivering_to(params[:lat], params[:lng])
-
-    unless @warehouses.blank?
-      @warehouses.each do |warehouse|
-        warehouses[:warehouses] << {
-            id: warehouse.id,
-            address: warehouse.address.postcode,
-            is_open: warehouse.is_open_for_live_delivery,
-            opening_time: warehouse.today_opening_time,
-            closing_time: warehouse.today_closing_time,
-            opens_today: warehouse.opens_today,
-
-
-        }
-      end
-
-      warehouses[:next_opening] = next_open_warehouse(@warehouses)
-
-      warehouses[:delivery_slots] = future_delivery_slots(@warehouses)
-
-    end
-    render :json => warehouses
-  end
-
-
   def terms
   end
 
@@ -155,54 +122,4 @@ class HomeController < ApplicationController
     false
   end
 
-  def next_open_warehouse(warehouses)
-
-    today = local_time.wday
-    if today == 6 # Saturday
-      next_day = 0 # Sunday
-    else
-      next_day = today + 1
-    end
-
-    7.times do
-
-      next_warehouse = warehouses.select { |w| w.next_open_day == next_day }.first
-      unless next_warehouse.blank?
-        return {
-            :day => next_warehouse.next_open_day,
-            :week_day => Date::DAYNAMES[next_warehouse.next_open_day],
-            :opening_time => next_warehouse.next_open_day_opening_time,
-            :closing_time => next_warehouse.next_open_day_closing_time
-        }
-      end
-
-      next_day += 1
-      if next_day == 6
-        next_day = 0
-      end
-    end
-  end
-
-  # Not DRY, Repeated from Warehouse.rb - should move to helper library
-  def local_time
-    #TODO: In the future we'll make time zone identifier configurable
-    time_zone_identifier = 'Europe/London'
-    tz = TZInfo::Timezone.get(time_zone_identifier)
-    # current local time
-    tz.utc_to_local(Time.now.getutc)
-  end
-
-  # Only future delivery slots
-  # By closest warehouse
-  # Array of warehouse Ids and Slots
-  # Only slots for next available date
-  # Don't mix dates - it can only be less slots left for today or only next day slots.
-  def future_delivery_slots(warehouses)
-    [
-        {day: 'Monday', date: '2015/02/15', from: '13:00', to: '14:00', full: true, warehouse_id: 1},
-        {day: 'Monday', date: '2015/02/15', from: '14:00', to: '15:00', full: true, warehouse_id: 1},
-        {day: 'Monday', date: '2015/02/15', from: '15:00', to: '16:00', full: false, warehouse_id: 2},
-        {day: 'Monday', date: '2015/02/15', from: '16:00', to: '17:00', full: true, warehouse_id: 1}
-    ]
-  end
 end

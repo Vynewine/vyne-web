@@ -23,7 +23,6 @@ Rails.application.routes.draw do
   post '/mailing_list_signup' => 'home#mailing_list_signup'
 
   # Sign up:
-  get 'warehouses/addresses' => 'home#warehouses'
   post 'signup/create' => 'signup#create'
   post 'signup/address' => 'signup#address'
   post 'signup/mailing_list_signup' => 'signup#mailing_list_signup'

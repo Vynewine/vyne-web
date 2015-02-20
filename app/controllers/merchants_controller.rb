@@ -35,6 +35,8 @@ class MerchantsController < ApplicationController
 
       warehouse_info[:daytime_slots_available] = warehouse_info[:delivery_slots].blank? ? false : warehouse_info[:delivery_slots].select { |slot| slot[:type] == :daytime }.count > 0
 
+      logger.info warehouse_info
+
     end
     render :json => warehouse_info
   end
@@ -77,32 +79,28 @@ class MerchantsController < ApplicationController
   def next_open_warehouse(warehouses)
 
     unless warehouses.blank?
-      today = warehouses[0].local_time.wday
-      if today == 6 # Saturday
-        next_day = 0 # Sunday
-      else
-        next_day = today + 1
+
+      last_midnight = nil
+
+      if last_midnight.nil?
+        last_midnight = local_time.change(:hour => 0)
       end
 
-      7.times do
-
-        next_warehouse = warehouses.select { |w| w.next_open_day == next_day }.first
+      7.times do |i|
+        tomorrow = last_midnight + (i + 1).day
+        next_warehouse = warehouses.select { |w| w.is_open_on_day(tomorrow) }.first
         unless next_warehouse.blank?
           return {
-              :day => next_warehouse.next_open_day,
-              :week_day => Date::DAYNAMES[next_warehouse.next_open_day],
-              :opening_time => next_warehouse.next_open_day_opening_time,
-              :closing_time => next_warehouse.next_open_day_closing_time
+              :day => tomorrow.wday,
+              :week_day => Date::DAYNAMES[tomorrow.wday],
+              :opening_time => next_warehouse.opening_on_day(tomorrow),
+              :closing_time => next_warehouse.closing_on_day(tomorrow),
+              :warehouse => next_warehouse.title
           }
-        end
-
-        next_day += 1
-        if next_day == 6
-          next_day = 0
         end
       end
     end
-
+    nil
   end
 
   def get_delivery_slots(warehouses)

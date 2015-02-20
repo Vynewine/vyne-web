@@ -114,8 +114,6 @@
         <tr>
           <th>Day</th>
           <th>Opens Today</th>
-          <th>Opening</th>
-          <th>Closing</th>
           <th>Booked Delivery Starts</th>
           <th>Booked Delivery Ends</th>
           <th>Live Delivery Starts</th>
@@ -139,12 +137,6 @@
 
                     <input type="hidden" name="warehouse[agendas_attributes][<%= agendaCounter %>][opens_today]" value="false"/>
                     <input type="checkbox" name="warehouse[agendas_attributes][<%= agendaCounter %>][opens_today]" <%= a.opens_today ? 'checked' : '' %>>
-                  </td>
-                  <td>
-                    <input type="text" class="form-control" name="warehouse[agendas_attributes][<%= agendaCounter %>][opening]" value="<%= a.opening %>"/>
-                  </td>
-                  <td>
-                    <input type="text" class="form-control" name="warehouse[agendas_attributes][<%= agendaCounter %>][closing]" value="<%= a.closing %>"/>
                   </td>
                   <td>
                     <input type="text" class="form-control"

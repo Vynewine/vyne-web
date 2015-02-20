@@ -105,6 +105,24 @@ class Warehouse < ActiveRecord::Base
     end
   end
 
+  def opening_on_day (day)
+    agenda = self.agendas.select { |agenda| agenda.day == day.wday }.first
+    if agenda.blank?
+      false
+    else
+      agenda.opening_time
+    end
+  end
+
+  def closing_on_day (day)
+    agenda = self.agendas.select { |agenda| agenda.day == day.wday }.first
+    if agenda.blank?
+      false
+    else
+      agenda.closing_time
+    end
+  end
+
   def today_opening_time
     # Select agenda for today for a warehouse
     agenda = self.agendas.select { |agenda| agenda.day == local_time.wday }.first
@@ -136,46 +154,6 @@ class Warehouse < ActiveRecord::Base
       else
         false
       end
-    end
-  end
-
-  def next_open_day
-    today = local_time.wday
-    if today == 6 # Saturday
-      next_day = 0 # Sunday
-    else
-      next_day = today + 1
-    end
-
-    7.times do
-      next_agenda = self.agendas.select { |agenda| agenda.day == next_day }.first
-
-      unless next_agenda.blank?
-        if next_agenda.opens_today
-          return next_agenda.day
-        end
-      end
-
-      next_day += 1
-      if next_day == 6
-        next_day = 0
-      end
-    end
-  end
-
-  def next_open_day_opening_time
-    agenda = self.agendas.select { |agenda| agenda.day == next_open_day }.first
-
-    unless agenda.blank? || agenda.live_delivery_from.blank?
-      agenda.live_delivery_from.strftime('%H:%M')
-    end
-  end
-
-  def next_open_day_closing_time
-    agenda = self.agendas.select { |agenda| agenda.day == next_open_day }.first
-
-    unless agenda.blank? || agenda.live_delivery_to.blank?
-      agenda.live_delivery_to.strftime('%H:%M')
     end
   end
 

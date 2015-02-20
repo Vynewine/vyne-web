@@ -73,8 +73,11 @@
             </li>
         <% end %>
 
-        <!-- HEADER ACTION BUTTON -->
-        <li class="header-action-button"><a href="#hero" class="btn btn-primary">Check Availability</a></li>
+        <% if params[:controller] == 'home' %>
+            <li class="header-action-button"><a href="#hero" class="btn btn-primary">Check Availability</a></li>
+            <% else %>
+            <li class="header-action-button"><a href="/#hero" class="btn btn-primary" class="external">Check Availability</a></li>
+            <% end %>
 
       </ul>
 
