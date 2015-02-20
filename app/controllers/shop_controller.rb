@@ -79,8 +79,12 @@ class ShopController < ApplicationController
       }
 
       # Assign Warehouse
-
       warehouse = Warehouse.find(warehouse_id)
+
+      slot_info = nil
+      unless slot_date.blank?
+        slot_info = warehouse.get_delivery_block_by(Time.parse(slot_date + ' ' + slot_from))
+      end
 
       if warehouse.blank?
         render json: ['Warehouse not valid'], status: :unprocessable_entity
@@ -124,7 +128,18 @@ class ShopController < ApplicationController
 
       if @order.save
         # Client Email
-        Resque.enqueue(OrderEmailNotification, @order.id, :first_time_ordered)
+        puts slot_info: slot_info
+        if slot_info.blank?
+          puts slot_info: 'slot_info blank'
+          Resque.enqueue(OrderEmailNotification, @order.id, :first_time_ordered)
+        elsif slot_info[:type] == :daytime
+          puts slot_info: 'slot_info daytime'
+          Resque.enqueue(OrderEmailNotification, @order.id, :ordered_daytime_slot)
+        elsif slot_info[:type] == :live
+          puts slot_info: 'slot_info live'
+          Resque.enqueue(OrderEmailNotification, @order.id, :ordered_live_slot)
+        end
+
         # Vyne Email
         Resque.enqueue(OrderEmailNotification, @order.id, :order_notification)
 

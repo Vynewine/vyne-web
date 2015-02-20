@@ -13,6 +13,9 @@ class OrderCancellation
 
     order = Order.find(order_id)
 
+    Resque.remove_delayed(OrderConfirmation, :order_id => order.id, :admin => order.client.admin?)
+    Resque.remove_delayed(OrderFulfilment, :order_id => order.id)
+
     unless order.charge_id.blank? || order.charge_id == 'Admin' || !order.refund_id.blank?
       log 'Refunding any charges associated with the order'
       #TODO: Move this to Stripe Helper

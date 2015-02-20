@@ -291,4 +291,15 @@ class Warehouse < ActiveRecord::Base
     end
   end
 
+  def get_delivery_block_by(time)
+    block = nil
+    agenda = self.agendas.select { |agenda| agenda.day == time.wday }.first
+    unless agenda.blank?
+      block = agenda.block_slots.select { |slot| slot[:from].strftime('%H:%M') == time.strftime('%H:%M') }.first
+      if block.blank?
+        block = agenda.live_slots.select { |slot| slot[:from].strftime('%H:%M') == time.strftime('%H:%M') }.first
+      end
+    end
+    block
+  end
 end

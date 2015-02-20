@@ -26,7 +26,7 @@ class UserNewOrderTest < ActiveSupport::TestCase
 
     @driver.get(@base_url + '/')
 
-    enter_postcode_first_page('n17rj')
+    enter_postcode_first_page('n17rj', false)
     select_bottle_for_category(2)
     select_wine_by_occasion
     confirm_order_selection
@@ -137,12 +137,16 @@ class UserNewOrderTest < ActiveSupport::TestCase
     end
   end
 
-  def enter_postcode_first_page(postcode)
+  def enter_postcode_first_page(postcode, booked_slot = false)
     puts 'Entering postcode' + postcode
     @driver.find_element(:id, 'filterPostcode').clear
     @driver.find_element(:id, 'filterPostcode').send_keys postcode
     @driver.find_element(:css, 'input[type=\'submit\']').click
-    @driver.find_element(:xpath, "//button[contains(text(),'Now')]").click || @driver.find_element(:xpath, "//button[contains(text(),'Book Now')]").click
+    if booked_slot
+      @driver.find_element(:xpath, "//button[contains(text(),'Book Now')]").click
+    else
+      @driver.find_element(:xpath, "//button[contains(text(),'Now')]").click || @driver.find_element(:xpath, "//button[contains(text(),'Book Now')]").click
+    end
   end
 
   def select_bottle_for_category(category)

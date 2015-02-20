@@ -167,7 +167,8 @@ class ShopControllerTest < ActionController::TestCase
   end
 
   test 'Will create order for booked slot' do
-
+    time_now = Time.parse('1996/01/01 00:00') #Monday
+    Time.stubs(:now).returns(time_now)
     post :create, post_data_new
     order = Order.find_by client: @userOne
     assert_equal(Status.statuses[:created], order.status_id)
@@ -201,9 +202,12 @@ class ShopControllerTest < ActionController::TestCase
   end
 
   def post_data_new
+
     {
-        'warehouse' => '{"id":' + warehouses(:two).id.to_s + ',
-                        "schedule_date": "2015-02-15", "schedule_time_from": "12:00", "schedule_time_to": "13:00"}',
+        'warehouse_id' => warehouses(:two).id.to_s,
+        'slot_date' => Time.now.strftime('%F'),
+        'slot_from' => '14:00',
+        'slot_to' => '15:00',
         'wines' => '[
       {
         "quantity":1, "category":"' + categories(:house).id.to_s + '",

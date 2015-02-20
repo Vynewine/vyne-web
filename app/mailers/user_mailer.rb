@@ -64,6 +64,158 @@ module UserMailer
     end
   end
 
+  def self.ordered_daytime_slot(order)
+
+    log "Sending email notification ordered_daytime_slot to customer: #{order.client.email} for order #{order.id.to_s}"
+
+    begin
+
+      template = ERB.new(File.read(Rails.root.join('app', 'views', 'user_mailer', 'order_items.erb')))
+      order_items = template.result(binding)
+
+      booked_slot = nil
+
+      unless order.order_schedule.blank?
+        booked_slot = "between #{order.order_schedule[:from].strftime('%l:%M %P')} and
+                    #{order.order_schedule[:to].strftime('%l:%M %P')} on
+                    #{order.order_schedule[:to].strftime('%-d/%-m/%Y')} "
+      end
+
+      if booked_slot.blank?
+        log_error('Order confirmation for booked slot should have delivery information recorded.')
+      end
+
+      mandrill = Mandrill::API.new Rails.application.config.mandrill
+      template_name = 'slotorderplaced-2tochv1'
+      message = {
+          :subject => 'Order Placed with Vyne. No: ' + order.id.to_s,
+          :from_email => 'checkout@vyne.co.uk',
+          :from_name => 'Vyne Checkout',
+          :to => [
+              {
+                  :email => order.client.email,
+                  :name => order.client.first_name
+              }
+          ],
+          :merge_vars => [
+              {
+                  :rcpt => order.client.email,
+                  :vars => [
+                      {
+                          :name => 'FIRSTNAME',
+                          :content => order.client.first_name
+                      },
+                      {
+                          :name => 'ORDERPREFERENCES',
+                          :content => order_items
+
+                      },
+                      {
+                          :name => 'ADDRESSLINE1',
+                          :content => order.address.line_1
+                      },
+                      {
+                          :name => 'POSTCODE',
+                          :content => order.address.postcode
+                      },
+                      {
+                          :name => 'bookedslot',
+                          :content => booked_slot
+                      },
+
+                  ]
+              }
+          ]
+
+      }
+
+      mandrill.messages.send_template template_name, nil, message
+
+    rescue Mandrill::Error => exception
+      log_error "A Mandrill error occurred first_time_ordered: #{exception.class} - #{exception.message}"
+    rescue Exception => exception
+      message = "Error occurred while sending email first_time_ordered: #{exception.class} - #{exception.message} - for user: #{order.client.email}"
+      log_error message
+      log_error exception.backtrace
+    end
+  end
+
+  def self.ordered_live_slot(order)
+
+    log "Sending email notification ordered_live_slot to customer: #{order.client.email} for order #{order.id.to_s}"
+
+    begin
+
+      template = ERB.new(File.read(Rails.root.join('app', 'views', 'user_mailer', 'order_items.erb')))
+      order_items = template.result(binding)
+
+      booked_slot = nil
+
+      unless order.order_schedule.blank?
+        booked_slot = "between #{order.order_schedule[:from].strftime('%l:%M %P')} and
+                    #{order.order_schedule[:to].strftime('%l:%M %P')} on
+                    #{order.order_schedule[:to].strftime('%-d/%-m/%Y')} "
+      end
+
+      if booked_slot.blank?
+        log_error('Order confirmation for booked slot should have delivery information recorded.')
+      end
+
+      mandrill = Mandrill::API.new Rails.application.config.mandrill
+      template_name = 'liveslotplaced-3tochv1'
+      message = {
+          :subject => 'Order Placed with Vyne. No: ' + order.id.to_s,
+          :from_email => 'checkout@vyne.co.uk',
+          :from_name => 'Vyne Checkout',
+          :to => [
+              {
+                  :email => order.client.email,
+                  :name => order.client.first_name
+              }
+          ],
+          :merge_vars => [
+              {
+                  :rcpt => order.client.email,
+                  :vars => [
+                      {
+                          :name => 'FIRSTNAME',
+                          :content => order.client.first_name
+                      },
+                      {
+                          :name => 'ORDERPREFERENCES',
+                          :content => order_items
+
+                      },
+                      {
+                          :name => 'ADDRESSLINE1',
+                          :content => order.address.line_1
+                      },
+                      {
+                          :name => 'POSTCODE',
+                          :content => order.address.postcode
+                      },
+                      {
+                          :name => 'bookedslot',
+                          :content => booked_slot
+                      },
+
+                  ]
+              }
+          ]
+
+      }
+
+      mandrill.messages.send_template template_name, nil, message
+
+    rescue Mandrill::Error => exception
+      log_error "A Mandrill error occurred first_time_ordered: #{exception.class} - #{exception.message}"
+    rescue Exception => exception
+      message = "Error occurred while sending email first_time_ordered: #{exception.class} - #{exception.message} - for user: #{order.client.email}"
+      log_error message
+      log_error exception.backtrace
+    end
+  end
+
   def self.order_notification(order)
 
     log "Sending email notification to Vyne for order #{order.id.to_s}"
