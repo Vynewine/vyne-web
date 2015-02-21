@@ -42,16 +42,12 @@ class ShopController < ApplicationController
 
   end
 
-  # GET /orders/confirmed
   def confirmed
   end
 
-  # GET /orders/1/edit
   def edit
   end
 
-  # POST /shop/create
-  # POST /shop/create.json
   def create
     logger.info 'Creating New Order'
 
@@ -66,31 +62,21 @@ class ShopController < ApplicationController
       address = Address.find(order_address)
       @order.address = address
 
-
       warehouse_id = params[:warehouse_id]
-      slot_date = params[:slot_date]
-      slot_from = params[:slot_from]
-
-      @order.information = {
-          warehouse_id: warehouse_id,
-          slot_date: slot_date,
-          slot_from: slot_from,
-          slot_to: params[:slot_to]
-      }
 
       # Assign Warehouse
       warehouse = Warehouse.find(warehouse_id)
-
-      slot_info = nil
-      unless slot_date.blank?
-        slot_info = warehouse.get_delivery_block_by(Time.parse(slot_date + ' ' + slot_from))
-      end
 
       if warehouse.blank?
         render json: ['Warehouse not valid'], status: :unprocessable_entity
         return
       else
         @order.warehouse = warehouse
+      end
+
+      slot_info = nil
+      unless params[:slot_date].blank?
+        slot_info = warehouse.get_delivery_block_by(Time.parse(params[:slot_date] + ' ' + params[:slot_from]))
       end
 
       # Add Order Items with Customer Preferences
@@ -104,7 +90,7 @@ class ShopController < ApplicationController
 
       # Save Order
       unless @order.save
-        logger.error @order.errors.full_messages().join(', ')
+        logger.error @order.errors.full_messages.join(', ')
         render json: @order.errors, status: :unprocessable_entity
         return
       end
@@ -119,24 +105,42 @@ class ShopController < ApplicationController
 
       schedule_date = nil
 
+      puts slot_info: slot_info
+
       # Check if order is realtime or a scheduled order.
-      if slot_date.blank?
+      if slot_info.blank?
         @order.status_id = Status.statuses[:pending]
       else
-        schedule_date = Time.parse(slot_date + ' ' + slot_from)
+        if slot_info[:type] == :live
+          schedule_date = Time.parse(params[:slot_date] + ' ' + slot_info[:from])
+        else
+          # Deliveries scheduled for daytime slot are send for fulfillment 1 hour before delivery window.
+          schedule_date = Time.parse(params[:slot_date] + ' ' + slot_info[:from]) - 1.hour
+        end
+      end
+
+      if slot_info.blank?
+        @order.information = {
+            warehouse_id: warehouse_id
+        }
+      else
+        @order.information = {
+            slot_date: params[:slot_date],
+            slot_from: slot_info[:from],
+            slot_to: slot_info[:to],
+            slot_type: slot_info[:type],
+            schedule_date: schedule_date,
+            warehouse_id: warehouse_id
+        }
       end
 
       if @order.save
         # Client Email
-        puts slot_info: slot_info
         if slot_info.blank?
-          puts slot_info: 'slot_info blank'
           Resque.enqueue(OrderEmailNotification, @order.id, :first_time_ordered)
         elsif slot_info[:type] == :daytime
-          puts slot_info: 'slot_info daytime'
           Resque.enqueue(OrderEmailNotification, @order.id, :ordered_daytime_slot)
         elsif slot_info[:type] == :live
-          puts slot_info: 'slot_info live'
           Resque.enqueue(OrderEmailNotification, @order.id, :ordered_live_slot)
         end
 
@@ -153,6 +157,7 @@ class ShopController < ApplicationController
           # Admin UI Web Notification
           WebNotificationDispatcher.publish([@order.warehouse.id], "New order placed. Id: #{@order.id}", :new_order)
         else
+          # Orders made for later delivery are scheduled
           Resque.enqueue_at(schedule_date, OrderFulfilment, :order_id => @order.id)
         end
 

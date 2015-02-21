@@ -26,7 +26,7 @@ class UserNewOrderTest < ActiveSupport::TestCase
 
     @driver.get(@base_url + '/')
 
-    enter_postcode_first_page('n17rj', false)
+    enter_postcode_first_page('n17rj', true)
     select_bottle_for_category(2)
     select_wine_by_occasion
     confirm_order_selection
