@@ -69,7 +69,11 @@
               <li
               <% if params[:status] == Status.statuses[:created].to_s %> class="active"
               <% end %>>
-                <%= link_to 'Created', admin_orders_path(:status => Status.statuses[:created]) %>
+                <a href="<%= admin_orders_path(:status => Status.statuses[:created]) %>">
+                  Created <span id="badge-created" class="label label-default label-as-badge"
+                                style="display: <%= @actionable_order_counts[:created] == 0 ? 'none' : 'inline' %>;"
+                ><%= @actionable_order_counts[:created] %></span>
+                </a>
               </li>
           <% end %>
 
@@ -79,6 +83,8 @@
           <%= render 'order.pending' %>
       <% elsif params[:status] == Status.statuses[:packing].to_s %>
           <%= render 'order.packing' %>
+      <% elsif params[:status] == Status.statuses[:created].to_s %>
+          <%= render 'order.created' %>
       <% else %>
           <div class="panel-body">
             <div class="tab-content">

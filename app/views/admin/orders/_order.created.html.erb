@@ -1,0 +1,103 @@
+<div class="panel-body">
+  <div class="tab-content">
+    <div class="tab-pane active">
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th></th>
+          <th>Id</th>
+          <th>Client Post Code</th>
+          <th>Created</th>
+          <th>Delivery Window</th>
+          <th>Processing At</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @orders.each do |order| %>
+
+            <tr>
+
+              <td>
+                <%= link_to admin_order_path(order), class: 'btn btn-default' do %>
+                    <i class="flaticon stroke zoom-1"></i>
+                <% end %>
+              </td>
+
+              <td>
+                <%= order.id %>
+              </td>
+              <td>
+                <%= order.address.postcode %>
+              </td>
+
+              <td>
+                <%= local_time(order.created_at, '%b %d, %Y %l:%M %p') %>
+              </td>
+
+              <td>
+                <% unless order.order_schedule.blank? %>
+                    <%= local_time(order.order_schedule[:from], '%b %d, %Y %l:%M %p') %> -
+                    <%= local_time(order.order_schedule[:to], '%l:%M %p') %>
+                <% end %>
+              </td>
+              <td>
+                <% unless order.order_schedule.blank? %>
+                    <%= local_time(order.order_schedule[:schedule_date], '%b %d, %Y %l:%M %p') %>
+                <% end %>
+              </td>
+            </tr>
+
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="finished-packing" tabindex="-1" role="dialog" aria-labelledby="finished-packing" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Please confirm packing</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-12 text-center">
+            Please confirm this information is present on the package:
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-6 text-right">
+            <h1>Order Id</h1>
+          </div>
+          <div class="col-xs-6">
+            <h1 id="modal-order-id"></h1>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-6 text-right">
+            <h1>Postcode</h1>
+          </div>
+          <div class="col-xs-6">
+            <h1 id="modal-customer-postcode"></h1>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-xs-12">
+            <form role="form" method="post" action="<%= packing_complete_admin_orders_path %>" id="finish-packing-form">
+              <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+              <input type="hidden" name="order_id" id="order-id"/>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <input type="submit" class="btn btn-primary" value="Done Packing"/>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

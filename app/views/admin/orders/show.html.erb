@@ -46,7 +46,7 @@
             <div class="col-xs-6">
               <strong>Delivery:</strong>
               <% if @order.delivery_token.blank? %>
-                  <span class="to-do">Delivery not scheduled</span>
+                  <span class="to-do">Courier not scheduled</span>
               <% else %>
                   <%= @order.delivery_token %>
               <% end %>
@@ -72,6 +72,19 @@
               </div>
             </li>
         <% end %>
+        <% unless @order.order_schedule.blank? %>
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-xs-12">
+                  <strong>Delivery Window:</strong>
+                  <%= local_time(@order.order_schedule[:from], '%b %d, %Y %l:%M %p') %> -
+                  <%= local_time(@order.order_schedule[:to], '%l:%M %p') %>
+                  (Fulfillment at: <%= local_time(@order.order_schedule[:schedule_date], '%b %d, %Y %l:%M %p') %>)
+                </div>
+              </div>
+            </li>
+        <% end %>
+
       </ul>
     </div>
   </div>

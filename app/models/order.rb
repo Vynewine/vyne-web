@@ -95,7 +95,8 @@ class Order < ActiveRecord::Base
     unless information.blank? || information['slot_date'].blank?
       {
           from: Time.parse(information['slot_date'] + ' ' + information['slot_from']),
-          to: Time.parse(information['slot_date'] + ' ' + information['slot_to'])
+          to: Time.parse(information['slot_date'] + ' ' + information['slot_to']),
+          schedule_date: Time.parse(information['schedule_date'])
       }
     end
   end
@@ -108,7 +109,8 @@ class Order < ActiveRecord::Base
         :advised => 0,
         :in_transit => 0,
         :pickup => 0,
-        :payment_failed => 0
+        :payment_failed => 0,
+        :created => 0
     }
 
     unless warehouses.blank? && !is_admin
@@ -119,7 +121,8 @@ class Order < ActiveRecord::Base
           Status.statuses[:advised],
           Status.statuses[:in_transit],
           Status.statuses[:pickup],
-          Status.statuses[:payment_failed]
+          Status.statuses[:payment_failed],
+          Status.statuses[:created]
       ]
 
       if is_admin
@@ -142,6 +145,8 @@ class Order < ActiveRecord::Base
             counts[:pickup] += 1
           when Status.statuses[:payment_failed]
             counts[:payment_failed] += 1
+          when Status.statuses[:created]
+            counts[:created] += 1
         end
       end
     end
