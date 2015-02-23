@@ -24,6 +24,8 @@ var renderWarehouse = function () {
                     fillOpacity: 0.45
                 });
 
+            map.fitBounds(deliveryArea);
+
             var warehouseIcon = L.icon({
                 iconUrl: '/winebar.png',
                 iconSize: [32, 32]

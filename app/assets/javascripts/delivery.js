@@ -1,16 +1,16 @@
 var deliveryJsrRady = function () {
     if (($('body.delivery').length || $('div.delivery').length) && areas.length > 0) {
 
-        var map = L.map('map', {zoomControl: false, scrollWheelZoom: false}).setView([51.514525, -0.1050393], 12);
+        var map = L.map('map', {zoomControl: false, scrollWheelZoom: false});
         map.addControl(L.control.zoom({position: 'topright'}));
 
-        var gl = new L.Google('ROAD');
-        map.addLayer(gl);
-
-        if ($('body.mobile-device').length) {
+        if (isMobile.any()) {
             map.dragging.disable();
             map.tap.disable()
         }
+
+        var gl = new L.Google('ROAD');
+        map.addLayer(gl);
 
         var outside = [
             [0, -90],
@@ -19,7 +19,16 @@ var deliveryJsrRady = function () {
             [90, 90]
         ];
 
-        L.polygon([outside, areas]).addTo(map).setStyle(
+        var allAreas = [];
+        var deliveryAreas = [];
+        allAreas.push(outside);
+
+        areas.forEach(function(area) {
+            allAreas.push(area);
+            deliveryAreas.push(area);
+        });
+
+        L.polygon(allAreas).addTo(map).setStyle(
             {
                 color: '#009ee0',
                 opacity: 0.8,
@@ -27,6 +36,8 @@ var deliveryJsrRady = function () {
                 fillColor: '#e8f8ff',
                 fillOpacity: 0.45
             });
+
+        map.fitBounds(deliveryAreas);
 
     }
 };

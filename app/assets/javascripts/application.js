@@ -51,6 +51,11 @@ $(document).on('ready page:change', function() {
     analytics.page();
 });
 
+$(document).on('ready', function() {
+    checkForMobileDevice();
+});
+
+
 /**
  * =======================================
  * Function: Detect Mobile Device
@@ -78,12 +83,14 @@ var isMobile = {
     }
 };
 
-if (isMobile.any()) {
-    // add identifier class to <body>
-    $('body').addClass('mobile-device');
-    // remove all element with class "remove-on-mobile-device"
-    $('.remove-on-mobile-device').remove();
-}
+var checkForMobileDevice = function() {
+    if (isMobile.any()) {
+        // add identifier class to <body>
+        $('body').addClass('mobile-device');
+        // remove all element with class "remove-on-mobile-device"
+        $('.remove-on-mobile-device').remove();
+    }
+};
 
 var events = [];
 

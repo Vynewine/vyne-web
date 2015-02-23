@@ -216,7 +216,9 @@ class Warehouse < ActiveRecord::Base
 
     unless delivery_areas.blank?
       if delivery_areas.is_a?(RGeo::Cartesian::MultiPolygonImpl)
+        areas += '['
         delivery_areas.each_with_index do |polygon, polygon_index|
+
           polygon.exterior_ring.points.each_with_index do |point, index|
             if index == 0
               areas += '['
@@ -228,11 +230,14 @@ class Warehouse < ActiveRecord::Base
               areas += ']'
             end
           end
+
           if polygon_index < (delivery_areas.count - 1)
             areas += ','
           end
         end
+        areas += ']'
       elsif delivery_areas.is_a?(RGeo::Cartesian::PolygonImpl)
+        areas += '['
         delivery_areas.exterior_ring.points.each_with_index do |point, index|
           if index == 0
             areas += '['
@@ -244,6 +249,7 @@ class Warehouse < ActiveRecord::Base
             areas += ']'
           end
         end
+        areas += ']'
       end
     end
 

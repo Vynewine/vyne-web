@@ -40,9 +40,7 @@
           <%= yield(:head) %>
       <% end %>
     </head>
-    <body class="<%= params[:controller] %>
-      <% if user_signed_in? %> logged-in
-      <% end %> enable-animations">
+    <body class="<%= params[:controller] %><% if user_signed_in? %> logged-in<% end %> enable-animations">
     <div id="document" class="document">
       <%= render :partial => 'layouts/aidani.header' %>
       <%= yield %>
