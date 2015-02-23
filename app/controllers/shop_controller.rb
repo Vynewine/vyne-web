@@ -39,6 +39,7 @@ class ShopController < ApplicationController
     @occasions = Occasion.all.order(:id)
     @types = Type.all.order(:id)
     @preparations = Preparation.all.order(:id)
+    @warehouse = Warehouse.find(params[:warehouse_id])
 
   end
 
@@ -85,8 +86,12 @@ class ShopController < ApplicationController
       # Set Order Status Created
       @order.status_id = Status.statuses[:created]
 
-      # Fixed delivery price:
-      @order.delivery_price = 2.5
+      # Delivery price for one house wine £3.5 otherwise £2.5
+      if @order.order_items.length == 1 && @order.order_items[0].category_id == 1
+        @order.delivery_price = 3.5
+      else
+        @order.delivery_price = 2.5
+      end
 
       # Save Order
       unless @order.save

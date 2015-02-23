@@ -49,4 +49,19 @@ module ApplicationHelper
       true
     end
   end
+
+  def category_is_active? (warehouse, category_id)
+    case category_id
+      when 1
+        return warehouse.house_available
+      when 2
+        return warehouse.reserve_available
+      when 3
+        return warehouse.fine_available
+      when 4
+        return warehouse.cellar_available
+      else
+        return true
+    end
+  end
 end

@@ -17,7 +17,6 @@
     <div class="swiper-wrapper">
     <div class="swiper-overlay"></div>
 
-
       <input type="hidden" id="warehouse_id" name="warehouse_id"  value="<%= params[:warehouse_id] %>"/>
       <input type="hidden" id="slot_date" name="slot_date" value="<%= params[:slot_date] %>"/>
       <input type="hidden" id="slot_from" name="slot_from" value="<%= params[:slot_from] %>"/>
@@ -28,7 +27,7 @@
 
     <div id="bottles-panel" class="order-panel swiper-slide noSwipingClass" data-hash="bottles">
       <div class="order-panel-content wrapper wrapper-large">
-        <a href="#" class="back-nav"></a>
+
         <h2 class="title">Select price range</h2>
         <h3 class="subttitle"></h3>
 
@@ -49,11 +48,7 @@
                  data-price-min="<%= category.price_min %>"
                  data-price-max="<%= category.price_max %>"
             >
-              <% if category.id == 1 %>
-                  <%= image_tag 'select/house-coming-soon.jpg',
-                                :alt => 'House Wine Coming Soon',
-                                :class => 'not-in-stock' %>
-              <% else %>
+              <% if category_is_active?(@warehouse, category.id) %>
                   <div class="bottle-info-bg"></div>
                   <div class="bottle-info-content">
                     <div class="close">
@@ -71,6 +66,10 @@
                     </div>
                     <a href="" class="btn select-bottle">Choose bottle</a>
                   </div>
+              <% else %>
+                  <%= image_tag 'select/' + category.name.downcase + '-coming-soon.jpg',
+                                :alt => 'House Wine Coming Soon',
+                                :class => 'not-in-stock' %>
               <% end %>
             </div>
           </li>
@@ -269,7 +268,7 @@
             </td>
           </tr>
           <tr class="total" >
-            <td class="delivery-cost" colspan="2">Delivery <span class="disclaimer">(flat fee)</span> £ <span class="price"></span></td>
+            <td class="delivery-cost" colspan="2">Delivery <span class="disclaimer" id="delivery-disclaimer"></span> £ <span class="price"></span></td>
           </tr>
           <tr class="total" >
             <td class="total-cost" colspan="2">Total <span class="disclaimer">(range)</span> £<span class="price"></span></td>

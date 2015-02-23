@@ -703,7 +703,12 @@ $(function () {
 
         var wineid = $this.closest('td').attr('id').split('-')[1];
 
-        wines.splice(wineid, 1);
+        if(wines.length === 1) {
+            wines.splice(0, 1);
+        } else {
+            wines.splice(wineid, 1);
+        }
+
 
         $('input[name="wines"]').val(JSON.stringify(wines));
 
@@ -1308,26 +1313,33 @@ var resetEventsForEmptyCart = function () {
     events = [];
 
     events.push({
-        type: 'slideChange'
-    });
-
-    events.push({
         type: 'slideChange',
-        name: '1'
+        name: '0'
     });
-
 };
 
 function calculateTotalCost() {
     secondBottle = false;
     var totalMinimum = 0.00;
     var totalMaximum = 0.00;
-    var deliveryCost = 2.50;
+    var lowerDeliveryCost = 2.5;
+    var higherDeliveryCost = 3.50;
+    var deliveryCost = 0.0;
+    var $deliveryDisclaimer = $('#delivery-disclaimer');
 
     $(wines).each(function (index, wine) {
         totalMinimum += parseFloat(wine.priceMin);
         totalMaximum += parseFloat(wine.priceMax);
+        if (wine.category == 1) {
+            deliveryCost = higherDeliveryCost;
+        } else {
+            deliveryCost = lowerDeliveryCost;
+        }
     });
+
+    if(wines.length > 1) {
+        deliveryCost = lowerDeliveryCost;
+    }
 
     totalMinimum += deliveryCost;
     totalMaximum += deliveryCost;
@@ -1337,6 +1349,13 @@ function calculateTotalCost() {
     var $btnCheckout = $('.btn-checkout');
 
     if (wines.length > 0) {
+
+        if(deliveryCost == lowerDeliveryCost) {
+            $deliveryDisclaimer.text('(flat fee)');
+        } else {
+            $deliveryDisclaimer.text('(wine under £15.00)');
+        }
+
         $deliveryCost.find('.price').text(deliveryCost.toFixed(2));
         $totalCost.find('.price').text(totalMinimum.toFixed(2) + '-' + totalMaximum.toFixed(2));
         $deliveryCost.show();

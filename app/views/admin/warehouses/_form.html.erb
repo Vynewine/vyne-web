@@ -186,6 +186,14 @@
       </table>
     </div>
     <div class="form-group">
+      <strong>Fulfilling these categories:</strong>
+        <br/>
+      Hose: <%= f.check_box :house_available %> |
+      Reserve: <%= f.check_box :reserve_available %> |
+      Fine: <%= f.check_box :fine_available %> |
+      Cellar: <%= f.check_box :cellar_available %>
+    </div>
+    <div class="form-group">
       <%= f.label :delivery_area %>
       <br/>
       <textarea id="area" name="warehouse[delivery_area]" cols="50" rows="20" class="form-control lat-lng"></textarea>

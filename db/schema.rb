@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150216180242) do
+ActiveRecord::Schema.define(version: 20150223114744) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,7 +56,7 @@ ActiveRecord::Schema.define(version: 20150216180242) do
     t.time     "delivery_slots_from"
     t.time     "delivery_slots_to"
     t.time     "live_delivery_from"
-    t.time     "live_delivery_two"
+    t.time     "live_delivery_to"
   end
 
   add_index "agendas", ["closing"], :name => "index_agendas_on_closing"
@@ -497,7 +497,7 @@ ActiveRecord::Schema.define(version: 20150216180242) do
 
   create_table "warehouses", force: true do |t|
     t.string   "title"
-    t.string   "email",                                                      default: "", null: false
+    t.string   "email",                                                      default: "",   null: false
     t.string   "phone"
     t.boolean  "shutl"
     t.integer  "address_id"
@@ -508,6 +508,10 @@ ActiveRecord::Schema.define(version: 20150216180242) do
     t.boolean  "registered_with_shutl"
     t.spatial  "delivery_area",         limit: {:srid=>0, :type=>"polygon"}
     t.string   "key"
+    t.boolean  "house_available",                                            default: true
+    t.boolean  "reserve_available",                                          default: true
+    t.boolean  "fine_available",                                             default: true
+    t.boolean  "cellar_available",                                           default: true
   end
 
   add_index "warehouses", ["address_id"], :name => "index_warehouses_on_address_id"
