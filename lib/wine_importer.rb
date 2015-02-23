@@ -1,7 +1,6 @@
 module WineImporter
 
-  @logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
-  TAG = 'Wine Importer'
+  @logger = Logging.logger['WineImporter']
 
   def self.import_wines(file)
 
@@ -10,6 +9,9 @@ module WineImporter
     }
 
     begin
+
+      log 'Processing wines data'
+
       wine_data = Roo::CSV.new(file)
 
       header = wine_data.row(1)
@@ -310,15 +312,15 @@ module WineImporter
   end
 
   def self.log(message)
-    @logger.tagged(TAG) { @logger.info message }
+    @logger.info message
   end
 
   def self.log_warning(message)
-    @logger.tagged(TAG) { @logger.warn message }
+    @logger.warn message
   end
 
   def self.log_error(message)
-    @logger.tagged(TAG) { @logger.error message }
+    @logger.error message
   end
 
 end
