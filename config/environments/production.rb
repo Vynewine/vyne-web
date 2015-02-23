@@ -145,4 +145,6 @@ Rails.application.configure do
   
   # Show the logging configuration on STDOUT
   config.show_log_configuration = false
+
+  config.vyne_order_notification_number = ENV['VYNE_ORDER_NOTIFICATION_NUMBER']
 end

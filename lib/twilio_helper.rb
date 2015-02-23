@@ -66,7 +66,7 @@ module TwilioHelper
       @client = Twilio::REST::Client.new account_sid, auth_token
 
       message = @client.account.messages.create(
-          :body => 'Your Vyne order number ' +  order.id.to_s + ' has been cancelled. You can view it here: ' + order_link.to_s,
+          :body => 'Your Vyne order number ' + order.id.to_s + ' has been cancelled. You can view it here: ' + order_link.to_s,
           :to => order.client.mobile,
           :from => twilio_number
       )
@@ -116,6 +116,46 @@ module TwilioHelper
       raise
     rescue Exception => exception
       message = "Error occurred while sending in-transit sms notification: #{exception.class} - #{exception.message} - for order: #{order_id.to_s}"
+      log_error message
+      log_error exception.backtrace
+      raise
+    end
+  end
+
+  def self.admin_order_notification(order_id)
+    log 'Sending admin order notification for order id ' + order_id.to_s
+
+    begin
+
+      order = Order.find(order_id)
+
+      schedule_message = ''
+      unless order.order_schedule.blank?
+        schedule_message = 'Delivery Window: ' +
+        "#{order.order_schedule[:from].strftime('%b %d, %Y %l:%M %p')} -" +
+        "#{order.order_schedule[:to].strftime('%l:%M %p')} " +
+        "(Fulfillment at: #{order.order_schedule[:schedule_date].strftime('%b %d, %Y %l:%M %p')})"
+
+        log schedule_message
+      end
+
+      account_sid = Rails.application.config.twilio_account_sid
+      auth_token = Rails.application.config.twilio_auth_token
+      twilio_number = Rails.application.config.twilio_number
+
+      @client = Twilio::REST::Client.new account_sid, auth_token
+
+      message = @client.account.messages.create(
+          :body => 'New Vyne Order! Id: ' + order_id.to_s + '. ' + schedule_message,
+          :to => Rails.application.config.vyne_order_notification_number,
+          :from => twilio_number
+      )
+
+    rescue Twilio::REST::RequestError => exception
+      log_error exception.message
+      raise
+    rescue Exception => exception
+      message = "Error occurred while sending admin order notification: #{exception.class} - #{exception.message} - for order: #{order_id.to_s}"
       log_error message
       log_error exception.backtrace
       raise

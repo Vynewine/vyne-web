@@ -152,6 +152,9 @@ class ShopController < ApplicationController
         # Vyne Email
         Resque.enqueue(OrderEmailNotification, @order.id, :order_notification)
 
+        #Vyne SMS
+        Resque.enqueue(OrderSmsNotification, @order.id, :admin_order_notification)
+
         if schedule_date.blank?
           # Merchant Email
           Resque.enqueue(OrderEmailNotification, @order.id, :merchant_order_confirmation)
@@ -164,6 +167,9 @@ class ShopController < ApplicationController
         else
           # Orders made for later delivery are scheduled
           Resque.enqueue_at(schedule_date, OrderFulfilment, :order_id => @order.id)
+
+          # Vyne Admins Web Notification
+          WebNotificationDispatcher.publish([@order.warehouse.id], "New (scheduled) order placed. Id:  #{@order.id}", :new_order, 'admin')
         end
 
         render :json => @order.to_json

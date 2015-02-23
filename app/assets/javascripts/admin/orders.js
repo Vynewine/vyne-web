@@ -23,6 +23,7 @@ var updateOrderBadgeCounts = function (type) {
             var $pickup = $('#badge-pickup');
             var $cancelled = $('#badge-cancelled');
             var $paymentFailed = $('#badge-payment-failed');
+            var $created = $('#badge-created');
 
             updateBadge(data.actionable_order_counts.pending, $pending);
             updateBadge(data.actionable_order_counts.packing, $packing);
@@ -31,6 +32,7 @@ var updateOrderBadgeCounts = function (type) {
             updateBadge(data.actionable_order_counts.pickup, $pickup);
             updateBadge(data.actionable_order_counts.cancel_count, $cancelled);
             updateBadge(data.actionable_order_counts.payment_failed, $paymentFailed);
+            updateBadge(data.actionable_order_counts.created, $created);
         });
     }
 };

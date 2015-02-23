@@ -94,8 +94,6 @@ class Admin::WarehousesController < ApplicationController
     end
 
     if response[:errors].blank?
-
-      logger.info 'saving warehouse'
       logger.info json: @warehouse
       unless @warehouse.save
         redirect_to edit_admin_warehouse_path(@warehouse), alert: @warehouse.errors.full_messages().join(', ')

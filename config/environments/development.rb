@@ -105,4 +105,6 @@ Rails.application.configure do
   # Show the logging configuration on STDOUT
   config.show_log_configuration = true
 
+  config.vyne_order_notification_number = '+447718225201'
+
 end
