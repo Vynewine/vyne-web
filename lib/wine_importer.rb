@@ -16,7 +16,9 @@ module WineImporter
 
       header = wine_data.row(1)
 
-      if validate_wine_data(wine_data)
+      data_errors = validate_wine_data(wine_data)
+
+      if data_errors.blank?
         (2..wine_data.last_row).each do |i|
           row = Hash[[header, wine_data.row(i)].transpose]
 
@@ -92,6 +94,9 @@ module WineImporter
             )
           end
         end
+      else
+        log_error data_errors
+        result[:errors] = data_errors
       end
 
     rescue Exception => exception
@@ -268,32 +273,35 @@ module WineImporter
   end
 
   def self.validate_wine_data(data)
+    errors = []
     header = data.row(1)
     (2..data.last_row).each do |i|
       row = Hash[[header, data.row(i)].transpose]
       name = row['name']
 
       if name.nil?
-        puts 'Wine name cannot be empty'
-        return false
+        errors << 'Wine name cannot be empty'
+        return errors
       end
 
       if row['producer_id'].to_i == 0
-        puts 'Producer cannot be empty - ' + name
-        return false
+        errors << 'Producer cannot be empty - ' + name
+        return errors
       end
 
       if row['type_id'].to_i == 0
-        puts 'Wine type is required - ' + name
-        return false
+        errors << 'Wine type is required - ' + name
+        return errors
       end
 
       if row['composition_id'].to_i == 0
-        puts 'Wine composition is required - ' + name
-        return false
+        errors << 'Wine composition is required - ' + name
+        return errors
       end
 
     end
+
+    errors
   end
 
   def self.convert_vintage(vintage)
