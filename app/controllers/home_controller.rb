@@ -59,6 +59,7 @@ class HomeController < ApplicationController
   end
 
   def terms
+    render layout: 'application'
   end
 
   def aidani

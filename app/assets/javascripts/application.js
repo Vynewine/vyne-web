@@ -123,6 +123,7 @@ var food = function (id, name, preparationId, preparationName) {
 var wineCount = 0;
 var secondBottle = false;
 var orderSwiper;
+var userEstablished = false;
 
 var mailingListSignUp = function(email, callback) {
 
@@ -336,7 +337,7 @@ $(function () {
         onSlideChangeEnd: function (swiper) {
             //Remove registration panel. User successfully registered or signed by this point.
 
-            if (swiper.getSlide(swiper.previousIndex).id === 'register-panel') {
+            if (swiper.getSlide(swiper.previousIndex).id === 'register-panel' && userEstablished) {
                 swiper.removeSlide(swiper.previousIndex);
 
                 if (ieVersion() > 0 && ieVersion() < 11) {
@@ -843,6 +844,8 @@ $(function () {
                         email: data.email
                     });
 
+                    userEstablished = true;
+
                     orderSwiper.swipeNext();
                 }
             });
@@ -925,6 +928,8 @@ $(function () {
                             name: data.user.first_name,
                             email: data.user.email
                         });
+
+                        userEstablished = true;
 
                         orderSwiper.swipeNext();
                     } else {

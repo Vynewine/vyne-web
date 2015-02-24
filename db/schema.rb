@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150223114744) do
+ActiveRecord::Schema.define(version: 20150224110201) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -512,6 +512,7 @@ ActiveRecord::Schema.define(version: 20150223114744) do
     t.boolean  "reserve_available",                                          default: true
     t.boolean  "fine_available",                                             default: true
     t.boolean  "cellar_available",                                           default: true
+    t.datetime "active_from"
   end
 
   add_index "warehouses", ["address_id"], :name => "index_warehouses_on_address_id"

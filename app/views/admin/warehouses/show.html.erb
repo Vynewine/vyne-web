@@ -2,7 +2,16 @@
 
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title">Warehouse Details</h3>
+    <div class="row">
+      <div class="col-xs-6">
+        <h3 class="panel-title">Warehouse Details</h3>
+      </div>
+      <div class="col-xs-6 text-right">
+        <%= link_to edit_admin_warehouse_path(@warehouse), class: 'btn btn-default' do %>
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+        <% end %>
+      </div>
+    </div>
   </div>
   <ul class="list-group">
     <li class="list-group-item">
@@ -11,9 +20,13 @@
           <strong>Title:</strong>
           <%= @warehouse.title %>
         </div>
-        <div class="col-xs-6">
+        <div class="col-xs-3">
           <strong>Active</strong>
           <%= @warehouse.active %>
+        </div>
+        <div class="col-xs-3">
+          <strong>Active From</strong>
+          <%= local_time(@warehouse.active_from, '%b %d, %Y') %>
         </div>
       </div>
     </li>
@@ -99,10 +112,10 @@
                     <%= agenda.delivery_slots_to.blank? ? '' : agenda.delivery_slots_to.strftime('%H:%M') %>
                   </td>
                   <td>
-                    <%= agenda.live_delivery_from.blank? ? '' :  agenda.live_delivery_from.strftime('%H:%M') %>
+                    <%= agenda.live_delivery_from.blank? ? '' : agenda.live_delivery_from.strftime('%H:%M') %>
                   </td>
                   <td>
-                    <%= agenda.live_delivery_to.blank? ? '' :  agenda.live_delivery_to.strftime('%H:%M') %>
+                    <%= agenda.live_delivery_to.blank? ? '' : agenda.live_delivery_to.strftime('%H:%M') %>
                   </td>
                 </tr>
             <% end %>
@@ -119,8 +132,10 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <strong>House:</strong> <%= @warehouse.house_available %> | <strong>Reserve:</strong> <%= @warehouse.reserve_available %> |
-            <strong>Fine:</strong> <%= @warehouse.fine_available %> | <strong>Cellar:</strong> <%= @warehouse.cellar_available %>
+          <strong>House:</strong> <%= @warehouse.house_available %> |
+          <strong>Reserve:</strong> <%= @warehouse.reserve_available %> |
+          <strong>Fine:</strong> <%= @warehouse.fine_available %> |
+          <strong>Cellar:</strong> <%= @warehouse.cellar_available %>
         </div>
       </div>
     </li>

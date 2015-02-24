@@ -30,6 +30,13 @@ class Warehouse < ActiveRecord::Base
   end
 
   def is_open_for_live_delivery
+
+    unless self.active_from.blank?
+      if local_time < self.active_from
+        return false
+      end
+    end
+
     if self.agendas.blank?
       false
     else
@@ -140,6 +147,13 @@ class Warehouse < ActiveRecord::Base
   end
 
   def opens_today
+
+    unless self.active_from.blank?
+      if local_time < self.active_from
+        return false
+      end
+    end
+
     agenda = self.agendas.select { |agenda| agenda.day == local_time.wday }.first
     if agenda.blank? || today_closing_time.blank?
       false

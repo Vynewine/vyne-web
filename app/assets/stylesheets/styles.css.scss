@@ -809,9 +809,13 @@ iframe {
     }
 
     form {
-        background-color: #000000;
         padding: 5px 20px 5px 20px;
+
+        &.translucent {
+            background-color: rgba(0, 0, 0, 0.4);
+        }
     }
+
 
     select {
         margin: auto;
@@ -850,7 +854,7 @@ iframe {
 
 
     .app-area {
-        background-color: rgba(0, 0, 0, 0.8);
+        background-color: rgba(0, 0, 0, 0.4);
         padding: 5px 20px 1px 20px;
     }
 

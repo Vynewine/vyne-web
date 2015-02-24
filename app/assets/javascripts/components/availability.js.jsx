@@ -60,7 +60,7 @@ var CheckPostcode = React.createClass({
         };
 
         var labelClass = 'app-label loading';
-        var labelText = 'Please enter your postcode';
+        var labelText = 'Checking your postcode';
 
         if (this.isMounted()) {
 
@@ -70,7 +70,15 @@ var CheckPostcode = React.createClass({
                     labelText = 'Not available in your area yet';
                 } else {
                     labelClass = 'app-label success fadeIn';
-                    labelText = 'Vyne delivers to your area';
+
+                    if(this.props.deliveryOptions.today_warehouse.coming_soon) {
+                        labelText = 'On demand delivery available in West London ' +
+                        moment(this.props.deliveryOptions.today_warehouse.active_from).format('dddd MMMM Do');
+                    } else {
+
+                        labelText = 'Vyne delivers to your area';
+                    }
+
                 }
             }
         }
@@ -142,6 +150,9 @@ var LiveDelivery = React.createClass({
                     between {this.state.warehouse.opening_time}-{this.state.warehouse.closing_time}
                 </h4>
             );
+        } else if (this.state.warehouse.coming_soon) {
+            deliverNow = '';
+
         } else if (this.state.nextOpenWarehouse && this.state.nextOpenWarehouse.opening_time) {
             deliverNow = (
                 <h4>
@@ -219,7 +230,13 @@ var BlockDelivery = React.createClass({
 
             this.state.deliverySlots.map(function (slot) {
                 var key = slot.date + ',' + slot.from + ',' + slot.to;
-                options.push(<option key={key} data-value={JSON.stringify(slot)} value={key} >{slot.day} {slot.from} - {slot.to}</option>)
+                var text =  slot.day + ' ' + slot.from + ' - ' +  slot.to;
+
+                if (this.state.warehouse.coming_soon) {
+                    text = slot.day + ' (' + moment(slot.date).format('MMM Do') + ') ' + slot.from + ' - ' +  slot.to;
+                }
+
+                options.push(<option key={key} data-value={JSON.stringify(slot)} value={key} >{text}</option>)
             }.bind(this));
 
 

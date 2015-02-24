@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   # ----------------------------------------------------------------------------
   # General access
 
-  root :to => "home#index"
+  root :to => 'home#index'
 
   # Global pages
 
@@ -61,9 +61,9 @@ Rails.application.routes.draw do
   devise_for :users, :controllers => {sessions: 'sessions'}
 
   devise_scope :user do
-    get "/signup" => "devise/registrations#new"
-    get "/login" => "devise/sessions#new"
-    delete "/logout" => "devise/sessions#destroy"
+    get '/signup' => 'devise/registrations#new'
+    get '/login' => 'devise/sessions#new'
+    delete '/logout' => 'devise/sessions#destroy'
   end
 
   scope '/signup' do

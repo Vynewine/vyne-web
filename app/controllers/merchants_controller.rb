@@ -26,12 +26,20 @@ class MerchantsController < ApplicationController
           opening_time: closest_warehouse.today_opening_time,
           closing_time: closest_warehouse.today_closing_time,
           opens_today: closest_warehouse.opens_today,
-          title: closest_warehouse.title
+          title: closest_warehouse.title,
+          coming_soon: closest_warehouse.active_from.blank? ? false : local_time < closest_warehouse.active_from,
+          active_from: closest_warehouse.active_from
       }
 
       warehouse_info[:next_open_warehouse] = next_open_warehouse(warehouses)
 
-      warehouse_info[:delivery_slots] = get_delivery_slots(warehouses)
+
+      if !closest_warehouse.active_from.blank? && local_time < closest_warehouse.active_from
+        warehouse_info[:delivery_slots] = get_delivery_slots(warehouses, closest_warehouse.active_from)
+      else
+        warehouse_info[:delivery_slots] = get_delivery_slots(warehouses)
+      end
+
 
       daytime_slots_available = false
 
@@ -110,11 +118,16 @@ class MerchantsController < ApplicationController
     nil
   end
 
-  def get_delivery_slots(warehouses)
+  def get_delivery_slots(warehouses, active_from = nil)
 
     first_day_delivery_slots = []
     second_day_delivery_slots = []
-    warehouse_local_time = local_time
+    if active_from.blank?
+      warehouse_local_time = local_time
+    else
+      warehouse_local_time = active_from
+    end
+
     last_midnight = nil
 
     if last_midnight.nil?

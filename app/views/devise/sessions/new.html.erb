@@ -1,35 +1,62 @@
-<div class="inner wrapper wrapper-large">
-    <h2>Sign in</h2>
-    <%= form_for(resource,
-    as: resource_name,
-    :html => {:class => "sign-in-form"},
-    url: session_path(resource_name)) do |f| %>
-        <fieldset>
-            <div>
-                <%=
-                f.email_field :email,
-                autofocus: true,
-                :type => "email",
-                :placeholder => "example@gmail.com"
-                %>
-            </div>
-            <div>
-                <%=
-                f.password_field :password,
-                autocomplete: "off",
-                :placeholder => "Password"
-                %>
-            </div>
+<section id="availability" class="section section-dark app-section">
+  <div class="section-background">
+    <!-- IMAGE BACKGROUND -->
+    <div class="section-background-image parallax-background" data-stellar-background-ratio="0.4"></div>
+  </div>
 
-              <% flash.each do |name, msg| -%>
-                  <%= content_tag :div, msg, class: name %>
-              <% end -%>
-
-            <%= f.submit "Sign In" %>
-        </fieldset>
-    <% end %>
-    <div class="form-links">
-    <%= render "devise/shared/links" %>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12 col-xs-offset-0">
+        <div class="animated fadeIn">
+          <h3 class="app-title">
+            Sign in
+          </h3>
+        </div>
+      </div>
     </div>
-</div>
+
+    <div class="row">
+      <div class="col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-12 col-xs-offset-0">
+        <div class="">
+          <%= form_for(resource,
+                       as: resource_name,
+                       html: {class: 'translucent home-form'},
+                       url: session_path(resource_name)) do |f| %>
+              <fieldset>
+                <div class="form-group">
+                  <%=
+                      f.email_field :email,
+                                    autofocus: true,
+                                    :type => 'email',
+                                    :placeholder => 'example@gmail.com',
+                                    :class => 'form-control'
+                  %>
+                </div>
+                <div class="form-group">
+                  <%= f.password_field :password,
+                                       autocomplete: 'off',
+                                       :placeholder => 'Password',
+                                       :class => 'form-control'
+                  %>
+                </div>
+
+                <% flash.each do |name, msg| -%>
+                    <%= content_tag :div, msg, class: name %>
+                <% end %>
+                <div class="form-group form-group-submit">
+                  <%= f.submit 'Sign In', :class => 'btn btn-primary btn-lg btn-block' %>
+                </div>
+
+
+              </fieldset>
+
+              <%= render 'devise/shared/links' %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
 

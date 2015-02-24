@@ -4,6 +4,7 @@ class ShopController < ApplicationController
   include UserMailer
   include StripeHelper
   include GcmHelper
+  layout 'application'
 
   before_action :authenticate_user!, :except => [:new, :create]
   authorize_actions_for UserAuthorizer, :except => [:new, :create] # Triggers user check

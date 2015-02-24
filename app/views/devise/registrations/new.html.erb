@@ -1,49 +1,88 @@
-<div class="sign-in-box wrapper">
-    <%= form_for(resource,
-        as: resource_name,
-        :html => {:class => "sign-in-form"},
-        url: registration_path(resource_name)) do |f| %>
-        <div class="fieldset">
-            <h1>Register</h1>
-            <%= devise_error_messages! %>
-            <div class="row-box">
-                <div class="row name-row">
-                    <%= f.text_field :first_name, autofocus: true, :placeholder => "First name" %>
-                </div>
-                <div class="row name-row">
-                    <%= f.text_field :last_name, :placeholder => "Last name" %>
-                </div>
-                <div class="row">
-                    <%= f.email_field :email, :placeholder => "Email" %>
-                </div>
-                <div class="row tel-row">
-                    <%= f.text_field :mobile, :placeholder => "Mobile" %>
-                </div>
-<%
-passPlaceholder = "Password"
-if @validatable
-    passPlaceholder += " (#{@minimum_password_length} characters minimum)"
-end
-%>
-                <br />
-                <div class="row password-row">
-                    <%=
-                    f.password_field :password,
-                    autocomplete: "off",
-                    :placeholder => passPlaceholder
-                    %>
-                </div>
-                <div class="row password-row">
-                    <%=
-                    f.password_field :password_confirmation,
-                    autocomplete: "off",
-                    :placeholder => "Confirm password"
-                    %>
-                </div>
+<section id="availability" class="section section-dark app-section">
+  <div class="section-background">
+    <!-- IMAGE BACKGROUND -->
+    <div class="section-background-image parallax-background" data-stellar-background-ratio="0.4"></div>
+  </div>
 
-            </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12 col-xs-offset-0">
+        <div class="animated fadeIn">
+          <h3 class="app-title">
+            Register
+          </h3>
         </div>
+      </div>
+    </div>
 
-        <%= f.submit "Sign up" %>
-    <% end %>
-</div>
+    <div class="row">
+      <div class="col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-12 col-xs-offset-0">
+        <div class="">
+
+          <%= form_for(resource,
+                       as: resource_name,
+                       :html => {:class => 'translucent home-form'},
+                       url: registration_path(resource_name)) do |f| %>
+
+
+                <%= devise_error_messages! %>
+
+              <div class="form-group">
+                    <%= f.text_field :first_name, autofocus: true,
+                                     :placeholder => 'First name',
+                                     :class => 'form-control'%>
+                  </div>
+              <div class="form-group">
+                    <%= f.text_field :last_name,
+                                     :placeholder => 'Last name',
+                                     :class => 'form-control'%>
+                  </div>
+              <div class="form-group">
+                    <%= f.email_field :email,
+                                      :placeholder => 'Email',
+                                      :class => 'form-control'%>
+                  </div>
+              <div class="form-group">
+                    <%= f.text_field :mobile,
+                                     :placeholder => 'Mobile',
+                                     :class => 'form-control'%>
+                  </div>
+                  <%
+                     passPlaceholder = 'Password'
+                     if @validatable
+                       passPlaceholder += " (#{@minimum_password_length} characters minimum)"
+                     end
+                  %>
+                  <br />
+              <div class="form-group">
+                    <%=
+                        f.password_field :password,
+                                         autocomplete: 'off',
+                                         :placeholder => passPlaceholder,
+                                         :class => 'form-control'
+                    %>
+                  </div>
+              <div class="form-group">
+                    <%=
+                        f.password_field :password_confirmation,
+                                         autocomplete: 'off',
+                                         :placeholder => 'Confirm password',
+                                         :class => 'form-control'
+                    %>
+                  </div>
+
+
+
+              <div class="form-group form-group-submit">
+              <%= f.submit 'Sign up', :class => 'btn btn-primary btn-lg btn-block' %>
+              </div>
+
+              <%= render 'devise/shared/links' %>
+
+          <% end %>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
