@@ -26,7 +26,9 @@
         </div>
         <div class="col-xs-3">
           <strong>Active From</strong>
+          <% unless @warehouse.active_from.blank? %>
           <%= local_time(@warehouse.active_from, '%b %d, %Y') %>
+          <% end %>
         </div>
       </div>
     </li>
