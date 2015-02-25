@@ -47,11 +47,11 @@
  * Triger Analytics for turbolinks pages
  */
 
-$(document).on('ready page:change', function() {
+$(document).on('ready page:change', function () {
     analytics.page();
 });
 
-$(document).on('ready', function() {
+$(document).on('ready', function () {
     checkForMobileDevice();
 });
 
@@ -83,7 +83,7 @@ var isMobile = {
     }
 };
 
-var checkForMobileDevice = function() {
+var checkForMobileDevice = function () {
     if (isMobile.any()) {
         // add identifier class to <body>
         $('body').addClass('mobile-device');
@@ -125,7 +125,7 @@ var secondBottle = false;
 var orderSwiper;
 var userEstablished = false;
 
-var mailingListSignUp = function(email, callback) {
+var mailingListSignUp = function (email, callback) {
 
     $.ajax({
         type: "POST",
@@ -221,6 +221,8 @@ $(function () {
 
             orderSwiper.swipeTo(2, 500, false);
             $('.btn-checkout').show();
+
+            updateOrderSummary();
 
         }
 
@@ -348,6 +350,8 @@ $(function () {
                     swiper.swipeTo(swiper.previousIndex - 1, 0, false);
                 }
             }
+
+            updateOrderSummary();
         }
     });
 
@@ -704,7 +708,7 @@ $(function () {
 
         var wineid = $this.closest('td').attr('id').split('-')[1];
 
-        if(wines.length === 1) {
+        if (wines.length === 1) {
             wines.splice(0, 1);
         } else {
             wines.splice(wineid, 1);
@@ -1277,21 +1281,6 @@ function createCartPage(wines, wineCount) {
 
     calculateTotalCost();
 
-    var deliveryDate = $('#slot_date').val();
-    var deliveryTimeFrom = $('#slot_from').val();
-    var deliveryTimeTo = $('#slot_to').val();
-
-    var $futureDeliveryNotice = $('#future-delivery-notice');
-
-    if(deliveryDate) {
-        var deliveryDateTime = moment(deliveryDate).format('dddd MMMM Do') +
-            ' between ' + moment(deliveryDate + ' ' + deliveryTimeFrom).format('h:mm a') + ' and ' +
-            moment(deliveryDate + ' ' + deliveryTimeTo).format('h:mm a');
-
-        $futureDeliveryNotice.text('Delivery Date: ' + deliveryDateTime);
-        $futureDeliveryNotice.show();
-    }
-
 }
 
 var clearPreferences = function () {
@@ -1342,7 +1331,7 @@ function calculateTotalCost() {
         }
     });
 
-    if(wines.length > 1) {
+    if (wines.length > 1) {
         deliveryCost = lowerDeliveryCost;
     }
 
@@ -1355,7 +1344,7 @@ function calculateTotalCost() {
 
     if (wines.length > 0) {
 
-        if(deliveryCost == lowerDeliveryCost) {
+        if (deliveryCost == lowerDeliveryCost) {
             $deliveryDisclaimer.text('(flat fee)');
         } else {
             $deliveryDisclaimer.text('(wine under £15.00)');
@@ -1377,3 +1366,225 @@ function calculateTotalCost() {
 
     }
 }
+
+var slidesArray = [
+    'bottles-panel',
+    'preferences-panel',
+    'review-panel',
+    'register-panel',
+    'delivery-panel',
+    'payment-panel'
+];
+
+var currentSlidePosition = function () {
+
+    if (typeof(orderSwiper) === "undefined") {
+        return 0;
+    }
+
+    var currentSlide = orderSwiper.activeSlide().id;
+    return slidesArray.indexOf(currentSlide);
+};
+
+var updateOrderSummary = function () {
+    var $orderSummary = $('.order-summary');
+    var $check = $('<i>').addClass('fa fa-check-square-o');
+    var $unCheck = $('<i>').addClass('fa fa-square-o');
+    var $step = $('<div>').addClass('order-summary-note-section');
+    var $top = $('<div>').addClass('top');
+    var $middle = $('<div>').addClass('middle');
+    var $bottom = $('<div>').addClass('bottom');
+
+    /**
+     * Heading
+     */
+    var $orderSummaryHeading = $('<div>').addClass('order-summary-heading');
+    $orderSummaryHeading.text('Order Summary');
+    $top.append($orderSummaryHeading);
+
+
+    /**
+     * Delivery Summary
+     */
+    var postcode = $('#filterPostcode').val();
+    var slotDate = $('#slot_date').val();
+    var slotFrom = $('#slot_from').val();
+    var slotTo = $('#slot_to').val();
+    var deliveryText = ' Delivery to ' + postcode;
+
+    if (slotDate) {
+        deliveryText += ' - ' + moment(slotDate).format('dddd MMMM Do') +
+        ' between ' + moment(slotDate + ' ' + slotFrom).format('h:mm a') + ' and ' +
+        moment(slotDate + ' ' + slotTo).format('h:mm a');
+    } else {
+        deliveryText += ' - ASAP'
+    }
+
+    var $deliverySummary = $('<div>').addClass('order-summary-major-section');
+    var $deliveryText = $check.clone().text(deliveryText);
+    $deliverySummary.append($deliveryText);
+    $middle.append($deliverySummary);
+
+    /**
+     * Bottle selection
+     */
+    var $bottleSelectionHeading = $('<div>').addClass('order-summary-major-section center');
+    $bottleSelectionHeading.text(' Select Preferences');
+
+    var chooseBottleText = ' Choose bottle price range';
+    var choosePreferencesText = ' Choose preferences - the merchant will match best wine based on these';
+    var $chooseBottleSection;
+    var $choosePreferencesSection;
+
+    if (wines.length == 0) {
+        $chooseBottleSection = $unCheck.clone()
+            .text(chooseBottleText);
+    } else {
+        $chooseBottleSection = $check.clone()
+            .text(chooseBottleText);
+    }
+
+    if (wines.length > 0 && arePreferencesSelected(wines[0])) {
+        $choosePreferencesSection = $check.clone()
+            .text(choosePreferencesText);
+    } else {
+        $choosePreferencesSection = $unCheck.clone()
+            .text(choosePreferencesText);
+    }
+
+    $bottleSelectionHeading.append(
+        $step.clone()
+            .append($chooseBottleSection));
+
+    $bottleSelectionHeading.append(
+        $step.clone()
+            .append($choosePreferencesSection));
+
+
+    $middle.append($bottleSelectionHeading);
+
+    /**
+     * Order confirmation
+     */
+
+    var paymentText = ' Enter payment details (you won\'t be charged until you can see the merchant\'s selection)';
+    var confirmSelectionText = ' Review your choices';
+    var confirmDeliveryText = ' Confirm delivery address';
+
+    if (currentSlidePosition() >= 2) {
+        var $confirmationSelectionHeading = $('<div>').addClass('order-summary-major-section center');
+
+        $confirmationSelectionHeading.text('Confirm Order');
+
+        if (currentSlidePosition() <= 2) {
+            $confirmationSelectionHeading.append(
+                $step.clone()
+                    .append($unCheck.clone()
+                        .text(confirmSelectionText))
+            );
+        } else {
+            $confirmationSelectionHeading.append(
+                $step.clone()
+                    .append($check.clone()
+                        .text(confirmSelectionText))
+            );
+        }
+
+        if (currentSlidePosition() <= 4) {
+            $confirmationSelectionHeading.append(
+                $step.clone()
+                    .append($unCheck.clone()
+                        .text(confirmDeliveryText))
+            );
+        } else {
+            $confirmationSelectionHeading.append(
+                $step.clone()
+                    .append($check.clone()
+                        .text(confirmDeliveryText))
+            );
+        }
+
+        $confirmationSelectionHeading.append(
+            $step.clone()
+                .append($unCheck.clone()
+                    .text(paymentText))
+        );
+
+        $middle.append($confirmationSelectionHeading);
+
+
+        /**
+         * Whats next
+         */
+
+        var $whatsNextHeading = $('<div>').addClass('order-summary-heading center');
+        $whatsNextHeading.text('What\'s next');
+
+        $middle.append($whatsNextHeading);
+
+        var $whatsNextSelection = $('<div>').addClass('order-summary-major-section');
+
+        $whatsNextSelection.append(
+            $step.clone()
+                .append($unCheck.clone()
+                    .text(' Merchant expert chooses wine based on your preferences'))
+        );
+
+        $whatsNextSelection.append(
+            $step.clone()
+                .append($unCheck.clone()
+                    .text(' You confirm merchants\'s selection'))
+        );
+
+        $whatsNextSelection.append(
+            $step.clone()
+                .append($unCheck.clone()
+                    .text(' Wine delivered to your door'))
+        );
+
+        $middle.append($whatsNextSelection);
+    }
+
+    /**
+     * Show summary
+     */
+    $orderSummary.empty();
+    $orderSummary.append($top);
+    $orderSummary.append($middle);
+    $orderSummary.append($bottom);
+    $orderSummary.show();
+
+};
+
+var arePreferencesSelected = function (wine) {
+    if (wine && wine.food.length > 0 || wine.occasion !== 0 || wine.specificWine !== '') {
+        return true;
+    } else {
+        return false;
+    }
+};
+
+var shouldShow = function (section) {
+
+    if (typeof(orderSwiper) === "undefined") {
+        return false;
+    }
+
+    var currentSlide = orderSwiper.activeSlide().id;
+    switch (section) {
+        case 'order-confirmation':
+            if (currentSlidePosition() >= 2) {
+                return true;
+            }
+            break;
+        case 'what-is-next':
+            if (currentSlide == '') {
+                return true;
+            }
+            break;
+        default:
+            return false;
+    }
+};
+
+updateOrderSummary();
