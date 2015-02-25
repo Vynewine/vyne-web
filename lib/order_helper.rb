@@ -37,6 +37,12 @@ module OrderHelper
 
     unless order.charge_id.blank?
       order.status_id = Status.statuses[:packing]
+
+      Analytics.track(
+          user_id: order.client.id.to_s,
+          event: 'Purchase complete',
+          properties: { revenue: order.total_price}
+      )
       #TODO Need to handle errors here
       CoordinateHelper.schedule_job(order)
     end

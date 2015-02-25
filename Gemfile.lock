@@ -39,6 +39,7 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
     addressable (2.3.6)
+    analytics-ruby (2.0.12)
     arel (5.0.1.20140414130214)
     authority (3.0.0)
       activesupport (>= 3.0.0)
@@ -417,6 +418,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-postgis-adapter
+  analytics-ruby
   authority
   autoprefixer-rails
   bootstrap-sass (~> 3.3.1)

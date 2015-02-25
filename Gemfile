@@ -137,3 +137,6 @@ gem 'font-awesome-rails'
 gem 'react-rails', '~> 0.12.0.0'
 
 gem 'logging-rails', :require => 'logging/rails'
+
+# Segment IO
+gem 'analytics-ruby', :require => 'segment/analytics'
