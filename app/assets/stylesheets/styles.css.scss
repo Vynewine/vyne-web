@@ -933,6 +933,36 @@ iframe {
     margin-bottom: 10px;
 }
 
+
+/**
+ * ========================================
+ * ORDER DETAILS
+ * ========================================
+ */
+
+.order-details {
+    .section-background-image {
+        background-image: url(asset-path("landing/wine_tasting.jpg"));
+        background-repeat: no-repeat;
+        background-size: cover;
+        opacity: 0.3;
+    }
+
+    .order-section {
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .order-heading {
+        border-bottom: 1px solid white;
+    }
+
+    .order-divider {
+        border-bottom: 1px solid white;
+        margin-top: 10px;
+
+    }
+}
+
 /**
  * ========================================
  * HERO

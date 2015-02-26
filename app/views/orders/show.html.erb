@@ -1,6 +1,135 @@
-<% content_for :head do %>
-    <script src="https://maps.google.com/maps/api/js?v=3&sensor=false"></script>
-<% end %>
+<section id="availability" class="section section-dark order-details">
+  <div class="section-background">
+    <!-- IMAGE BACKGROUND -->
+    <div class="section-background-image parallax-background" data-stellar-background-ratio="0.4"></div>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row animated fadeIn">
+      <div class="col-lg-8 col-lg-offset-2
+                  col-md-8 col-md-offset-2
+                  col-sm-10 col-sm-offset-1
+                  col-xs-12 col-xs-offset-0">
+        <div class="row order-section">
+          <!-- left -->
+          <div class="col-sm-6 col-xs-12">
+
+            <div class="row">
+              <div class="col-xs-12">
+                <h4 class="app-title order-heading">
+                  Order details:
+                </h4>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-xs-12">Order Id: <%= @order.id %>,
+                Created: <%= local_time(@order.created_at, '%b %d, %Y %l:%M %p') %>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-xs-12">Delivery to: <%= @order.address.full %>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-xs-12">
+                <% if @order.order_schedule.blank? %>
+                    When: ASAP
+                <% else %>
+                    When: You chose to have your wine delivered on
+                    <strong><%= local_time(@order.order_schedule[:from], '%B %d') %>
+                      between <%= local_time(@order.order_schedule[:from], '%l:%M %p') %>
+                      and <%= local_time(@order.order_schedule[:to], '%l:%M %p') %></strong>
+
+                <% end %>
+              </div>
+            </div>
+
+            <!-- Change to wine selection once advisory is complete -->
+
+            <% if @order.advisory_completed_at.blank? %>
+                <%= render 'wine_preferences' %>
+            <% else %>
+                <%= render 'wine_selection' %>
+            <% end %>
+
+
+            <div id="counter-text" style="display: none; text-align: center"> This order will be scheduled for delivery
+              in:
+              <span id="counter"></span>
+            </div>
+
+          </div>
+
+          <!--<div class="col-xs-12">-->
+          <!--<h4 class="app-title order-heading text-center">-->
+          <!--MAP MAP MAP-->
+          <!--</h4>-->
+          <!--</div>-->
+
+          <!-- right -->
+          <div class="col-sm-6 col-xs-12">
+
+            <div class="row">
+              <div class="col-xs-12">
+                <h4 class="app-title order-heading">
+                  Now:
+                </h4>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-xs-12">
+                <% if [Status.statuses[:created], Status.statuses[:pending]].include?(@order.status.id) %>
+                    <strong>Merchant expert chooses wine based on your preferences</strong>
+                <% end %>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-xs-12">
+                <h4 class="app-title order-heading">
+                  Next:
+                </h4>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12">
+                <% if [Status.statuses[:created], Status.statuses[:pending]].include?(@order.status.id) %>
+                    <strong>You confirm merchants's selection</strong> <br/>
+                    <strong>Wine delivered to your door</strong>
+                <% end %>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-xs-12">
+                <h4 class="app-title order-heading">
+                  Payment Method:
+                </h4>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12">
+                <%
+                if @order.payment.brand == 3 # American Express
+                card_number = "**** ****** #{@order.payment.number}"
+                else
+                card_number = "**** **** **** #{@order.payment.number}"
+                end
+                   %>
+                <%= card_number %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 <div class="order-confirmation">
 
@@ -35,7 +164,7 @@
         <% if @order.status_id == Status.statuses[:created] %> active
         <% end %>" id="order-created">
             <div class="line"></div>
-            
+
 
             <div class="accordian-item-content">
               <div class="line"></div>
@@ -45,12 +174,15 @@
 
               <% unless @order.order_schedule.blank? %>
 
-                  <p class="delivery-note">Your order will be delivered on <strong><%= local_time(@order.order_schedule[:from], '%B %d') %>
-                    between <%= local_time(@order.order_schedule[:from], '%l:%M %p') %>
-                    and <%= local_time(@order.order_schedule[:to], '%l:%M %p') %></strong>
+                  <p class="delivery-note">Your order will be delivered on
+                    <strong><%= local_time(@order.order_schedule[:from], '%B %d') %>
+                      between <%= local_time(@order.order_schedule[:from], '%l:%M %p') %>
+                      and <%= local_time(@order.order_schedule[:to], '%l:%M %p') %></strong>
                   </p>
 
-                  <p class="delivery-note">We will notify you when our sommelier chooses your wine based on the preferences provided</p>
+                  <p class="delivery-note">We will notify you when our sommelier chooses your wine based on the
+                    preferences provided</p>
+
                   <p class="delivery-note">
                     <strong>You will be able to review order before delivery</strong>
                   </p>

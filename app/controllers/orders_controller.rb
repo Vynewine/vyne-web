@@ -1,5 +1,5 @@
 class OrdersController < ApplicationController
-  layout 'application'
+  layout 'aidani'
   before_action :authenticate_user!
   authorize_actions_for UserAuthorizer
   authority_actions :status => 'read',
