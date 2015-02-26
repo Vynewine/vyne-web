@@ -300,6 +300,8 @@ if ($('body.shop').length) {
                     order_id: data.id
                 });
 
+                $.cookie('wines', '[]');
+
                 window.location.replace('/orders/' + data.id);
             }
         });

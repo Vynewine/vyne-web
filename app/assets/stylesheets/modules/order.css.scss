@@ -865,7 +865,7 @@
                 &#register-panel {
 
                     .order-panel-content {
-                        padding: 60px 20px;
+                        padding: 60px 10px;
 
                         .errors {
                             @include errors;
@@ -1002,15 +1002,28 @@
                     &.center {
                         text-align: center;
                     }
+
+                    .center {
+                        text-align: center;
+                    }
                 }
 
                 .order-summary-note-section {
                     text-align: left;
                     font-size: 10pt;
+                    position: relative;
 
+                    .now-image {
+                        position:absolute;
+                        left: 250px;
+                        top:0;
+                        background-image: image_url('select/now.png');
+                        background-repeat: no-repeat;
+                        width: 25px;
+                        height: 17px;
+                    }
                 }
             }
-
         }
         /* END .slide-wrapper */
 
