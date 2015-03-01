@@ -2,7 +2,8 @@ class OrdersController < ApplicationController
   layout 'aidani'
   before_action :authenticate_user!
   authorize_actions_for UserAuthorizer
-  authority_actions :status => 'read',
+  authority_actions :order_details => 'read',
+                    :status => 'read',
                     :substitution_request => 'read',
                     :substitute => 'update',
                     :cancel => 'update',
@@ -32,6 +33,25 @@ class OrdersController < ApplicationController
         @estimate = @order.delivery_status['booking']['estimates']['eta']
       end
     end
+  end
+
+  def order_details
+    if current_user.admin?
+      @order = Order.find_by(id: params[:order_id])
+    else
+      @order = Order.find_by(id: params[:order_id], client_id: current_user)
+    end
+
+    if @order.blank?
+      render json: {}, status: :forbidden
+      return
+    end
+
+    if @order.blank?
+      render json: ['404'], status: :not_found
+    else
+      render(template: 'orders/order_details.json.jbuilder', locals: {order: @order})
+    end
 
   end
 
@@ -45,12 +65,6 @@ class OrdersController < ApplicationController
     if @order.blank?
       render json: {}, status: :forbidden
       return
-    end
-
-    seconds_since_advisory = -1
-
-    unless @order.advisory_completed_at.blank?
-      seconds_since_advisory = (Time.now.utc - @order.advisory_completed_at).seconds.to_i
     end
 
     if @order.blank?

@@ -1,38 +1,66 @@
-<div class="order-confirmation">
-  <div class="order-confirmation-overlay"></div>
-  <div class="order-confirmation-content wrapper">
-    <div class="order-sub-content">
-      <% if @order.order_change_timeout_seconds > 0 %>
-          <div class="cancel" style="padding-bottom: 10px;">Please let us know the reason for cancellation</div>
-          <%= form_tag(order_cancel_path(@order), id: 'cancel-order', method: 'post') do %>
-              <%= text_field_tag(:reason, nil, placeholder: 'Reason') %>
-              <div class="total" style="display: none; margin-top: 10px;" id="cancel-error">* Please enter reason for your
-                cancellation
+<section id="availability" class="section section-dark app-section">
+  <div class="section-background">
+    <!-- IMAGE BACKGROUND -->
+    <div class="section-background-image parallax-background" data-stellar-background-ratio="0.4"></div>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12 col-xs-offset-0">
+        <h3 class="app-title">
+          Order Cancellation
+        </h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12 col-xs-offset-0">
+        <div class="animated fadeIn app-area" style="padding: 30px">
+            <% if @order.order_change_timeout_seconds > 0 %>
+                <div class="cancel" style="padding-bottom: 10px;">Please let us know the reason for cancellation</div>
+                <%= form_tag(order_cancel_path(@order), id: 'cancel-order', method: 'post') do %>
+                    <%= text_field_tag(:reason, nil, placeholder: 'Reason', class: 'form-control') %>
+                    <div class="total" style="display: none; margin-top: 10px;" id="cancel-error">* Please enter reason for
+                      your
+                      cancellation
+                    </div>
+                    <%= submit_tag('Submit', :style => 'margin-top: 10px;', :class => 'btn btn-primary') %>
+                <% end %>
+
+                <div class="total" style="margin-bottom: 10px; margin-top: 10px;">
+                  <div id="counter-text" style="display: none; text-align: center"> This order will be scheduled for delivery
+                    in:
+                    <span id="counter"></span>
+                  </div>
+                </div>
+
+                <div style="text-align: center">
+                  <a href="/orders/<%= @order.id %>" class="btn btn-default"><i class="fa fa-chevron-left"></i> Back to order
+                    details</a></div>
+
+            <% else %>
+
+              <div class="row">
+                <div class="col-xs-12">
+                  <p>
+                    Oops you took too long to request cancellation.<br/>
+                    We processed your order with the original selection.
+                  </p>
+
+                  <p>Please contact
+                  <a href="https://vyne.zendesk.com/">Vyne Support</a>
+                  in case of any queries about your order.
+                  </p>
+                  <div style="padding-top: 10px;">
+                    <a href="/orders/<%= @order.id %>" class="btn btn-default"><i class="fa fa-chevron-left"></i> Back to order
+                      details</a></div>
+                </div>
               </div>
-              <%= submit_tag('Submit', :style => 'margin-top: 10px;') %>
-          <% end %>
-
-          <div class="total" style="margin-bottom: 10px; margin-top: 10px;">
-            <div id="counter-text" style="display: none; text-align: center"> This order will be scheduled for delivery in:
-              <span id="counter"></span>
-            </div>
-          </div>
-
-          <div style="text-align: center"><a href="/orders/<%= @order.id %>" class="btn btn__small btn__full-width btn__gray">Back to order details</a></div>
-
-      <% else %>
-          <div class="cancel" style="padding: 20px;text-align: center">
-            <div>Oops you took too long to request cancellation.</div>
-            We processed your order with the original selection.
-            Please contact
-            <a href="https://vyne.zendesk.com/">Vyne Support</a>
-            in case of any queries about your order.
-            <div style="padding-top: 10px;"><a href="/orders/<%= @order.id %>" class="btn btn__small btn__full-width btn__gray">Back to order details</a></div>
-          </div>
-      <% end %>
+            <% end %>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+</section>
 
 <script>
     var cancellationOrderId = <%= @order.id %>;

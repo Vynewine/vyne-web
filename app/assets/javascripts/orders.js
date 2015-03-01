@@ -115,11 +115,11 @@ var ordersJsReady = function () {
             $('#order-created').removeClass('active');
         };
 
-        var scheduleCheckOrderStatus = setInterval(function () {
-            checkOrderStatus();
-        }, 10000);
+        //var scheduleCheckOrderStatus = setInterval(function () {
+        //    checkOrderStatus();
+        //}, 10000);
 
-        setCountDown(orderChangeTimeOutSeconds);
+        //setCountDown(orderChangeTimeOutSeconds);
 
         var map;
         var wineMarker;

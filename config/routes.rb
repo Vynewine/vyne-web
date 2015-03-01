@@ -53,6 +53,7 @@ Rails.application.routes.draw do
     get 'cancellation_request'
     post 'cancel'
     get 'accept'
+    get 'order_details'
   end
 
   # ----------------------------------------------------------------------------

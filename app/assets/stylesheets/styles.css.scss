@@ -496,6 +496,12 @@ iframe {
     padding: 14px 24px;
 }
 
+.btn-xs {
+    font-size: 10px;
+    line-height: 12px;
+    padding: 5px 5px;
+}
+
 /* BUTTON COLOR */
 
 .btn-default {
@@ -505,6 +511,17 @@ iframe {
     &:hover, &:focus {
         background-color: transparent;
         color: #222;
+        border-color: #222;
+    }
+}
+
+.btn-gray {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: #999999;
+    color: #ffffff;
+    &:hover, &:focus {
+        background-color: #5a5a5a;
+        color: #ffffff;
         border-color: #222;
     }
 }
@@ -790,7 +807,6 @@ iframe {
     }
 }
 
-
 /**
  * ========================================
  * APP
@@ -816,12 +832,11 @@ iframe {
         }
     }
 
-
     select {
         margin: auto;
         border-radius: 0;
         outline: 1px inset black;
-        outline-offset:-1px;
+        outline-offset: -1px;
         height: 50px;
         padding: 5px 30px 5px 15px;
     }
@@ -851,7 +866,6 @@ iframe {
             background-color: #000000;
         }
     }
-
 
     .app-area {
         background-color: rgba(0, 0, 0, 0.4);
@@ -901,9 +915,9 @@ iframe {
 
 .circled-text-lg {
     background-color: #201C19;
-    -moz-background-clip: padding;     /* Firefox 3.6 */
-    -webkit-background-clip: padding;  /* Safari 4? Chrome 6? */
-    background-clip: padding-box;      /* Firefox 4, Safari 5, Opera 10, IE 9 */
+    -moz-background-clip: padding; /* Firefox 3.6 */
+    -webkit-background-clip: padding; /* Safari 4? Chrome 6? */
+    background-clip: padding-box; /* Firefox 4, Safari 5, Opera 10, IE 9 */
     margin-left: auto;
     margin-right: auto;
     display: block;
@@ -933,7 +947,6 @@ iframe {
     margin-bottom: 10px;
 }
 
-
 /**
  * ========================================
  * ORDER DETAILS
@@ -948,6 +961,10 @@ iframe {
         opacity: 0.3;
     }
 
+    .totals {
+        margin-top: -10px;
+    }
+
     .order-section {
         background-color: rgba(0, 0, 0, 0.4);
     }
@@ -958,8 +975,70 @@ iframe {
 
     .order-divider {
         border-bottom: 1px solid white;
-        margin-top: 10px;
+        margin: 10px 0 10px 0;
+    }
 
+    .order-change {
+        padding: 5px 0px 5px 0px;
+
+        .btn {
+            width: 250px;
+        }
+    }
+
+    .processing-acceptance {
+        background: url(asset-path('loading.gif')) no-repeat center;
+        width: 20px;
+        height: 20px;
+    }
+
+}
+
+.one {
+    opacity: 0;
+    -webkit-animation: dot 1.3s infinite;
+    -webkit-animation-delay: 0.0s;
+    animation: dot 1.3s infinite;
+    animation-delay: 0.0s;
+}
+
+.two {
+    opacity: 0;
+    -webkit-animation: dot 1.3s infinite;
+    -webkit-animation-delay: 0.2s;
+    animation: dot 1.3s infinite;
+    animation-delay: 0.2s;
+}
+
+.three {
+    opacity: 0;
+    -webkit-animation: dot 1.3s infinite;
+    -webkit-animation-delay: 0.3s;
+    animation: dot 1.3s infinite;
+    animation-delay: 0.3s;
+}
+
+@-webkit-keyframes dot {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes dot {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
     }
 }
 
