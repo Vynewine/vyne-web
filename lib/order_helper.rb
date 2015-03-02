@@ -41,7 +41,10 @@ module OrderHelper
       Analytics.track(
           user_id: order.client.id.to_s,
           event: 'Purchase complete',
-          properties: { revenue: order.total_price}
+          properties: {
+              revenue: order.total_price,
+              order_id: order.id
+          }
       )
       #TODO Need to handle errors here
       CoordinateHelper.schedule_job(order)

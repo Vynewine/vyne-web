@@ -26,6 +26,24 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def estimated_total_min_price
+    if (order_items.map { |item| item.category }).include?(nil)
+      nil
+    else
+      total = (order_items.map { |item| item.category.price_min }).inject(:+)
+      total + (delivery_price.blank? ? 0 : delivery_price)
+    end
+  end
+
+  def estimated_total_max_price
+    if (order_items.map { |item| item.category }).include?(nil)
+      nil
+    else
+      total = (order_items.map { |item| item.category.price_max }).inject(:+)
+      total + (delivery_price.blank? ? 0 : delivery_price)
+    end
+  end
+
   def total_wine_cost
     if (order_items.map { |item| item.cost }).include?(nil)
       nil

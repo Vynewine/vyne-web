@@ -35,7 +35,7 @@ class UserNewOrderTest < ActiveSupport::TestCase
     register_new_credit_card
     submit_order
 
-    @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Thanks for ordering')]").displayed? }
+    @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Thank you for ordering')]").displayed? }
   end
 
   test 'Will show credit card error' do
@@ -77,7 +77,7 @@ class UserNewOrderTest < ActiveSupport::TestCase
     register_new_credit_card
     submit_order
 
-    @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Thanks for ordering')]").displayed? }
+    @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Thank you for ordering')]").displayed? }
   end
 
   test 'Existing user one bottle' do
@@ -96,7 +96,7 @@ class UserNewOrderTest < ActiveSupport::TestCase
     register_new_credit_card
     submit_order
 
-    @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Thanks for ordering')]").displayed? }
+    @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Thank you for ordering')]").displayed? }
 
     @driver.find_element(:css, 'a.menu-link').click
     @wait.until { @driver.find_element(:css, 'a.sign-out').displayed? }
@@ -109,7 +109,7 @@ class UserNewOrderTest < ActiveSupport::TestCase
     login_existing_user(email, password)
     confirm_existing_address
     submit_order
-    @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Thanks for ordering')]").displayed? }
+    @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Thank you for ordering')]").displayed? }
 
   end
 

@@ -566,7 +566,7 @@ var delOptions = {
         "opening_time": "17:00",
         "closing_time": "20:30",
         "opens_today": true,
-        "title": "Vynz QH Soho"
+        "title": "Vyne QH Soho"
     },
     "next_open_warehouse": {
         "day": 1,
@@ -582,7 +582,7 @@ var delOptions = {
             "date": "2015-02-22",
             "day": "Wednesday",
             "warehouse_id": 1,
-            "title": "Vynz QH Soho"
+            "title": "Vyne QH Soho"
         },
         {
             "from": "15:00",
@@ -590,7 +590,7 @@ var delOptions = {
             "date": "2015-12-22",
             "day": "Wednesday",
             "warehouse_id": 4,
-            "title": "Vynz QH Soho"
+            "title": "Vyne QH Soho"
         },
         {
             "from": "14:00",
@@ -598,7 +598,7 @@ var delOptions = {
             "date": "2015-12-23",
             "day": "Thursday",
             "warehouse_id": 1,
-            "title": "Vynz QH Soho"
+            "title": "Vyne QH Soho"
         },
         {
             "from": "15:00",
@@ -606,7 +606,7 @@ var delOptions = {
             "date": "2015-12-23",
             "day": "Thursday",
             "warehouse_id": 4,
-            "title": "Vynz QH Soho"
+            "title": "Vyne QH Soho"
         }
 
     ]

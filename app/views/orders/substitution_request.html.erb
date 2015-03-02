@@ -1,58 +1,79 @@
-<div class="order-confirmation">
-  <div class="order-confirmation-overlay"></div>
-  <div class="order-confirmation-content wrapper">
-    <div class="order-sub-content">
-      <% if @order.can_request_substitution? && @order.order_change_timeout_seconds > 0 %>
-          <p class="note">
-            Please select wines you'd like to change
-          </p>
-          <hr class="divider">
-          <% @order.order_items.each_with_index do |item, index| %>
-
-              <div class="wine-name"><%= index + 1 %> - <%= item.wine.full_info %> - £<%= '%.2f' % item.price %></div>
-              <% unless item.advisory_note.blank? %>
-                  <div class="merchant-note">Merchant Note: <%= item.advisory_note %> </div>
-              <% end %>
-              <input type="submit" id="request-<%= item.id %>" onclick="requestSubstitution(<%= item.id %>)" class="btn btn__small btn__full-width btn__gray" data-id="<%= item.id %>" value="Change">
-              <input type="text" id="substitution-reason-<%= item.id %>" style="display: none; margin-top: 10px;" placeholder="Reason for substitution"/>
-              <div class="total" style="display: none; margin-top: 10px;" id="reason-error-<%= item.id %>">* Please enter reason for this
-                substitution.
-              </div>
-              <hr class="divider">
-
-          <% end %>
-
-          <div class="total" style="display: none; margin-bottom: 10px;" id="error">
-            * Please select wines you would like to substitute.
-          </div>
-
-          <%= form_tag(order_substitute_path(@order), id: 'substitutions-form', method: 'post') do %>
-              <input type="hidden" name="substitutions" id="substitutions">
-              <input type="submit" id="request-substitution" value="Request Changes"/>
-          <% end %>
-
-
-          <div class="total" style="margin-bottom: 10px; margin-top: 10px;">
-            <div id="counter-text" style="display: none; text-align: center"> This order will be scheduled for delivery in:
-              <span id="counter"></span>
-            </div>
-          </div>
-
-          <div style="text-align: center"><a href="/orders/<%= @order.id %>" class="btn btn__small btn__full-width btn__gray">Back to order details</a></div>
-
-      <% else %>
-          Oops you took too long to request any changes.
-          We processed your order with the original selection.
-          <div>Please contact <a href="https://vyne.zendesk.com/">Vyne Support</a>
-          in case of any queries about your order.</div>
-          <div style="padding-top: 10px;"><a href="/orders/<%= @order.id %>" class="btn btn__small btn__full-width btn__gray">Back to order details</a></div>
-      <% end %>
-    </div>
-
-
-    <script>
-        var substitutionOrderId = <%= @order.id %>;
-        var orderChangeTimeOutSeconds = <%= @order.order_change_timeout_seconds %>;
-    </script>
+<section id="substitutions-section" class="section section-dark app-section">
+  <div class="section-background">
+    <!-- IMAGE BACKGROUND -->
+    <div class="section-background-image parallax-background" data-stellar-background-ratio="0.4"></div>
   </div>
-</div>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12 col-xs-offset-0">
+        <h3 class="app-title">
+          Substitution Request
+        </h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12 col-xs-offset-0">
+        <div class="animated fadeIn app-area" style="padding: 30px">
+          <% if @order.can_request_substitution? && @order.order_change_timeout_seconds > 0 %>
+              <p class="note">
+                Please select wines you'd like to change
+              </p>
+              <hr class="divider">
+              <% @order.order_items.each_with_index do |item, index| %>
+
+                  <div class="wine-name"><%= item.quantity %>x - <%= item.wine.full_info %> - £<%= '%.2f' % item.price %></div>
+                  <% unless item.advisory_note.blank? %>
+                      <div class="merchant-note">Merchant Note: <%= item.advisory_note %> </div>
+                  <% end %>
+                  <div class="form-group">
+                    <input type="submit" id="request-<%= item.id %>" onclick="requestSubstitution(<%= item.id %>)" class="btn btn-gray" data-id="<%= item.id %>" value="Change">
+                    <input type="text" id="substitution-reason-<%= item.id %>" style="display: none; margin-top: 10px;" class="form-control" placeholder="Reason for substitution"/>
+                    <div class="total" style="display: none; margin-top: 10px;" id="reason-error-<%= item.id %>">* Please enter reason for this
+                      substitution.
+                    </div>
+                  </div>
+
+
+                  <hr class="divider">
+
+              <% end %>
+
+              <div class="total" style="display: none; margin-bottom: 10px;" id="error">
+                * Please select wines you would like to substitute.
+              </div>
+
+              <%= form_tag(order_substitute_path(@order), id: 'substitutions-form', method: 'post') do %>
+                  <input type="hidden" name="substitutions" id="substitutions">
+                  <input type="submit" id="request-substitution" value="Request Changes" class="btn btn-primary"/>
+              <% end %>
+
+
+              <div class="total" style="margin-bottom: 10px; margin-top: 10px;">
+                <div id="counter-text" style="display: none; text-align: center"> This order will be scheduled for delivery in:
+                  <span id="counter"></span>
+                </div>
+              </div>
+
+              <div style="text-align: center"><a href="/orders/<%= @order.id %>" class="btn btn-default"><i class="fa fa-chevron-left"></i> Back to order details</a></div>
+
+          <% else %>
+              <p>
+                Oops you took too long to request any changes.<br/>
+                We processed your order with the original selection.
+              </p>
+
+              <div>Please contact <a href="https://vyne.zendesk.com/">Vyne Support</a>
+                in case of any queries about your order.</div>
+              <div style="padding-top: 10px;"><a href="/orders/<%= @order.id %>" class="btn btn-default"><i class="fa fa-chevron-left"></i> Back to order details</a></div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+    var substitutionOrderId = <%= @order.id %>;
+    var orderChangeTimeOutSeconds = <%= @order.order_change_timeout_seconds %>;
+</script>

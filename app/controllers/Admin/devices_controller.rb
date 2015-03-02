@@ -101,6 +101,6 @@ class Admin::DevicesController < ApplicationController
   private
 
   def device_params
-    params.require(:device).permit(:key)
+    params.require(:device).permit(:key, :registration_id)
   end
 end
