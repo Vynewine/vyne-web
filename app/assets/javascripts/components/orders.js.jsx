@@ -16,6 +16,32 @@ var OrderSummary = React.createClass({
             deliveryTime = deliveryFrom.format('dddd MMMM Do') + ' between ' + deliveryFrom.format('h:mm a') + ' and ' + deliveryTo.format('h:mm a');
         }
 
+        var sections = [];
+
+        var section = function (description, text, key) {
+            sections.push(
+                <div className="row" key = {key}>
+                    <div className="col-xs-12">
+                        <span className="section-description">{description}:</span> {text}
+                    </div>
+                </div>
+            );
+        };
+
+        section('Order Id', this.props.order.id, 1);
+        section('Created', moment.utc(this.props.order.created_at).format('dddd MMMM Do h:mm a'), 2);
+
+        if (this.props.order.status && this.props.order.warehouse && this.props.order.address) {
+            if (this.props.order.status.label == 'cancelled') {
+                section('Status', 'This order has been cancelled.', 3);
+                section('Cancellation Reason', this.props.order.cancellation_note, 4);
+            } else {
+                section('Delivery to', this.props.order.address.full, 3);
+                section('When', deliveryTime, 4);
+                section('Merchant', this.props.order.warehouse.title, 5);
+            }
+        }
+
         return (
             <div>
                 <div className="row">
@@ -25,24 +51,7 @@ var OrderSummary = React.createClass({
                         </h4>
                     </div>
                 </div>
-
-                <div className="row">
-                    <div className="col-xs-12">
-                        Order Id: {this.props.order.id},
-                        Created: {moment.utc(this.props.order.created_at).format('dddd MMMM Do h:mm a')}
-                    </div>
-                </div>
-
-                <div className="row">
-                    <div className="col-xs-12">Delivery to: {this.props.order.address}
-                    </div>
-                </div>
-
-                <div className="row">
-                    <div className="col-xs-12">
-                        When: {deliveryTime}
-                    </div>
-                </div>
+                {sections}
             </div>
         );
     }
@@ -51,19 +60,32 @@ var OrderSummary = React.createClass({
 var WinePreferences = React.createClass({
     render: function () {
 
-        var wines = [];
-        if (this.props.orderItems.length) {
-            this.props.orderItems.map(function (item) {
-                wines.push(
-                    <div className="row" key={item.id}>
+        var preferences = [];
+        var addPreference = function (description, text, key) {
+            preferences.push(
+                (
+                    <div className="row" key={key}>
                         <div className="col-xs-12">
-                    {item.quantity}x - {item.category.name}&nbsp;
-                            (£{parseFloat(item.category.price_min).toFixed(2)}
-                            -{parseFloat(item.category.price_max).toFixed(2)})&nbsp;-&nbsp;
-                        {item.preferences.join(', ')}
+                            <span className="section-description">{description}:</span> {text}
                         </div>
                     </div>
-                );
+                )
+            )
+        };
+
+        if (this.props.orderItems.length) {
+            this.props.orderItems.map(function (item, index) {
+
+                if (index === 1) {
+                    preferences.push((<div className="order-divider" key="break"></div>));
+                }
+
+                addPreference('Category', item.category.name +
+                ' (£' + parseFloat(item.category.price_min).toFixed(2) +
+                '-' + parseFloat(item.category.price_max).toFixed(2) + ')', item.id + 'cat')
+
+                addPreference('Preferences', item.preferences.join(', '), item.id + 'pref');
+
             });
         }
 
@@ -72,58 +94,36 @@ var WinePreferences = React.createClass({
                 <div className="row">
                     <div className="col-xs-12">
                         <h4 className="app-title order-heading">
-                            Wine Pereference:
+                            Your Wine Pereferences:
                         </h4>
                     </div>
                 </div>
-            {wines}
+                {preferences}
                 <div className="order-divider"></div>
-
             </div>
         )
     }
 });
 
 var WineSelection = React.createClass({
-    getInitialState: function () {
-        return {
-            expand: 'collapse',
-            expandedId: 0
-        }
-    },
-    showMoreWineInfo: function (item) {
-        this.setState({
-            expandedId: item.id
-        });
-    },
-    showLessWineInfo: function (item) {
-        this.setState({
-            expandedId: 0
-        });
-    },
     render: function () {
-
-        var linkStyle = {float: "right"};
 
         var wines = [];
         if (this.props.orderItems.length) {
-            this.props.orderItems.map(function (item) {
+            this.props.orderItems.map(function (item, index) {
+
+                if (index === 1) {
+                    wines.push(<div className="order-divider" key="divider"></div>);
+                }
 
                 wines.push(
                     <div className="row" key={item.id}>
-                        <div className="col-xs-10">
-                            <WineInfo orderItem={item} expanded={this.state.expandedId == item.id} />
-                        </div>
-                        <div className="col-xs-2">
-                            <button
-                                href="#"
-                                style={linkStyle}
-                                onClick={this.state.expandedId == item.id ? this.showLessWineInfo.bind(this, item) : this.showMoreWineInfo.bind(this, item) }
-                                className="btn btn-primary btn-xs"
-                            >{this.state.expandedId == item.id ? '- less' : '+ more'}</button>
+                        <div className="col-xs-12">
+                            <WineInfo orderItem={item} />
                         </div>
                     </div>
                 );
+
             }.bind(this));
         }
 
@@ -136,7 +136,7 @@ var WineSelection = React.createClass({
                         </h4>
                     </div>
                 </div>
-            {wines}
+                {wines}
                 <div className="order-divider"></div>
 
             </div>
@@ -145,6 +145,21 @@ var WineSelection = React.createClass({
 });
 
 var WineInfo = React.createClass({
+    getInitialState: function () {
+        return {
+            expanded: false
+        }
+    },
+    showLessWineInfo: function () {
+        this.setState({
+            expanded: false
+        });
+    },
+    showMoreWineInfo: function () {
+        this.setState({
+            expanded: true
+        });
+    },
     render: function () {
         if (!this.props.orderItem.wine)
             return false;
@@ -163,7 +178,7 @@ var WineInfo = React.createClass({
         var detailsRow = function (description, text, key) {
             return row(
                 <div>
-                    <span>{description}:</span>
+                    <span className="section-description">{description}:</span>
                 &nbsp;
                     <span>{text}</span>
                 </div>, key
@@ -171,7 +186,9 @@ var WineInfo = React.createClass({
         };
 
         var wineDescription = [
-            (row(orderItem.quantity + 'x - ' + wine.full_info + ' - £ ' + parseFloat(orderItem.price).toFixed(2), 1))
+            detailsRow('Bottle Preferences', orderItem.preferences.join(', '), 1),
+            detailsRow('Wine Selection', orderItem.quantity + 'x - ' + wine.full_info, 2),
+            detailsRow('Price', '£' + parseFloat(orderItem.price).toFixed(2), 3)
         ];
 
         if (this.props.orderItem.advisory_note) {
@@ -182,8 +199,11 @@ var WineInfo = React.createClass({
 
         var detailsSection = '';
         var wineDetails = [];
+        var buttonText = '';
 
-        if (this.props.expanded) {
+        if (this.state.expanded) {
+
+            buttonText = '-less';
 
             wineDetails.push(
                 detailsRow('Producer', wine.producer.name, 2)
@@ -230,12 +250,18 @@ var WineInfo = React.createClass({
                     {wineDetails}
                 </div>
             )
+        } else {
+            buttonText = '+more';
         }
 
         return (
             <div>
             {wineDescription}
             {detailsSection}
+                <button
+                    className="btn btn-primary btn-xs"
+                    onClick={this.state.expanded ? this.showLessWineInfo : this.showMoreWineInfo }
+                >{buttonText}</button>
             </div>
         )
     }
@@ -246,7 +272,7 @@ var Totals = React.createClass({
 
         var total = parseFloat(this.props.order.estimated_total_min_price).toFixed(2) + ' - ' + parseFloat(this.props.order.estimated_total_max_price).toFixed(2);
 
-        if (this.props.order.advisory_completed_at) {
+        if (this.props.order.advisory_completed_at && this.props.order.status.label !== 'cancelled') {
             total = parseFloat(this.props.order.total_price).toFixed(2)
         }
 
@@ -269,20 +295,6 @@ var AcceptOrder = React.createClass({
     getInitialState: function () {
         return {pendingAcceptance: false}
     },
-    componentWillReceiveProps: function (props) {
-
-        if (props.order.order_change_timeout_seconds > 0) {
-            this.setState({
-                pendingAcceptance: false
-            });
-        }
-
-        if (!this.state.shouldExpand && props.expanded) {
-            this.setState({shouldExpand: true});
-        } else {
-            this.setState({shouldExpand: false});
-        }
-    },
     accept: function () {
         $.get('/orders/' + this.props.order.id + '/accept', function (data) {
             if (data.success) {
@@ -293,13 +305,21 @@ var AcceptOrder = React.createClass({
                 setTimeout(function () {
                     this.props.onOrderChange(this.props.order.id);
                 }.bind(this), 3000);
-
             }
         }.bind(this));
     },
+    componentWillReceiveProps: function (props) {
+        if(props.order.status) {
+            if (props.order.status.label !== 'advised') {
+                this.setState({
+                    pendingAcceptance: false
+                });
+            }
+        }
+    },
     render: function () {
 
-        if (this.props.order.order_change_timeout_seconds < 1) {
+        if (this.props.order.order_change_timeout_seconds < 1 || justCancelled) {
             return false;
         }
 
@@ -313,7 +333,7 @@ var AcceptOrder = React.createClass({
             <div>
                 <i className="fa fa-check"></i>
             &nbsp;
-                Accept Order
+                Confirm Selection
             </div>
         );
 
@@ -329,12 +349,7 @@ var AcceptOrder = React.createClass({
 
         return (
             <div>
-                <div className="row">
-                    <div className="col-xs-12 text-center">
-                        <div className="order-divider"></div>
-                        <span>Please review your order.</span>
-                    </div>
-                </div>
+
                 <div className="row">
                     <div className="col-xs-12 text-center">
                         <button
@@ -343,6 +358,7 @@ var AcceptOrder = React.createClass({
                         >{buttonText}</button>
                     </div>
                 </div>
+
                 <div className="row">
                     <div className="col-xs-12 text-center">
                         {substitutionMessage}
@@ -356,7 +372,7 @@ var AcceptOrder = React.createClass({
 var ChangeOrder = React.createClass({
     render: function () {
 
-        if (this.props.order.order_change_timeout_seconds < 1) {
+        if (this.props.order.order_change_timeout_seconds < 1 || justCancelled) {
             return false;
         }
 
@@ -442,23 +458,40 @@ var OrderTimer = React.createClass({
             minutes: 0,
             seconds: 0,
             minuteText: '00',
-            secondText: '00'
+            secondText: '00',
+            initialized: false
         };
     },
-    componentDidMount: function () {
-        var seconds = this.props.order.order_change_timeout_seconds;
+    initialize: function (seconds) {
+        if (seconds > 0 && !this.state.initialized) {
 
-        if (seconds > 0) {
             var minutes = Math.floor(seconds / 60);
 
             this.setState({
                 minutes: minutes,
                 seconds: seconds - minutes * 60,
-                minuteText: '00'
+                minuteText: '00',
+                initialized: true
             });
 
             this.setMixinInterval(this.tick, 1000);
+        } else if (seconds <= 0 && this.state.initialized) {
+            this.clearMixinInterval();
+            this.setState({
+                initialized: false
+            });
         }
+    },
+    componentDidMount: function () {
+        this.initialize(this.props.order.order_change_timeout_seconds);
+    },
+    componentWillReceiveProps: function (props) {
+        this.initialize(props.order.order_change_timeout_seconds);
+    },
+    componentWillUnmount: function () {
+        this.setState({
+            initialized: false
+        });
     },
     tick: function () {
 
@@ -515,7 +548,7 @@ var OrderTimer = React.createClass({
     }
 });
 
-var Now = React.createClass({
+var Done = React.createClass({
     getInitialState: function () {
         return {
             nowText: ''
@@ -527,10 +560,14 @@ var Now = React.createClass({
         });
     },
     componentWillMount: function () {
-        this.checkStatus(this.props.order.status.label);
+        if (this.props.order.status) {
+            this.checkStatus(this.props.order.status.label);
+        }
     },
     componentWillReceiveProps: function (props) {
-        this.checkStatus(props.order.status.label);
+        if(props.order.status) {
+            this.checkStatus(props.order.status.label);
+        }
     },
     checkStatus: function (status) {
         var merchantName = '';
@@ -539,30 +576,32 @@ var Now = React.createClass({
             merchantName = this.props.order.warehouse.title;
         }
 
+        //
+        //Your order has been delivered.
+        //<p>If you have any problems, get in touch via <br/><a href="https://vyne.zendesk.com/hc">Vyne Helpdesk</a>
         switch (status) {
+            case 'created':
             case 'pending':
-                this.setText('Thank you for ordering! We submitted your order to your local merchant:' + merchantName);
+                this.setText('Thank you for ordering! We submitted your order to your local merchant: ' + merchantName + '.');
                 break;
             case 'advised':
-                if (props.order.order_change_timeout_seconds > 0) {
-                    this.setText('Your wines has been selected by merchant. Please approve wine selection.');
-                } else {
-                    this.setText('Your wines has been selected by merchant.');
-                }
+                this.setText('');
                 break;
             case 'packing':
             case 'pickup':
-                this.setText('The courier is on the first leg of the journey: to the wine cellar. Check this page in 10-20 minutes to see if the bottle has been collected and on its way to you.');
+                this.setText('');
                 break;
             case 'in transit':
+                this.setText('');
                 break;
             case 'delivered':
+                this.setText('');
                 break;
             case 'payment failed':
-                break;
-            case 'created':
+                this.setText('Payment for your order failed. Please contact Vyne at: 020 3355 4338');
                 break;
             default:
+                this.setText('');
                 break;
         }
     },
@@ -575,15 +614,7 @@ var Now = React.createClass({
         return (
             <div>
                 <div className="row">
-                    <div className="col-xs-12">
-                        <h4 className="app-title order-heading">
-                            Now:
-                        </h4>
-                    </div>
-                </div>
-
-                <div className="row">
-                    <div className="col-xs-12">
+                    <div className="col-xs-12 text-center">
                     {this.state.nowText}
                     </div>
                 </div>
@@ -607,31 +638,40 @@ var Next = React.createClass({
     },
     checkStatus: function (status) {
         switch (status) {
+            case 'created':
             case 'pending':
-                this.setText('We will notify you when our sommelier chooses your wine based on the preferences provided');
+                this.setText('We will notify you the merchant\'s sommelier chooses your wine based on the preferences provided. You will be able to review their selection before delivery.');
                 break;
             case 'advised':
-            case 'packing':
-            case 'pickup':
                 this.setText('You\'ll see wine coming your way');
                 break;
+            case 'packing':
+            case 'pickup':
+                this.setText('The courier is on the first leg of the journey: to the wine cellar. Check this page in 10-20 minutes to see if the bottle has been collected and on its way to you.');
+                break;
             case 'in transit':
+                this.setText('Wine is on it\'s way! Please make sure to be present at: ' + this.props.order.address.postcode + '.');
                 break;
             case 'delivered':
+                this.setText('');
                 break;
             case 'payment failed':
-                break;
-            case 'created':
+                this.setText('');
                 break;
             default:
+                this.setText('');
                 break;
         }
     },
     componentWillMount: function () {
-        this.checkStatus(this.props.order.status.label);
+        if (this.props.order.status) {
+            this.checkStatus(this.props.order.status.label);
+        }
     },
     componentWillReceiveProps: function (props) {
-        this.checkStatus(props.order.status.label);
+        if(props.order.status) {
+            this.checkStatus(props.order.status.label);
+        }
     },
 
     render: function () {
@@ -641,18 +681,23 @@ var Next = React.createClass({
         }
 
         return (
-            <div>
+            <div className="">
                 <div className="row">
                     <div className="col-xs-12">
-                        <h4 className="app-title order-heading">
-                            Next:
-                        </h4>
+
                     </div>
                 </div>
 
-                <div className="row">
-                    <div className="col-xs-12">
-                    {this.state.nextText}
+                <div className="row ">
+                    <div className="col-xs-12 ">
+                        <div className="order-next text-center">
+
+                            <p className="app-title">
+                                Next Step
+                            </p>
+                            {this.state.nextText}
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -662,22 +707,174 @@ var Next = React.createClass({
     }
 });
 
-var Map = React.createClass({
+var PaymentInfo = React.createClass({
     render: function () {
+        return (
+            <div>
+                <div className="row">
+                    <div className="col-xs-12">
+                        <h4 className="app-title order-heading">
+                            Payment Method:
+                        </h4>
+                    </div>
+                </div>
 
-        if(this.props.order.status.label !== 'in transit') {
-            return false;
+                <div className="row">
+                    <div className="col-xs-12">
+                    {this.props.order.payment ? this.props.order.payment.brand == 3 ?
+                    '**** ****** ' + this.props.order.payment.number :
+                    '**** **** **** ' + this.props.order.payment.number : ''}
+                    </div>
+                </div>
+            </div>
+        )
+    }
+});
+
+var map;
+var wineMarker;
+
+var Map = React.createClass({
+    getInitialState: function () {
+        return {
+            wineMarker: null
+        }
+    },
+    getCourierLocation: function () {
+        $.get('/delivery/get_courier_location?id=' + this.props.order.id, function (data) {
+
+            if (!wineMarker) {
+                var bottleIcon = L.icon({
+                    iconUrl: '/wine-bottle.png',
+                    iconRetinaUrl: '/wine-bottle@2x.png',
+                    iconSize: [32, 32]
+                });
+
+                wineMarker = L.marker([data.data.lat, data.data.lng], {icon: bottleIcon}).addTo(map);
+
+            } else {
+
+                wineMarker.setLatLng(L.latLng(
+                        data.data.lat,
+                        data.data.lng)
+                );
+            }
+        });
+    },
+    initialize: function () {
+
+        map = L.map('map', {zoomControl: false, scrollWheelZoom: false});
+
+        map.addControl(L.control.zoom({position: 'topright'}));
+
+        var gl = new L.Google('ROAD');
+
+        map.addLayer(gl);
+
+        var warehouseIcon = L.icon({
+            iconUrl: '/winebar.png',
+            iconSize: [32, 32]
+        });
+
+        L.marker([
+            this.props.order.warehouse.address.latitude,
+            this.props.order.warehouse.address.longitude
+        ], {icon: warehouseIcon}).addTo(map);
+
+        var homeIcon = L.icon({
+            iconUrl: '/home.png',
+            iconSize: [32, 32]
+        });
+
+        L.marker([
+            this.props.order.address.latitude,
+            this.props.order.address.longitude
+        ], {icon: homeIcon}).addTo(map);
+
+        var directionsService = new google.maps.DirectionsService();
+
+        var request = {
+            origin: new google.maps.LatLng(this.props.order.warehouse.address.latitude, this.props.order.warehouse.address.longitude),
+            destination: new google.maps.LatLng(this.props.order.address.latitude, this.props.order.address.longitude),
+            travelMode: google.maps.TravelMode.BICYCLING
+        };
+
+        directionsService.route(request, function (result) {
+            if (result && result.routes && result.routes.length) {
+
+                var line_points = [];
+
+                $.each(result.routes[0].overview_path, function (i, val) {
+                    line_points[line_points.length] = [val.lat(), val.lng()];
+                });
+
+                var polyline = L.polyline(line_points, {color: 'blue'}).addTo(map);
+
+                map.fitBounds(polyline.getBounds());
+            }
+
+            this.getCourierLocation();
+        }.bind(this));
+    },
+
+    componentDidMount: function () {
+
+        if (this.props.order.status) {
+            if (this.props.order.status.label === 'in transit') {
+                if (!map) {
+                    this.initialize();
+                }
+            }
         }
 
+    },
+    componentWillReceiveProps: function (props) {
+
+        if (props.order.status) {
+            if (props.order.status.label === 'in transit') {
+
+                if (!map) {
+                    this.initialize();
+                } else {
+                    this.getCourierLocation();
+                }
+            } else {
+                if (map) {
+                    map.remove();
+                    map = null;
+                    wineMarker = null;
+                    $('#map').empty();
+                }
+            }
+        }
+
+    },
+    render: function () {
+
         var mapStyle = {
-            width:  '100%',
+            width: '100%',
             height: '300px'
         };
 
+        var mainStyle = {
+            display: (this.props.order.status && this.props.order.status.label === 'in transit') ? 'block' : 'none'
+        };
+
         return (
-            <div>
-                {this.props.order.status.label}
-                <div id="map" style={mapStyle}></div>
+            <div style={mainStyle}>
+                <div className="row">
+                    <div className="col-xs-12">
+                        <h4 className="app-title order-heading">
+                            Delivery in progress
+                        </h4>
+                    </div>
+                </div>
+
+                <div className="row">
+                    <div className="col-xs-12">
+                        <div id="map" style={mapStyle}></div>
+                    </div>
+                </div>
             </div>
         )
     }
@@ -719,12 +916,13 @@ var OrderDetails = React.createClass({
             orderItems={this.state.orderDetails.order.order_items}
         />;
 
-        if (this.state.orderDetails.order.advisory_completed_at) {
+        if (this.state.orderDetails.order.advisory_completed_at &&
+            this.state.orderDetails.order.status.label !== 'cancelled' && !justCancelled
+        ) {
             wines = <WineSelection
                 orderItems={this.state.orderDetails.order.order_items}
             />;
         }
-
         return (
             <div>
                 <div className="row order-section">
@@ -740,7 +938,8 @@ var OrderDetails = React.createClass({
                 {/**
                  * left
                  */}
-                        <OrderSummary
+
+                        <Done
                             order={this.state.orderDetails.order}
                         />
 
@@ -749,7 +948,12 @@ var OrderDetails = React.createClass({
                             onOrderChange={this.handleOrderStatusChange}
                         />
 
-                    {wines}
+                        <OrderTimer
+                            order={this.state.orderDetails.order}
+                            onOrderChange={this.handleOrderStatusChange}
+                        />
+
+                        {wines}
 
                         <Totals
                             order={this.state.orderDetails.order}
@@ -759,12 +963,9 @@ var OrderDetails = React.createClass({
                             order={this.state.orderDetails.order}
                         />
 
-                        <OrderTimer
+                        <Next
                             order={this.state.orderDetails.order}
-                            onOrderChange={this.handleOrderStatusChange}
                         />
-
-                        <OrderChangeCountDown />
 
                     </div>
 
@@ -774,22 +975,23 @@ var OrderDetails = React.createClass({
                  * right
                  */}
 
-                        <Now
+                        <OrderSummary
                             order={this.state.orderDetails.order}
                         />
 
-                        <Next
+                        <PaymentInfo
                             order={this.state.orderDetails.order}
                         />
                     </div>
                 </div>
             </div>
         );
+
     }
 });
 
 var renderOrderDetails = function () {
-    if ($('body.orders').length && typeof(orderId) != "undefined" && $('#order-details').length) {
+    if ($('body.orders').length && $('#order-details').length) {
 
         React.render(
             <OrderDetails />,

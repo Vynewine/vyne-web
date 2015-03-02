@@ -967,6 +967,7 @@ iframe {
 
     .order-section {
         background-color: rgba(0, 0, 0, 0.4);
+        padding-bottom: 20px;
     }
 
     .order-heading {
@@ -986,10 +987,23 @@ iframe {
         }
     }
 
+    .section-description {
+        color: #ffffff;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 9pt;
+    }
+
     .processing-acceptance {
         background: url(asset-path('loading.gif')) no-repeat center;
         width: 20px;
         height: 20px;
+    }
+
+    .order-next {
+        border: 2px solid #A32438;
+        margin-top: 10px;
+        padding: 10px;
     }
 
 }
