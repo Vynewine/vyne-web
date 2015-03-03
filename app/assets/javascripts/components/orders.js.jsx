@@ -39,6 +39,7 @@ var OrderSummary = React.createClass({
                 section('Delivery to', this.props.order.address.full, 3);
                 section('When', deliveryTime, 4);
                 section('Merchant', this.props.order.warehouse.title, 5);
+                section('Status', this.props.order.status.label, 6);
             }
         }
 
@@ -894,12 +895,26 @@ var OrderDetails = React.createClass({
     componentDidMount: function () {
         this.setMixinInterval(this.tick, 10000);
     },
+    componentWillReceiveProps: function(props) {
+      if(props.clear) {
+          this.clearMixinInterval();
+      }
+    },
     tick: function () {
         this.loadData(orderId);
     },
     loadData: function (orderId) {
         getOrderDetails(orderId, function (orderDetails) {
-            this.setState({orderDetails: orderDetails});
+
+            if(orderDetails.order.status &&
+                (orderDetails.order.status.label === 'cancelled' || orderDetails.order.status.label === 'delivered')) {
+                this.clearMixinInterval();
+            }
+
+            this.setState({
+                orderDetails: orderDetails
+            });
+
         }.bind(this));
     },
     handleOrderStatusChange: function (orderId) {
@@ -988,13 +1003,29 @@ var OrderDetails = React.createClass({
     }
 });
 
+var mainOrderComponent;
+
 var renderOrderDetails = function () {
     if ($('body.orders').length && $('#order-details').length) {
 
-        React.render(
+        mainOrderComponent = React.render(
             <OrderDetails />,
             document.getElementById('order-details')
         );
+    } else {
+        clearMainOrderComponent();
+    }
+};
+
+var clearMainOrderComponent =  function() {
+    if (!$('#order-details').length) {
+        if(mainOrderComponent) {
+            mainOrderComponent.setProps({
+                clear: true
+            });
+            React.unmountComponentAtNode(document.getElementById('order-details'));
+            mainOrderComponent = null;
+        }
     }
 };
 
@@ -1005,4 +1036,9 @@ var getOrderDetails = function (orderId, callback) {
         });
 };
 
-$(document).on('page:change page:load', renderOrderDetails);
+$(document).ready(renderOrderDetails);
+$(document).on('page:load', renderOrderDetails);
+
+$(document).on('page:restore', function() {
+    clearMainOrderComponent();
+});

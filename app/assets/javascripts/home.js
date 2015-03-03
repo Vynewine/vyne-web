@@ -314,4 +314,5 @@ var homeJsReady = function () {
     }
 };
 
-$(document).on('page:load page:change', homeJsReady);
+$(document).ready(homeJsReady);
+$(document).on('page:load', homeJsReady);

@@ -1,67 +1,76 @@
+<section id="vyne-jobs" class="section section-dark app-section">
+  <div class="section-background">
+    <!-- IMAGE BACKGROUND -->
+    <div class="section-background-image parallax-background" data-stellar-background-ratio="0.4"></div>
+  </div>
 
-<div id="jobs">
-  <% if params[:job].blank? %>
-      <div style="text-align: center; padding-top: 30px;">
-        <h3> Join Vyne </h3>
-      </div>
-      <div style="width: 300px;margin:0 auto;text-align: center">
-        <a href="?job=1">
-          <div class="job-link">
-            <div>Front-end Leader</div>
-            <div class="see-more">See More</div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-xs-12 col-xs-offset-0">
+        <div class="row">
+          <div class="col-xs-12 animated fadeIn">
+            <h3 class="app-title">
+              Driven by achieving beauty with technology?
+            </h3>
+            <h3>
+              Build for the future, not just for now!
+            </h3>
           </div>
-        </a>
-        <a href="?job=2">
-          <div class="job-link">
-            <div>Full-stack Engineer & Leader</div>
-            <div class="see-more">See More</div>
-          </div>
-        </a>
-        <a href="?job=3">
-          <div class="job-link">
-            <div>Native App Engineer & Leader</div>
-            <div class="see-more">See More</div>
-          </div>
-        </a>
-      </div>
-  <% else %>
-      <div style="text-align: center; padding-top: 30px;">
-        <div style="width: 100px;margin: 0 auto">
-          <h3><a href="/jobs" style="color: #e7e7e7"> Back </a></h3>
         </div>
 
-      </div>
-      <div style="width: 100%">
-        <div style="margin: 0 auto">
-          <% case params[:job]
-             when '1' %>
-              <iframe id="pikchart-frame" width="800" height="4260" frameborder="0" scrolling="no" style="overflow-y:hidden;margin: 0 auto;display:block;" src="https://magic.piktochart.com/embed/3572160-frontend-leader"></iframe>
-          <% when '2' %>
-              <iframe id="pikchart-frame" width="800" height="4260" frameborder="0" scrolling="no" style="overflow-y:hidden;margin: 0 auto;display:block;" src="https://magic.piktochart.com/embed/3740110-full-stack-engineer-leader"></iframe>
-          <% when '3' %>
-              <iframe id="pikchart-frame" width="800" height="4260" frameborder="0" scrolling="no" style="overflow-y:hidden;margin: 0 auto;display:block;" src="https://magic.piktochart.com/embed/3740433-native-app-engineer-leader"></iframe>
-          <% end %>
+        <div class="row">
+          <div class="col-xs-12 animated fadeIn">
+            <h4>
+              Current openings at Vyne:
+            </h4>
 
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12 animated fadeIn text-left">
+
+            <h4 class="app-title">Front-end Leader</h4>
+            <p>As our lead in front-end engineering, you’ll be given the freedom and responsibility to create and implement strategy and product. Contribute to our stack with the most creative, impactful and scalable technologies on the web and native. You’ll translate the passion for beauty on the web that runs through your veins into immersive experiences ahead of the curve.</p>
+
+            <p>You’ll oversee user-adoption and understand our users deeply.</p>
+          </div>
+        </div>
+        <div class="app-divider"></div>
+        <div class="row">
+          <div class="col-xs-12 animated fadeIn text-left">
+            <h4 class="app-title">Full-stack Engineer & Leader</h4>
+
+            <p>You'll be among the founding engineers; solving the biggest technology challenges in the global wine market. We’re catapulting one of the oldest industries into the future.</p>
+
+            <p>Solve some really hard problems and we’ll give you the freedom and responsibility you need to grow a team around you. Contribute vision and leadership in product (deciding what to build and when), and see those plans through from implementation to end-user adoption.</p>
+          </div>
+        </div>
+        <div class="app-divider"></div>
+        <div class="row">
+          <div class="col-xs-12 animated fadeIn text-left">
+            <h4 class="app-title">Native App Engineer & Leader</h4>
+            <p>
+              Lead our native app engineering to create beautiful, intelligent, and context driven apps for our sellers and our customers. Help define mobile roadmap and strategy.
+            </p>
+            <p>
+              We’re building the future for one of the oldest and most complicated consumer goods. The market is huge and awe inspiring; and line-by-line you’re going to build an immersive experience in which everyone can learn, create memories and enjoy.
+            </p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12 animated fadeIn">
+            <h4>
+              Contact us @ <a href="mailto:join@vyne.co.uk">join@vyne.co.uk</a>
+            </h4>
+          </div>
         </div>
       </div>
+    </div>
+  </div>
+</section>
 
-      <script>
-          document.addEventListener("DOMContentLoaded", function() {
-              var $window = $(window);
-              var $frame = $('#pikchart-frame');
-
-              function checkWidth() {
-                  var windowsize = $window.width();
-                  if (windowsize < 800) {
-                      $frame.width(windowsize);
-                  }
-              }
-              checkWidth();
-              $(window).resize(checkWidth);
-          });
-      </script>
-  <% end %>
-</div>
 
 
 

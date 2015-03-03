@@ -36,7 +36,7 @@
 
 
 </head>
-<body class="<%= params[:controller] %><% if user_signed_in? %> logged-in<% end %>">
+<body class="<%= params[:controller] %> <%= params[:action] %> <% if user_signed_in? %> logged-in<% end %>">
 <script>
     analytics.page();
     <% if current_user.blank? %>

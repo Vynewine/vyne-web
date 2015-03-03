@@ -134,13 +134,8 @@ var resetEventsForCart = function () {
     }
 };
 
-
-$(document).on('page:load page:change', function () {
-    loadWines();
-});
-
 var loadWines = function() {
-    if($('body.shop').length) {
+    if($('body.shop').length && $('body.new').length) {
         var savedWines = $.cookie('wines');
         if(savedWines) {
             if(JSON.parse(savedWines).length > 0) {
@@ -154,6 +149,8 @@ var loadWines = function() {
     }
 };
 
+$(document).ready(loadWines);
+$(document).on('page:load', loadWines);
 
 var mailingListSignUp = function (email, callback) {
 

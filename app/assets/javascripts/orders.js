@@ -120,4 +120,5 @@ var ordersJsReady = function () {
 
 };
 
-$(document).on('page:change', ordersJsReady);
+$(document).ready(ordersJsReady);
+$(document).on('page:load', ordersJsReady);

@@ -1,5 +1,5 @@
 class JobsController < ApplicationController
-  layout 'application'
+  layout 'aidani'
   def index
   end
 end
