@@ -149,8 +149,9 @@ var loadWines = function() {
     }
 };
 
-$(document).ready(loadWines);
-$(document).on('page:load', loadWines);
+$(document).on('page:load page:change', function () {
+    loadWines();
+});
 
 var mailingListSignUp = function (email, callback) {
 
