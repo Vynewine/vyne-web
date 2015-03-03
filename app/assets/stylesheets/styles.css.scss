@@ -877,6 +877,11 @@ iframe {
         margin-top: -15px;
     }
 
+    .app-divider {
+        border-bottom: 1px solid white;
+        margin: 10px 0 10px 0;
+    }
+
     @media (max-width: 375px) {
         .app-btn {
             width: 265px;
@@ -895,6 +900,17 @@ iframe {
         margin: 15px 15px;
         font-size: 14pt;
         color: white;
+    }
+
+    .app-caption {
+        font-family: "Montserrat", sans-serif;
+        font-size: 25px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+    }
+
+    .app-padding-15 {
+        padding: 15px;
     }
 
 }
@@ -1053,6 +1069,55 @@ iframe {
     }
     100% {
         opacity: 1;
+    }
+}
+
+/**
+ * ========================================
+ * Pagination
+ * ========================================
+ */
+
+.vyne_pagination {
+    text-align: right;
+    padding: 0.3em;
+    cursor: default;
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    text-transform: uppercase;
+
+    a, span, em {
+        padding: 9px 15px;
+    }
+    .disabled {
+        color: #aaaaaa;
+    }
+    .current {
+        font-style: normal;
+        font-weight: bold;
+        color: #ffffff;
+    }
+    a {
+        border: 1px solid #dddddd;
+        text-decoration: none;
+        &:hover, &:focus {
+            border-color: #A32438;
+            background: #A32438;
+            color: white;
+        }
+    }
+    .page_info {
+        color: #aaaaaa;
+        padding-top: 0.8em;
+    }
+    .previous_page, .next_page {
+        border-width: 1px;
+    }
+    .previous_page {
+        margin-right: 1em;
+    }
+    .next_page {
+        margin-left: 1em;
     }
 }
 

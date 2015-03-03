@@ -309,7 +309,7 @@ var AcceptOrder = React.createClass({
         }.bind(this));
     },
     componentWillReceiveProps: function (props) {
-        if(props.order.status) {
+        if (props.order.status) {
             if (props.order.status.label !== 'advised') {
                 this.setState({
                     pendingAcceptance: false
@@ -565,7 +565,7 @@ var Done = React.createClass({
         }
     },
     componentWillReceiveProps: function (props) {
-        if(props.order.status) {
+        if (props.order.status) {
             this.checkStatus(props.order.status.label);
         }
     },
@@ -669,7 +669,7 @@ var Next = React.createClass({
         }
     },
     componentWillReceiveProps: function (props) {
-        if(props.order.status) {
+        if (props.order.status) {
             this.checkStatus(props.order.status.label);
         }
     },
@@ -821,9 +821,7 @@ var Map = React.createClass({
 
         if (this.props.order.status) {
             if (this.props.order.status.label === 'in transit') {
-                if (!map) {
-                    this.initialize();
-                }
+                this.initialize();
             }
         }
 

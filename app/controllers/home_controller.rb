@@ -3,7 +3,7 @@ require 'mailchimp'
 class HomeController < ApplicationController
   before_action :check_the_gate, :except => [:mailing_list_signup, :warehouses, :gate, :aidani]
 
-  layout 'aidani', :only => [:index]
+  layout 'aidani', :only => [:index, :terms]
 
   def index
 
@@ -59,7 +59,6 @@ class HomeController < ApplicationController
   end
 
   def terms
-    render layout: 'application'
   end
 
   def aidani

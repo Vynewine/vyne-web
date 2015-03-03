@@ -1,22 +1,94 @@
-<div class="wrapper" style="margin-top: 60px; margin-bottom: 30px">
-  <p>Your previous wines</p>
-  <% @orders.each do |order| %>
-      <div>
-        <div style="font-size: 1.4rem;"><a href="/orders/<%= order.id %>">Id: <%= order.id %>
-          - <%= order.created_at.strftime("%Y %b %d, %H:%M") %></a>
-          <div>Status: <%= order.status.label %></div>
-          <% unless order.order_items.blank? %>
-              <div>Preferences:</div>
-              <% order.order_items.each_with_index do |item, index| %>
-                  <% unless item.preferences.blank? %>
-                      <div>Bottle <%= index + 1 %> - <%= item.preferences.to_sentence({:last_word_connector => ' and '}) %></div>
-                  <% end %>
-              <% end %>
-          <% end %>
-
+<section id="my-wines" class="section section-dark app-section">
+  <div class="section-background">
+    <!-- IMAGE BACKGROUND -->
+    <div class="section-background-image parallax-background" data-stellar-background-ratio="0.4"></div>
+  </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-xs-12 col-xs-offset-0">
+        <div class="animated fadeIn">
+          <h3 class="app-title">
+            Your orders
+          </h3>
         </div>
-
       </div>
-      <hr style=" border: none; height: 1px; background-color: #626262;"/>
-  <% end %>
-</div>
+    </div>
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-xs-12 col-xs-offset-0">
+        <div class="animated fadeIn text-left app-area">
+          <% @orders.each do |order| %>
+              <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                  <div class="row">
+                    <div class="col-xs-12 app-caption text-center">
+                      Order Id: <%= order.id %>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xs-12">
+                      Created: <%= order.created_at.strftime("%Y %b %d, %H:%M") %>
+                    </div>
+                  </div>
+
+                  <% unless order.status.blank? %>
+                      <div class="row">
+                        <div class="col-xs-12">
+                          Status: <%= order.status.label %>
+                        </div>
+                      </div>
+                  <% end %>
+
+                  <% unless order.address.blank? %>
+                      <div class="row">
+                        <div class="col-xs-12">
+                          Delivery to: <%= order.address.full %>
+                        </div>
+                      </div>
+                  <% end %>
+                </div>
+                <div class="col-sm-6 col-xs-12">
+                  <div class="row">
+                    <div class="col-xs-12 app-caption text-center">
+                      Wine Selection
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xs-12">
+                      <% unless order.order_items.blank? %>
+                          <% order.order_items.each_with_index do |item, index| %>
+
+                              <div>
+                                <%= item.quantity %>x
+                                <% if item.wine.blank? %>
+                                    <% unless item.preferences.blank? %>
+                                        - <%= item.preferences.to_sentence({:last_word_connector => ' and '}) %>
+                                    <% end %>
+                                <% else %>
+                                    - <%= item.wine.full_info %>
+                                <% end %>
+                              </div>
+
+                          <% end %>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12 text-center app-padding-15">
+                  <a href="/orders/<%= order.id %>" class="btn btn-primary">View Details</a>
+                </div>
+              </div>
+              <div class="app-divider"></div>
+          <% end %>
+          <div class="row">
+            <div class="col-xs-12 text-right app-padding-15">
+              <%= will_paginate @orders, :class => 'vyne_pagination' %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

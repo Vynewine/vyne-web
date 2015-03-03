@@ -16,7 +16,7 @@
 
 
       <!-- HEADER LOGO -->
-      <% if params[:controller] == 'home' %>
+      <% if controller_name == 'home' && action_name == 'index' %>
 
           <a class="navbar-logo navbar-brand anchor-link" href="#hero">
             <img src="<%= asset_path('logo@2x.png') %>" srcset="<%= asset_path('logo@2x.png') %> 2x" alt="Vyne">
@@ -40,7 +40,7 @@
 
         <li><a href="#hero" class="hidden">Top</a></li>
 
-        <% if params[:controller] == 'home' %>
+        <% if controller_name == 'home' && action_name == 'index' %>
             <li><a href="#how-it-works">How it Works</a></li>
             <li><a href="#about">Discover</a></li>
         <% else %>
@@ -51,7 +51,7 @@
         <% if user_signed_in? %>
 
             <li>
-              <%= link_to 'My wines', mywines_path, data: {no_turbolink: true}, class: 'external' %>
+              <%= link_to 'My wines', mywines_path, class: 'external' %>
             </li>
 
             <% if current_user.has_role?(:supplier) ||

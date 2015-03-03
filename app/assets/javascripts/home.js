@@ -13,6 +13,23 @@ var homeJsReady = function () {
     }
 
     /**
+     * =======================================
+     * Scroll Spy
+     * =======================================
+     */
+    var toggleHeaderFloating = function () {
+        // Floating Header
+        if ($(window).scrollTop() > 80) {
+            $('.header-section').addClass('floating');
+        } else {
+            $('.header-section').removeClass('floating');
+        }
+    };
+
+    $(window).on('scroll', toggleHeaderFloating);
+    toggleHeaderFloating();
+
+    /**
      * Execute only when home page is loaded
      */
 
@@ -137,23 +154,6 @@ var homeJsReady = function () {
                 time: 1000
             });
         }
-
-        /**
-         * =======================================
-         * Scroll Spy
-         * =======================================
-         */
-        var toggleHeaderFloating = function () {
-            // Floating Header
-            if ($(window).scrollTop() > 80) {
-                $('.header-section').addClass('floating');
-            } else {
-                $('.header-section').removeClass('floating');
-            }
-        };
-
-        $(window).on('scroll', toggleHeaderFloating);
-        toggleHeaderFloating();
 
         /**
          * =======================================
@@ -314,5 +314,4 @@ var homeJsReady = function () {
     }
 };
 
-$(document).on('page:load', homeJsReady);
-$(document).ready(homeJsReady);
+$(document).on('page:load page:change', homeJsReady);

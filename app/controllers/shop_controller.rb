@@ -23,7 +23,8 @@ class ShopController < ApplicationController
 
   # GET /orders/list
   def list
-    @orders = Order.user_id(current_user.id).order('id desc')
+    @orders = Order.user_id(current_user.id).order('id desc').page(params[:page])
+    render layout: 'aidani'
   end
 
   # GET /orders/1
