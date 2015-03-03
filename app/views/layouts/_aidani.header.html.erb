@@ -37,7 +37,6 @@
       <!-- NAVIGATION LINKS -->
       <ul id="header-nav" class="nav navbar-nav">
 
-
         <li><a href="#hero" class="hidden">Top</a></li>
 
         <% if controller_name == 'home' && action_name == 'index' %>
@@ -73,16 +72,13 @@
             </li>
         <% end %>
 
-        <% if params[:controller] == 'home' %>
+        <% if params[:controller] == 'home' && action_name == 'index' %>
             <li class="header-action-button"><a href="#hero" class="btn btn-primary">Check Availability</a></li>
-            <% else %>
-            <li class="header-action-button"><a href="/#hero" class="btn btn-primary" class="external">Check Availability</a></li>
-            <% end %>
-
+        <% else %>
+            <li class="header-action-button"><a href="/" class="btn btn-primary" class="external">Check Availability</a>
+            </li>
+        <% end %>
       </ul>
-
     </nav>
-
   </div>
-
 </header>
