@@ -1,5 +1,4 @@
 <section id="user-account" class="section section-dark vyne-section">
-
   <div class="container-fluid">
     <div class="row">
       <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12 col-xs-offset-0">
@@ -39,8 +38,17 @@
 
         <div class="row">
           <div class="col-xs-12">
-            <div class="animated fadeIn">
-              <a href="/users/edit" class="btn btn-primary">Edit</a>
+            <div class="row">
+              <div class="col-xs-6">
+                <div class="animated fadeIn">
+                  <a href="/users/edit" class="btn btn-primary">Edit</a>
+                </div>
+              </div>
+              <div class="col-xs-6 text-right">
+                <%= link_to mywines_path, class: 'btn btn-default' do %>
+                    <i class="fa fa-briefcase"></i> My Wines
+                <% end %>
+              </div>
             </div>
           </div>
         </div>

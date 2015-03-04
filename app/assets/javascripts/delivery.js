@@ -1,5 +1,15 @@
-var deliveryJsrRady = function () {
-    if (($('body.delivery').length || $('div.delivery').length) && areas.length > 0) {
+var rendered = false;
+
+$(document).on('page:load',  function () {
+    rendered = false;
+});
+$(document).ready( function () {
+    rendered = false;
+});
+
+
+var renderDeliveryMap = function () {
+    if (!rendered && areas.length > 0) {
 
         var map = L.map('map', {zoomControl: false, scrollWheelZoom: false});
         map.addControl(L.control.zoom({position: 'topright'}));
@@ -39,8 +49,7 @@ var deliveryJsrRady = function () {
 
         map.fitBounds(deliveryAreas);
 
+        rendered = true;
+
     }
 };
-
-$(document).on('page:load', deliveryJsrRady);
-$(document).ready(deliveryJsrRady);

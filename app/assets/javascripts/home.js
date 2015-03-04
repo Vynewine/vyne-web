@@ -170,8 +170,10 @@ var homeJsReady = function () {
                     }
                 },
                 scrollChange: function ($currentListItem) {
-                    if ($currentListItem.find('a').attr('href') === '#discover') {
-                        //This can be used to enable something when user scrolls to this section
+
+                    if ($currentListItem.find('a').attr('href') === '#delivery') {
+                        //Load Map
+                        renderDeliveryMap();
                     }
                 }
             });
