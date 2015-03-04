@@ -16,7 +16,7 @@
       <%= yield(:head) %>
   <% end %>
 </head>
-<body class="<%= params[:controller].gsub('/', '_') %>">
+<body class="<%= params[:controller].gsub('/', '_') %> <%= params[:action]%>">
 
 <%
    if current_user.has_role?(:advisor)

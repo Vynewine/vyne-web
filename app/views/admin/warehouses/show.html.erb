@@ -7,7 +7,7 @@
         <h3 class="panel-title">Warehouse Details</h3>
       </div>
       <div class="col-xs-6 text-right">
-        <%= link_to edit_admin_warehouse_path(@warehouse), class: 'btn btn-default' do %>
+        <%= link_to edit_admin_warehouse_path(@warehouse), class: 'btn btn-default', 'data-no-turbolink' => true do %>
             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
         <% end %>
       </div>
@@ -193,7 +193,7 @@
         <%= link_to admin_warehouses_path, class: 'btn btn-default' do %>
             <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back To Warehouses
         <% end %>
-        <%= link_to edit_admin_warehouse_path(@warehouse), class: 'btn btn-default' do %>
+        <%= link_to edit_admin_warehouse_path(@warehouse), class: 'btn btn-default', 'data-no-turbolink' => true do %>
             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
         <% end %>
       </div>

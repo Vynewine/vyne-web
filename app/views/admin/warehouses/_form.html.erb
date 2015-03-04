@@ -198,10 +198,29 @@
       Fine: <%= f.check_box :fine_available %> |
       Cellar: <%= f.check_box :cellar_available %>
     </div>
+
+
+
     <div class="form-group">
       <%= f.label :delivery_area %>
       <br/>
-      <textarea id="area" name="warehouse[delivery_area]" cols="50" rows="20" class="form-control lat-lng"></textarea>
+      <% if @warehouse.delivery_area.blank? %>
+          <div class="form-group form-inline">
+            Radius (meters): <input type="text" id="delivery-radius-meters" value="4000" class="form-control" />
+            Number of Points: <input id="number-of-points" type="text" value="20" class="form-control" />
+            <button id="draw-new-delivery-map" class="btn btn-primary">Draw</button>
+          </div>
+      <% else %>
+          <script>
+              var deliveryArea = [<% @warehouse.delivery_area.exterior_ring.points.each do |point| %> [<%= point.y %>, <%= point.x %>], <% end %>];
+              var warehouseLat = <%= @warehouse.address.latitude %>;
+              var warehouseLng = <%= @warehouse.address.longitude %>;
+          </script>
+      <% end %>
+
+      <div id="warehouse-delivery-map" style="width: 100%; height: 500px; display: none"></div>
+
+      <textarea id="area" name="warehouse[delivery_area]" cols="50" rows="10" class="form-control lat-lng"></textarea>
       <script>
           var area = '<%= @warehouse.area %>';
           area = area.replace('[[', '[[\n');
@@ -209,6 +228,7 @@
 
           $('#area').val(area);
       </script>
+
     </div>
     <div class="form-group">
       <p>
