@@ -63,12 +63,15 @@ class SignupController < ApplicationController
       if errors.blank?
         current_user.mobile = params[:mobile]
         unless current_user.save
-          render :json => {:errors => current_user.errors}, :status => 422
+          render :json => {:errors => current_user.errors.full_messages}, :status => 422
+          logger.error "Couldn't save current user"
+          logger.error current_user.errors.full_messages
           return
         end
 
       else
         render :json => {:errors => errors}, :status => 422
+        logger.error errors.join(', ')
         return
       end
 
@@ -97,6 +100,7 @@ class SignupController < ApplicationController
         else
           render :json => {:errors => address_association.errors.full_messages}, :status => 422
           logger.error "Couldn't save address association"
+          logger.error address_association.errors.full_messages
         end
       else
         render :json => address.to_json
@@ -105,6 +109,7 @@ class SignupController < ApplicationController
     else
       render :json => {:errors => address.errors.full_messages}, :status => 422
       logger.error "Couldn't save address"
+      logger.error address.errors.full_messages
     end
 
   end

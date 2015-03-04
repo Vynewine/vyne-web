@@ -680,6 +680,7 @@ iframe {
         display: inline-block;
         vertical-align: middle;
         max-height: 50px;
+        max-width: 75px;
     }
 }
 
@@ -1097,13 +1098,24 @@ iframe {
 
 .vyne-section {
 
+    .section-background-image {
+        background-image: url(asset-path("landing/wine_tasting.jpg"));
+        background-repeat: no-repeat;
+        background-size: cover;
+        opacity: 0.3;
+    }
+
     .divider {
         border-bottom: 1px solid white;
         margin: 10px 0 10px 0;
     }
 
-    .description-content {
+    .translucent {
+        padding: 5px 20px 5px 20px;
+        background-color: rgba(0, 0, 0, 0.4);
+    }
 
+    .description-content {
 
         position: relative;
         font-size: 20px;
@@ -1198,11 +1210,12 @@ iframe {
     font-family: "Montserrat", sans-serif;
     font-size: 18px;
     font-weight: bold;
+    margin: 0;
 }
 
 #error_explanation ul {
-    list-style: none;
-
+    list-style: circle;
+    padding: 0 0 0 20px;
     li {
 
     }

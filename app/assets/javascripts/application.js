@@ -37,6 +37,7 @@
 
 //= require react
 //= require app
+//= require session
 
 /**
  * Turbolinks always at the end of all scripts.

@@ -26,9 +26,14 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable
 
+  validates_confirmation_of :password
+
   validates :first_name, :presence => true
   validates :email, :uniqueness => true
   validates :email, presence: true, email: true
+
+  validates :password, length: { in: 8..128 }, on: :create
+  validates :password, length: { in: 8..128 }, on: :update, allow_blank: true
 
   def name
     "#{first_name} #{last_name}"

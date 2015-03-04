@@ -42,7 +42,7 @@
 
 
     </head>
-    <body class="<%= params[:controller] %><% if user_signed_in? %> logged-in<% end %> enable-animations">
+    <body class="<%= params[:controller].gsub('/', '_') + ' ' + params[:action] %><% if user_signed_in? %> logged-in<% end %> enable-animations">
     <script>
         analytics.page();
         <% if current_user.blank? %>

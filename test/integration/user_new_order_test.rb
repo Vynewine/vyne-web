@@ -64,7 +64,6 @@ class UserNewOrderTest < ActiveSupport::TestCase
 
     @driver.get(@base_url + '/')
 
-
     enter_postcode_first_page('n17rj')
     select_bottle_for_category(2)
     select_wine_by_occasion
@@ -84,6 +83,7 @@ class UserNewOrderTest < ActiveSupport::TestCase
 
     email = Time.now.strftime('%Y%m%d%H%M%S') + '@vyne.london'
     password = 'password'
+    first_name = 'Mike'
 
     @driver.get(@base_url + '/')
 
@@ -91,16 +91,15 @@ class UserNewOrderTest < ActiveSupport::TestCase
     select_bottle_for_category(2)
     select_wine_by_occasion
     confirm_order_selection
-    register_new_user(email, password)
+    register_new_user(email, password, first_name)
     register_new_address
     register_new_credit_card
     submit_order
 
     @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Thank you for ordering')]").displayed? }
 
-    @driver.find_element(:css, 'a.menu-link').click
-    @wait.until { @driver.find_element(:css, 'a.sign-out').displayed? }
-    @driver.find_element(:css, 'a.sign-out').click
+    @driver.find_element(:id, 'user_navigation').click
+    @driver.find_element(:id, 'logout').click
 
     enter_postcode_first_page('n17rj')
     select_bottle_for_category(2)
@@ -120,11 +119,10 @@ class UserNewOrderTest < ActiveSupport::TestCase
     @driver.find_element(:id, 'user_password').clear
     @driver.find_element(:id, 'user_password').send_keys 'Wines1234'
     @driver.find_element(:name, 'commit').click
-    @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Matching great wines')]").displayed? }
-    @driver.find_element(:css, 'a.menu-link').click
-    @wait.until { @driver.find_element(:css, 'a.sign-out').displayed? }
-    @driver.find_element(:css, 'a.sign-out').click
-    @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Matching great wines')]").displayed? }
+    @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Wine delivered from London’s top cellars')]").displayed? }
+    @driver.find_element(:id, 'user_navigation').click
+    @driver.find_element(:id, 'logout').click
+    @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Wine delivered from London’s top cellars')]").displayed? }
   end
 
 
@@ -198,10 +196,10 @@ class UserNewOrderTest < ActiveSupport::TestCase
     @driver.find_element(:id, 'checkout').click
   end
 
-  def register_new_user(email, password)
+  def register_new_user(email, password, first_name = 'Jakub')
     puts 'Registering new user'
     @driver.find_element(:id, 'user_first_name').clear
-    @driver.find_element(:id, 'user_first_name').send_keys 'Jakub'
+    @driver.find_element(:id, 'user_first_name').send_keys first_name
     @driver.find_element(:id, 'user_last_name').clear
     @driver.find_element(:id, 'user_last_name').send_keys 'Borys'
     @driver.find_element(:id, 'user_email').clear

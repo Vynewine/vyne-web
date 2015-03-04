@@ -38,10 +38,10 @@ class SessionsController < Devise::SessionsController
   def failure
     respond_to do |format|
       format.html {
-        redirect_to new_user_session_path, :flash => {:error => "Invalid email/password combination"}
+        redirect_to new_user_session_path, :flash => {:error => 'Invalid email/password combination'}
       }
       format.json {
-        render :json => {:success => false, :errors => ["Invalid email/password combination"]}
+        render :json => {:success => false, :errors => ['Invalid email/password combination']}
       }
     end
   end
