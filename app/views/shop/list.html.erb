@@ -16,6 +16,18 @@
     <div class="row">
       <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-xs-12 col-xs-offset-0">
         <div class="animated fadeIn text-left app-area">
+          <% if @orders.blank? %>
+
+            <h4 class="text-center">
+              Unfortunately looks like you have not ordered any wine yet.
+            </h4>
+
+              <div class="text-center">
+                <a href="/" class="btn btn-primary" class="external">Check Availability</a>
+              </div>
+
+
+          <% end %>
           <% @orders.each do |order| %>
               <div class="row">
                 <div class="col-sm-6 col-xs-12">
