@@ -65,6 +65,5 @@ json.order do
       end
     end
 
-
   end
 end

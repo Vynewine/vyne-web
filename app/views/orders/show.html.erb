@@ -23,3 +23,21 @@
     var justCancelled = <%= !params[:cancelled].blank? %>;
     <% end %>
 </script>
+
+
+<input type="hidden" id="refreshed" value="no">
+<script type="text/javascript">
+    var onLoad = function () {
+
+        //Can reload page when back button is clicked
+
+        var e = document.getElementById("refreshed");
+        if (e.value == "no")
+            e.value = "yes";
+        else {
+            e.value = "no";
+            //location.reload();
+        }
+    };
+    onLoad();
+</script>

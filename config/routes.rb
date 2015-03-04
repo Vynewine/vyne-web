@@ -39,12 +39,14 @@ Rails.application.routes.draw do
 
   # ------------
 
-  resources :promotions, :share, :help, :jobs, :availability, :merchants
+  resources :promotions, :share, :help, :jobs, :availability, :merchants, :account
   resources :delivery do
     collection do
       get 'get_courier_location'
     end
   end
+
+  get 'user_root' => redirect('/account')
 
   resources :orders do
     get 'status'

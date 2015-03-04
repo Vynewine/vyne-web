@@ -7,6 +7,9 @@ class AccountMailer < Devise::Mailer
   def reset_password_instructions(record, token, opts={})
 
     begin
+
+      log 'Sending reset password email for: ' + record.email
+
       mandrill = Mandrill::API.new Rails.application.config.mandrill
       template_name = 'forgot-password-4tfphpv1'
 
@@ -41,12 +44,21 @@ class AccountMailer < Devise::Mailer
 
     rescue Mandrill::Error => e
       # Mandrill errors are thrown as exceptions
-      puts "A mandrill error occurred: #{e.class} - #{e.message}"
-      # A mandrill error occurred: Mandrill::UnknownSubaccountError - No subaccount exists with the id 'customer-123'
+      log_error "A mandrill error occurred: #{e.class} - #{e.message}"
       # raise
       #TODO: This needs to go to Sentry!!!
     rescue Exception => e
-      puts "Shit happens: #{e}"
+      log_error "Failure sending password reset email: #{e.message}"
     end
+  end
+
+  def log(message)
+    @logger = Logging.logger['AccountMailer']
+    @logger.info message
+  end
+
+  def log_error(message)
+    @logger = Logging.logger['AccountMailer']
+    @logger.error message
   end
 end
