@@ -3,6 +3,9 @@ class User < ActiveRecord::Base
 
   has_many :orders, foreign_key: 'client_id'
   has_many :payments
+  has_many :referrals
+  has_many :user_promotions
+
 
   has_and_belongs_to_many :addresses
   has_and_belongs_to_many :warehouses

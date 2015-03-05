@@ -39,7 +39,7 @@ Rails.application.routes.draw do
 
   # ------------
 
-  resources :promotions, :share, :help, :jobs, :availability, :merchants, :account
+  resources :promotions, :share, :help, :jobs, :availability, :merchants, :account, :promo
   resources :delivery do
     collection do
       get 'get_courier_location'

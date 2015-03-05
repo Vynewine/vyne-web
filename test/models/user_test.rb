@@ -46,4 +46,10 @@ class UserTest < ActiveSupport::TestCase
     assert(saved_user.has_role? :client)
     assert_equal(1, saved_user.roles.length)
   end
+
+  test "Can get user's promotions" do
+    user = User.find(users(:client))
+    assert_equal(1, user.referrals.length)
+    assert_equal(1, user.referrals[0].referral_codes.length)
+  end
 end

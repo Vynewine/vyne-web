@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150224110201) do
+ActiveRecord::Schema.define(version: 20150305112506) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,11 +23,11 @@ ActiveRecord::Schema.define(version: 20150224110201) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
-    t.spatial  "coordinates",  limit: {:srid=>0, :type=>"point"}
     t.string   "line_2"
     t.string   "company_name"
     t.string   "country"
     t.string   "city"
+    t.spatial  "coordinates",  limit: {:srid=>0, :type=>"point"}
   end
 
   add_index "addresses", ["deleted_at"], :name => "index_addresses_on_deleted_at"
@@ -161,6 +161,14 @@ ActiveRecord::Schema.define(version: 20150224110201) do
   add_index "devices", ["key"], :name => "index_devices_on_key", :unique => true
   add_index "devices", ["warehouse_id"], :name => "index_devices_on_warehouse_id"
 
+  create_table "devices_warehouses", id: false, force: true do |t|
+    t.integer  "device_id"
+    t.integer  "warehouse_id"
+    t.datetime "deleted_at"
+  end
+
+  add_index "devices_warehouses", ["deleted_at"], :name => "index_devices_warehouses_on_deleted_at"
+
   create_table "food_items", force: true do |t|
     t.integer  "order_item_id"
     t.integer  "food_id"
@@ -291,6 +299,8 @@ ActiveRecord::Schema.define(version: 20150224110201) do
     t.integer  "substitution_status",       default: 0
     t.text     "substitution_request_note"
     t.text     "advisory_note"
+    t.integer  "user_promotions_id"
+    t.integer  "warehouse_promotions_id"
   end
 
   add_index "order_items", ["deleted_at"], :name => "index_order_items_on_deleted_at"
@@ -367,6 +377,35 @@ ActiveRecord::Schema.define(version: 20150224110201) do
   add_index "producers", ["country_id"], :name => "index_producers_on_country_id"
   add_index "producers", ["deleted_at"], :name => "index_producers_on_deleted_at"
 
+  create_table "promotions", force: true do |t|
+    t.string   "title"
+    t.integer  "category",   default: 0, null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "referral_codes", force: true do |t|
+    t.integer  "referral_id"
+    t.string   "code"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "referral_codes", ["referral_id"], :name => "index_referral_codes_on_referral_id"
+
+  create_table "referrals", force: true do |t|
+    t.integer  "promotion_id"
+    t.integer  "user_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "referrals", ["promotion_id"], :name => "index_referrals_on_promotion_id"
+  add_index "referrals", ["user_id"], :name => "index_referrals_on_user_id"
+
   create_table "regions", force: true do |t|
     t.string   "name"
     t.integer  "country_id"
@@ -441,6 +480,21 @@ ActiveRecord::Schema.define(version: 20150224110201) do
 
   add_index "types", ["deleted_at"], :name => "index_types_on_deleted_at"
 
+  create_table "user_promotions", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "category",                         null: false
+    t.integer  "referral_code_id"
+    t.integer  "friend_id"
+    t.boolean  "redeemed",         default: false, null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_promotions", ["friend_id"], :name => "index_user_promotions_on_friend_id"
+  add_index "user_promotions", ["referral_code_id"], :name => "index_user_promotions_on_referral_code_id"
+  add_index "user_promotions", ["user_id"], :name => "index_user_promotions_on_user_id"
+
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -495,6 +549,31 @@ ActiveRecord::Schema.define(version: 20150224110201) do
 
   add_index "vinifications", ["deleted_at"], :name => "index_vinifications_on_deleted_at"
 
+  create_table "warehouse_categories", force: true do |t|
+    t.integer  "warehouse_id"
+    t.integer  "category_id"
+    t.boolean  "enabled"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "warehouse_categories", ["category_id"], :name => "index_warehouse_categories_on_category_id"
+  add_index "warehouse_categories", ["warehouse_id"], :name => "index_warehouse_categories_on_warehouse_id"
+
+  create_table "warehouse_promotions", force: true do |t|
+    t.integer  "warehouse_id"
+    t.integer  "promotion_id"
+    t.boolean  "active"
+    t.numrange "price_range"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "warehouse_promotions", ["promotion_id"], :name => "index_warehouse_promotions_on_promotion_id"
+  add_index "warehouse_promotions", ["warehouse_id"], :name => "index_warehouse_promotions_on_warehouse_id"
+
   create_table "warehouses", force: true do |t|
     t.string   "title"
     t.string   "email",                                                      default: "",   null: false
@@ -506,13 +585,13 @@ ActiveRecord::Schema.define(version: 20150224110201) do
     t.datetime "deleted_at"
     t.boolean  "active"
     t.boolean  "registered_with_shutl"
-    t.spatial  "delivery_area",         limit: {:srid=>0, :type=>"polygon"}
     t.string   "key"
     t.boolean  "house_available",                                            default: true
     t.boolean  "reserve_available",                                          default: true
     t.boolean  "fine_available",                                             default: true
     t.boolean  "cellar_available",                                           default: true
     t.datetime "active_from"
+    t.spatial  "delivery_area",         limit: {:srid=>0, :type=>"polygon"}
   end
 
   add_index "warehouses", ["address_id"], :name => "index_warehouses_on_address_id"

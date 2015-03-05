@@ -7,6 +7,9 @@ class OrderItem < ActiveRecord::Base
   belongs_to :type
   belongs_to :category
   belongs_to :inventory
+  belongs_to :user_promotion
+  belongs_to :warehouse_promotion
+
   has_many :food_items
 
   enum substitution_status: %i(not_requested requested completed)
