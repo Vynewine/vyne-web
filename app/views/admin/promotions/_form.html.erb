@@ -1,0 +1,17 @@
+<%= form_for([:admin, @promotion]) do |f| %>
+
+    <div class="form-group">
+      <%= f.label :title %><br>
+      <%= f.text_field :title, :class => 'form-control' %>
+    </div>
+    <div class="form-group">
+      Category<br>
+      <%=
+          f.select :category, Promotion.categories.keys.to_a, {}, :class => 'form-control'
+      %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit(:class => 'btn btn-success') %>
+    </div>
+<% end %>

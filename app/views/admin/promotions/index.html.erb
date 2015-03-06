@@ -1,0 +1,40 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Promotions</h3>
+  </div>
+
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>Id</th>
+      <th>Title</th>
+      <th>Category</th>
+      <th></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <% @promotions.each do |promotion| %>
+        <tr>
+          <td><%= promotion.id %></td>
+          <td><%= promotion.title %></td>
+          <td><%= promotion.category %></td>
+          <td class="button-wrapper">
+            <%= link_to admin_promotion_path(promotion, :page => params[:page]), class: 'btn btn-default' do %>
+                <i class="glyphicon glyphicon-search"></i>
+            <% end %>
+          </td>
+        </tr>
+    <% end %>
+    </tbody>
+  </table>
+
+  <ul class="list-group">
+    <li class="list-group-item">
+      <%= link_to 'New Promotion', new_admin_promotion_path, :class => 'btn btn-primary' %>
+    </li>
+  </ul>
+</div>
+
+
+

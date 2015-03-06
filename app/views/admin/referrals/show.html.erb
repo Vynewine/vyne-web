@@ -1,0 +1,159 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Referral Details</h3>
+  </div>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Id:</strong>
+          <%= @referral.id %>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Promotion:</strong>
+          <%= @referral.promotion.title %>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>User:</strong>
+          <%= @referral.user.name %> - <%= @referral.user.email %>
+        </div>
+      </div>
+    </li>
+
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-xs-6">
+          <strong>Referral Codes:</strong>
+        </div>
+        <div class="col-xs-6 text-right">
+          <button type="button" class="btn btn-primary"
+                  data-toggle="modal"
+                  data-target="#referral-code"
+                  data-new-code="true"
+          >
+            Add
+          </button>
+        </div>
+      </div>
+    </li>
+    <% unless @referral.referral_codes.blank? %>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-xs-12">
+              <table class="table table-bordered">
+                <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Edit</th>
+                  <th>Delete</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <% @referral.referral_codes.each do |referral_code| %>
+                    <tr>
+                      <td><%= referral_code.code %></td>
+                      <td>
+                        <button class="btn btn-default"
+                                data-toggle="modal"
+                                data-target="#referral-code"
+                                data-new-code="false"
+                                data-id="<%= referral_code.id %>"
+                                data-code="<%= referral_code.code %>"
+                        ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
+                      </td>
+                      <td>
+                        <%= link_to admin_referral_referral_code_path(@referral, referral_code),
+                                    method: :delete,
+                                    data: {confirm: 'Are you sure?'},
+                                    class: 'btn btn-danger' do %>
+                            <i class="glyphicon glyphicon-trash"></i>
+                        <% end %>
+
+                        </tr>
+                <% end %>
+                </tbody>
+              </table>
+
+            </div>
+          </div>
+        </li>
+    <% end %>
+  </ul>
+
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-xs-6">
+        <%= link_to admin_referrals_path, class: 'btn btn-default' do %>
+            <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back To Referrals
+        <% end %>
+        <%= link_to edit_admin_referral_path(@referral), class: 'btn btn-default' do %>
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+        <% end %>
+      </div>
+      <div class="col-xs-6 text-right">
+        <%= link_to admin_referral_path(@referral), method: :delete, data: {confirm: 'Are you sure?'}, class: 'btn btn-danger' do %>
+            <i class="glyphicon glyphicon-trash"></i>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="referral-code" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Referral Code</h4>
+      </div>
+      <form id="referral-code-form" method="post">
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xs-12">
+              <label for="code" >Only letters, numbers and dashes are allowed.</label>
+              <input name="_method" id="_method" type="hidden"/>
+              <input type="text" class="form-control" name="code" id="code"/>
+            </div>
+          </div>
+          <%= hidden_field_tag(request_forgery_protection_token.to_s, form_authenticity_token) %>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <input type="submit" class="btn btn-primary" value="Save"/>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+    $('#referral-code').on('show.bs.modal', function (event) {
+
+        var button = $(event.relatedTarget);
+        var newCode = button.data('new-code');
+        var $form = $("#referral-code-form");
+        var $code = $(this).find("#code");
+
+        if (newCode) {
+            $form.attr("action", "/admin/referrals/<%= params['id']%>/referral_codes");
+            $(this).find("#_method").val("post");
+        } else {
+            var id = button.data('id');
+            $form.attr("action", "/admin/referrals/<%= params['id']%>/referral_codes/" + id);
+            $(this).find("#_method").val("put");
+            $code.val(button.data('code'));
+        }
+    }).on('shown.bs.modal', function () {
+        $(this).find("#code").focus();
+    });
+</script>

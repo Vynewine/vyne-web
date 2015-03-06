@@ -156,6 +156,11 @@ Rails.application.routes.draw do
         get 'callback'
       end
     end
+    resources :promotions
+    resources :referrals do
+      resources :referral_codes
+    end
+
     post '/orders/list' => 'orders#list'
     get 'advise/choose' => 'advisors#choose'
     get 'advise/item/:id' => 'advisors#item'

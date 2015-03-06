@@ -2,7 +2,7 @@ class Admin::AppellationsController < ApplicationController
   include GenericImporter
   layout 'admin'
   before_action :authenticate_user!
-  authorize_actions_for SupplierAuthorizer # Triggers user check
+  authorize_actions_for AdminAuthorizer # Triggers user check
   before_action :set_appellation, only: [:show, :edit, :update, :destroy]
 
   # GET /appellations

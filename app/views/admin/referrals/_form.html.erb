@@ -1,0 +1,22 @@
+<%= form_for([:admin, @referral]) do |f| %>
+
+    <div class="form-group">
+      <%= f.label :promotion %><br>
+
+      <% current_promotion = @referral.promotion_id %>
+      <%= f.select :promotion_id,
+                   options_from_collection_for_select(@promotions, 'id', 'title', :selected => current_promotion), {},
+                   {:prompt => 'Choose a Promotion', :class => 'form-control'}
+      %>
+
+    </div>
+
+    <div class="form-group">
+      <%= f.label :user %><br>
+      <%= f.text_field :user_id, :class => 'form-control' %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit(:class => 'btn btn-success') %>
+    </div>
+<% end %>

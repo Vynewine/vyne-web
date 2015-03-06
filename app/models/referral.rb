@@ -5,4 +5,7 @@ class Referral < ActiveRecord::Base
   belongs_to :user
 
   has_many :referral_codes
+
+  validates :user, :presence => true
+
 end

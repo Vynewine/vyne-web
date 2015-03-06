@@ -1,0 +1,40 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Referrals</h3>
+  </div>
+
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>Id</th>
+      <th>Promotion</th>
+      <th>User</th>
+      <th></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <% @referrals.each do |referral| %>
+        <tr>
+          <td><%= referral.id %></td>
+          <td><%= referral.promotion.title %></td>
+          <td><%= referral.user.name + ' - ' + referral.user.email  %></td>
+          <td class="button-wrapper">
+            <%= link_to admin_referral_path(referral, :page => params[:page]), class: 'btn btn-default' do %>
+                <i class="glyphicon glyphicon-search"></i>
+            <% end %>
+          </td>
+        </tr>
+    <% end %>
+    </tbody>
+  </table>
+
+  <ul class="list-group">
+    <li class="list-group-item">
+      <%= link_to 'New User Referral', new_admin_referral_path, :class => 'btn btn-primary' %>
+    </li>
+  </ul>
+</div>
+
+
+

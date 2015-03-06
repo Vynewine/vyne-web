@@ -2,7 +2,7 @@ class Admin::ProducersController < ApplicationController
   include GenericImporter
   layout "admin"
   before_action :authenticate_user!
-  authorize_actions_for SupplierAuthorizer # Triggers user check
+  authorize_actions_for AdminAuthorizer
   before_action :set_producer, only: [:show, :edit, :update, :destroy]
 
   # GET /producers

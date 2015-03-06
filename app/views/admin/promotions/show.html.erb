@@ -1,0 +1,51 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Promotion Details</h3>
+  </div>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Id:</strong>
+          <%= @promotion.id %>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Title:</strong>
+          <%= @promotion.title %>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Category:</strong>
+          <%= @promotion.category %>
+        </div>
+      </div>
+    </li>
+  </ul>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-xs-6">
+        <%= link_to admin_promotions_path, class: 'btn btn-default' do %>
+            <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back To Promotions
+        <% end %>
+        <%= link_to edit_admin_promotion_path(@promotion), class: 'btn btn-default' do %>
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+        <% end %>
+        <%= link_to admin_referrals_path, class: 'btn btn-default' do %>
+            <i class="fa fa-share-alt"></i> Referrals
+        <% end %>
+      </div>
+      <div class="col-xs-6 text-right">
+        <%= link_to admin_promotion_path(@promotion), method: :delete, data: {confirm: 'Are you sure?'}, class: 'btn btn-danger' do %>
+            <i class="glyphicon glyphicon-trash"></i>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

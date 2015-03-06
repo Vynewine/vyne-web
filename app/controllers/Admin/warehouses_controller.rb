@@ -5,7 +5,7 @@ class Admin::WarehousesController < ApplicationController
 
   layout "admin"
   before_action :authenticate_user!
-  authorize_actions_for SupplierAuthorizer # Triggers user check
+  authorize_actions_for AdminAuthorizer # Triggers user check
   before_action :set_warehouse, only: [:show, :edit, :update, :destroy]
   authority_actions :shutl => 'read'
 
