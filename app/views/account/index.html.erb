@@ -3,52 +3,83 @@
     <div class="row">
       <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12 col-xs-offset-0">
         <div class="animated fadeIn">
-          <h3 class="app-title">
-            Your Account
-          </h3>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12 col-xs-offset-0">
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="animated fadeIn description-content">
-              <span class="description">Name:</span> <span class="content"><%= current_user.name %></span>
+          <div class="row">
+            <div class="col-xs-12">
+              <%= render 'layouts/message' %>
             </div>
           </div>
-        </div>
+          <div class="row">
+            <div class="col-sm-6 col-xs-12">
+              <h3 class="app-title">
+                Your Account
+              </h3>
 
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="animated fadeIn description-content">
-              <span class="description">Email:</span> <span class="content"><%= current_user.email %></span>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="animated fadeIn description-content">
-              <span class="description">Mobile:</span> <span class="content"><%= current_user.mobile %></span>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="row">
-              <div class="col-xs-6">
-                <div class="animated fadeIn">
-                  <a href="/users/edit" class="btn btn-primary">Edit</a>
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="animated fadeIn description-content">
+                    <span class="description">Name:</span> <span class="content"><%= current_user.name %></span>
+                  </div>
                 </div>
               </div>
-              <div class="col-xs-6 text-right">
-                <%= link_to mywines_path, class: 'btn btn-default' do %>
-                    <i class="fa fa-briefcase"></i> My Wines
-                <% end %>
+
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="animated fadeIn description-content">
+                    <span class="description">Email:</span> <span class="content"><%= current_user.email %></span>
+                  </div>
+                </div>
               </div>
+
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="animated fadeIn description-content">
+                    <span class="description">Mobile:</span> <span class="content"><%= current_user.mobile %></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="animated fadeIn">
+                    <a href="/users/edit" class="btn btn-primary">Edit</a>
+                  </div>
+                </div>
+                <div class="col-xs-6 text-right">
+                  <%= link_to mywines_path, class: 'btn btn-default' do %>
+                      <i class="fa fa-briefcase"></i> My Wines
+                  <% end %>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-sm-6 col-xs-12">
+              <h3 class="app-title">
+                Your Promotions
+              </h3>
+              <% if current_user.user_promotions.blank? %>
+                <span>
+                  Looks like you don't have any promotions on your account yet.
+                  --- TODO: If share promoiton active:
+                  Please share your promo code with your friends to get some free wine woth your order.
+                </span>
+              <% else %>
+                  <% current_user.user_promotions.each do |promotion| %>
+                      <% if promotion.new_account_reward? %>
+                          <p> Thank for signing up for vyne account with promo
+                            code: <%= promotion.referral_code.code %></p>
+                          <% if promotion.redeemed %>
+                              <p> Your promotion was redeemed with order -- TODO Order Id</p>
+                          <% else %>
+                              <p> Your promotion for: <%= promotion.referral_code.referral.promotion.title %>
+                                is ready to be used with your next order (Terms and conditions apply).</p>
+                          <% end %>
+                      <% end %>
+
+                      <% if promotion.sharing_reward? %>
+
+                      <% end %>
+                  <% end %>
+              <% end %>
             </div>
           </div>
         </div>

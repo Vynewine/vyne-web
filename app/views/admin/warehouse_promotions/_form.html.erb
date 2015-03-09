@@ -1,13 +1,21 @@
-<%= form_for([:admin, @promotion]) do |f| %>
+<%= form_for [:admin, @promotion, @warehouse_promotion ] do |f| %>
 
     <div class="form-group">
-      <%= f.label :title %><br>
-      <%= f.text_field :title, :class => 'form-control' %>
+
+      <%= f.label :warehouse %><br>
+
+      <% current_warehouse = @warehouse_promotion.warehouse_id %>
+
+      <%= f.select :warehouse_id,
+                   options_from_collection_for_select(@warehouses, 'id', 'title', :selected => current_warehouse), {},
+                   {:prompt => 'Choose a Warehouse', :class => 'form-control'}
+      %>
+
     </div>
+
     <div class="form-group">
-      Category<br>
-      <%=
-          f.select :category, Promotion.categories.keys.to_a, {}, :class => 'form-control'
+      <%= f.label :active %><br>
+      <%= f.check_box :active
       %>
     </div>
 

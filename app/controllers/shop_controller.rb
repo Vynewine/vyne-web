@@ -42,6 +42,32 @@ class ShopController < ApplicationController
     @types = Type.all.order(:id)
     @preparations = Preparation.all.order(:id)
     @warehouse = Warehouse.find(params[:warehouse_id])
+    promo = nil
+
+
+    if user_signed_in?
+      user_promotion = UserPromotion.find_by(:user => current_user, :can_be_redeemed => true, :redeemed => false)
+      unless user_promotion.blank?
+        promo = user_promotion.referral_code.referral.promotion
+      end
+    else
+      unless cookies[:referral_code].blank?
+        referral_code = ReferralCode.find_by(code: cookies[:referral_code])
+        unless referral_code.blank?
+          promo = referral_code.referral.promotion
+        end
+      end
+    end
+
+    unless promo.blank?
+      warehouse_promotion = WarehousePromotion.find_by(:promotion => promo, :active => true)
+      if warehouse_promotion.blank?
+        @promotion = "We're sorry but looks like Merchant in your area in not
+                        taking part in '#{promo.title}' promotion at the moment"
+      else
+        @promotion = promo.title
+      end
+    end
 
   end
 

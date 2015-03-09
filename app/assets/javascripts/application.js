@@ -1295,6 +1295,7 @@ function createCartPage(wines, wineCount) {
 
     $('.btn-checkout').show();
 
+    applyPromotions();
     calculateTotalCost();
 
 }
@@ -1383,6 +1384,18 @@ function calculateTotalCost() {
     $('input[name="wines"]').val(JSON.stringify(wines));
     $.cookie('wines', JSON.stringify(wines));
 }
+
+var applyPromotions = function() {
+    var $promo = $('#promotion');
+    var $promoArea = $('.promotion-area');
+
+    if($promo.val() !== '') {
+        $promoArea.text($promo.val());
+        $promoArea.show();
+    } else {
+        $promoArea.hide();
+    }
+};
 
 var slidesArray = [
     'bottles-panel',

@@ -7,5 +7,6 @@ class Referral < ActiveRecord::Base
   has_many :referral_codes
 
   validates :user, :presence => true
+  validates :promotion, :presence => true
 
 end

@@ -22,6 +22,7 @@
       <input type="hidden" id="slot_from" name="slot_from" value="<%= params[:slot_from] %>"/>
       <input type="hidden" id="slot_to" name="slot_to" value="<%= params[:slot_to] %>"/>
       <input type="hidden" id="filterPostcode" name="filterPostcode" value="<%= params[:postcode] %>"/>
+      <input type="hidden" id="promotion" name="promotion" value="<%= @promotion %>"/>
 
     <%# ============================= Select Bottle ============================= %>
 
@@ -249,6 +250,7 @@
             <th width="80%">Wine</th>
             <th width="20%">Price</th>
           </tr>
+
           <tr class="no-bottles">
             <td colspan="2">
               <span>No bottles selected</span>
@@ -260,6 +262,11 @@
               <a href="" class="btn btn__small add-same-bottle-link" id="add-same-bottle">Add same bottle</a>
               <span class="or">or</span>
               <a href="" class="btn btn__small add-bottle-link another-bottle" id="add-another-bottle">Add another bottle</a>
+            </td>
+          </tr>
+          <tr class="promotion">
+            <td colspan="2" class="promotion-area">
+
             </td>
           </tr>
           <tr class="total" >

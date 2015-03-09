@@ -23,6 +23,7 @@
             <%= link_to admin_promotion_path(promotion, :page => params[:page]), class: 'btn btn-default' do %>
                 <i class="glyphicon glyphicon-search"></i>
             <% end %>
+
           </td>
         </tr>
     <% end %>
@@ -32,7 +33,11 @@
   <ul class="list-group">
     <li class="list-group-item">
       <%= link_to 'New Promotion', new_admin_promotion_path, :class => 'btn btn-primary' %>
+      <%= link_to admin_referrals_path, class: 'btn btn-default' do %>
+          <i class="fa fa-share-alt"></i> Referrals
+      <% end %>
     </li>
+
   </ul>
 </div>
 

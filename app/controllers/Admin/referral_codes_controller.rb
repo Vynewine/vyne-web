@@ -6,7 +6,7 @@ class Admin::ReferralCodesController < ApplicationController
   def create
     @referral_code = ReferralCode.new({
                                       referral_id: params[:referral_id],
-                                      code: params[:code]
+                                      code: params[:code].upcase
                                   })
     if @referral_code.save
       redirect_to [:admin, @referral_code.referral], notice: 'Referral Code was successfully created.'

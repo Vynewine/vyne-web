@@ -31,6 +31,9 @@
 
   <ul class="list-group">
     <li class="list-group-item">
+      <%= link_to admin_promotions_path, class: 'btn btn-default' do %>
+          <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back To Promotion
+      <% end %>
       <%= link_to 'New User Referral', new_admin_referral_path, :class => 'btn btn-primary' %>
     </li>
   </ul>

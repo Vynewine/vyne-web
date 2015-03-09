@@ -9,6 +9,7 @@ class Admin::PromotionsController < ApplicationController
   end
 
   def show
+    @warehouse_promotions = WarehousePromotion.where(:promotion_id => params[:id])
   end
 
   def new
@@ -22,17 +23,16 @@ class Admin::PromotionsController < ApplicationController
   def create
     @promotion = Promotion.new(promotion_params)
     if @promotion.save
-      redirect_to [:admin, @promotion], notice: 'Promotion was successfully created.'
+      redirect_to admin_promotions_path, notice: 'Promotion was successfully created.'
     else
-      flash[:error] = @promotion.errors.full_messages().join(', ')
+      flash.now[:error] = @promotion.errors.full_messages.join(', ')
       render :new
     end
-
   end
 
   def update
     if @promotion.update(promotion_params)
-      redirect_to [:admin, @promotion], notice: 'Promotion was successfully updated.'
+      redirect_to admin_promotions_path, notice: 'Promotion was successfully updated.'
     else
       render :edit
     end
@@ -40,7 +40,7 @@ class Admin::PromotionsController < ApplicationController
 
   def destroy
     @promotion.destroy
-    redirect_to admin_producers_url, notice: 'Promotion was successfully destroyed.'
+    redirect_to admin_promotions_path, notice: 'Promotion was successfully destroyed.'
   end
 
   private

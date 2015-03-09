@@ -39,7 +39,7 @@ Rails.application.routes.draw do
 
   # ------------
 
-  resources :promotions, :share, :help, :jobs, :availability, :merchants, :account, :promo
+  resources :share, :help, :jobs, :availability, :merchants, :account, :promo
   resources :delivery do
     collection do
       get 'get_courier_location'
@@ -156,7 +156,9 @@ Rails.application.routes.draw do
         get 'callback'
       end
     end
-    resources :promotions
+    resources :promotions do
+      resources :warehouse_promotions
+    end
     resources :referrals do
       resources :referral_codes
     end

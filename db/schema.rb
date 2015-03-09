@@ -486,6 +486,7 @@ ActiveRecord::Schema.define(version: 20150305112506) do
     t.integer  "referral_code_id"
     t.integer  "friend_id"
     t.boolean  "redeemed",         default: false, null: false
+    t.boolean  "can_be_redeemed",  default: false, null: false
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"

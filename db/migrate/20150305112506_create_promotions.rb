@@ -27,6 +27,7 @@ class CreatePromotions < ActiveRecord::Migration
       t.references :referral_code, index: true
       t.references :friend, index: true
       t.boolean :redeemed, default: false, null: false
+      t.boolean :can_be_redeemed, default: false, null: false
       t.datetime :deleted_at, index: true
       t.timestamps
     end
@@ -42,6 +43,41 @@ class CreatePromotions < ActiveRecord::Migration
 
     add_reference :order_items, :user_promotions
     add_reference :order_items, :warehouse_promotions
+
+    execute <<-SQL
+      ALTER TABLE referrals
+        ADD CONSTRAINT fk_referrals_promotions
+        FOREIGN KEY (promotion_id)
+        REFERENCES promotions(id)
+    SQL
+
+    execute <<-SQL
+      ALTER TABLE referral_codes
+        ADD CONSTRAINT fk_referral_codes_referrals
+        FOREIGN KEY (referral_id)
+        REFERENCES referrals(id)
+    SQL
+
+    execute <<-SQL
+      ALTER TABLE user_promotions
+        ADD CONSTRAINT fk_user_promotions_referral_codes
+        FOREIGN KEY (referral_code_id)
+        REFERENCES referral_codes(id)
+    SQL
+
+    execute <<-SQL
+      ALTER TABLE warehouse_promotions
+        ADD CONSTRAINT fk_warehouse_promotions_warehouses
+        FOREIGN KEY (warehouse_id)
+        REFERENCES warehouses(id)
+    SQL
+
+    execute <<-SQL
+      ALTER TABLE warehouse_promotions
+        ADD CONSTRAINT fk_warehouse_promotions_promotions
+        FOREIGN KEY (promotion_id)
+        REFERENCES promotions(id)
+    SQL
 
   end
 
