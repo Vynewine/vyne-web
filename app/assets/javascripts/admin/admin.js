@@ -233,13 +233,18 @@ var adminReady = function () {
             });
             var data = {
                 'keywords': keywords,
-                'warehouses': $('#warehouses-ids').val(),
                 'single': $('#tick-sing').is(':checked'),
                 'categories': categories,
-                'order_id': $('#order-id').val()
+                'order_id': $('#order-id').val(),
+                'price_range_min' : $('#price-range-min').val(),
+                'price_range_max' : $('#price-range-max').val()
             };
             postJSON('/admin/advise/results.json', token, data, renderItems, errorMethod);
         };
+
+        if($('#price-range-min').length && $('#price-range-min').val() !== '' && $('#price-range-max').val() !== '') {
+            findKeywords('');
+        }
 
         var sortKeyWords = function (e) {
             $('#wine-list').slideUp(100);

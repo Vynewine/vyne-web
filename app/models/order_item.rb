@@ -29,6 +29,10 @@ class OrderItem < ActiveRecord::Base
       unless specific_wine.blank?
         preferences << 'Specific Wine: ' + specific_wine
       end
+
+      unless user_promotion.blank?
+        preferences << 'Promotion: ' + user_promotion.to_s
+      end
     else
 
       food_items.each_with_index do |item, index|
@@ -49,5 +53,18 @@ class OrderItem < ActiveRecord::Base
     end
 
     preferences
+  end
+
+  def warehouse_promotion
+    unless user_promotion.blank?
+      WarehousePromotion.find_by(
+          :warehouse => self.order.warehouse,
+          :promotion => self.user_promotion.referral_code.referral.promotion
+      )
+    end
+  end
+
+  def final_price
+    PromotionHelper.calculate_order_item_price(self, self.user_promotion)
   end
 end

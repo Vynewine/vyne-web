@@ -58,6 +58,7 @@
       <th>Warehouse Id</th>
       <th>Title</th>
       <th>Active</th>
+      <th>Price Range</th>
       <th></th>
     </tr>
     </thead>
@@ -68,6 +69,7 @@
               <td><%= warehouse_promotions.id %></td>
               <td><%= warehouse_promotions.warehouse.title %></td>
               <td><%= warehouse_promotions.active %></td>
+              <td>(<%= warehouse_promotions.price_range_min %> - <%= warehouse_promotions.price_range_max %>)</td>
               <td class="button-wrapper">
                 <%= link_to edit_admin_promotion_warehouse_promotion_path(@promotion, warehouse_promotions), class: 'btn btn-default' do %>
                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>

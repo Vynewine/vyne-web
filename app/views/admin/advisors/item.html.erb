@@ -8,10 +8,17 @@
         <li class="list-group-item">
           <div class="row">
             <div class="col-xs-12">
-              Category: <strong>&pound;<%= '%.2f' % @order_item.category.merchant_price_min %></strong> to
-              <strong>&pound;<%= '%.2f' % @order_item.category.merchant_price_max %></strong>
-              (<%= @order_item.category.name.capitalize %>)
+              <% unless @order_item.category.blank? %>
+                  Category: <strong>&pound;<%= '%.2f' % @order_item.category.merchant_price_min %></strong> to
+                  <strong>&pound;<%= '%.2f' % @order_item.category.merchant_price_max %></strong>
+                  (<%= @order_item.category.name.capitalize %>)
+              <% end %>
+
               <%= @order_item.preferences.to_sentence(last_word_connector: ' and ').capitalize %>.
+
+              <% unless @order_item.warehouse_promotion.blank? %>
+                  <div><%= @order_item.warehouse_promotion %></div>
+              <% end %>
             </div>
           </div>
         </li>
@@ -85,17 +92,19 @@
         <li class="list-group-item">
           <div class="row">
             <div class="col-xs-12 text-right">
-              <% @categories.each do |category| %>
-                  <input type="checkbox" class="tick-category" name="tick-cat-<%= category.id %>"
-                         <% if @order_item.category.id == category.id %>
-                         checked="checked"
-                         <% end %>
-                         />
-                  <label for="tick-cat-<%= category.name %>">
-                    &pound;<%= '%.2f' % category.merchant_price_min %>
-                    to &pound;<%= '%.2f' % category.merchant_price_max %>
-                    (<%= category.name.capitalize %>)
-                  </label>
+              <% unless @order_item.category.blank? %>
+                  <% @categories.each do |category| %>
+                      <input type="checkbox" class="tick-category" name="tick-cat-<%= category.id %>"
+                             <% if @order_item.category.id == category.id %>
+                             checked="checked"
+                             <% end %>
+                             />
+                      <label for="tick-cat-<%= category.name %>">
+                        &pound;<%= '%.2f' % category.merchant_price_min %>
+                        to &pound;<%= '%.2f' % category.merchant_price_max %>
+                        (<%= category.name.capitalize %>)
+                      </label>
+                  <% end %>
               <% end %>
             </div>
           </div>
@@ -117,6 +126,8 @@
 </div>
 
 <input type="hidden" id="order-id" name="order-id" value="<%= @order.id %>"/>
+<input type="hidden" id="price-range-min" value="<%= @order_item.warehouse_promotion.blank? ? '' : @order_item.warehouse_promotion.price_range_min %>"/>
+<input type="hidden" id="price-range-max" value="<%= @order_item.warehouse_promotion.blank? ? '' : @order_item.warehouse_promotion.price_range_max %>"/>
 
 <form method="post" action="/admin/advise/item/<%= @order_item.id %>" id="update-form">
   <input type="hidden" id="wine-id" name="wine_id"/>

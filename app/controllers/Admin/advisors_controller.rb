@@ -162,6 +162,72 @@ class Admin::AdvisorsController < ApplicationController
 
     # Solr search
 
+    @search = Inventory.search do
+      fulltext params[:keywords]
+
+      with(:warehouse_id, order.warehouse_id)
+
+      unless params[:categories].nil?
+        with(:category_id, params[:categories])
+      end
+
+      if params[:single]
+        with(:single_estate, true)
+      end
+
+      unless params[:price_range_min].blank? || params[:price_range_max].blank?
+        with(:cost).between(params[:price_range_min].to_f..params[:price_range_max].to_f)
+      end
+
+    end
+
+    wines = []
+
+    @search.results.each do |inventory|
+
+      #inventory = wine.inventories.select { |inv| inv.warehouse == order.warehouse }.first
+
+      unless inventory.quantity == 0
+        wines << {
+            :countryCode => inventory.wine.producer.country.alpha_2,
+            :countryName => inventory.wine.producer.country.name,
+            :region => inventory.wine.region.blank? ? '' : inventory.wine.region.name,
+            :subregion => inventory.wine.subregion.nil? ? '' : inventory.wine.subregion.name,
+            :locale => inventory.wine.locale.blank? ? '' : inventory.wine.locale.name,
+            :id => inventory.wine.id,
+            :appellation => inventory.wine.appellation.blank? ? '' : inventory.wine.appellation.name,
+            :name => inventory.wine.name,
+            :vintage => inventory.wine.txt_vintage,
+            :single_estate => inventory.wine.single_estate,
+            :type => inventory.wine.type.name,
+            :compositions => inventory.wine.composition.blank? ? '' : inventory.wine.composition.composition_grapes.map { |c| {:name => c.grape.name, :percentage => c.percentage} },
+            :note => inventory.wine.note,
+            :cost => inventory.cost.to_s,
+            :price => inventory.category.blank? ? '' : inventory.category.price,
+            :quantity => inventory.quantity,
+            :category => inventory.category.blank? ? '' : inventory.category.name + ' - £' + inventory.category.price.to_s,
+            :bottle_size => inventory.wine.bottle_size,
+            :vendor_sku => inventory.vendor_sku,
+            :producer => inventory.wine.producer.name,
+            :inventory_id => inventory.id
+        }
+
+      end
+    end
+
+    @results = wines
+
+    respond_to do |format|
+      format.json
+    end
+  end
+
+  def results_old
+
+    order = Order.find(params[:order_id])
+
+    # Solr search
+
     @search = Wine.search do
       fulltext params[:keywords]
 

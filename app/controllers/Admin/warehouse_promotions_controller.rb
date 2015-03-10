@@ -51,6 +51,6 @@ class Admin::WarehousePromotionsController < ApplicationController
   end
 
   def warehouse_promotion_params
-    params.require(:warehouse_promotion).permit(:warehouse_id, :active)
+    params.require(:warehouse_promotion).permit(:warehouse_id, :active, :price_range_min, :price_range_max)
   end
 end

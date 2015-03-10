@@ -22,9 +22,9 @@ class SignupController < ApplicationController
     if new_user.save
 
       unless cookies[:referral_code].blank?
-        errors = apply_promotions(new_user, cookies[:referral_code])
+        errors = PromotionHelper.apply_sign_up_promotion(new_user, cookies[:referral_code])
         unless errors.blank?
-          #TODO Handle Errors Here
+          #TODO Not sure how to handle error here
           cookies.delete :referral_code
         end
       end
@@ -243,14 +243,4 @@ class SignupController < ApplicationController
     email =~ /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
   end
 
-  def apply_promotions(user, code)
-
-      referral_code = ReferralCode.find_by(code: code)
-
-      if referral_code.blank?
-        return ['Referral code not found']
-      end
-
-      UserPromotion.new_account_reward(referral_code, user)
-  end
 end

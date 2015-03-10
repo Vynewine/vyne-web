@@ -34,7 +34,8 @@ json.order do
   end
 
   json.order_items(@order.order_items) do |item|
-    json.extract! item, :id, :quantity, :price, :advisory_note, :preferences
+    json.extract! item, :id, :quantity, :advisory_note, :preferences
+    json.price item.final_price
 
     unless item.category.blank?
       json.category item.category, :id, :name, :price_min, :price_max

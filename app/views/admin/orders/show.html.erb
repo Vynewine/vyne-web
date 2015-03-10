@@ -131,12 +131,12 @@
                           </a>
                       <% end %>
                       <% if @order.address.latitude == '' || @order.address.longitude == '' %>
-                        <span class="to-do"> Incomplete address. Lat/Lng missing.</span>
+                          <span class="to-do"> Incomplete address. Lat/Lng missing.</span>
                       <% else %>
-                         <br/>lat/lng: <a target="_blank"
-                             href="https://www.google.co.uk/maps/place/<%= @order.address.latitude %>,<%= @order.address.longitude%>">
-                            <%= @order.address.latitude %>/<%= @order.address.longitude%>
-                          </a>
+                          <br/>lat/lng: <a target="_blank"
+                                           href="https://www.google.co.uk/maps/place/<%= @order.address.latitude %>,<%= @order.address.longitude %>">
+                      <%= @order.address.latitude %>/<%= @order.address.longitude %>
+                    </a>
                       <% end %>
                     </div>
                     <div class="col-xs-6">
@@ -205,8 +205,11 @@
             <%= item.preferences.to_sentence(last_word_connector: ' and ').capitalize %>.
           </td>
           <td>x<%= item.quantity %></td>
-          <td><%= item.category.name %> (&pound;<%= '%.2f' % item.category.merchant_price_min %>
-            to &pound;<%= '%.2f' % item.category.merchant_price_max %>)
+          <td>
+            <% unless item.category.blank? %>
+                <%= item.category.name %> (&pound;<%= '%.2f' % item.category.merchant_price_min %>
+                to &pound;<%= '%.2f' % item.category.merchant_price_max %>)
+            <% end %>
           </td>
           <td>
             <% if item.wine.blank? %>
@@ -222,7 +225,10 @@
             <% if item.price.blank? %>
                 -
             <% else %>
-                £<%= '%.2f' % item.price %>
+                £<%= '%.2f' % item.final_price %>
+                <% if item.final_price != item.price %>
+                (£<%= '%.2f' % item.price %>)
+                <% end %>
             <% end %>
           </td>
         </tr>

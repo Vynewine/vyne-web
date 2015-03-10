@@ -23,7 +23,7 @@ class Order < ActiveRecord::Base
     if (order_items.map { |item| item.price }).include?(nil)
       nil
     else
-      total = (order_items.map { |item| item.price }).inject(:+)
+      total = (order_items.map { |item| item.final_price }).inject(:+)
       total + (delivery_price.blank? ? 0 : delivery_price)
     end
   end

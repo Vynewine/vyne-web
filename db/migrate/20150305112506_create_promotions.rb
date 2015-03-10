@@ -36,7 +36,8 @@ class CreatePromotions < ActiveRecord::Migration
       t.references :warehouse, index: true
       t.references :promotion, index: true
       t.boolean :active
-      t.numrange :price_range
+      t.decimal :price_range_min
+      t.decimal :price_range_max
       t.datetime :deleted_at, index: true
       t.timestamps
     end

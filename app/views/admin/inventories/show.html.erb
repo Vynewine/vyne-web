@@ -55,7 +55,7 @@
       <div class="row">
         <div class="col-md-12">
           <strong>Cost:</strong>
-          &pound;<%= "%.2f" % @inventory.cost %>
+          &pound;<%= @inventory.cost.blank? ? '' : "%.2f" % @inventory.cost %>
         </div>
       </div>
     </li>

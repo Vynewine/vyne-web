@@ -58,35 +58,42 @@ module CoordinateHelper
 
   def self.schedule_job(order)
 
-    google_client
+    begin
 
-    google_token = Token.find_by_key(GOOGLE_COORDINATE_TOKEN)
+      google_client
 
-    @client.authorization.access_token = google_token.fresh_token
+      google_token = Token.find_by_key(GOOGLE_COORDINATE_TOKEN)
 
-    coordinate = @client.discovered_api('coordinate', 'v1')
+      @client.authorization.access_token = google_token.fresh_token
 
-    result = @client.execute(:api_method => coordinate.jobs.insert,
-                             :parameters => {
-                                 'teamId' => Rails.application.config.google_coordinate_team_id,
-                                 'address' => order.address.full,
-                                 'lat' => order.address.latitude,
-                                 'lng' => order.address.longitude,
-                                 'title' => 'Order ' + order.id.to_s + (Rails.env.production? ? '' : ' - test'),
-                                 'note' => order.address.full,
-                                 'customerName' => order.client.name,
-                                 'customerPhoneNumber' => order.client.mobile
-                             })
+      coordinate = @client.discovered_api('coordinate', 'v1')
 
-    body = JSON.parse(result.body)
+      result = @client.execute(:api_method => coordinate.jobs.insert,
+                               :parameters => {
+                                   'teamId' => Rails.application.config.google_coordinate_team_id,
+                                   'address' => order.address.full,
+                                   'lat' => order.address.latitude,
+                                   'lng' => order.address.longitude,
+                                   'title' => 'Order ' + order.id.to_s + (Rails.env.production? ? '' : ' - test'),
+                                   'note' => order.address.full,
+                                   'customerName' => order.client.name,
+                                   'customerPhoneNumber' => order.client.mobile
+                               })
 
-    log body
+      body = JSON.parse(result.body)
 
-    order.delivery_token = body['id']
-    order.delivery_status = body
-    order.delivery_provider = 'google_coordinate'
+      log body
 
-    WebNotificationDispatcher.publish([order.warehouse.id], "Courier Job for order: #{order.id.to_s} created", :courier_job_created, 'admin')
+      order.delivery_token = body['id']
+      order.delivery_status = body
+      order.delivery_provider = 'google_coordinate'
+
+      WebNotificationDispatcher.publish([order.warehouse.id], "Courier Job for order: #{order.id.to_s} created", :courier_job_created, 'admin')
+    rescue Exception => exception
+      message = "Error occurred while scheduling Google Coordinate Job: #{exception.class} - #{exception.message}"
+      log_error message
+      log_error exception
+    end
   end
 
   def self.cancel_job(order)

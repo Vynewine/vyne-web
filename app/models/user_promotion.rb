@@ -50,4 +50,8 @@ class UserPromotion < ActiveRecord::Base
       end
     end
   end
+
+  def to_s
+    referral_code.referral.promotion.title
+  end
 end

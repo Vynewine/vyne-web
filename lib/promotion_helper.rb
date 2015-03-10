@@ -1,0 +1,89 @@
+module PromotionHelper
+
+  @logger = Logging.logger['PromotionHelper']
+
+  def self.calculate_order_item_price(order_item, user_promotion)
+    if user_promotion.blank?
+      order_item.price
+    else
+      if user_promotion.referral_code.referral.promotion.wine?
+        0
+      else
+        order_item.price
+      end
+    end
+  end
+
+  def self.apply_sign_up_promotion(user, code)
+
+    log "Applying promotions for user: #{user.id} and code: #{code}"
+
+    begin
+      referral_code = ReferralCode.find_by(code: code)
+
+      if referral_code.blank?
+        message = 'Referral code not found'
+        log_error message
+        return [message]
+      end
+
+      UserPromotion.new_account_reward(referral_code, user)
+
+      new_referral = Referral.new(
+          :user => user,
+          :promotion => referral_code.referral.promotion
+      )
+
+      unless new_referral.save
+        log_error new_referral.errors.full_messages
+        return new_referral.errors.full_messages
+      end
+
+      new_referral_code = ReferralCode.new(
+          :referral => new_referral
+      )
+
+      unless new_referral_code.save
+        log_error new_referral_code.errors.full_messages
+        return new_referral_code.errors.full_messages
+      end
+
+    rescue Exception => exception
+      message = "Error occurred while applying promotions: #{exception.class} - #{exception.message}"
+      log_error message
+      log_error exception
+    end
+  end
+
+  def self.process_sharing_reward(order_item)
+
+    begin
+      unless order_item.blank?
+        sharing_user_promotion = UserPromotion.find_by(
+            :friend => order_item.order.client,
+            :user => order_item.user_promotion.referral_code.referral.user,
+            :category => UserPromotion.categories[:sharing_reward]
+        )
+
+        unless sharing_user_promotion.blank?
+          sharing_user_promotion.can_be_redeemed = true
+          sharing_user_promotion.save
+        end
+      end
+    rescue Exception => exception
+      message = "Error occurred while process_sharing_reward: #{exception.class} - #{exception.message}"
+      log_error message
+      log_error exception
+    end
+
+  end
+
+  def self.log(message)
+    @logger.info message
+  end
+
+  def self.log_error(message)
+    @logger.error message
+  end
+
+end
