@@ -74,19 +74,49 @@ var WinePreferences = React.createClass({
             )
         };
 
+        var promotion = '';
+        var addPromotion = function (description) {
+            promotion = (
+                <div>
+                    <div className="order-divider"></div>
+                    <div className="row">
+                        <div className="col-xs-12">
+                            <span className="section-promotion">Promotion: {description}</span>
+                        </div>
+                    </div>
+                </div>
+            )
+        };
+
         if (this.props.orderItems.length) {
-            this.props.orderItems.map(function (item, index) {
+
+            var wines = this.props.orderItems.filter(function (item) {
+                return !item.user_promotion;
+            });
+
+            var promoWines = this.props.orderItems.filter(function (item, index) {
+                return item.user_promotion;
+            });
+
+            wines.forEach(function (item, index) {
 
                 if (index === 1) {
                     preferences.push((<div className="order-divider" key="break"></div>));
                 }
 
-                addPreference('Category', item.category.name +
-                ' (£' + parseFloat(item.category.price_min).toFixed(2) +
-                '-' + parseFloat(item.category.price_max).toFixed(2) + ')', item.id + 'cat')
+
+                if (item.category) {
+                    addPreference('Category', item.category.name +
+                    ' (£' + parseFloat(item.category.price_min).toFixed(2) +
+                    '-' + parseFloat(item.category.price_max).toFixed(2) + ')', item.id + 'cat');
+                }
 
                 addPreference('Preferences', item.preferences.join(', '), item.id + 'pref');
 
+            });
+
+            promoWines.forEach(function (item) {
+                addPromotion(item.user_promotion.title);
             });
         }
 
@@ -100,7 +130,9 @@ var WinePreferences = React.createClass({
                     </div>
                 </div>
                 {preferences}
+                {promotion}
                 <div className="order-divider"></div>
+
             </div>
         )
     }
@@ -895,10 +927,10 @@ var OrderDetails = React.createClass({
     componentDidMount: function () {
         this.setMixinInterval(this.tick, 10000);
     },
-    componentWillReceiveProps: function(props) {
-      if(props.clear) {
-          this.clearMixinInterval();
-      }
+    componentWillReceiveProps: function (props) {
+        if (props.clear) {
+            this.clearMixinInterval();
+        }
     },
     tick: function () {
         this.loadData(orderId);
@@ -906,7 +938,7 @@ var OrderDetails = React.createClass({
     loadData: function (orderId) {
         getOrderDetails(orderId, function (orderDetails) {
 
-            if(orderDetails.order.status &&
+            if (orderDetails.order.status &&
                 (orderDetails.order.status.label === 'cancelled' || orderDetails.order.status.label === 'delivered')) {
                 this.clearMixinInterval();
             }
@@ -1017,9 +1049,9 @@ var renderOrderDetails = function () {
     }
 };
 
-var clearMainOrderComponent =  function() {
+var clearMainOrderComponent = function () {
     if (!$('#order-details').length) {
-        if(mainOrderComponent) {
+        if (mainOrderComponent) {
             mainOrderComponent.setProps({
                 clear: true
             });
@@ -1039,6 +1071,6 @@ var getOrderDetails = function (orderId, callback) {
 $(document).ready(renderOrderDetails);
 $(document).on('page:load', renderOrderDetails);
 
-$(document).on('page:restore', function() {
+$(document).on('page:restore', function () {
     clearMainOrderComponent();
 });

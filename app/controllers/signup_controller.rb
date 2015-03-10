@@ -20,6 +20,15 @@ class SignupController < ApplicationController
     new_user = User.create(user_params)
 
     if new_user.save
+
+      unless cookies[:referral_code].blank?
+        errors = apply_promotions(new_user, cookies[:referral_code])
+        unless errors.blank?
+          #TODO Handle Errors Here
+          cookies.delete :referral_code
+        end
+      end
+
       sign_in(:user, new_user)
       render :json => new_user.to_json
     else
@@ -234,4 +243,14 @@ class SignupController < ApplicationController
     email =~ /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
   end
 
+  def apply_promotions(user, code)
+
+      referral_code = ReferralCode.find_by(code: code)
+
+      if referral_code.blank?
+        return ['Referral code not found']
+      end
+
+      UserPromotion.new_account_reward(referral_code, user)
+  end
 end

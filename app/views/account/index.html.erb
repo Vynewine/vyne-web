@@ -64,7 +64,7 @@
                 </span>
               <% else %>
                   <% current_user.user_promotions.each do |promotion| %>
-                      <% if promotion.new_account_reward? %>
+                      <% if promotion.sign_up_reward? %>
                           <p> Thank for signing up for vyne account with promo
                             code: <%= promotion.referral_code.code %></p>
                           <% if promotion.redeemed %>

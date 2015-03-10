@@ -16,7 +16,7 @@ class SignupControllerTest < ActionController::TestCase
   test 'Should create user' do
     post :create, :user => {
         :first_name => 'John',
-        :email => 'test@vinz.com',
+        :email => 'test@vyne.co.uk',
         :password => 'password'
     }
     assert_response :success
@@ -25,7 +25,7 @@ class SignupControllerTest < ActionController::TestCase
   test 'Should not create user with out password' do
     post :create, :user => {
         :first_name => 'John',
-        :email => 'test@vinz.com'
+        :email => 'test@vyne.co.uk'
     }
     assert_response 422
     body = JSON.parse(@response.body)
@@ -37,14 +37,14 @@ class SignupControllerTest < ActionController::TestCase
     new_user = User.create!({
                                 :first_name => 'John',
                                 :last_name => 'Doe',
-                                :email => 'john@doe.vn',
+                                :email => 'john@vyne.co.uk',
                                 :password => 'password',
                                 :password_confirmation => 'password'
                             })
 
     sign_in(:user, new_user)
 
-    post :address, {:address_s => 'Main Street',
+    post :address, {:address_line_1 => 'Main Street',
                     :address_p => 'N1 7RJ',
                     :new_address => 'true'
     }
@@ -59,14 +59,14 @@ class SignupControllerTest < ActionController::TestCase
     new_user = User.create!({
                                 :first_name => 'John',
                                 :last_name => 'Doe',
-                                :email => 'john@doe.vn',
+                                :email => 'john@vyne.co.uk',
                                 :password => 'password',
                                 :password_confirmation => 'password'
                             })
 
     sign_in(:user, new_user)
 
-    post :address, {:address_s => 'Main Street',
+    post :address, {:address_line_1 => 'Main Street',
                     :address_p => 'N1 7RJ',
                     :mobile => '999999',
                     :new_address => 'true'
@@ -81,14 +81,14 @@ class SignupControllerTest < ActionController::TestCase
     new_user = User.create!({
                                 :first_name => 'John',
                                 :last_name => 'Doe',
-                                :email => 'john@doe.vn',
+                                :email => 'john@vyne.co.uk',
                                 :password => 'password',
                                 :password_confirmation => 'password'
                             })
 
     sign_in(:user, new_user)
 
-    post :address, {:address_s => 'Main Street',
+    post :address, {:address_line_1 => 'Main Street',
                     :address_p => 'N1 7RJ',
                     :mobile => '+44 077 1822 5201',
                     :new_address => 'true'
@@ -99,14 +99,14 @@ class SignupControllerTest < ActionController::TestCase
     assert_response :success
     assert @response.body.include? 'Main Street'
     assert_equal('N1 7RJ', user.addresses[0].postcode, 'User postcode not correct')
-    assert_equal('7718225201', user.mobile, 'User mobile is not correct')
+    assert_equal('+44 077 1822 5201', user.mobile, 'User mobile is not correct')
   end
 
   test 'Should update just created address if address id present' do
     new_user = User.create!({
                                 :first_name => 'John',
                                 :last_name => 'Doe',
-                                :email => 'john@doe.vn',
+                                :email => 'john@vyne.co.uk',
                                 :password => 'password',
                                 :password_confirmation => 'password'
                             })
@@ -127,7 +127,7 @@ class SignupControllerTest < ActionController::TestCase
 
     post :address, {
         :address_id => new_address.id,
-        :address_s => 'Main Street',
+        :address_line_1 => 'Main Street',
         :address_p => 'N2 7RJ',
         :mobile => '+44 072 1822 5201',
         :new_address => 'true'
@@ -139,7 +139,7 @@ class SignupControllerTest < ActionController::TestCase
     assert @response.body.include? 'Main Street'
     assert_equal('N2 7RJ', user.addresses[0].postcode, 'User postcode not correct')
     assert_equal(1, user.addresses.count, 'User should have only one address')
-    assert_equal('7218225201', user.mobile, 'User mobile is not correct')
+    assert_equal('+44 072 1822 5201', user.mobile, 'User mobile is not correct')
 
   end
 
@@ -147,7 +147,7 @@ class SignupControllerTest < ActionController::TestCase
     new_user = User.create!({
                                 :first_name => 'John',
                                 :last_name => 'Doe',
-                                :email => 'john@doe.vn',
+                                :email => 'john@vyne.co.uk',
                                 :password => 'password',
                                 :password_confirmation => 'password'
                             })
@@ -167,7 +167,7 @@ class SignupControllerTest < ActionController::TestCase
     assert_equal('N17RJ', new_user.addresses[0].postcode, 'User postcode not correct')
 
     post :address, {
-        :address_s => 'Main Street 2',
+        :address_line_1 => 'Main Street 2',
         :address_p => 'N2 7RJ',
         :mobile => '+44 072 1822 5201',
         :new_address => 'true'
@@ -181,7 +181,7 @@ class SignupControllerTest < ActionController::TestCase
     assert @response.body.include? 'Main Street 2'
     assert_equal('N2 7RJ', new_address.postcode, 'User postcode not correct')
     assert_equal(2, user.addresses.count, 'User should have only one address')
-    assert_equal('7218225201', user.mobile, 'User mobile is not correct')
+    assert_equal('+44 072 1822 5201', user.mobile, 'User mobile is not correct')
 
   end
 
@@ -189,7 +189,7 @@ class SignupControllerTest < ActionController::TestCase
     new_user = User.create!({
                                 :first_name => 'John',
                                 :last_name => 'Doe',
-                                :email => 'john@doe.vn',
+                                :email => 'john@vyne.co.uk',
                                 :password => 'password',
                                 :mobile => '7718225201'
                             })
@@ -270,7 +270,20 @@ class SignupControllerTest < ActionController::TestCase
 
   end
 
-  test 'Shoiuld validate address and mobile' do
+  test 'Should apply promo code when signing up' do
+
+    referral_code = referral_codes(:abc)
+    cookies[:referral_code] = referral_code.code
+
+    post :create, :user => {
+                    :first_name => 'John',
+                    :email => 'test@vyne.co.uk',
+                    :password => 'password'
+                }
+
+    new_user = User.find_by(:email => 'test@vyne.co.uk')
+    user_promotion = UserPromotion.find_by(:referral_code => referral_code, :user => new_user)
+    assert(user_promotion.sign_up_reward?)
 
   end
 

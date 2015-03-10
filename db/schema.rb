@@ -299,8 +299,7 @@ ActiveRecord::Schema.define(version: 20150305112506) do
     t.integer  "substitution_status",       default: 0
     t.text     "substitution_request_note"
     t.text     "advisory_note"
-    t.integer  "user_promotions_id"
-    t.integer  "warehouse_promotions_id"
+    t.integer  "user_promotion_id"
   end
 
   add_index "order_items", ["deleted_at"], :name => "index_order_items_on_deleted_at"

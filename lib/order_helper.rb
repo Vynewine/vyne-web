@@ -46,6 +46,23 @@ module OrderHelper
               order_id: order.id
           }
       )
+
+      # Process Referral Promotion
+      promo_order_item = order.order_items.select{|item| item.user_promotion != nil}.first
+
+      unless promo_order_item.blank?
+        sharing_user_promotion = UserPromotion.find_by(
+            :friend => promo_order_item.user,
+            :user => promo_order_item.referral_code.referral.user,
+            :category => UserPromotion.categories[:sharing_reward]
+        )
+
+        unless sharing_user_promotion.blank?
+          sharing_user_promotion.can_be_redeemed = true
+          sharing_user_promotion.save
+        end
+      end
+
       #TODO Need to handle errors here
       CoordinateHelper.schedule_job(order)
     end

@@ -44,7 +44,7 @@ class ShopControllerTest < ActionController::TestCase
         :stripeToken => 'tok_14m18t2eZvKYlo2CHKjAcAVY',
         :new_brand => '1',
         :new_card => '1111',
-        :warehouses => '{"warehouses":[{"id":' + warehouses(:one).id.to_s + ',"distance":1.914},{"id":' + warehouses(:two).id.to_s + ',"distance":2.123}]}', #{ :warehouses => [{ :id => 1, :distance => 2.5 }, { :id => 2, :distance => 1.8}],
+        :warehouse_id => warehouses(:one),
         :wines => nil
     }
 
@@ -87,8 +87,8 @@ class ShopControllerTest < ActionController::TestCase
     assert_equal(order.payment, payment)
     assert_equal(order.client, @userOne)
     assert_equal(payment.user, @userOne)
-    expected_information = {"warehouses" => [{"id" => warehouses(:one).id, "distance" => 1.914}, {"id" => warehouses(:two).id, "distance" => 2.123}]}
-    assert_equal(expected_information, order.information)
+
+    assert_equal({"warehouse_id" => warehouses(:one).id.to_s}, order.information)
     assert_equal(2, order.order_items.count, 'There should be 2 order items')
     categories = order.order_items.map { |c| c.category.id }
     assert_equal(true, (categories.include? categories(:house).id) && (categories.include? categories(:reserve).id), 'House and Reserve wines should be present on the order.')
@@ -175,11 +175,31 @@ class ShopControllerTest < ActionController::TestCase
 
   end
 
+  test 'Will create order with promotion for new user' do
+
+    user = users(:client)
+
+    sign_in(:user, user)
+
+    post :create, post_data_single_house
+
+    order_details =  JSON.parse @response.body
+
+    puts JSON.pretty_generate(order_details)
+
+    order = Order.find(order_details['id'])
+
+    assert_equal(2, order.order_items.count)
+    assert_equal(1, order.order_items.select{|item| item.user_promotion == user.user_promotions.first}.count)
+    assert(1, user.user_promotions.select{|promotion| promotion.can_be_redeemed}.count)
+    assert(1, user.user_promotions.select{|promotion| promotion.redeemed}.count)
+    assert_equal(2.5, order.delivery_price)
+  end
 
   def post_data
     {
         'email' => '',
-        'warehouses' => '{"warehouses":[{"id":1,"distance":1.914}]}',
+        'warehouse_id' => warehouses(:one),
         'wines' => '[
       {
         "quantity":1, "category":"' + categories(:house).id.to_s + '",
@@ -219,6 +239,27 @@ class ShopControllerTest < ActionController::TestCase
         "label":"Reserve","price":"£20", "specificWine":"",
         "food":[{"id":"14", "name":"fish"}, {"id":"18","name":"hard cheese"},{"id":"38","name":"pasta"}], "occasion":[]
       }]',
+        'address_id' => addresses(:one).id,
+        'old_card' => '0',
+        'new_card' => '1111',
+        'new_brand' => '1',
+        'stripeToken' => 'tok_14tFx92eZvKYlo2CxthO99kb'
+    }
+  end
+
+  def post_data_single_house
+    {
+        'email' => '',
+        'warehouse_id' => warehouses(:one),
+        'wines' => '[
+      {
+        "quantity":1, "category":"' + categories(:house).id.to_s + '",
+        "label":"House", "price":"£15", "specificWine":"",
+        "food":[{"id":"14","name":"fish"}, {"id":"35", "name":"herbs"}, {"id":"10", "name":"cured meat"} ],"occasion":[]
+      }
+      ]',
+        'address_s' => '',
+        'address_d' => '',
         'address_id' => addresses(:one).id,
         'old_card' => '0',
         'new_card' => '1111',

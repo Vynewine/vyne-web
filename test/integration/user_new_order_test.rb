@@ -125,14 +125,35 @@ class UserNewOrderTest < ActiveSupport::TestCase
     @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Wine delivered from London’s top cellars')]").displayed? }
   end
 
+  test 'New user one bottle with promotion' do
 
-  def enter_promo_code
-    unless Rails.application.config.enable_invite_code == 'false'
+    email = Time.now.strftime('%Y%m%d%H%M%S') + '@vyne.london'
+    password = 'password'
+
+    @driver.get(@base_url + '/promo')
+
+    enter_promo_code('abc','n17rj')
+    select_bottle_for_category(2)
+    select_wine_by_occasion
+    confirm_order_selection
+    register_new_user(email, password)
+    register_new_address
+    register_new_credit_card
+    submit_order
+
+    @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Promotion')]").displayed? }
+    @wait.until { @driver.find_element(:xpath, "//*[contains(text(), '2.50')]").displayed? }
+  end
+
+
+  def enter_promo_code(promo_code, postcode)
+
       puts 'Entering Promo Code'
-      @driver.find_element(:id, 'invite-code').clear
-      @driver.find_element(:id, 'invite-code').send_keys 'timeforvyne'
-      @driver.find_element(:id, 'submit-invite-code').click
-    end
+      @driver.find_element(:name, 'promo_code').send_keys promo_code
+      @driver.find_element(:name, 'postcode').send_keys postcode
+      @driver.find_element(:css, 'input[type=\'submit\']').click
+      @driver.find_element(:xpath, "//button[contains(text(),'Book Now')]").click
+
   end
 
   def enter_postcode_first_page(postcode, booked_slot = false)

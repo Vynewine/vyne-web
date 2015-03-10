@@ -15,6 +15,8 @@ class Order < ActiveRecord::Base
 
   enum delivery_type: {google_coordinate: 'google_coordinate', shutl: 'shutl'}
 
+  before_save :calculate_delivery_price
+
   self.per_page = 15
 
   def total_price
@@ -27,21 +29,13 @@ class Order < ActiveRecord::Base
   end
 
   def estimated_total_min_price
-    if (order_items.map { |item| item.category }).include?(nil)
-      nil
-    else
-      total = (order_items.map { |item| item.category.price_min }).inject(:+)
+      total = (order_items.map { |item| item.category.blank? ? 0 : item.category.price_min }).inject(:+)
       total + (delivery_price.blank? ? 0 : delivery_price)
-    end
   end
 
   def estimated_total_max_price
-    if (order_items.map { |item| item.category }).include?(nil)
-      nil
-    else
-      total = (order_items.map { |item| item.category.price_max }).inject(:+)
+      total = (order_items.map { |item| item.category.blank? ? 0 : item.category.price_max }).inject(:+)
       total + (delivery_price.blank? ? 0 : delivery_price)
-    end
   end
 
   def total_wine_cost
@@ -116,6 +110,17 @@ class Order < ActiveRecord::Base
           to: Time.parse(information['slot_date'] + ' ' + information['slot_to']),
           schedule_date: information['schedule_date'].blank? ? '' : Time.parse(information['schedule_date'])
       }
+    end
+  end
+
+  def calculate_delivery_price
+    # Delivery price for one house wine £3.5 otherwise £2.5
+    wines = order_items.select { |item| item.user_promotion.blank? }
+
+    if wines.count == 1 && wines[0].category_id == 1
+      self.delivery_price = 3.5
+    else
+      self.delivery_price = 2.5
     end
   end
 

@@ -1,3 +1,7 @@
 abc:
   referral: one
   code: 'ABC'
+
+xyz:
+  referral: two
+  code: 'XYZ'

@@ -36,7 +36,18 @@ json.order do
   json.order_items(@order.order_items) do |item|
     json.extract! item, :id, :quantity, :price, :advisory_note, :preferences
 
-    json.category item.category, :id, :name, :price_min, :price_max
+    unless item.category.blank?
+      json.category item.category, :id, :name, :price_min, :price_max
+    end
+
+    unless item.user_promotion.blank?
+      json.user_promotion do
+        json.code item.user_promotion.referral_code.code
+        json.title item.user_promotion.referral_code.referral.promotion.title
+        json.category item.user_promotion.category
+      end
+    end
+
 
     wine = item.wine
 

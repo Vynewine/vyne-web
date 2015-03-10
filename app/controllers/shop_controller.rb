@@ -11,30 +11,22 @@ class ShopController < ApplicationController
   before_action :set_order, only: [:show, :edit, :update, :destroy]
   before_action :check_the_gate
 
-  # GET /welcome
   def welcome
   end
 
-  # GET /orders
-  # GET /orders.json
   def index
     @orders = Order.all
   end
 
-  # GET /orders/list
   def list
     @orders = Order.user_id(current_user.id).order('id desc').page(params[:page])
     render layout: 'aidani'
   end
 
-  # GET /orders/1
-  # GET /orders/1.json
   def show
   end
 
-  # GET /shop/neworder
   def new
-    # current_user.has_role?(:superadmin)
     @order = Order.new
     @categories = Category.all.order(:id)
     @foods = Food.all.order(:id)
@@ -43,7 +35,6 @@ class ShopController < ApplicationController
     @preparations = Preparation.all.order(:id)
     @warehouse = Warehouse.find(params[:warehouse_id])
     promo = nil
-
 
     if user_signed_in?
       user_promotion = UserPromotion.find_by(:user => current_user, :can_be_redeemed => true, :redeemed => false)
@@ -114,12 +105,8 @@ class ShopController < ApplicationController
       # Set Order Status Created
       @order.status_id = Status.statuses[:created]
 
-      # Delivery price for one house wine £3.5 otherwise £2.5
-      if @order.order_items.length == 1 && @order.order_items[0].category_id == 1
-        @order.delivery_price = 3.5
-      else
-        @order.delivery_price = 2.5
-      end
+      # Apply Promotions
+      apply_promotion(@order)
 
       # Save Order
       unless @order.save
@@ -137,8 +124,6 @@ class ShopController < ApplicationController
       end
 
       schedule_date = nil
-
-      puts slot_info: slot_info
 
       # Check if order is realtime or a scheduled order.
       if slot_info.blank?
@@ -211,8 +196,6 @@ class ShopController < ApplicationController
     end
   end
 
-  # PATCH/PUT /orders/1
-  # PATCH/PUT /orders/1.json
   def update
     respond_to do |format|
       if @order.update(order_params)
@@ -225,8 +208,6 @@ class ShopController < ApplicationController
     end
   end
 
-  # DELETE /orders/1
-  # DELETE /orders/1.json
   def destroy
     @order.destroy
     respond_to do |format|
@@ -375,6 +356,27 @@ class ShopController < ApplicationController
     order.payment = payment
 
     nil
+  end
+
+  def apply_promotion(order)
+    available_promotion = UserPromotion
+                              .where(:user => current_user, :can_be_redeemed => true, :redeemed => false)
+                              .order('id DESC').first
+    unless available_promotion.blank?
+      if available_promotion.referral_code.referral.promotion.wine?
+        order.order_items.new({
+                                  :quantity => 1,
+                                  :user_promotion => available_promotion
+                              })
+      end
+
+      available_promotion.redeemed = true
+
+      unless available_promotion.save
+        logger.error 'Error while applying user promotion'
+        logger.error available_promotion.errors.full_messages
+      end
+    end
   end
 end
 

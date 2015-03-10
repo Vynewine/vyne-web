@@ -41,8 +41,7 @@ class CreatePromotions < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_reference :order_items, :user_promotions
-    add_reference :order_items, :warehouse_promotions
+    add_reference :order_items, :user_promotion
 
     execute <<-SQL
       ALTER TABLE referrals
@@ -82,8 +81,7 @@ class CreatePromotions < ActiveRecord::Migration
   end
 
   def down
-    remove_reference :order_items, :user_promotions
-    remove_reference :order_items, :warehouse_promotions
+    remove_reference :order_items, :user_promotion
 
     drop_table :warehouse_promotions
     drop_table :user_promotions

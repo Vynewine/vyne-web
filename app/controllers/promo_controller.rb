@@ -35,36 +35,5 @@ class PromoController < ApplicationController
       redirect_to availability_index_path({ :postcode =>  params[:postcode]})
       return
     end
-
-
-
-      if user_signed_in?
-        flash.now[:notice] = 'Promo code was successfully applied to your account.'
-        render :index
-      else
-
-
-        account_reward = UserPromotion.new_account_reward(referral_code, current_user)
-
-        if account_reward.save
-
-          sharing_reward = UserPromotion.new_sharing_reward(referral_code, current_user)
-
-          if sharing_reward.save
-            flash.now[:notice] = 'Promo code was successfully applied to your account.'
-            render :index
-          else
-            flash.now[:error] = sharing_reward.errors.full_messages.join('. ') + '.'
-            render :index
-          end
-
-        else
-          flash.now[:error] = account_reward.errors.full_messages.join('. ') + '.'
-          render :index
-        end
-
-        # TODO: Save Cookie
-      end
-
   end
 end
