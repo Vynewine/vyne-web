@@ -185,9 +185,9 @@ class SignupController < ApplicationController
     else
 
       if we_will_deliver
-        coming_soon_near_you(params[:email])
+        UserMailer.coming_soon_near_you(params[:email])
       else
-        order_at_your_desk(params[:email])
+        UserMailer.order_at_your_desk(params[:email])
       end
     end
 

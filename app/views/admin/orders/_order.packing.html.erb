@@ -14,67 +14,34 @@
         </thead>
         <tbody>
         <% @orders.each do |order| %>
-            <% rowspan = order.order_items.length %>
-            <% order.order_items.each_with_index do |order_item, index| %>
-                <tr>
-                  <% if rowspan == 2 && index == 0 %>
-                      <td rowspan="2">
-                        <%= link_to admin_order_path(order), class: 'btn btn-default' do %>
-                            <i class="flaticon stroke zoom-1"></i>
-                        <% end %>
-                      </td>
-                  <% elsif index == 0 %>
-                      <td>
-                        <%= link_to admin_order_path(order), class: 'btn btn-default' do %>
-                            <i class="flaticon stroke zoom-1"></i>
-                        <% end %>
-                      </td>
-                  <% end %>
+            <tr>
+              <td>
+                <%= link_to admin_order_path(order), class: 'btn btn-default' do %>
+                    <i class="flaticon stroke zoom-1"></i>
+                <% end %>
+              </td>
+              <td><%= order.id %></td>
+              <td>
+                <% order.order_items.each do |order_item| %>
+                    <div class="row">
+                      <div class="col-xs-12">
+                        <%= order_item.wine.nil? ? 'Not Advised' : "#{order_item.quantity}x - #{order_item.wine.display_name}"  %>
+                      </div>
+                    </div>
+                <% end %>
+              </td>
+              <td><%= order.address.blank? ? '' : order.address.postcode %></td>
+              <td>
+                <button type="button" class="btn btn-primary btn-xs" data-toggle="modal"
+                        data-target="#finished-packing"
+                        data-order-id="<%= order.id %>"
+                        data-customer-postcode="<%= order.address.blank? ? '' : order.address.postcode %>">
+                  <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Done
+                </button>
 
-                  <% if rowspan == 2 && index == 0 %>
-                      <td rowspan="2"><%= order.id %></td>
-                  <% elsif index == 0 %>
-                      <td><%= order.id %></td>
-                  <% end %>
-
-                  <td>
-                    <%= order_item.wine.nil? ? 'Not Advised' : order_item.wine.display_name %>
-                  </td>
-
-                  <% if rowspan == 2 && index == 0 %>
-                      <td rowspan="2"><%= order.address.blank? ? '' : order.address.postcode %></td>
-                  <% elsif index == 0 %>
-                      <td><%= order.address.blank? ? '' : order.address.postcode %></td>
-                  <% end %>
-
-                  <% if rowspan == 2 && index == 0 %>
-                      <td rowspan="2">
-                        <button type="button" class="btn btn-primary btn-xs" data-toggle="modal"
-                                data-target="#finished-packing"
-                                data-order-id="<%= order.id %>"
-                                data-customer-postcode="<%= order.address.blank? ? '' : order.address.postcode %>">
-                          <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Done
-                        </button>
-                      </td>
-                  <% elsif index == 0 %>
-                      <td>
-                        <button type="button" class="btn btn-primary btn-xs" data-toggle="modal"
-                                data-target="#finished-packing"
-                                data-order-id="<%= order.id %>"
-                                data-customer-postcode="<%= order.address.blank? ? '' : order.address.postcode %>">
-                          <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Done
-                        </button>
-
-                      </td>
-                  <% end %>
-
-                  <% if rowspan == 2 && index == 0 %>
-                      <td rowspan="2"><%= local_time(order.created_at, '%b %d, %Y %l:%M %p') %></td>
-                  <% elsif index == 0 %>
-                      <td><%= local_time(order.created_at, '%b %d, %Y %l:%M %p') %></td>
-                  <% end %>
-                </tr>
-            <% end %>
+              </td>
+              <td><%= local_time(order.created_at, '%b %d, %Y %l:%M %p') %></td>
+            </tr>
         <% end %>
         </tbody>
       </table>
@@ -105,11 +72,11 @@
             <h1 id="modal-order-id"></h1>
           </div>
         </div>
-          <div class="row">
+        <div class="row">
           <div class="col-xs-6 text-right">
             <h1>Postcode</h1>
           </div>
-            <div class="col-xs-6">
+          <div class="col-xs-6">
             <h1 id="modal-customer-postcode"></h1>
           </div>
         </div>

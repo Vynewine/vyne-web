@@ -52,6 +52,7 @@
                 <thead>
                 <tr>
                   <th>Code</th>
+                  <th>Active</th>
                   <th>Edit</th>
                   <th>Delete</th>
                 </tr>
@@ -61,6 +62,7 @@
                 <% @referral.referral_codes.each do |referral_code| %>
                     <tr>
                       <td><%= referral_code.code %></td>
+                      <td><%= referral_code.active %></td>
                       <td>
                         <button class="btn btn-default"
                                 data-toggle="modal"
@@ -68,6 +70,7 @@
                                 data-new-code="false"
                                 data-id="<%= referral_code.id %>"
                                 data-code="<%= referral_code.code %>"
+                                data-active="<%= referral_code.active %>"
                         ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
                       </td>
                       <td>
@@ -125,6 +128,12 @@
               <input type="text" class="form-control" name="code" id="code"/>
             </div>
           </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <label for="active" >Active: </label>
+              <input type="checkbox" name="active" id="active"/>
+            </div>
+          </div>
           <%= hidden_field_tag(request_forgery_protection_token.to_s, form_authenticity_token) %>
         </div>
         <div class="modal-footer">
@@ -143,15 +152,18 @@
         var newCode = button.data('new-code');
         var $form = $("#referral-code-form");
         var $code = $(this).find("#code");
+        var $active = $(this).find("#active");
 
         if (newCode) {
             $form.attr("action", "/admin/referrals/<%= params['id']%>/referral_codes");
             $(this).find("#_method").val("post");
+            $active.prop('checked', true);
         } else {
             var id = button.data('id');
             $form.attr("action", "/admin/referrals/<%= params['id']%>/referral_codes/" + id);
             $(this).find("#_method").val("put");
             $code.val(button.data('code'));
+            $active.prop('checked', button.data('active'));
         }
     }).on('shown.bs.modal', function () {
         $(this).find("#code").focus();

@@ -378,7 +378,8 @@ ActiveRecord::Schema.define(version: 20150305112506) do
 
   create_table "promotions", force: true do |t|
     t.string   "title"
-    t.integer  "category",   default: 0, null: false
+    t.integer  "category",   default: 0,     null: false
+    t.boolean  "active",     default: false
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -387,6 +388,7 @@ ActiveRecord::Schema.define(version: 20150305112506) do
   create_table "referral_codes", force: true do |t|
     t.integer  "referral_id"
     t.string   "code"
+    t.boolean  "active",      default: true
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"

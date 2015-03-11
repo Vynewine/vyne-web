@@ -6,7 +6,8 @@ class Admin::ReferralCodesController < ApplicationController
   def create
     @referral_code = ReferralCode.new({
                                       referral_id: params[:referral_id],
-                                      code: params[:code].upcase
+                                      code: params[:code].upcase,
+                                      active: params[:active].blank? ? false : params[:active]
                                   })
     if @referral_code.save
       redirect_to [:admin, @referral_code.referral], notice: 'Referral Code was successfully created.'
@@ -20,7 +21,8 @@ class Admin::ReferralCodesController < ApplicationController
     @referral_code = ReferralCode.find(params[:id])
     if @referral_code.update({
                                  referral_id: params[:referral_id],
-                                 code: params[:code]
+                                 code: params[:code],
+                                 active: params[:active].blank? ? false : params[:active]
                              })
       redirect_to [:admin, @referral_code.referral], notice: 'Referral Code was successfully updated.'
     else

@@ -4,6 +4,13 @@ module GcmHelper
 
   def self.send_notification(message, registration_ids)
 
+    registration_ids = registration_ids.select{|reg_id| !reg_id.blank?}
+
+    if registration_ids.blank?
+      log 'No devices registered for the message'
+      return
+    end
+
     log 'Sending notification: ' + message
 
     unless registration_ids.blank?

@@ -125,16 +125,19 @@ class UserNewOrderTest < ActiveSupport::TestCase
     @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Wine delivered from London’s top cellars')]").displayed? }
   end
 
-  test 'New user one bottle with promotion' do
+  test 'New user two bottles with promotion' do
 
     email = Time.now.strftime('%Y%m%d%H%M%S') + '@vyne.london'
     password = 'password'
 
     @driver.get(@base_url + '/promo')
 
-    enter_promo_code('abc','n17rj')
+    enter_promo_code('xyz','n17rj')
     select_bottle_for_category(2)
     select_wine_by_occasion
+    select_second_bottle
+    select_bottle_for_category(2)
+    select_wine_by_food
     confirm_order_selection
     register_new_user(email, password)
     register_new_address
@@ -143,6 +146,21 @@ class UserNewOrderTest < ActiveSupport::TestCase
 
     @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Promotion')]").displayed? }
     @wait.until { @driver.find_element(:xpath, "//*[contains(text(), '2.50')]").displayed? }
+  end
+
+  test 'New account with new account promotion' do
+    name = Time.now.strftime('%Y%m%d%H%M%S')
+    email = name + '@vyne.london'
+    password = 'password'
+
+    @driver.get(@base_url + '/promo')
+
+    enter_promo_code('ABC','n17rj')
+    select_bottle_for_category(2)
+    select_wine_by_occasion
+    confirm_order_selection
+    register_new_user(email, password, name)
+
   end
 
   def enter_promo_code(promo_code, postcode)

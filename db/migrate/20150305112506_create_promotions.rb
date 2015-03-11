@@ -3,6 +3,7 @@ class CreatePromotions < ActiveRecord::Migration
     create_table :promotions do |t|
       t.string :title
       t.integer :category, default: 0, null: false
+      t.boolean :active, default: false
       t.datetime :deleted_at, index: true
       t.timestamps
     end
@@ -17,6 +18,7 @@ class CreatePromotions < ActiveRecord::Migration
     create_table :referral_codes do |t|
       t.references :referral, index: true
       t.string :code
+      t.boolean :active, default: true
       t.datetime :deleted_at, index: true
       t.timestamps
     end

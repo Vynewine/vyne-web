@@ -9,6 +9,7 @@
       <th>Id</th>
       <th>Title</th>
       <th>Category</th>
+      <th>Active</th>
       <th></th>
     </tr>
     </thead>
@@ -19,6 +20,7 @@
           <td><%= promotion.id %></td>
           <td><%= promotion.title %></td>
           <td><%= promotion.category %></td>
+          <td><%= promotion.active %></td>
           <td class="button-wrapper">
             <%= link_to admin_promotion_path(promotion, :page => params[:page]), class: 'btn btn-default' do %>
                 <i class="glyphicon glyphicon-search"></i>

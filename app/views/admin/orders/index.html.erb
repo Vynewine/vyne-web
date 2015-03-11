@@ -94,61 +94,37 @@
                   <tr>
                     <th></th>
                     <th>Id</th>
-                    <th>Client Preferences</th>
-                    <th>Advise</th>
-                    <th>Wine</th>
+                    <th>Wines</th>
                     <th>Created</th>
                   </tr>
                   </thead>
                   <tbody>
                   <% @orders.each do |order| %>
-                      <% rowspan = order.order_items.length %>
-                      <% order.order_items.each_with_index do |order_item, index| %>
-                          <tr>
-                            <% if rowspan == 2 && index == 0 %>
-                                <td rowspan="2">
-                                  <%= link_to admin_order_path(order), class: 'btn btn-default' do %>
-                                      <i class="flaticon stroke zoom-1"></i>
+                      <tr>
+                        <td>
+                          <%= link_to admin_order_path(order), class: 'btn btn-default' do %>
+                              <i class="flaticon stroke zoom-1"></i>
+                          <% end %>
+                        </td>
+                        <td><%= order.id %></td>
+                        <td>
+                          <% order.order_items.each do |order_item| %>
+                              <div class="row">
+                                <div class="col-xs-12" style="margin: 5px;">
+                                  <% if order.can_be_advised %>
+                                      <a href="/admin/advise/item/<%= order_item.id %>" class="btn btn-default">
+                                        <%= order_item.wine.nil? ? 'Advise' : 'Advised' %>
+                                      </a>
                                   <% end %>
-                                </td>
-                            <% elsif index == 0 %>
-                                <td>
-                                  <%= link_to admin_order_path(order), class: 'btn btn-default' do %>
-                                      <i class="flaticon stroke zoom-1"></i>
-                                  <% end %>
-                                </td>
-                            <% end %>
-
-                            <% if rowspan == 2 && index == 0 %>
-                                <td rowspan="2"><%= order.id %></td>
-                            <% elsif index == 0 %>
-                                <td><%= order.id %></td>
-                            <% end %>
-
-                            <td><%= order_item.preferences.to_sentence(last_word_connector: ' and ').capitalize %>.</td>
-                            <td>
-                              <% if order.can_be_advised %>
-                                  <a href="/admin/advise/item/<%= order_item.id %>" class="btn btn-default">
-                                    <%= order_item.wine.nil? ? 'Advise' : 'Advised' %>
-                                  </a>
-                              <% else %>
-                                  Complete
-                              <% end %>
-
-                            </td>
-
-                            <td>
-                              <%= order_item.wine.nil? ? 'Not Advised' : order_item.wine.display_name %>
-                            </td>
-
-                            <% if rowspan == 2 && index == 0 %>
-                                <td rowspan="2"><%= local_time(order.created_at, '%b %d, %Y %l:%M %p') %></td>
-                            <% elsif index == 0 %>
-                                <td><%= local_time(order.created_at, '%b %d, %Y %l:%M %p') %></td>
-                            <% end %>
-
-                          </tr>
-                      <% end %>
+                                    <%= "#{order_item.quantity}x - " %>
+                                 Preferences: <%= order_item.preferences.to_sentence(last_word_connector: ' and ').capitalize %>.
+                                  <%= order_item.wine.nil? ? ' - Not Advised' : " - Wine Selection: #{order_item.wine.display_name}" %>
+                                </div>
+                              </div>
+                          <% end %>
+                        </td>
+                        <td><%= local_time(order.created_at, '%b %d, %Y %l:%M %p') %></td>
+                      </tr>
                   <% end %>
                   </tbody>
                 </table>

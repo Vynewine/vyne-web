@@ -50,7 +50,7 @@ class Admin::PromotionsController < ApplicationController
   end
 
   def promotion_params
-    params.require(:promotion).permit(:title, :category)
+    params.require(:promotion).permit(:title, :category, :active)
   end
 
 end

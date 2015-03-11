@@ -1154,9 +1154,25 @@ iframe {
         margin: 10px 0 10px 0;
     }
 
+    .divider-short {
+        border-bottom: 1px solid white;
+        margin: 10px 0 10px 0;
+        width: 80px;
+
+        &.gray {
+            border-bottom-color: rgba(255, 255, 255, 0.2);
+        }
+
+        &.fat {
+            border-bottom-width: 2px;
+        }
+
+    }
+
     .translucent {
         padding: 5px 20px 5px 20px;
         background-color: rgba(0, 0, 0, 0.4);
+
     }
 
     .description-content {

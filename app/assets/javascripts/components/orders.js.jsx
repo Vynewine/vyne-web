@@ -145,8 +145,8 @@ var WineSelection = React.createClass({
         if (this.props.orderItems.length) {
             this.props.orderItems.map(function (item, index) {
 
-                if (index === 1) {
-                    wines.push(<div className="order-divider" key="divider"></div>);
+                if (index > 0) {
+                    wines.push(<div className="order-divider" key={'divider-' + index}></div>);
                 }
 
                 wines.push(

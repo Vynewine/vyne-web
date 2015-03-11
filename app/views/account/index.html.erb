@@ -1,7 +1,7 @@
 <section id="user-account" class="section section-dark vyne-section">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12 col-xs-offset-0">
+      <div class="col-lg-10 col-lg-offset-1 col-md-8 col-md-offset-2 col-xs-12 col-xs-offset-0">
         <div class="animated fadeIn">
           <div class="row">
             <div class="col-xs-12">
@@ -9,7 +9,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-sm-6 col-xs-12">
+            <div class="col-sm-3 col-xs-12">
               <h3 class="app-title">
                 Your Account
               </h3>
@@ -39,48 +39,87 @@
               </div>
 
               <div class="row">
-                <div class="col-xs-6">
+                <div class="col-xs-12">
                   <div class="animated fadeIn">
                     <a href="/users/edit" class="btn btn-primary">Edit</a>
                   </div>
-                </div>
-                <div class="col-xs-6 text-right">
-                  <%= link_to mywines_path, class: 'btn btn-default' do %>
-                      <i class="fa fa-briefcase"></i> My Wines
-                  <% end %>
+                  <div class="divider-short gray fat"></div>
+                  <div class="animated fadeIn ">
+                    <%= link_to mywines_path, class: 'btn btn-default' do %>
+                        <i class="fa fa-briefcase"></i> My Wines
+                    <% end %>
+                  </div>
                 </div>
               </div>
 
             </div>
-            <div class="col-sm-6 col-xs-12">
-              <h3 class="app-title">
-                Your Promotions
-              </h3>
-              <% if current_user.user_promotions.blank? %>
-                <span>
-                  Looks like you don't have any promotions on your account yet.
-                  --- TODO: If share promoiton active:
-                  Please share your promo code with your friends to get some free wine woth your order.
-                </span>
-              <% else %>
-                  <% current_user.user_promotions.each do |promotion| %>
-                      <% if promotion.sign_up_reward? %>
-                          <p> Thank for signing up for vyne account with promo
-                            code: <%= promotion.referral_code.code %></p>
-                          <% if promotion.redeemed %>
-                              <p> Your promotion was redeemed with order -- TODO Order Id</p>
-                          <% else %>
-                              <p> Your promotion for: <%= promotion.referral_code.referral.promotion.title %>
-                                is ready to be used with your next order (Terms and conditions apply).</p>
+
+            <% unless @promo_codes.blank? %>
+                <div class="col-sm-4 col-xs-12">
+                  <h3 class="app-title">
+                    Share Your Promo Code
+                  </h3>
+                  <div class="row">
+                    <div class="col-xs-12">
+                      <p>Your active promo codes:</p>
+                      <% @promo_codes.each do |code| %>
+                          <div>Code: <%= code %></div>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+            <% end %>
+
+            <% unless current_user.user_promotions.blank? %>
+                <div class="col-sm-5 col-xs-12">
+                  <h3 class="app-title">
+                    Your Promotions
+                  </h3>
+
+                  <% unless @redeemable_promotions.blank? %>
+
+                      <div>You have pending promotions that can be applied to your account:</div>
+                      <% @redeemable_promotions.each do |promo| %>
+                          <% if promo.sign_up_reward? %>
+                              <p> Thank for signing up for vyne account with promo
+                                code: <%= promo.referral_code.code %></p>
+                          <% elsif promo.sharing_reward? %>
+                              <p>Your friend <%= promo.friend.name %> signed up using your promo code.</p>
                           <% end %>
                       <% end %>
+                      <div>Your promotions will be automatically applied during checkout.</div>
 
-                      <% if promotion.sharing_reward? %>
+                  <% end %>
 
+                  <% unless @pending_promotions.blank? %>
+
+                      <div>You have promotions that are not yet activate:</div>
+                      <% @pending_promotions.each do |promo| %>
+                          <% if promo.sharing_reward? %>
+                              <p>Your friend <%= promo.friend.name %> signed up using your promo code but
+                                have not yet made a purchase.</p>
+                          <% end %>
+                      <% end %>
+                      <div>Your promotions will become active once your friend uses her/his promotion</div>
+
+                  <% end %>
+
+                  <% unless @redeemed_promotions.blank? %>
+                      <div>Your redeemed promotions:</div>
+                      <% @redeemed_promotions.each do |promo| %>
+                          <% if promo.sign_up_reward? %>
+                              <p> Thank for signing up for vyne account with promo
+                                code: <%= promo.referral_code.code %></p>
+                          <% elsif promo.sharing_reward? %>
+                              <p>Your friend <%= promo.friend.name %> signed up using your promo code.</p>
+                          <% end %>
                       <% end %>
                   <% end %>
-              <% end %>
-            </div>
+
+                </div>
+            <% end %>
+
+
           </div>
         </div>
       </div>

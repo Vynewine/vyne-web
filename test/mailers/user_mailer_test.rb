@@ -57,11 +57,6 @@ class UserMailerTest < ActionMailer::TestCase
     WebMock.allow_net_connect!
     order_two_bottles
 
-    #Wine 1 Name,_Region,_Producer,_Merchant Name_"ID:"Merchant ID___"("Cost")"
-    # wine1 = @order.order_items[0].wine
-    # inventory_item1 = Inventory.where(wine: wine1, warehouse: @order.warehouse)
-    # puts json: inventory_item1
-
     result = merchant_order_confirmation(@order)
     puts json: result
 
@@ -168,67 +163,6 @@ class UserMailerTest < ActionMailer::TestCase
 
     assert_equal(results[0]['status'], 'sent', 'Email status from Mandrill should be sent')
   end
-
-
-  # test 'Can send first time order email' do
-  #
-  #   order = orders(:order1)
-  #   order.address = addresses(:one)
-  #
-  #   message = {
-  #       :to => [
-  #           {
-  #               :email => order.client.email,
-  #               :name => order.client.first_name}
-  #       ],
-  #       :merge_vars => [
-  #           {
-  #               :rcpt => order.client.email,
-  #               :vars => [
-  #                   {
-  #                       :name => 'NAME',
-  #                       :content => order.client.first_name}
-  #               ]
-  #           }
-  #       ]}
-  #
-  #   stub_mandrill('orderplaced-1tochv1', success_response, message, 200)
-  #
-  #
-  #   results = first_time_ordered(order)
-  #   assert_equal(results.kind_of?(Array), true, 'Bad response from the Mandrill')
-  #   assert_equal('sent', results[0]['status'], msg = "Can't send first_time_ordered email")
-  # end
-  #
-  # test 'Will handle error response' do
-  #
-  #   order = orders(:order1)
-  #   order.address = addresses(:one)
-  #
-  #   message = {
-  #       :to => [
-  #           {
-  #               :email => order.client.email,
-  #               :name => order.client.first_name}
-  #       ],
-  #       :merge_vars => [
-  #           {
-  #               :rcpt => order.client.email,
-  #               :vars => [
-  #                   {
-  #                       :name => 'NAME',
-  #                       :content => order.client.first_name}
-  #               ]
-  #           }
-  #       ]}
-  #
-  #   stub_mandrill('orderplaced-1tochv1', failed_response, message, 500)
-  #
-  #   results = first_time_ordered(order)
-  #   puts json: results
-  #   assert(results.blank?, 'Results during error will be blank')
-  #
-  # end
 
   def stub_mandrill(template_name, response, message, status)
     stub_request(:post, 'https://mandrillapp.com/api/1.0/messages/send-template.json').

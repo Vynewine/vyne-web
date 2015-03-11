@@ -441,7 +441,7 @@ module UserMailer
     end
   end
 
-  def order_at_your_desk(email)
+  def self.order_at_your_desk(email)
 
     mandrill = Mandrill::API.new Rails.application.config.mandrill
     template_name = 'coverage-apology-order-at-desk-1cnps-mailchimp'
@@ -467,7 +467,7 @@ module UserMailer
     Rails.logger.error exception.backtrace
   end
 
-  def coming_soon_near_you(email)
+  def self.coming_soon_near_you(email)
 
     mandrill = Mandrill::API.new Rails.application.config.mandrill
     template_name = 'coverage-apology-order-at-desk-1cnps-mailchimp'
