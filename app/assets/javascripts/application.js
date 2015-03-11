@@ -1390,7 +1390,7 @@ var applyPromotions = function() {
     var $promoArea = $('.promotion-area');
 
     if($promo.val() !== '') {
-        $promoArea.text($promo.val());
+        $('.promotion-name').text('1x - ' + $promo.val() + ' (£0.00)');
         $promoArea.show();
     } else {
         $promoArea.hide();
@@ -1463,6 +1463,7 @@ var updateOrderSummary = function () {
     $deliverySummary.append($('<div>').append($deliveryText));
     $middle.append($deliverySummary);
 
+    promoSummary($deliverySummary);
     selectedBottlesSummary($deliverySummary);
 
     /**
@@ -1607,7 +1608,7 @@ var selectedBottlesSummary = function($deliverySummary) {
 
     if(wines.length > 0) {
 
-        $selectedBottlesSummary.push($('<div>').addClass('center').text('Wines Selected'));
+        $selectedBottlesSummary.push($('<div>').addClass('center').append($('<strong>').text('Wines Selected')));
 
         wines.forEach(function(wine) {
             var $summary = $('<div>').text(wineSummary(wine));
@@ -1616,6 +1617,15 @@ var selectedBottlesSummary = function($deliverySummary) {
     }
 
     $deliverySummary.append($selectedBottlesSummary);
+};
+
+var promoSummary = function($deliverySummary) {
+
+    var $promo = $('#promotion');
+
+    if($promo.val() !== '') {
+        $deliverySummary.append('<div>').addClass('center').text('Promotion: 1x - ' + $promo.val() + ' (£0.00)');
+    }
 };
 
 var wineSummary = function(wine) {

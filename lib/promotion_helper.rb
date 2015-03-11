@@ -78,6 +78,45 @@ module PromotionHelper
 
   end
 
+  def self.get_promotion_text(user, promo_code, warehouse)
+
+    promo = nil
+    promo_text = ''
+
+    if user.blank?
+      unless promo_code.blank?
+        referral_code = ReferralCode.find_by(code: promo_code)
+        unless referral_code.blank?
+          promo = referral_code.referral.promotion
+        end
+      end
+
+    else
+      user_promotion = UserPromotion.find_by(:user => user, :can_be_redeemed => true, :redeemed => false)
+      unless user_promotion.blank?
+        promo = user_promotion.referral_code.referral.promotion
+      end
+    end
+
+    unless promo.blank?
+
+      warehouse_promotion = WarehousePromotion.find_by(
+          :warehouse => warehouse,
+          :promotion => promo,
+          :active => true
+      )
+
+      if warehouse_promotion.blank?
+        promo_text = "We're sorry but looks like Merchant in your area in not
+                        taking part in '#{promo.title}' promotion at the moment"
+      else
+        promo_text = promo.title
+      end
+    end
+
+    promo_text
+  end
+
   def self.log(message)
     @logger.info message
   end
