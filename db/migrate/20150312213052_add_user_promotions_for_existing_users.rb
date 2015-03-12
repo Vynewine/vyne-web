@@ -20,15 +20,16 @@ class AddUserPromotionsForExistingUsers < ActiveRecord::Migration
                                     :can_be_redeemed => true
                                 })
 
-          new_referral = Referral.create!(
-              :user => user,
-              :promotion => referral_code.referral.promotion
-          )
+          if user.referrals.blank?
+            new_referral = Referral.create!(
+                :user => user,
+                :promotion => referral_code.referral.promotion
+            )
 
-          ReferralCode.create!(
-              :referral => new_referral
-          )
-
+            ReferralCode.create!(
+                :referral => new_referral
+            )
+          end
         end
       end
     end
