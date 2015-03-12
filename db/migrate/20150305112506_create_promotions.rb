@@ -84,6 +84,7 @@ class CreatePromotions < ActiveRecord::Migration
   end
 
   def down
+
     remove_reference :order_items, :user_promotion
 
     drop_table :warehouse_promotions

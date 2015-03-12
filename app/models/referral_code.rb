@@ -10,7 +10,16 @@ class ReferralCode < ActiveRecord::Base
   def generate_user_code
 
     if self.code.blank?
-      new_code = "#{referral.user.first_name}-#{referral.user.last_name[0..3]}".upcase
+
+      if referral.user.first_name.blank? || referral.user.last_name.blank?
+        if referral.user.last_name.blank? && !referral.user.first_name.blank?
+          new_code = "#{referral.user.first_name}-#{generate_key}".upcase
+        else
+          new_code = generate_key.upcase
+        end
+      else
+        new_code = "#{referral.user.first_name}-#{referral.user.last_name[0..3]}".upcase
+      end
 
       existing_code = ReferralCode.find_by(:code => new_code)
 
