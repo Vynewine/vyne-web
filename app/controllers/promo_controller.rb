@@ -1,7 +1,9 @@
 class PromoController < ApplicationController
 
   def index
-
+    unless params[:promo].blank?
+      @code = params[:promo].upcase
+    end
   end
   def create
 
@@ -27,7 +29,7 @@ class PromoController < ApplicationController
     referral_code = ReferralCode.find_by(code: @code)
 
     if referral_code.blank?
-      flash.now[:error] = "We can't locate promo code provided. Please enter it again."
+      flash.now[:error] = "We can't locate promo code provided. Please make sure it's correct and enter it again."
       render :index
       return
     else

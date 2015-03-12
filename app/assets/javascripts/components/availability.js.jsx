@@ -1,5 +1,81 @@
 var token = $('meta[name="csrf-token"]').last().attr('content');
 
+var Promotion = React.createClass({
+    render: function () {
+
+        var promotion_section = '';
+
+        var setPromotion = function (message, shouldSignUp) {
+
+            var signUpLink = '';
+
+            if (shouldSignUp) {
+                signUpLink = (
+                    <div>
+                        <div className="row">
+                            <div className="col-xs-12">
+                                <a href="/users/sign_up" >Register Here</a>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
+
+            promotion_section = (
+                <div>
+                    <div className="row">
+                        <div className="col-xs-12 promotion-message">
+                            <i className="fa fa-gift"></i> {message}
+                        {signUpLink}
+                        </div>
+                    </div>
+                </div>
+            )
+        };
+
+        if (this.isMounted()) {
+
+            if (this.props.deliveryOptions.today_warehouse) {
+
+                if (this.props.deliveryOptions.promotion) {
+
+                    var promotion = this.props.deliveryOptions.promotion;
+
+                    if (!this.props.deliveryOptions.today_warehouse.id) {
+
+                        if (promotion.category === 'sign_up_reward') {
+                            setPromotion('We currently don\'t deliver to your area, but if you register now, we\'ll save' +
+                            ' your promotion (code ' + promotion.code + ' - "' + promotion.title + '") in your account,' +
+                            ' and let you know when we deliver to this postcode. ', true);
+                        } else {
+                            setPromotion('Your promotion ' + promotion.title +
+                            ' will be applied to your order automatically upon checkout.', false);
+                        }
+
+                    } else {
+                        if (promotion.category === 'sign_up_reward') {
+                            setPromotion('Your promotion (code ' + promotion.code +
+                            ' - "' + promotion.title + '") will be applied to your order automatically upon checkout.', false);
+                        } else {
+                            setPromotion('Your promotion: "' + promotion.title +
+                            '" will be applied to your order automatically upon checkout.', false);
+                        }
+                    }
+                } else {
+                    return false;
+                }
+
+            }
+        }
+
+        return (
+            <div>
+            {promotion_section}
+            </div>
+        )
+    }
+});
+
 var CheckPostcode = React.createClass({
 
     getInitialState: function () {
@@ -71,7 +147,7 @@ var CheckPostcode = React.createClass({
                 } else {
                     labelClass = 'app-label success fadeIn';
 
-                    if(this.props.deliveryOptions.today_warehouse.coming_soon) {
+                    if (this.props.deliveryOptions.today_warehouse.coming_soon) {
                         labelText = 'On demand delivery available in West London ' +
                         moment(this.props.deliveryOptions.today_warehouse.active_from).format('dddd MMMM Do');
                     } else {
@@ -230,10 +306,10 @@ var BlockDelivery = React.createClass({
 
             this.state.deliverySlots.map(function (slot) {
                 var key = slot.date + ',' + slot.from + ',' + slot.to;
-                var text =  slot.day + ' ' + slot.from + ' - ' +  slot.to;
+                var text = slot.day + ' ' + slot.from + ' - ' + slot.to;
 
                 if (this.state.warehouse.coming_soon) {
-                    text = slot.day + ' (' + moment(slot.date).format('MMM Do') + ') ' + slot.from + ' - ' +  slot.to;
+                    text = slot.day + ' (' + moment(slot.date).format('MMM Do') + ') ' + slot.from + ' - ' + slot.to;
                 }
 
                 options.push(<option key={key} data-value={JSON.stringify(slot)} value={key} >{text}</option>)
@@ -452,6 +528,9 @@ var Availability = React.createClass({
 
         return (
             <div>
+                <Promotion
+                    deliveryOptions={this.state.deliveryOptions}
+                />
                 <CheckPostcode
                     initialFilterPostcode={this.props.initialFilterPostcode}
                     onPostcodeChange={this.handlePostcodeChange}
@@ -508,7 +587,6 @@ var checkWarehouseAvailability = function (postcode, callback) {
     //No daytime delivery options
     //callback(scenario_07);
     //return;
-
 
 
     analytics.track('Postcode lookup', {

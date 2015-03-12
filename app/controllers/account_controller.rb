@@ -5,7 +5,7 @@ class AccountController < ApplicationController
   authorize_actions_for UserAuthorizer
 
   def index
-    @promo_codes = []
+    @promo_code = nil
     @redeemed_promotions = []
     @redeemable_promotions = []
     @pending_promotions = []
@@ -15,10 +15,10 @@ class AccountController < ApplicationController
 
       latest_referral = active_referrals.first
 
-      active_codes = latest_referral.referral_codes.select{|code| code.active}.sort_by &:created_at
+      active_codes = latest_referral.referral_codes.select{|code| code.active}.sort_by(&:created_at).reverse!
 
       unless active_codes.blank?
-        @promo_codes = active_codes.map{|code| code.code}
+        @promo_code = active_codes.map{|code| code.code}.first
       end
     end
 

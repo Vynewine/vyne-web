@@ -100,17 +100,19 @@ module PromotionHelper
 
     unless promo.blank?
 
-      warehouse_promotion = WarehousePromotion.find_by(
-          :warehouse => warehouse,
-          :promotion => promo,
-          :active => true
-      )
+      promo_text = promo.title
 
-      if warehouse_promotion.blank?
-        promo_text = "We're sorry but looks like Merchant in your area in not
-                        taking part in '#{promo.title}' promotion at the moment"
-      else
-        promo_text = promo.title
+      unless warehouse.blank?
+
+        warehouse_promotion = WarehousePromotion.find_by(
+            :warehouse => warehouse,
+            :promotion => promo,
+            :active => true
+        )
+
+        if warehouse_promotion.blank?
+          promo_text = "We're sorry but looks like Merchant in your area in not taking part in '#{promo.title}' promotion at the moment"
+        end
       end
     end
 

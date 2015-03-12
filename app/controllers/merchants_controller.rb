@@ -1,4 +1,9 @@
 class MerchantsController < ApplicationController
+
+  # TODO - This is madness
+  # Need to move it to API namespace
+  # Need to separate this to multiple calls based on the resources: Warehouses, Promotions
+  # Ideally batch REST calls.
   def index
 
     if params[:lat].blank? || params[:lng].blank?
@@ -10,8 +15,15 @@ class MerchantsController < ApplicationController
       cookies[:postcode] = params[:postcode]
     end
 
+    warehouse_info = {
+        today_warehouse: {},
+        next_open_warehouse: {},
+        delivery_slots: [],
+        daytime_slots_available: false,
+        promotion: {}
+    }
 
-    warehouse_info = {today_warehouse: {}, next_open_warehouse: {}, delivery_slots: [], daytime_slots_available: false}
+    warehouse_info[:promotion] = get_promotion_info
 
     warehouses = Warehouse.delivering_to(params[:lat], params[:lng])
 
@@ -194,4 +206,43 @@ class MerchantsController < ApplicationController
     tz.utc_to_local(Time.now.getutc)
   end
 
+  def get_promotion_info
+
+    promotion = nil
+    promotion_code = ''
+    promotion_category = ''
+
+    if user_signed_in?
+
+      user_promotion = UserPromotion.order(created_at: :asc).find_by(
+          :user => current_user,
+          :can_be_redeemed => true,
+          :redeemed => false
+      )
+
+      unless user_promotion.blank?
+        promotion = user_promotion.referral_code.referral.promotion
+        promotion_code = user_promotion.referral_code.code
+        promotion_category = user_promotion.category
+      end
+
+    else
+      unless cookies[:referral_code].blank?
+        referral_code = ReferralCode.find_by(code: cookies[:referral_code])
+        unless referral_code.blank?
+          promotion = referral_code.referral.promotion
+          promotion_code = referral_code.code
+          promotion_category = :sign_up_reward
+        end
+      end
+    end
+
+    unless promotion.blank?
+      return {
+          :title => promotion.title,
+          :code => promotion_code,
+          :category => promotion_category
+      }
+    end
+  end
 end

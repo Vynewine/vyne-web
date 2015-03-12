@@ -23,7 +23,7 @@ class SignupController < ApplicationController
 
       unless cookies[:referral_code].blank?
         errors = PromotionHelper.apply_sign_up_promotion(new_user, cookies[:referral_code])
-        unless errors.blank?
+        if errors.blank?
           #TODO Not sure how to handle error here
           cookies.delete :referral_code
         end

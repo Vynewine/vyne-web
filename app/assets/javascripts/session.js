@@ -1,5 +1,5 @@
 var sessionJsReady = function () {
-    if ($('body.devise_registrations').length) {
+    if ($('body.registrations.new').length) {
         $('#new_user').submit(function (e) {
             e.preventDefault();
 

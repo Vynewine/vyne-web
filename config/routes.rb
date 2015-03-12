@@ -61,7 +61,7 @@ Rails.application.routes.draw do
   # ----------------------------------------------------------------------------
   # User authentication:
 
-  devise_for :users, :controllers => {sessions: 'sessions'}
+  devise_for :users, :controllers => {sessions: 'sessions', :registrations => 'registrations'}
 
   devise_scope :user do
     get '/signup' => 'devise/registrations#new'

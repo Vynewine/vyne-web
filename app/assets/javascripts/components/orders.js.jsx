@@ -81,7 +81,7 @@ var WinePreferences = React.createClass({
                     <div className="order-divider"></div>
                     <div className="row">
                         <div className="col-xs-12">
-                            <span className="section-promotion">Promotion: {description}</span>
+                            <span className="section-promotion"><i className="fa fa-gift"></i> Promotion: {description}</span>
                         </div>
                     </div>
                 </div>

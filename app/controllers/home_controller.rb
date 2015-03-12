@@ -16,6 +16,11 @@ class HomeController < ApplicationController
       return
     end
 
+    unless params[:promo].blank?
+      redirect_to promo_index_path :promo => params[:promo]
+      return
+    end
+
     if user_signed_in?
 
       if user_can_access_device
