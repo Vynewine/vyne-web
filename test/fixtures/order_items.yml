@@ -13,3 +13,24 @@ three:
   quantity: 1
   order: order2
   category: reserve
+
+promo_order_wine1:
+  quantity: 1
+  category: reserve
+  wine: one
+  order: promo_order
+  price: 15
+
+promo_order_wine2:
+  quantity: 1
+  category: reserve
+  wine: two
+  order: promo_order
+  price: 16
+
+promo_order_wine3:
+  quantity: 1
+  wine: three
+  order: promo_order
+  user_promotion: client_new_account
+  price: 17

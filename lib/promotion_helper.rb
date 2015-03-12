@@ -57,6 +57,8 @@ module PromotionHelper
 
   def self.process_sharing_reward(order_item)
 
+    log hash: order_item
+
     begin
       unless order_item.blank?
         sharing_user_promotion = UserPromotion.find_by(
@@ -65,7 +67,9 @@ module PromotionHelper
             :category => UserPromotion.categories[:sharing_reward]
         )
 
-        unless sharing_user_promotion.blank?
+        if sharing_user_promotion.blank?
+          log_error 'We should process this promotion'
+        else
           sharing_user_promotion.can_be_redeemed = true
           sharing_user_promotion.save
         end

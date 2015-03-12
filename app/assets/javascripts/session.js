@@ -1,5 +1,5 @@
 var sessionJsReady = function () {
-    if ($('body.registrations.new').length) {
+    if ($('body.registrations.new').length || $('body.registrations.create').length) {
         $('#new_user').submit(function (e) {
             e.preventDefault();
 

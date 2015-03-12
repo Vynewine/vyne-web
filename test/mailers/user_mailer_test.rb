@@ -44,22 +44,37 @@ class UserMailerTest < ActionMailer::TestCase
     WebMock.allow_net_connect!
     order_two_bottles
 
+    @order.order_items[0].quantity = 1
     @order.order_items[0].wine = wines(:one)
+    @order.order_items[1].quantity = 1
     @order.order_items[1].wine = wines(:two)
     @order.payment = payments(:one)
 
-    results = order_receipt(@order)
+    results = UserMailer.order_receipt(@order)
 
     puts json: results
   end
 
-  test 'Merchant order confirmation' do
+  test 'Send order receipt for promo order' do
     WebMock.allow_net_connect!
-    order_two_bottles
+    order = orders(:promo_order)
+    results = UserMailer.order_receipt(order)
+    puts json: results
+  end
 
-    result = merchant_order_confirmation(@order)
+
+  test 'Merchant promo order confirmation' do
+    WebMock.allow_net_connect!
+    order = orders(:promo_order)
+    result = UserMailer.merchant_order_confirmation(order)
     puts json: result
+  end
 
+  test 'Send order cancellation email to the client' do
+    WebMock.allow_net_connect!
+    order = orders(:promo_order)
+    result = UserMailer.order_cancellation(order)
+    puts json: result
   end
 
 

@@ -38,7 +38,7 @@
       <ul id="header-nav" class="nav navbar-nav">
 
         <li><a href="#hero" class="hidden">Top</a></li>
-        <li><a href="/promo">Promo</a></li>
+        <!--<li><a href="/promo">Promo</a></li>-->
         <% if controller_name == 'home' && action_name == 'index' %>
             <li><a href="#how-it-works">How it Works</a></li>
 
@@ -57,9 +57,13 @@
               <ul class="dropdown-menu" role="menu">
                 <li><a href="/account" class="external"><i class="fa fa-user"></i> Account</a></li>
                 <li>
-
                   <%= link_to mywines_path, class: 'external' do %>
                       <i class="fa fa-briefcase"></i> My Wines
+                  <% end %>
+                </li>
+                <li>
+                  <%= link_to promo_index_path, class: 'external' do %>
+                      <i class="fa fa-gift"></i> Promotions
                   <% end %>
                 </li>
                 <% if current_user.has_role?(:supplier) ||

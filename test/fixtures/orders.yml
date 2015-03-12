@@ -11,3 +11,11 @@ order2:
 order3:
   status: four
   client: client
+
+promo_order:
+  status: four
+  client: client
+  payment: client_payment
+  address: one
+  warehouse: two
+  delivery_price: 3.5

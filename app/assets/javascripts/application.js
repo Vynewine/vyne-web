@@ -1624,7 +1624,7 @@ var promoSummary = function($deliverySummary) {
     var $promo = $('#promotion');
 
     if($promo.val() !== '') {
-        $deliverySummary.append('<div>').addClass('center').text('Promotion: 1x - ' + $promo.val() + ' (£0.00)');
+        $deliverySummary.append($('<div>').append('<i>').addClass('fa fa-gift').text(' Promotion: 1x - ' + $promo.val() + ' (£0.00)'));
     }
 };
 

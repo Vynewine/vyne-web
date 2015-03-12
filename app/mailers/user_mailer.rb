@@ -281,6 +281,9 @@ module UserMailer
 
     begin
 
+      template = ERB.new(File.read(Rails.root.join('app', 'views', 'user_mailer', 'selected_wines.erb')))
+      order_items = template.result(binding)
+
       url_opt = Rails.application.config.action_mailer.default_url_options
 
       order_link = URI::HTTP.build({
@@ -294,15 +297,6 @@ module UserMailer
         card_number = '**** ****** ' + order.payment.number
       else
         card_number = '**** **** **** ' + order.payment.number
-      end
-
-      wine1 = order.order_items[0].wine
-      wine1_name = "#{wine1.name} #{wine1.txt_vintage}, #{wine1.producer.name}, £#{'%.2f' % order.order_items[0].price} (#{order.order_items[0].category.name})"
-
-
-      unless order.order_items[1].blank?
-        wine2 = order.order_items[1].wine
-        wine2_name = "#{wine2.name} #{wine2.txt_vintage}, #{wine2.producer.name}, £#{'%.2f' % order.order_items[1].price} (#{order.order_items[1].category.name})"
       end
 
       mandrill = Mandrill::API.new Rails.application.config.mandrill
@@ -354,12 +348,8 @@ module UserMailer
                           :content => card_number
                       },
                       {
-                          :name => 'FULLWINE1NAME',
-                          :content => wine1_name
-                      },
-                      {
-                          :name => 'FULLWINE2NAME',
-                          :content => wine2_name
+                          :name => 'RECEIPTWINES',
+                          :content => order_items
                       }
                   ]
               }
@@ -383,18 +373,8 @@ module UserMailer
 
     begin
 
-      order_item_1 = order.order_items[0]
-      wine_1_preferences = "Category:  £#{ '%.2f' % order_item_1.category.merchant_price_min} to
-      £#{ '%.2f' % order_item_1.category.merchant_price_max}
-      (#{order_item_1.category.name.capitalize}) #{order_item_1.preferences.to_sentence(last_word_connector: ' and ').capitalize}"
-
-      wine_2_preferences = ''
-      order_item_2 = order.order_items[1]
-      unless order_item_2.blank?
-        wine_2_preferences = "Category:  £#{ '%.2f' % order_item_2.category.merchant_price_min} to
-        £#{ '%.2f' % order_item_2.category.merchant_price_max}
-        (#{order_item_2.category.name.capitalize}) #{order_item_2.preferences.to_sentence(last_word_connector: ' and ').capitalize}"
-      end
+      template = ERB.new(File.read(Rails.root.join('app', 'views', 'user_mailer', 'order_items.erb')))
+      order_items = template.result(binding)
 
       mandrill = Mandrill::API.new Rails.application.config.mandrill
       template_name = 'merchant-order-confirmation-5tmsmov1'
@@ -417,12 +397,8 @@ module UserMailer
                           :content => order.id.to_s
                       },
                       {
-                          :name => 'WINE1MERCHANT',
-                          :content => wine_1_preferences
-                      },
-                      {
-                          :name => 'WINE2MERCHANT',
-                          :content => wine_2_preferences
+                          :name => 'RECEIPTWINES',
+                          :content => order_items
                       }
                   ]
               }
@@ -499,17 +475,6 @@ module UserMailer
 
     begin
 
-      unless order.order_items[0].wine.blank?
-        wine1 = order.order_items[0].wine
-        wine1_name = "#{wine1.name} #{wine1.txt_vintage}, #{wine1.producer.name}, £#{'%.2f' % order.order_items[0].price} (#{order.order_items[0].category.name})"
-
-        unless order.order_items[1].blank?
-          wine2 = order.order_items[1].wine
-          wine2_name = "#{wine2.name} #{wine2.txt_vintage}, #{wine2.producer.name}, £#{'%.2f' % order.order_items[1].price} (#{order.order_items[1].category.name})"
-        end
-      end
-
-
       mandrill = Mandrill::API.new Rails.application.config.mandrill
       template_name = 'cancellation-2scch'
       message = {
@@ -541,18 +506,6 @@ module UserMailer
                       {
                           :name => 'VYNEORDERID',
                           :content => order.id.to_s
-                      },
-                      {
-                          :name => 'ORDERTOTAL',
-                          :content => order.total_price.blank? ? '' : '£' + '%.2f' % order.total_price
-                      },
-                      {
-                          :name => 'WINE1RECEIPT',
-                          :content => wine1_name
-                      },
-                      {
-                          :name => 'WINE2RECEIPT',
-                          :content => wine2_name
                       }
                   ]
               }

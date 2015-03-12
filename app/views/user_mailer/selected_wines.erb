@@ -1,0 +1,18 @@
+<%
+   order.order_items.each do |item|
+
+     category = ''
+
+     if item.category.blank?
+       category = 'Promotion'
+     else
+       category = item.category.name
+     end
+%>
+    <div style="margin: 5px 0 5px 0">
+      <span style="color:#FFFFFF;  font-size:17px">
+        <%= "#{item.quantity}x - #{item.wine.full_info}, £#{'%.2f' % item.final_price} (#{category})" %>
+        </span>
+    </div>
+
+<% end %>

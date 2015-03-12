@@ -48,8 +48,8 @@ var Promotion = React.createClass({
                             ' your promotion (code ' + promotion.code + ' - "' + promotion.title + '") in your account,' +
                             ' and let you know when we deliver to this postcode. ', true);
                         } else {
-                            setPromotion('Your promotion ' + promotion.title +
-                            ' will be applied to your order automatically upon checkout.', false);
+                            setPromotion('Your promotion "' + promotion.title +
+                            '" will be applied to your order automatically upon checkout.', false);
                         }
 
                     } else {
@@ -81,7 +81,7 @@ var CheckPostcode = React.createClass({
     getInitialState: function () {
         return {
             showErrorLabel: false,
-            filterPostcode: this.props.initialFilterPostcode || $.cookie('postcode'),
+            filterPostcode: this.props.initialFilterPostcode,
             typingTimer: null
         };
     },
@@ -188,14 +188,13 @@ var LiveDelivery = React.createClass({
         };
     },
     componentWillReceiveProps: function (nextProps) {
-        if (nextProps.deliveryOptions.today_warehouse.id) {
 
-            this.setState({
-                warehouse: nextProps.deliveryOptions.today_warehouse,
-                liveDeliveryEnabled: nextProps.deliveryOptions.today_warehouse.is_open,
-                nextOpenWarehouse: nextProps.deliveryOptions.next_open_warehouse
-            });
-        }
+        this.setState({
+            warehouse: nextProps.deliveryOptions.today_warehouse,
+            liveDeliveryEnabled: nextProps.deliveryOptions.today_warehouse.is_open,
+            nextOpenWarehouse: nextProps.deliveryOptions.next_open_warehouse,
+            filterPostcode: nextProps.initialFilterPostcode
+        });
     },
     render: function () {
 
@@ -237,6 +236,8 @@ var LiveDelivery = React.createClass({
                     between {this.state.nextOpenWarehouse.opening_time}-{this.state.nextOpenWarehouse.closing_time}
                 </h4>
             );
+        } else {
+            deliverNow = '';
         }
 
 
@@ -258,32 +259,30 @@ var BlockDelivery = React.createClass({
         };
     },
     componentWillReceiveProps: function (nextProps) {
-        if (nextProps.deliveryOptions.today_warehouse.id) {
+        var slots = nextProps.deliveryOptions.delivery_slots;
+        var slotDate = '';
+        var slotFrom = '';
+        var slotTo = '';
+        var slotWarehouse = '';
 
-            var slots = nextProps.deliveryOptions.delivery_slots;
-            var slotDate = '';
-            var slotFrom = '';
-            var slotTo = '';
-            var slotWarehouse = '';
-
-            if (slots) {
-                slotDate = slots[0].date;
-                slotFrom = slots[0].from;
-                slotTo = slots[0].to;
-                slotWarehouse = slots[0].warehouse_id;
-            }
-
-            this.setState({
-                warehouse: nextProps.deliveryOptions.today_warehouse,
-                deliverySlots: slots,
-                daytimeSlotsAvailable: nextProps.deliveryOptions.daytime_slots_available,
-                liveDeliveryEnabled: nextProps.deliveryOptions.today_warehouse.is_open,
-                slotDate: slotDate,
-                slotFrom: slotFrom,
-                slotTo: slotTo,
-                slotWarehouse: slotWarehouse
-            });
+        if (slots && slots.length) {
+            slotDate = slots[0].date;
+            slotFrom = slots[0].from;
+            slotTo = slots[0].to;
+            slotWarehouse = slots[0].warehouse_id;
         }
+
+        this.setState({
+            warehouse: nextProps.deliveryOptions.today_warehouse,
+            deliverySlots: slots,
+            daytimeSlotsAvailable: nextProps.deliveryOptions.daytime_slots_available,
+            liveDeliveryEnabled: nextProps.deliveryOptions.today_warehouse.is_open,
+            slotDate: slotDate,
+            slotFrom: slotFrom,
+            slotTo: slotTo,
+            slotWarehouse: slotWarehouse,
+            filterPostcode: nextProps.initialFilterPostcode
+        });
     },
     selectSlot: function (event) {
         var slot = $(event.target).find("option:selected").data('value');
@@ -513,12 +512,16 @@ var Availability = React.createClass({
 
     getInitialState: function () {
         return {
-            deliveryOptions: {}
+            deliveryOptions: {},
+            postcode: this.props.initialFilterPostcode
         };
     },
     loadData: function (postcode) {
         checkWarehouseAvailability(postcode, function (deliveryOptions) {
-            this.setState({deliveryOptions: deliveryOptions});
+            this.setState({
+                deliveryOptions: deliveryOptions,
+                postcode: postcode
+            });
         }.bind(this));
     },
     handlePostcodeChange: function (postcode) {
@@ -532,21 +535,21 @@ var Availability = React.createClass({
                     deliveryOptions={this.state.deliveryOptions}
                 />
                 <CheckPostcode
-                    initialFilterPostcode={this.props.initialFilterPostcode}
+                    initialFilterPostcode={this.state.postcode}
                     onPostcodeChange={this.handlePostcodeChange}
                     deliveryOptions={this.state.deliveryOptions}
                 />
                 <LiveDelivery
                     deliveryOptions={this.state.deliveryOptions}
-                    initialFilterPostcode={this.props.initialFilterPostcode}
+                    initialFilterPostcode={this.state.postcode}
                 />
                 <BlockDelivery
                     deliveryOptions={this.state.deliveryOptions}
-                    initialFilterPostcode={this.props.initialFilterPostcode}
+                    initialFilterPostcode={this.state.postcode}
                 />
                 <MailingList
                     deliveryOptions={this.state.deliveryOptions}
-                    initialFilterPostcode={this.props.initialFilterPostcode}
+                    initialFilterPostcode={this.state.postcode}
                 />
             </div>
         );
