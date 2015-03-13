@@ -55,6 +55,44 @@ module PromotionHelper
     end
   end
 
+  def self.enable_referral_promotion(user)
+    log "Enabling referral promotion for user: #{user.id}."
+    begin
+
+      current_promotion = Promotion.where(:category => Promotion.categories[:wine], :active => true).first
+
+      if current_promotion.blank?
+        log_error 'No active promotions found'
+        return
+      end
+
+      new_referral = Referral.new(
+          :user => user,
+          :promotion => current_promotion
+      )
+
+      unless new_referral.save
+        log_error new_referral.errors.full_messages
+        return new_referral.errors.full_messages
+      end
+
+      new_referral_code = ReferralCode.new(
+          :referral => new_referral
+      )
+
+      unless new_referral_code.save
+        log_error new_referral_code.errors.full_messages
+        return new_referral_code.errors.full_messages
+      end
+
+    rescue Exception => exception
+      message = "Error occurred while enabling referral promotion: #{exception.class} - #{exception.message}"
+      log_error message
+      log_error exception
+    end
+
+  end
+
   def self.process_sharing_reward(order_item)
 
     log hash: order_item

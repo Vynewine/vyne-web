@@ -79,7 +79,11 @@
                   <strong>Delivery Window:</strong>
                   <%= local_time(@order.order_schedule[:from], '%b %d, %Y %l:%M %p') %> -
                   <%= local_time(@order.order_schedule[:to], '%l:%M %p') %>
-                  (Fulfillment at: <%= local_time(@order.order_schedule[:schedule_date], '%b %d, %Y %l:%M %p') %>)
+
+                  <% unless @order.order_schedule[:schedule_date].blank? %>
+                      (Fulfillment at: <%= local_time(@order.order_schedule[:schedule_date], '%b %d, %Y %l:%M %p') %>)
+                  <% end %>
+
                 </div>
               </div>
             </li>

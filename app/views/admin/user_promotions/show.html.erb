@@ -1,0 +1,87 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Promotions Details</h3>
+  </div>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Id:</strong>
+          <%= @user_promotion.id %>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Created:</strong>
+          <%= @user_promotion.created_at %>
+        </div>
+      </div>
+    </li>
+
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>User:</strong>
+          <%= link_to admin_user_path(@user_promotion.user) do %>
+              <%= @user_promotion.user.name %>
+          <% end %>
+        </div>
+      </div>
+    </li>
+
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Category:</strong>
+          <%= @user_promotion.category %>
+        </div>
+      </div>
+    </li>
+
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Referral:</strong>
+          <% unless @user_promotion.referral_code.blank? %>
+              <%= link_to admin_referral_path(@user_promotion.referral_code.referral) do %>
+                  <%= @user_promotion.referral_code.code %>
+              <% end %>
+          <% end %>
+        </div>
+      </div>
+    </li>
+
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Friend</strong>
+          <% unless @user_promotion.friend.blank? %>
+              <%= link_to admin_user_path(@user_promotion.friend) do %>
+              <%= @user_promotion.friend.name %>
+              <% end %>
+          <% end %>
+        </div>
+      </div>
+    </li>
+
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Redeemed</strong>
+          <%= @user_promotion.redeemed %>
+        </div>
+      </div>
+    </li>
+
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Can Be Redeemed</strong>
+          <%= @user_promotion.can_be_redeemed %>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

@@ -5,7 +5,7 @@ class Admin::ReferralsController < ApplicationController
   before_action :set_referral, only: [:show, :edit, :update, :destroy]
 
   def index
-    @referrals = Referral.all.order(:id)
+    @referrals = Referral.all.order('id DESC').page(params[:page])
   end
 
   def show

@@ -64,4 +64,17 @@ class ReferralCodeTest < ActiveSupport::TestCase
 
     assert_equal('NICE-CODE', referral_code.code)
   end
+
+  test 'Will remove white space from first name' do
+    referral = referrals(:one)
+
+    referral.user.first_name = 'Mikie Mike'
+
+    referral_code = ReferralCode.create(
+        :referral => referral
+    )
+
+    assert_equal('MIKIEMIKE-DOE', referral_code.code)
+
+  end
 end

@@ -5,9 +5,13 @@
   <ul class="list-group">
     <li class="list-group-item">
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-6">
           <strong>Id:</strong>
           <%= @user.id %>
+        </div>
+        <div class="col-md-6">
+          <strong>Created:</strong>
+          <%= @user.created_at %>
         </div>
       </div>
     </li>
@@ -96,6 +100,42 @@
                 <% end %>
                 </tbody>
               </table>
+          <% end %>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Orders:</strong>
+          <% @user.orders.order(:id).each do |order| %>
+              <%= link_to admin_order_path(order.id) do %>
+                <%= order.id %>
+              <% end %>
+          <% end %>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Promotions:</strong>
+          <% @user.user_promotions.order(:id).each do |promotion| %>
+              <%= link_to admin_user_promotion_path(promotion.id) do %>
+                  <%= promotion.id %>
+              <% end %>
+          <% end %>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Referrals:</strong>
+          <% @user.referrals.order(:id).each do |referral| %>
+              <%= link_to admin_referral_path(referral.id) do %>
+                  <%= referral.id %>
+              <% end %>
           <% end %>
         </div>
       </div>

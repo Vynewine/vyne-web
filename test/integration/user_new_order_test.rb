@@ -163,6 +163,45 @@ class UserNewOrderTest < ActiveSupport::TestCase
 
   end
 
+  test 'Register User' do
+    name = Time.now.strftime('%Y%m%d%H%M%S')
+    email = name + '@vyne.london'
+    password = 'password'
+
+    @driver.get(@base_url + '/users/sign_up')
+
+    @driver.find_element(:id, 'user_first_name').send_keys name
+    @driver.find_element(:id, 'user_last_name').send_keys 'Borys'
+    @driver.find_element(:id, 'user_email').send_keys email
+    @driver.find_element(:id, 'user_mobile').send_keys '07718225201'
+    @driver.find_element(:id, 'user_password').send_keys password
+    @driver.find_element(:id, 'user_password_confirmation').send_keys password
+
+    @driver.find_element(:css, 'input[type=\'submit\']').click
+
+
+    #@wait.until { @driver.find_element(:xpath, "//*[contains(text(), '#{email}')]").displayed? }
+
+  end
+
+  test 'Page contains text' do
+    email = 'jakub.borys@gmail.com'
+
+    #@driver.get(@base_url + '/login')
+    @driver.get(@base_url)
+    # @driver.find_element(:id, 'user_email').send_keys email
+    # @driver.find_element(:id, 'user_password').send_keys 'Wines1234'
+    # @driver.find_element(:css, 'input[type=\'submit\']').click
+    #@driver.get(@base_url + '/account')
+
+    xpath = "//*[contains(text(), '#{email}')]"
+
+    puts xpath
+
+    @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Delivered')]").displayed? }
+
+  end
+
   def enter_promo_code(promo_code, postcode)
 
       puts 'Entering Promo Code'

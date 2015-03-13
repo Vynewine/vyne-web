@@ -163,6 +163,8 @@ Rails.application.routes.draw do
       resources :referral_codes
     end
 
+    resources :user_promotions
+
     post '/orders/list' => 'orders#list'
     get 'advise/choose' => 'advisors#choose'
     get 'advise/item/:id' => 'advisors#item'

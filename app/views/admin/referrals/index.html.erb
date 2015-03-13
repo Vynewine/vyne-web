@@ -9,6 +9,7 @@
       <th>Id</th>
       <th>Promotion</th>
       <th>User</th>
+      <th>Created</th>
       <th></th>
     </tr>
     </thead>
@@ -18,7 +19,12 @@
         <tr>
           <td><%= referral.id %></td>
           <td><%= referral.promotion.title %></td>
-          <td><%= referral.user.name + ' - ' + referral.user.email  %></td>
+          <td>
+            <%= link_to admin_user_path(referral.user) do %>
+            <%= referral.user.name + ' - ' + referral.user.email  %>
+          <% end %>
+          </td>
+          <td><%= referral.created_at %></td>
           <td class="button-wrapper">
             <%= link_to admin_referral_path(referral, :page => params[:page]), class: 'btn btn-default' do %>
                 <i class="glyphicon glyphicon-search"></i>
@@ -31,10 +37,17 @@
 
   <ul class="list-group">
     <li class="list-group-item">
-      <%= link_to admin_promotions_path, class: 'btn btn-default' do %>
-          <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back To Promotion
-      <% end %>
-      <%= link_to 'New User Referral', new_admin_referral_path, :class => 'btn btn-primary' %>
+      <div class="row">
+        <div class="col-xs-4">
+          <%= link_to admin_promotions_path, class: 'btn btn-default' do %>
+              <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back To Promotion
+          <% end %>
+          <%= link_to 'New User Referral', new_admin_referral_path, :class => 'btn btn-primary' %>
+        </div>
+        <div class="col-xs-8 text-right">
+          <%= will_paginate @referrals, :class => 'vyne_pagination' %>
+        </div>
+      </div>
     </li>
   </ul>
 </div>
