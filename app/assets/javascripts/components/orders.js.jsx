@@ -81,7 +81,9 @@ var WinePreferences = React.createClass({
                     <div className="order-divider"></div>
                     <div className="row">
                         <div className="col-xs-12">
-                            <span className="section-promotion"><i className="fa fa-gift"></i> Promotion: {description}</span>
+                            <span className="section-promotion">
+                                <i className="fa fa-gift"></i>
+                                Promotion: {description}</span>
                         </div>
                     </div>
                 </div>
@@ -415,7 +417,7 @@ var ChangeOrder = React.createClass({
             requestSubstitutions = (
                 <div className="row">
                     <div className="col-xs-12 text-center order-change">
-                        <a href={'/orders/' + this.props.order.id + '/substitution_request'} className="btn btn-gray">
+                        <a href={'/orders/' + this.props.order.id + '/substitution_request'} className="btn btn-warning">
                             <i className="fa fa-exchange"></i>
                         &nbsp;
                             Change wine choice
@@ -429,7 +431,7 @@ var ChangeOrder = React.createClass({
             cancelOrder = (
                 <div className="row">
                     <div className="col-xs-12 text-center order-change">
-                        <a href={'/orders/' + this.props.order.id + '/cancellation_request'} className="btn btn-warning">
+                        <a href={'/orders/' + this.props.order.id + '/cancellation_request'} className="btn btn-gray">
                             Cancel Order
                         </a>
                     </div>
@@ -673,21 +675,36 @@ var Next = React.createClass({
         switch (status) {
             case 'created':
             case 'pending':
-                this.setText('We will notify you the merchant\'s sommelier chooses your wine based on the preferences provided. You will be able to review their selection before delivery.');
+                this.setText(
+                    (
+                        <div>
+                            <p>We will notify you once the merchant's sommelier chooses your wine,
+                            based on the preferences you provided.</p>
+                            <p>You will be able to review their selection before delivery.</p>
+                        </div>
+                    )
+                );
                 break;
             case 'advised':
-                this.setText('You\'ll see wine coming your way');
+                this.setText('You can track the delivery of your wine.');
                 break;
             case 'packing':
             case 'pickup':
-                this.setText('The courier is on the first leg of the journey: to the wine cellar. Check this page in 10-20 minutes to see if the bottle has been collected and on its way to you.');
+                this.setText(
+                    (
+                        <div>
+                            <p>The courier is on the first leg of the journey: <br/> to the wine cellar.</p>
+                            <p>We'll send you a text very shortly, when the courier is on the way to your address.</p>
+                            <p>Click the link in the text, or remain on this page, to track the courier's progress live</p>
+                        </div>
+                    )
+                );
                 break;
             case 'in transit':
-                this.setText('Wine is on it\'s way! Please make sure to be present at: ' + this.props.order.address.postcode + '.');
+                this.setText('Your wine is on it\'s way! Please make sure to be present at: ' +
+                this.props.order.address.postcode + '.');
                 break;
             case 'delivered':
-                this.setText('');
-                break;
             case 'payment failed':
                 this.setText('');
                 break;

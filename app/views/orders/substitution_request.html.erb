@@ -27,7 +27,7 @@
                       <div class="merchant-note">Merchant Note: <%= item.advisory_note %> </div>
                   <% end %>
                   <div class="form-group">
-                    <input type="submit" id="request-<%= item.id %>" onclick="requestSubstitution(<%= item.id %>)" class="btn btn-gray" data-id="<%= item.id %>" value="Change">
+                    <input type="submit" id="request-<%= item.id %>" onclick="requestSubstitution(<%= item.id %>)" class="btn btn-warning" data-id="<%= item.id %>" value="Change">
                     <input type="text" id="substitution-reason-<%= item.id %>" style="display: none; margin-top: 10px;" class="form-control" placeholder="Reason for substitution"/>
                     <div class="total" style="display: none; margin-top: 10px;" id="reason-error-<%= item.id %>">* Please enter reason for this
                       substitution.
