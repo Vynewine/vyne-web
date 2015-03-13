@@ -118,6 +118,8 @@ class OrdersController < ApplicationController
       end
     end
 
+    Resque.remove_delayed(OrderConfirmation, :order_id => @order.id, :admin => @order.client.admin?)
+
     @order.status_id = Status.statuses[:pending]
 
     @order.save
@@ -150,6 +152,7 @@ class OrdersController < ApplicationController
       return
     end
 
+    Resque.remove_delayed(OrderConfirmation, :order_id => @order.id, :admin => @order.client.admin?)
     Resque.enqueue(OrderCancellation, params[:order_id], params[:reason])
     redirect_to order_path(params[:order_id], :cancelled => 'true')
   end
