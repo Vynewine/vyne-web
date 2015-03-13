@@ -95,7 +95,7 @@ module PromotionHelper
 
   def self.process_sharing_reward(order_item)
 
-    log hash: order_item
+    log "Processing sharing reward for order: #{order_item.order.id} order item: #{order_item.id}"
 
     begin
       unless order_item.blank?
@@ -105,7 +105,7 @@ module PromotionHelper
             :category => UserPromotion.categories[:sharing_reward]
         )
 
-        if sharing_user_promotion.blank?
+        if sharing_user_promotion.blank? && !order_item.user_promotion.referral_code.referral.user.admin?
           log_error 'We should process this promotion'
         else
           sharing_user_promotion.can_be_redeemed = true
