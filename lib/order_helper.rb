@@ -18,6 +18,10 @@ module OrderHelper
     if order.charge_id.blank? && order.status_id == Status.statuses[:advised]
       if admin
         order.charge_id = 'Admin'
+        log 'Not charging Admins'
+      elsif order.free
+        log 'Not Charging Free Orders'
+        order.charge_id = 'Free'
       else
         results = StripeHelper.charge_card(value, stripe_card_id, stripe_customer_id)
 

@@ -149,7 +149,11 @@
                     <div class="col-xs-12">
                       <strong>Payment:</strong>
                       <% if @order.charge_id.blank? %>
-                          <span class="to-do">Payment not processed</span>
+                          <% if @order.free %>
+                              free
+                          <% else %>
+                              <span class="to-do">Payment not processed</span>
+                          <% end %>
                       <% else %>
                           Stripe Charge Id: <%= @order.charge_id %>
                       <% end %>
@@ -227,7 +231,7 @@
             <% else %>
                 £<%= '%.2f' % item.final_price %>
                 <% if item.final_price != item.price %>
-                (£<%= '%.2f' % item.price %>)
+                    (£<%= '%.2f' % item.price %>)
                 <% end %>
             <% end %>
           </td>
