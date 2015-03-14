@@ -105,8 +105,10 @@ module PromotionHelper
             :category => UserPromotion.categories[:sharing_reward]
         )
 
-        if sharing_user_promotion.blank? && !order_item.user_promotion.referral_code.referral.user.admin?
-          log_error 'We should process this promotion'
+        if sharing_user_promotion.blank?
+          unless order_item.user_promotion.referral_code.referral.user.admin?
+            log_error 'We should process this promotion'
+          end
         else
           sharing_user_promotion.can_be_redeemed = true
           sharing_user_promotion.save
