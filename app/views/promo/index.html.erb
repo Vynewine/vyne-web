@@ -37,7 +37,20 @@
                         <span class="description">Share: </span>
                       </div>
                       <a href="https://twitter.com/intent/tweet?text=Use my Vyne promo code <%= @promotion[:promo_code] %> to get an extra bottle of wine with your first order. http://vyne.co.uk/?promo=<%= @promotion[:promo_code] %>" target="_blank" class="share-code"><span class="fa fa-twitter"></span></a>
-                      <a href="mailto:?subject=Try Vyne Today&body=Use my Vyne promo code <%= @promotion[:promo_code] %> to get an extra bottle of wine with your first order. http://vyne.co.uk/?promo=<%= @promotion[:promo_code] %>" target="_blank" class="share-code"><i class="fa fa-envelope-o"></i></a>
+
+                      <% facebook_url = 'https://www.facebook.com/dialog/feed?' +
+                              'app_id=1585515301707227' +
+                              '&display=popup' +
+                              '&name=' + ('Try Vyne using my promo code: ' + @promotion[:promo_code] + ' to get an extra bottle with your first order!').html_safe +
+                              '&description=' + ('Discover London’s top wine cellars. Personal bottle recommendation by sommeliers as you order.').html_safe +
+                              '&caption=' + ('Delivered in minutes from the best wine merchants.').html_safe +
+                              '&link=' + ('https://www.vyne.co.uk/promo/?promo=' + @promotion[:promo_code]).html_safe +
+                              '&picture=' + ('https://www.vyne.co.uk/vyne.cellar.jpg').html_safe +
+                              '&redirect_uri=https://www.vyne.co.uk/'
+
+                      %>
+                      <a href="<%= facebook_url %>" target="_blank" class="share-code"><span class="fa fa-facebook"></span></a>
+                      <a href="mailto:?subject=You're going to love Vyne&body=Use my Vyne promo code <%= @promotion[:promo_code] %> to get an extra bottle of wine with your first order. http://vyne.co.uk/?promo=<%= @promotion[:promo_code] %>" target="_blank" class="share-code"><i class="fa fa-envelope-o"></i></a>
 
                       <div>
                         <span class="description">Link:</span>

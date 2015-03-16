@@ -11,7 +11,7 @@ class UserNewOrderTest < ActiveSupport::TestCase
     @accept_next_alert = true
     @driver.manage.timeouts.implicit_wait = 10
     @verification_errors = []
-    @wait = Selenium::WebDriver::Wait.new(:timeout => 2)
+    @wait = Selenium::WebDriver::Wait.new(:timeout => 5)
   end
 
   def teardown
@@ -132,7 +132,7 @@ class UserNewOrderTest < ActiveSupport::TestCase
 
     @driver.get(@base_url + '/promo')
 
-    enter_promo_code('xyz','n17rj')
+    enter_promo_code('VYNEHEROES','n17rj')
     select_bottle_for_category(2)
     select_wine_by_occasion
     select_second_bottle
@@ -144,8 +144,8 @@ class UserNewOrderTest < ActiveSupport::TestCase
     register_new_credit_card
     submit_order
 
-    #@wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Promotion')]").displayed? }
-    # @wait.until { @driver.find_element(:xpath, "//*[contains(text(), '2.50')]").displayed? }
+    @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Promotion')]").displayed? }
+    @wait.until { @driver.find_element(:xpath, "//*[contains(text(), '2.50')]").displayed? }
   end
 
   test 'New account with new account promotion' do
@@ -155,7 +155,7 @@ class UserNewOrderTest < ActiveSupport::TestCase
 
     @driver.get(@base_url + '/promo')
 
-    enter_promo_code('ABC','n17rj')
+    enter_promo_code('VYNEHEROES','n17rj')
     select_bottle_for_category(2)
     select_wine_by_occasion
     confirm_order_selection
@@ -178,9 +178,7 @@ class UserNewOrderTest < ActiveSupport::TestCase
     @driver.find_element(:id, 'user_password_confirmation').send_keys password
 
     @driver.find_element(:css, 'input[type=\'submit\']').click
-
-
-    #@wait.until { @driver.find_element(:xpath, "//*[contains(text(), '#{email}')]").displayed? }
+    @wait.until { @driver.find_element(:xpath, "//*[contains(text(), '#{email}')]").displayed? }
 
   end
 
