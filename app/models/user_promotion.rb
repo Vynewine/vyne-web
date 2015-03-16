@@ -7,6 +7,7 @@ class UserPromotion < ActiveRecord::Base
   # In case of new_account_reward record we can find out who sent it via referral_code association.
   belongs_to :friend, class_name: 'User'
   belongs_to :referral_code
+  belongs_to :promotion_code
 
   enum category: [:sign_up_reward, :sharing_reward]
 

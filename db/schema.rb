@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150313095637) do
+ActiveRecord::Schema.define(version: 20150316121429) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -377,13 +377,30 @@ ActiveRecord::Schema.define(version: 20150313095637) do
   add_index "producers", ["country_id"], :name => "index_producers_on_country_id"
   add_index "producers", ["deleted_at"], :name => "index_producers_on_deleted_at"
 
-  create_table "promotions", force: true do |t|
-    t.string   "title"
-    t.integer  "category",   default: 0,     null: false
-    t.boolean  "active",     default: false
+  create_table "promotion_codes", force: true do |t|
+    t.integer  "promotion_id"
+    t.string   "code"
+    t.boolean  "active",             default: true
+    t.datetime "expiration_date"
+    t.integer  "redeem_count_limit", default: 0,    null: false
+    t.integer  "category",                          null: false
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  add_index "promotion_codes", ["promotion_id"], :name => "index_promotion_codes_on_promotion_id"
+
+  create_table "promotions", force: true do |t|
+    t.string   "title"
+    t.integer  "category",        default: 0,     null: false
+    t.boolean  "active",          default: false
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "free_delivery"
+    t.boolean  "extra_bottle"
+    t.integer  "bottle_category"
   end
 
   create_table "referral_codes", force: true do |t|
@@ -403,6 +420,9 @@ ActiveRecord::Schema.define(version: 20150313095637) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "promotion_code_id"
+    t.integer  "referred_user_id"
+    t.integer  "existing_user_id"
   end
 
   add_index "referrals", ["promotion_id"], :name => "index_referrals_on_promotion_id"
@@ -482,16 +502,28 @@ ActiveRecord::Schema.define(version: 20150313095637) do
 
   add_index "types", ["deleted_at"], :name => "index_types_on_deleted_at"
 
-  create_table "user_promotions", force: true do |t|
+  create_table "user_promotion_codes", force: true do |t|
+    t.integer  "promotion_code_id"
     t.integer  "user_id"
-    t.integer  "category",                         null: false
-    t.integer  "referral_code_id"
-    t.integer  "friend_id"
-    t.boolean  "redeemed",         default: false, null: false
-    t.boolean  "can_be_redeemed",  default: false, null: false
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  add_index "user_promotion_codes", ["promotion_code_id"], :name => "index_user_promotion_codes_on_promotion_code_id"
+  add_index "user_promotion_codes", ["user_id"], :name => "index_user_promotion_codes_on_user_id"
+
+  create_table "user_promotions", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "category",                          null: false
+    t.integer  "referral_code_id"
+    t.integer  "friend_id"
+    t.boolean  "redeemed",          default: false, null: false
+    t.boolean  "can_be_redeemed",   default: false, null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "promotion_code_id"
   end
 
   add_index "user_promotions", ["friend_id"], :name => "index_user_promotions_on_friend_id"
@@ -568,8 +600,8 @@ ActiveRecord::Schema.define(version: 20150313095637) do
     t.integer  "warehouse_id"
     t.integer  "promotion_id"
     t.boolean  "active"
-    t.decimal  "price_range_min"
-    t.decimal  "price_range_max"
+    t.decimal  "extra_bottle_price_min"
+    t.decimal  "extra_bottle_price_max"
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
