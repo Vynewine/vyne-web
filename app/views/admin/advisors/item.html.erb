@@ -126,8 +126,8 @@
 </div>
 
 <input type="hidden" id="order-id" name="order-id" value="<%= @order.id %>"/>
-<input type="hidden" id="price-range-min" value="<%= @order_item.warehouse_promotion.blank? ? '' : @order_item.warehouse_promotion.price_range_min %>"/>
-<input type="hidden" id="price-range-max" value="<%= @order_item.warehouse_promotion.blank? ? '' : @order_item.warehouse_promotion.price_range_max %>"/>
+<input type="hidden" id="price-range-min" value="<%= @order_item.warehouse_promotion.blank? ? '' : @order_item.warehouse_promotion.extra_bottle_price_min %>"/>
+<input type="hidden" id="price-range-max" value="<%= @order_item.warehouse_promotion.blank? ? '' : @order_item.warehouse_promotion.extra_bottle_price_max %>"/>
 
 <form method="post" action="/admin/advise/item/<%= @order_item.id %>" id="update-form">
   <input type="hidden" id="wine-id" name="wine_id"/>

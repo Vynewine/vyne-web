@@ -25,8 +25,8 @@
               <td><%= code.expiration_date.blank? ? "Doesn't expire" : code.expiration_date %></td>
               <td><%= code.redeem_count_limit == 0 ? 'No limit' : code.redeem_count_limit %></td>
               <td class="button-wrapper">
-                <%= link_to admin_promotion_promotion_code_path(params[:promotion_id],code), class: 'btn btn-default' do %>
-                    <i class="glyphicon glyphicon-search"></i>
+                <%= link_to edit_admin_promotion_promotion_code_path(params[:promotion_id], code), class: 'btn btn-default' do %>
+                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                 <% end %>
               </td>
             </tr>
@@ -41,12 +41,66 @@
           <%= link_to admin_promotion_path(params[:promotion_id]), class: 'btn btn-default' do %>
               <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back To Promotion
           <% end %>
-          <%= link_to 'New Promo Code', new_admin_promotion_promotion_code_path, :class => 'btn btn-primary' %>
+          <%= link_to 'New Vyne Promo Code', new_admin_promotion_promotion_code_path, :class => 'btn btn-primary' %>
         </div>
       </div>
     </li>
   </ul>
 </div>
+
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">User Referral Codes for <%= @promotion.title %></h3>
+  </div>
+
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>Id</th>
+      <th>Code</th>
+      <th>Active</th>
+      <th>User</th>
+      <th></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <% unless @referral_codes.blank? %>
+        <% @referral_codes.each do |code| %>
+            <tr>
+              <td><%= code.id %></td>
+              <td><%= code.code %></td>
+              <td><%= code.active %></td>
+              <td>
+                <%= link_to admin_user_path(code.user) do %>
+                    <%= "#{code.user.id} - #{code.user.name} - #{code.user.email}" %>
+                <% end %>
+              </td>
+              <td class="button-wrapper">
+                <%= link_to edit_admin_promotion_promotion_code_path(params[:promotion_id], code, :category => :referral_code), class: 'btn btn-default' do %>
+                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                <% end %>
+              </td>
+            </tr>
+        <% end %>
+    <% end %>
+    </tbody>
+  </table>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-xs-4">
+          <%= link_to admin_promotion_path(params[:promotion_id]), class: 'btn btn-default' do %>
+              <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back To Promotion
+          <% end %>
+          <%= link_to 'New User Referral Code', new_admin_promotion_promotion_code_path(:category => :referral_code), :class => 'btn btn-primary' %>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+
 
 
 

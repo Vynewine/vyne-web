@@ -379,17 +379,19 @@ ActiveRecord::Schema.define(version: 20150316121429) do
 
   create_table "promotion_codes", force: true do |t|
     t.integer  "promotion_id"
+    t.integer  "category",                          null: false
     t.string   "code"
+    t.integer  "user_id"
     t.boolean  "active",             default: true
     t.datetime "expiration_date"
     t.integer  "redeem_count_limit", default: 0,    null: false
-    t.integer  "category",                          null: false
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "promotion_codes", ["promotion_id"], :name => "index_promotion_codes_on_promotion_id"
+  add_index "promotion_codes", ["user_id"], :name => "index_promotion_codes_on_user_id"
 
   create_table "promotions", force: true do |t|
     t.string   "title"
@@ -501,17 +503,6 @@ ActiveRecord::Schema.define(version: 20150316121429) do
   end
 
   add_index "types", ["deleted_at"], :name => "index_types_on_deleted_at"
-
-  create_table "user_promotion_codes", force: true do |t|
-    t.integer  "promotion_code_id"
-    t.integer  "user_id"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "user_promotion_codes", ["promotion_code_id"], :name => "index_user_promotion_codes_on_promotion_code_id"
-  add_index "user_promotion_codes", ["user_id"], :name => "index_user_promotion_codes_on_user_id"
 
   create_table "user_promotions", force: true do |t|
     t.integer  "user_id"

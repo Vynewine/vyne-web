@@ -8,15 +8,17 @@ class RegistrationsController < Devise::RegistrationsController
     super
 
     unless current_user.blank?
-      if cookies[:referral_code].blank?
-        errors = PromotionHelper.enable_referral_promotion(current_user)
-        unless errors.blank?
-          logger.error errors
-        end
-      else
-        errors = PromotionHelper.apply_sign_up_promotion(current_user, cookies[:referral_code])
+
+      errors = PromotionHelper.enable_referral_promotion(current_user)
+
+      unless errors.blank?
+        logger.error errors
+      end
+
+      unless cookies[:promo_code].blank?
+        errors = PromotionHelper.add_promotion(current_user, cookies[:promo_code])
         if errors.blank?
-          cookies.delete :referral_code
+          cookies.delete :promo_code
         else
           logger.error errors
         end

@@ -63,14 +63,14 @@ class PromoController < ApplicationController
       return
     end
 
-    referral_code = ReferralCode.find_by(code: @code)
+    referral_code = PromotionCode.find_by(code: @code)
 
     if referral_code.blank?
       flash.now[:error] = "We can't locate promo code provided. Please make sure it's correct and enter it again."
       render :index
       return
     else
-      cookies[:referral_code] = {:value => @code, :expires => 1.month.from_now}
+      cookies[:promo_code] = {:value => @code, :expires => 1.month.from_now}
       redirect_to availability_index_path({:postcode => params[:postcode]})
       return
     end

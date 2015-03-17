@@ -17,13 +17,13 @@ class Admin::PromotionsController < ApplicationController
   end
 
   def edit
-
+    @categories = Category.all
   end
 
   def create
     @promotion = Promotion.new(promotion_params)
     if @promotion.save
-      redirect_to admin_promotions_path, notice: 'Promotion was successfully created.'
+      redirect_to admin_promotion_path(@promotion), notice: 'Promotion was successfully created.'
     else
       flash.now[:error] = @promotion.errors.full_messages.join(', ')
       render :new
@@ -32,7 +32,7 @@ class Admin::PromotionsController < ApplicationController
 
   def update
     if @promotion.update(promotion_params)
-      redirect_to admin_promotions_path, notice: 'Promotion was successfully updated.'
+      redirect_to admin_promotion_path(@promotion), notice: 'Promotion was successfully updated.'
     else
       render :edit
     end
@@ -50,7 +50,15 @@ class Admin::PromotionsController < ApplicationController
   end
 
   def promotion_params
-    params.require(:promotion).permit(:title, :category, :active)
+    params.require(:promotion).permit(
+        :title,
+        :category,
+        :active,
+        :free_delivery,
+        :extra_bottle,
+        :bottle_category_id,
+        :referral_promotion
+    )
   end
 
 end

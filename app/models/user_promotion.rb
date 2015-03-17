@@ -2,13 +2,10 @@ class UserPromotion < ActiveRecord::Base
   acts_as_paranoid
 
   belongs_to :user
-
-  # Friend is assigned to UserPromotion record when it's a referral_reward record.
-  # In case of new_account_reward record we can find out who sent it via referral_code association.
-  belongs_to :friend, class_name: 'User'
-  belongs_to :referral_code
   belongs_to :promotion_code
+  belongs_to :referral
 
+  #TODO These won't be needed any more
   enum category: [:sign_up_reward, :sharing_reward]
 
   validate :eligible_for_promotions, on: :create
@@ -53,6 +50,6 @@ class UserPromotion < ActiveRecord::Base
   end
 
   def to_s
-    referral_code.referral.promotion.title
+    promotion_code.promotion.title
   end
 end

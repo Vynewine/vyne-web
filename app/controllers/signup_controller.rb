@@ -21,17 +21,17 @@ class SignupController < ApplicationController
 
     if new_user.save
 
-      if cookies[:referral_code].blank?
-        errors = PromotionHelper.enable_referral_promotion(new_user)
-        unless errors.blank?
-          logger.error errors
-        end
-      else
-        errors = PromotionHelper.apply_sign_up_promotion(new_user, cookies[:referral_code])
+      errors = PromotionHelper.enable_referral_promotion(new_user)
+
+      unless errors.blank?
+        logger.error errors
+      end
+
+      unless cookies[:promo_code].blank?
+        errors = PromotionHelper.add_promotion(new_user, cookies[:promo_code])
         if errors.blank?
-          cookies.delete :referral_code
+          cookies.delete :promo_code
         else
-          #TODO Not sure how to handle error here
           logger.error errors
         end
       end

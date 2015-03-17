@@ -46,6 +46,7 @@
       </div>
     </li>
 
+    <% if params[:category].blank? %>
     <li class="list-group-item">
       <div class="row">
         <div class="col-md-12">
@@ -73,7 +74,16 @@
         </div>
       </div>
     </li>
-
+    <% else %>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-md-12">
+              <strong>User:</strong>
+                  <%= @promotion_code.user.name %>
+            </div>
+          </div>
+        </li>
+    <% end %>
   </ul>
   <div class="panel-footer">
     <div class="row">
@@ -81,7 +91,7 @@
         <%= link_to admin_promotion_promotion_codes_path(params[:promotion_id]), class: 'btn btn-default' do %>
             <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back To Promo Codes
         <% end %>
-        <%= link_to edit_admin_promotion_promotion_code_path(params[:promotion_id], @promotion_code), class: 'btn btn-default' do %>
+        <%= link_to edit_admin_promotion_promotion_code_path(params[:promotion_id], @promotion_code, :category => params[:category]), class: 'btn btn-default' do %>
             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
         <% end %>
 

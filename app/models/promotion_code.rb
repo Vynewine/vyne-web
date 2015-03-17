@@ -2,6 +2,7 @@ class PromotionCode < ActiveRecord::Base
   acts_as_paranoid
 
   belongs_to :promotion
+  belongs_to :user
 
   enum category: [:vyne_code, :referral_code]
 

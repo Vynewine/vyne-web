@@ -7,8 +7,8 @@ class WarehousePromotion < ActiveRecord::Base
   validates_uniqueness_of :warehouse_id, :scope => :promotion_id
 
   def to_s
-    unless price_range_min.blank? || price_range_max.blank?
-      "Price range: £#{'%.2f' % price_range_min}-#{'%.2f' % price_range_max}"
+    unless extra_bottle_price_min.blank? || extra_bottle_price_max.blank?
+      "Price range: £#{'%.2f' % extra_bottle_price_min}-#{'%.2f' % extra_bottle_price_max}"
     end
   end
 end

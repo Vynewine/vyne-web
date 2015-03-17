@@ -54,7 +54,7 @@ module OrderHelper
       promo_order_item = order.order_items.select{|item| item.user_promotion != nil}.first
 
       unless promo_order_item.blank?
-        PromotionHelper.process_sharing_reward(promo_order_item)
+        PromotionHelper.process_sharing_reward(promo_order_item.user_promotion)
       end
 
       #TODO Need to handle errors here

@@ -1,4 +1,4 @@
-<%= form_for([:admin, @promotion, @promotion_code  ]) do |f| %>
+<%= form_for([:admin, @promotion, @promotion_code]) do |f| %>
 
     <div class="form-group">
       Promotion: <%= @promotion.title %>
@@ -8,7 +8,7 @@
     <div class="form-group">
       <%= f.label :category %>
       <%=
-          f.select :category, PromotionCode.categories.keys.to_a, {}, :class => 'form-control'
+          f.select :category, options_for_select(PromotionCode.categories.keys, :selected => params[:category]), {}, :class => 'form-control'
       %>
     </div>
 
@@ -22,15 +22,24 @@
       <%= f.check_box :active %>
     </div>
 
-    <div class="form-group">
-      <%= f.label :expiration_date %> (leave blank for no expiration)
-      <%= f.date_select :expiration_date, :include_blank => true %>
-    </div>
+    <% if params[:category].blank? %>
 
-    <div class="form-group">
-      <%= f.label :redeem_count_limit %> (set to 0 for no limit)
-      <%= f.number_field :redeem_count_limit, step: 1, :class => 'form-control' %>
-    </div>
+        <div class="form-group">
+          <%= f.label :expiration_date %> (leave blank for no expiration)
+          <%= f.date_select :expiration_date, :include_blank => true %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :redeem_count_limit %> (set to 0 for no limit)
+          <%= f.number_field :redeem_count_limit, step: 1, :class => 'form-control' %>
+        </div>
+
+    <% else %>
+        <div class="form-group">
+          <%= f.label :user %><br>
+          <%= f.text_field :user_id, :class => 'form-control' %>
+        </div>
+    <% end %>
 
     <div class="actions">
       <%= f.submit(:class => 'btn btn-success') %>
