@@ -132,7 +132,7 @@ class UserNewOrderTest < ActiveSupport::TestCase
 
     @driver.get(@base_url + '/promo')
 
-    enter_promo_code('VYNEHEROES','n17rj')
+    enter_promo_code('JAKUB-519Z','n17rj')
     select_bottle_for_category(2)
     select_wine_by_occasion
     select_second_bottle

@@ -221,9 +221,8 @@ class MerchantsController < ApplicationController
       )
 
       unless user_promotion.blank?
-        promotion = user_promotion.referral_code.referral.promotion
-        promotion_code = user_promotion.referral_code.code
-        promotion_category = user_promotion.category
+        promotion = user_promotion.promotion_code.promotion
+        promotion_code = user_promotion.promotion_code.code
       end
 
     else
@@ -232,7 +231,6 @@ class MerchantsController < ApplicationController
         unless promo_code.blank?
           promotion = promo_code.promotion
           promotion_code = promo_code.code
-          promotion_category = :sign_up_reward
         end
       end
     end
@@ -240,8 +238,7 @@ class MerchantsController < ApplicationController
     unless promotion.blank?
       return {
           :title => promotion.title,
-          :code => promotion_code,
-          :category => promotion_category
+          :code => promotion_code
       }
     end
   end

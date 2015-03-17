@@ -8,8 +8,10 @@
     <tr>
       <th>Id</th>
       <th>Promotion</th>
-      <th>User</th>
-      <th>Created</th>
+      <th>Code</th>
+      <th>Existing User</th>
+      <th>Referred User</th>
+      <th>Created At</th>
       <th></th>
     </tr>
     </thead>
@@ -18,11 +20,25 @@
     <% @referrals.each do |referral| %>
         <tr>
           <td><%= referral.id %></td>
-          <td><%= referral.promotion.title %></td>
+          <td><%= referral.promotion_code.blank? ? 'old' : referral.promotion_code.promotion.title %></td>
+          <td><%= referral.promotion_code.blank? ? 'old' : referral.promotion_code.code %></td>
           <td>
-            <%= link_to admin_user_path(referral.user) do %>
-            <%= referral.user.name + ' - ' + referral.user.email  %>
-          <% end %>
+            <% if referral.existing_user.blank? %>
+                Old Referral
+            <% else %>
+                <%= link_to admin_user_path(referral.existing_user) do %>
+                    <%= "#{referral.existing_user.id} - #{referral.existing_user.name} - #{referral.existing_user.email}" %>
+                <% end %>
+            <% end %>
+          </td>
+          <td>
+            <% if referral.referred_user.blank? %>
+                Old Referral
+            <% else %>
+                <%= link_to admin_user_path(referral.referred_user) do %>
+                    <%= "#{referral.referred_user.id} - #{referral.referred_user.name} - #{referral.referred_user.email}" %>
+                <% end %>
+            <% end %>
           </td>
           <td><%= referral.created_at %></td>
           <td class="button-wrapper">

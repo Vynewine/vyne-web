@@ -6,7 +6,7 @@ class PromotionHelperTest < ActiveSupport::TestCase
     new_user = users(:one)
     promo_code = promotion_codes(:referral_one)
 
-    PromotionHelper.apply_promotion(new_user, promo_code.code)
+    PromotionHelper.add_promotion(new_user, promo_code.code)
 
     new_user_promotions = UserPromotion.where(:user => new_user)
     existing_user_promotions = UserPromotion.where(:user => promo_code.user)
@@ -24,6 +24,13 @@ class PromotionHelperTest < ActiveSupport::TestCase
     assert_equal(promo_code, existing_user_promotions.first.referral.promotion_code)
     assert_equal(false, existing_user_promotions.first.redeemed)
     assert_equal(false, existing_user_promotions.first.can_be_redeemed)
+  end
+
+  test 'Can enable referral promotion for a user' do
+    user = users(:one)
+    PromotionHelper.enable_referral_promotion(user)
+    assert_equal(1, user.promotion_codes.count)
+    assert_equal('JOHN-DOE', user.promotion_codes.first.code)
   end
 
 end

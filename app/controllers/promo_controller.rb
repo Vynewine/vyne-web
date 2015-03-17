@@ -6,16 +6,14 @@ class PromoController < ApplicationController
       redeemed_promotions = []
       redeemable_promotions = []
       pending_promotions = []
+      referrals = []
 
-      unless current_user.referrals.blank?
-        active_referrals = current_user.referrals.select { |referral| referral.promotion.active }.sort_by &:created_at
+      unless current_user.promotion_codes.blank?
 
-        latest_referral = active_referrals.first
+        promo_codes = current_user.promotion_codes.select{|code| code.active}.sort_by(&:created_at).reverse!
 
-        active_codes = latest_referral.referral_codes.select { |code| code.active }.sort_by(&:created_at).reverse!
-
-        unless active_codes.blank?
-          promo_code = active_codes.map { |code| code.code }.first
+        unless promo_codes.blank?
+          promo_code = promo_codes.map { |code| code.code }.first
         end
       end
 
@@ -29,11 +27,16 @@ class PromoController < ApplicationController
         }
       end
 
+      unless current_user.referrals.blank?
+        referrals = current_user.referrals
+      end
+
       @promotion = {
           :promo_code => promo_code,
           :redeemed_promotions => redeemed_promotions,
           :redeemable_promotions => redeemable_promotions,
-          :pending_promotions => pending_promotions
+          :pending_promotions => pending_promotions,
+          :referrals => referrals
       }
     else
       unless params[:promo].blank?

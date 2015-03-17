@@ -13,11 +13,9 @@ class Admin::ReferralsController < ApplicationController
 
   def new
     @referral = Referral.new
-    @promotions = Promotion.all
   end
 
   def edit
-    @promotions = Promotion.all
   end
 
   def create
@@ -53,7 +51,7 @@ class Admin::ReferralsController < ApplicationController
   end
 
   def referral_params
-    params.require(:referral).permit(:promotion_id, :user_id)
+    params.require(:referral).permit(:promotion_code_id, :existing_user_id, :referred_user_id)
   end
 
 end

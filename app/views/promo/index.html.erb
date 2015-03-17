@@ -73,11 +73,10 @@
                 <div class="row">
                   <div class="col-xs-12">
                     <div class="row">
-                      <% if @promotion[:redeemable_promotions].blank? && @promotion[:pending_promotions].blank? %>
+                      <% if @promotion[:referrals].blank? %>
                           <div class="col-md-4 col-sm-6 col-xs-12">
                             <div class="description-content">
                               <div class="description">Shared Promotions</div>
-
                             </div>
 
                             None of your friends have yet signed up using your promo code.
@@ -92,14 +91,13 @@
                               <div class="content">Will be automatically applied to your order upon checkout:</div>
                             </div>
 
-                            <% @promotion[:redeemable_promotions].each do |promo| %>
-                                <% if promo.sign_up_reward? %>
-                                    <p> Thank for signing up for vyne account with promo
-                                      code: <%= promo.referral_code.code %></p>
-                                <% elsif promo.sharing_reward? %>
-                                    <p>Your friend <%= promo.friend.name %> signed up using your promo code.</p>
+                            <% @promotion[:redeemable_promotions].each do |user_promotion| %>
+                                <%= user_promotion.promotion_code.promotion.title %>
+                                <% unless user_promotion.referral.blank? %>
+                                    (Referred user: <%= user_promotion.referral.referred_user.name %>)
                                 <% end %>
                             <% end %>
+
                             <div class="divider"></div>
                           </div>
                       <% end %>
@@ -113,9 +111,10 @@
                               </div>
                             </div>
 
-                            <% @promotion[:pending_promotions].each do |promo| %>
-                                <% if promo.sharing_reward? %>
-                                    <p>Your friend <%= promo.friend.name %> signed up using your promo code but
+                            <% @promotion[:pending_promotions].each do |user_promotion| %>
+                                <% unless user_promotion.referral.blank? %>
+                                    <p>Your friend <%= user_promotion.referral.referred_user.name %> signed up using
+                                      your promo code but
                                       have not yet made a purchase.</p>
                                 <% end %>
                             <% end %>
@@ -132,14 +131,15 @@
                             </div>
 
                             <% @promotion[:redeemed_promotions].each do |promo| %>
-                                <% if promo.sign_up_reward? %>
-                                    <p> Thank for signing up for vyne account with promo
-                                      code: <%= promo.referral_code.code %></p>
-                                <% elsif promo.sharing_reward? %>
-                                    <p>Your friend <%= promo.friend.name %> signed up using your promo code.</p>
-                                <% end %>
+                                <div>
+                                  <%= "Promotion title: #{promo.promotion_code.promotion.title}. Applied on: " %><%= local_time(promo.created_at, '%b %d, %Y %l:%M %p') %>
+                                  <% unless promo.referral.blank? %>
+                                      (Referred user: <%= promo.referral.referred_user.name %>)
+                                  <% end %>
+                                </div>
+                                <div class="divider"></div>
                             <% end %>
-                            <div class="divider"></div>
+
                           </div>
                       <% end %>
 

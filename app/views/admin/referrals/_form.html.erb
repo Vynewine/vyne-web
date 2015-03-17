@@ -1,19 +1,18 @@
 <%= form_for([:admin, @referral]) do |f| %>
 
     <div class="form-group">
-      <%= f.label :promotion %><br>
-
-      <% current_promotion = @referral.promotion_id %>
-      <%= f.select :promotion_id,
-                   options_from_collection_for_select(@promotions, 'id', 'title', :selected => current_promotion), {},
-                   {:prompt => 'Choose a Promotion', :class => 'form-control'}
-      %>
-
+      <%= f.label :promotion_code_id %><br>
+      <%= f.text_field :promotion_code_id, :class => 'form-control' %>
     </div>
 
     <div class="form-group">
-      <%= f.label :user %><br>
-      <%= f.text_field :user_id, :class => 'form-control' %>
+      <%= f.label :existing_user_id %><br>
+      <%= f.text_field :existing_user_id, :class => 'form-control' %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :referred_user_id %><br>
+      <%= f.text_field :referred_user_id, :class => 'form-control' %>
     </div>
 
     <div class="actions">
