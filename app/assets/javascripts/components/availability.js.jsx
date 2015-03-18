@@ -42,29 +42,17 @@ var Promotion = React.createClass({
                     var promotion = this.props.deliveryOptions.promotion;
 
                     if (!this.props.deliveryOptions.today_warehouse.id) {
-
-                        if (promotion.category === 'sign_up_reward') {
-                            setPromotion('We currently don\'t deliver to your area, but if you register now, we\'ll save' +
-                            ' your promotion (code ' + promotion.code + ' - "' + promotion.title + '") in your account,' +
-                            ' and let you know when we deliver to this postcode. ', true);
-                        } else {
-                            setPromotion('Your promotion "' + promotion.title +
-                            '" will be applied to your order automatically upon checkout.', false);
-                        }
+                        setPromotion('We currently don\'t deliver to your area, but if you register now, we\'ll save' +
+                        ' your promotion (code ' + promotion.code + ' - "' + promotion.title + '") in your account,' +
+                        ' and let you know when we deliver to this postcode. ', true);
 
                     } else {
-                        if (promotion.category === 'sign_up_reward') {
-                            setPromotion('Your promotion (code ' + promotion.code +
-                            ' - "' + promotion.title + '") will be applied to your order automatically upon checkout.', false);
-                        } else {
-                            setPromotion('Your promotion: "' + promotion.title +
-                            '" will be applied to your order automatically upon checkout.', false);
-                        }
+                        setPromotion('Your promotion (code ' + promotion.code +
+                        ' - "' + promotion.title + '") will be applied to your order automatically upon checkout.', false);
                     }
                 } else {
                     return false;
                 }
-
             }
         }
 

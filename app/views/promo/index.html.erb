@@ -92,7 +92,7 @@
                             </div>
 
                             <% @promotion[:redeemable_promotions].each do |user_promotion| %>
-                                <%= user_promotion.promotion_code.promotion.title %>
+                                <%= user_promotion.promotion_code.code %> - <%= user_promotion.promotion_code.promotion.title %>
                                 <% unless user_promotion.referral.blank? %>
                                     (Referred user: <%= user_promotion.referral.referred_user.name %>)
                                 <% end %>
