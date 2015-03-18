@@ -39,6 +39,7 @@
               <th>Mobile</th>
               <th>Stripe Id</th>
               <th>Roles</th>
+              <th>Created At</th>
               <% unless params[:show_deleted] %>
                   <th></th>
               <% end %>
@@ -59,6 +60,9 @@
                     <% else %>
                         <%= user.roles.map { |role| role.name }.join(',') %>
                     <% end %>
+                  </td>
+                  <td>
+                    <%= user.created_at %>
                   </td>
                   <% unless params[:show_deleted] %>
                       <td class="button-wrapper">

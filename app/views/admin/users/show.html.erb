@@ -119,7 +119,7 @@
     <li class="list-group-item">
       <div class="row">
         <div class="col-md-12">
-          <strong>Promotions:</strong>
+          <strong>Promotions:</strong> <%= link_to '+ New', new_admin_user_promotion_path(user_id: @user.id ), class: 'btn btn-xs btn-default' %>
           <% @user.user_promotions.order(:id).each do |promotion| %>
               <%= link_to admin_user_promotion_path(promotion.id) do %>
                   <%= promotion.id %>

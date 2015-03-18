@@ -5,10 +5,8 @@ class UserPromotion < ActiveRecord::Base
   belongs_to :promotion_code
   belongs_to :referral
 
-  #TODO These won't be needed any more
-  enum category: [:sign_up_reward, :sharing_reward]
-
-  validate :eligible_for_promotions, on: :create
+  validates :user, presence: true
+  validates :promotion_code, presence: true
 
   # TODO: Review
   def eligible_for_promotions
