@@ -6,7 +6,10 @@ class Admin::PromotionCodesController < ApplicationController
 
   def index
     @vyne_codes = PromotionCode.where(promotion: @promotion, category: PromotionCode.categories[:vyne_code])
-    @referral_codes = PromotionCode.where(promotion_id: params[:promotion_id], category: PromotionCode.categories[:referral_code])
+    @referral_codes = PromotionCode.where(
+        promotion_id: params[:promotion_id],
+        category: PromotionCode.categories[:referral_code]
+    ).page(params[:page]).order(:id)
   end
 
   def show
