@@ -272,8 +272,8 @@ class SignupControllerTest < ActionController::TestCase
 
   test 'Should apply promo code when signing up' do
 
-    referral_code = referral_codes(:abc)
-    cookies[:referral_code] = referral_code.code
+    promotion_code = promotion_codes(:vyne_uncork)
+    cookies[:promo_code] = promotion_code.code
 
     post :create, :user => {
                     :first_name => 'John',
@@ -282,8 +282,8 @@ class SignupControllerTest < ActionController::TestCase
                 }
 
     new_user = User.find_by(:email => 'test@vyne.co.uk')
-    user_promotion = UserPromotion.find_by(:referral_code => referral_code, :user => new_user)
-    assert(user_promotion.sign_up_reward?)
+    user_promotion = UserPromotion.find_by(:promotion_code => promotion_code, :user => new_user)
+    assert_equal(user_promotion.promotion_code, promotion_code)
 
   end
 

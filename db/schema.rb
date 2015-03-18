@@ -15,6 +15,7 @@ ActiveRecord::Schema.define(version: 20150316121429) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "pg_stat_statements"
   enable_extension "postgis"
 
   create_table "addresses", force: true do |t|
@@ -395,14 +396,15 @@ ActiveRecord::Schema.define(version: 20150316121429) do
 
   create_table "promotions", force: true do |t|
     t.string   "title"
-    t.integer  "category",        default: 0,     null: false
-    t.boolean  "active",          default: false
+    t.integer  "category",           default: 0,     null: false
+    t.boolean  "active",             default: false
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "free_delivery"
     t.boolean  "extra_bottle"
-    t.integer  "bottle_category"
+    t.integer  "bottle_category_id"
+    t.boolean  "referral_promotion"
   end
 
   create_table "referral_codes", force: true do |t|
@@ -506,7 +508,6 @@ ActiveRecord::Schema.define(version: 20150316121429) do
 
   create_table "user_promotions", force: true do |t|
     t.integer  "user_id"
-    t.integer  "category",                          null: false
     t.integer  "referral_code_id"
     t.integer  "friend_id"
     t.boolean  "redeemed",          default: false, null: false
@@ -515,6 +516,7 @@ ActiveRecord::Schema.define(version: 20150316121429) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "promotion_code_id"
+    t.integer  "referral_id"
   end
 
   add_index "user_promotions", ["friend_id"], :name => "index_user_promotions_on_friend_id"
@@ -575,18 +577,6 @@ ActiveRecord::Schema.define(version: 20150316121429) do
 
   add_index "vinifications", ["deleted_at"], :name => "index_vinifications_on_deleted_at"
 
-  create_table "warehouse_categories", force: true do |t|
-    t.integer  "warehouse_id"
-    t.integer  "category_id"
-    t.boolean  "enabled"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "warehouse_categories", ["category_id"], :name => "index_warehouse_categories_on_category_id"
-  add_index "warehouse_categories", ["warehouse_id"], :name => "index_warehouse_categories_on_warehouse_id"
-
   create_table "warehouse_promotions", force: true do |t|
     t.integer  "warehouse_id"
     t.integer  "promotion_id"
@@ -612,13 +602,13 @@ ActiveRecord::Schema.define(version: 20150316121429) do
     t.datetime "deleted_at"
     t.boolean  "active"
     t.boolean  "registered_with_shutl"
+    t.spatial  "delivery_area",         limit: {:srid=>0, :type=>"polygon"}
     t.string   "key"
     t.boolean  "house_available",                                            default: true
     t.boolean  "reserve_available",                                          default: true
     t.boolean  "fine_available",                                             default: true
     t.boolean  "cellar_available",                                           default: true
     t.datetime "active_from"
-    t.spatial  "delivery_area",         limit: {:srid=>0, :type=>"polygon"}
   end
 
   add_index "warehouses", ["address_id"], :name => "index_warehouses_on_address_id"

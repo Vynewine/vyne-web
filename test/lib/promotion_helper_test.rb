@@ -2,7 +2,7 @@ require 'test_helper'
 
 class PromotionHelperTest < ActiveSupport::TestCase
 
-  test 'Can apply referral promotion for a user' do
+  test 'Can add promotion for a user' do
     new_user = users(:one)
     promo_code = promotion_codes(:referral_one)
 
