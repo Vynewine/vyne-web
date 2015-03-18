@@ -1,3 +1,9 @@
 wine:
   title: 'Mystery Bottle'
   category: wine
+
+for_new_users:
+  title: 'Get Bottles'
+  active: true
+  category: wine
+  referral_promotion: true

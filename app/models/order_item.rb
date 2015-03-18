@@ -59,7 +59,7 @@ class OrderItem < ActiveRecord::Base
     unless user_promotion.blank?
       WarehousePromotion.find_by(
           :warehouse => self.order.warehouse,
-          :promotion => self.user_promotion.referral_code.referral.promotion
+          :promotion => self.user_promotion.promotion_code.promotion
       )
     end
   end

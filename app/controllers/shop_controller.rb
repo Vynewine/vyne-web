@@ -36,7 +36,7 @@ class ShopController < ApplicationController
     @warehouse = Warehouse.find(params[:warehouse_id])
     promo = nil
 
-    @promotion = PromotionHelper.get_promotion_text(user_signed_in? ? current_user : nil, cookies[:referral_code], @warehouse)
+    @promotion = PromotionHelper.get_promotion_text(user_signed_in? ? current_user : nil, cookies[:promo_code], @warehouse)
 
   end
 
@@ -84,7 +84,7 @@ class ShopController < ApplicationController
       @order.status_id = Status.statuses[:created]
 
       # Apply Promotions
-      apply_promotion(@order)
+      PromotionHelper.apply_promotion(@order)
 
       # Save Order
       unless @order.save
@@ -334,27 +334,6 @@ class ShopController < ApplicationController
     order.payment = payment
 
     nil
-  end
-
-  def apply_promotion(order)
-    available_promotion = UserPromotion
-                              .where(:user => current_user, :can_be_redeemed => true, :redeemed => false)
-                              .order('id DESC').first
-    unless available_promotion.blank?
-      if available_promotion.referral_code.referral.promotion.wine?
-        order.order_items.new({
-                                  :quantity => 1,
-                                  :user_promotion => available_promotion
-                              })
-      end
-
-      available_promotion.redeemed = true
-
-      unless available_promotion.save
-        logger.error 'Error while applying user promotion'
-        logger.error available_promotion.errors.full_messages
-      end
-    end
   end
 end
 

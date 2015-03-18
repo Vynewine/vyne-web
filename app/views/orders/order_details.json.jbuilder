@@ -43,9 +43,8 @@ json.order do
 
     unless item.user_promotion.blank?
       json.user_promotion do
-        json.code item.user_promotion.referral_code.code
-        json.title item.user_promotion.referral_code.referral.promotion.title
-        json.category item.user_promotion.category
+        json.code item.user_promotion.promotion_code.code
+        json.title item.user_promotion.promotion_code.promotion.title
       end
     end
 

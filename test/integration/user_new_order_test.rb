@@ -132,7 +132,7 @@ class UserNewOrderTest < ActiveSupport::TestCase
 
     @driver.get(@base_url + '/promo')
 
-    enter_promo_code('VYNEHEROES','n17rj')
+    enter_promo_code('UNCORK','n17rj')
     select_bottle_for_category(2)
     select_wine_by_occasion
     select_second_bottle
@@ -178,7 +178,7 @@ class UserNewOrderTest < ActiveSupport::TestCase
     @driver.find_element(:id, 'user_password_confirmation').send_keys password
 
     @driver.find_element(:css, 'input[type=\'submit\']').click
-    @wait.until { @driver.find_element(:xpath, "//*[contains(text(), '#{email}')]").displayed? }
+    @wait.until { @driver.find_element(:xpath, "//*[contains(text(), '#{name}')]").displayed? }
 
   end
 

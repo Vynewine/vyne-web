@@ -158,6 +158,7 @@ Rails.application.routes.draw do
     end
     resources :promotions do
       resources :warehouse_promotions
+      resources :promotion_codes
     end
     resources :referrals do
       resources :referral_codes

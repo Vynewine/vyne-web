@@ -6,7 +6,7 @@ module PromotionHelper
     if user_promotion.blank?
       order_item.price
     else
-      if user_promotion.referral_code.referral.promotion.wine?
+      if user_promotion.promotion_code.promotion.extra_bottle
         0
       else
         order_item.price
@@ -14,75 +14,93 @@ module PromotionHelper
     end
   end
 
-  def self.apply_sign_up_promotion(user, code)
+  def self.add_promotion(user, code)
 
-    log "Applying promotions for user: #{user.id} and code: #{code}"
+    log "Applying promotion for user: #{user.id} and code: #{code}"
 
     begin
-      referral_code = ReferralCode.find_by(code: code)
 
-      if referral_code.blank?
-        message = 'Referral code not found'
+      promo_code = PromotionCode.find_by(:code => code)
+
+      if promo_code.blank?
+        message = "Promo code #{code} not found"
         log_error message
         return [message]
       end
 
-      UserPromotion.new_account_reward(referral_code, user)
-
-      new_referral = Referral.new(
-          :user => user,
-          :promotion => referral_code.referral.promotion
+      user_promotion = UserPromotion.new(
+          user: user,
+          redeemed: false,
+          can_be_redeemed: true,
+          promotion_code: promo_code
       )
 
-      unless new_referral.save
-        log_error new_referral.errors.full_messages
-        return new_referral.errors.full_messages
+      unless user_promotion.save
+        log_error ["Can't save user promotion for user #{user.id}"] + user_promotion.errors.full_messages
+        return user_promotion.errors.full_messages
       end
 
-      new_referral_code = ReferralCode.new(
-          :referral => new_referral
-      )
+      if promo_code.referral_code?
 
-      unless new_referral_code.save
-        log_error new_referral_code.errors.full_messages
-        return new_referral_code.errors.full_messages
+        log "Creating referral for user #{promo_code.user.id}"
+
+        referral = Referral.new(
+            existing_user: promo_code.user,
+            referred_user: user,
+            promotion_code: promo_code
+        )
+
+        unless referral.save
+          log_error ["Can't save referral for user #{user.id}"] + referral.errors.full_messages
+          return referral.errors.full_messages
+        end
+
+        user_promotion = UserPromotion.new(
+            user: promo_code.user,
+            redeemed: false,
+            can_be_redeemed: false,
+            promotion_code: promo_code,
+            referral: referral
+        )
+
+        unless user_promotion.save
+          log_error ["Can't save user promotion for user #{user_promotion.user.id}"] + user_promotion.errors.full_messages
+          return user_promotion.errors.full_messages
+        end
       end
 
     rescue Exception => exception
-      message = "Error occurred while applying promotions: #{exception.class} - #{exception.message}"
+      message = "Error occurred while applying promotion: #{exception.class} - #{exception.message}"
       log_error message
       log_error exception
     end
+
   end
 
   def self.enable_referral_promotion(user)
     log "Enabling referral promotion for user: #{user.id}."
     begin
 
-      current_promotion = Promotion.where(:category => Promotion.categories[:wine], :active => true).first
+      referral_promotion = Promotion.where(
+          :active => true,
+          :referral_promotion => true
+      ).first
 
-      if current_promotion.blank?
-        log_error 'No active promotions found'
+      if referral_promotion.blank?
+        log_error 'No active referral promotion found'
         return
       end
 
-      new_referral = Referral.new(
+      promotion_codes = PromotionCode.new(
+          :promotion => referral_promotion,
+          :category => PromotionCode.categories[:referral_code],
           :user => user,
-          :promotion => current_promotion
+          :active => true
       )
 
-      unless new_referral.save
-        log_error new_referral.errors.full_messages
-        return new_referral.errors.full_messages
-      end
-
-      new_referral_code = ReferralCode.new(
-          :referral => new_referral
-      )
-
-      unless new_referral_code.save
-        log_error new_referral_code.errors.full_messages
-        return new_referral_code.errors.full_messages
+      unless promotion_codes.save
+        log_error promotion_codes.errors.full_messages
+        return promotion_codes.errors.full_messages
       end
 
     rescue Exception => exception
@@ -93,27 +111,53 @@ module PromotionHelper
 
   end
 
-  def self.process_sharing_reward(order_item)
+  def self.apply_promotion(order)
+    user_promotion = UserPromotion
+                         .where(:user => order.client, :can_be_redeemed => true, :redeemed => false)
+                         .order('id DESC').first
 
-    log "Processing sharing reward for order: #{order_item.order.id} order item: #{order_item.id}"
+    unless user_promotion.blank?
+
+      # Different logic for different promotion will go here in the future
+      if user_promotion.promotion_code.promotion.extra_bottle
+        order.order_items.new({
+                                  :quantity => 1,
+                                  :user_promotion => user_promotion
+                              })
+      end
+
+      user_promotion.redeemed = true
+
+      unless user_promotion.save
+        logger.error ['Error while applying user promotion'] + user_promotion.errors.full_messages
+      end
+    end
+  end
+
+  def self.process_sharing_reward(user_promotion)
+
+    log "Processing sharing reward for user promotion id: #{user_promotion.id}"
 
     begin
-      unless order_item.blank?
-        sharing_user_promotion = UserPromotion.find_by(
-            :friend => order_item.order.client,
-            :user => order_item.user_promotion.referral_code.referral.user,
-            :category => UserPromotion.categories[:sharing_reward]
-        )
 
-        if sharing_user_promotion.blank?
-          unless order_item.user_promotion.referral_code.referral.user.admin?
-            log_error 'We should process this promotion'
-          end
+      referral = Referral.find_by(
+          referred_user_id: user_promotion.user,
+          promotion_code: user_promotion.promotion_code
+      )
+
+      unless referral.blank?
+        referral_user_promotion = UserPromotion.find_by(referral: referral)
+
+        if referral_user_promotion.blank?
+          log_error "User Promotion for referral id: #{referral.id} not found."
         else
-          sharing_user_promotion.can_be_redeemed = true
-          sharing_user_promotion.save
+          referral_user_promotion.can_be_redeemed = true
+          unless referral_user_promotion.save
+            log_error referral_user_promotion.errors.full_messages
+          end
         end
       end
+
     rescue Exception => exception
       message = "Error occurred while process_sharing_reward: #{exception.class} - #{exception.message}"
       log_error message
@@ -129,16 +173,15 @@ module PromotionHelper
 
     if user.blank?
       unless promo_code.blank?
-        referral_code = ReferralCode.find_by(code: promo_code)
-        unless referral_code.blank?
-          promo = referral_code.referral.promotion
+        promo_code = PromotionCode.find_by(code: promo_code)
+        unless promo_code.blank?
+          promo = promo_code.promotion
         end
       end
-
     else
       user_promotion = UserPromotion.find_by(:user => user, :can_be_redeemed => true, :redeemed => false)
       unless user_promotion.blank?
-        promo = user_promotion.referral_code.referral.promotion
+        promo = user_promotion.promotion_code.promotion
       end
     end
 

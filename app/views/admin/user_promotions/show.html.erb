@@ -43,12 +43,8 @@
     <li class="list-group-item">
       <div class="row">
         <div class="col-md-12">
-          <strong>Referral:</strong>
-          <% unless @user_promotion.referral_code.blank? %>
-              <%= link_to admin_referral_path(@user_promotion.referral_code.referral) do %>
-                  <%= @user_promotion.referral_code.code %>
-              <% end %>
-          <% end %>
+          <strong>Promotion Code:</strong>
+          <%= @user_promotion.promotion_code.code %>
         </div>
       </div>
     </li>
@@ -56,10 +52,19 @@
     <li class="list-group-item">
       <div class="row">
         <div class="col-md-12">
-          <strong>Friend</strong>
-          <% unless @user_promotion.friend.blank? %>
-              <%= link_to admin_user_path(@user_promotion.friend) do %>
-              <%= @user_promotion.friend.name %>
+          <strong>Promotion:</strong>
+          <%= @user_promotion.promotion_code.promotion.title %>
+        </div>
+      </div>
+    </li>
+
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Referral:</strong>
+          <% unless @user_promotion.referral.blank? %>
+              <%= link_to admin_referral_path(@user_promotion.referral) do %>
+                  <%= @user_promotion.referral.id %>
               <% end %>
           <% end %>
         </div>

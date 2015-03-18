@@ -1,0 +1,10 @@
+vyne_uncork:
+  promotion: wine
+  code: UNCORK
+  category: 0 #vyne_code
+
+referral_one:
+  promotion: wine
+  code: JOE-SHMO
+  category: 1 #referral_code
+  user: client

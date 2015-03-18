@@ -82,7 +82,7 @@ var WinePreferences = React.createClass({
                     <div className="row">
                         <div className="col-xs-12">
                             <span className="section-promotion">
-                                <i className="fa fa-gift"></i>
+                                <i className="fa fa-gift"></i>{' '}
                                 Promotion: {description}</span>
                         </div>
                     </div>
@@ -679,7 +679,7 @@ var Next = React.createClass({
                     (
                         <div>
                             <p>We will notify you once the merchant's sommelier chooses your wine,
-                            based on the preferences you provided.</p>
+                                based on the preferences you provided.</p>
                             <p>You will be able to review their selection before delivery.</p>
                         </div>
                     )
@@ -693,7 +693,9 @@ var Next = React.createClass({
                 this.setText(
                     (
                         <div>
-                            <p>The courier is on the first leg of the journey: <br/> to the wine cellar.</p>
+                            <p>The courier is on the first leg of the journey:
+                                <br/>
+                                to the wine cellar.</p>
                             <p>We'll send you a text very shortly, when the courier is on the way to your address.</p>
                             <p>Click the link in the text, or remain on this page, to track the courier's progress live</p>
                         </div>

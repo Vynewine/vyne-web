@@ -1,5 +1,1 @@
-client_new_account:
-  user: client
-  category: sign_up_reward
-  referral_code: xyz
-  can_be_redeemed: true
+

@@ -16,6 +16,34 @@
       <%= f.check_box :active %>
     </div>
 
+    <div class="form-group">
+      <%= f.label :free_delivery %>
+      <%= f.check_box :free_delivery %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :extra_bottle %>
+      <%= f.check_box :extra_bottle %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :bottle_category_id %>
+      <%= f.select :bottle_category_id,
+                   content_tag(:option, 'N/A', :value => '')+
+                           options_from_collection_for_select(@categories.order(:id),
+                                                              'id',
+                                                              'name_with_ranges',
+                                                              :selected => @promotion.bottle_category_id),
+                   {},
+                   {:prompt => 'Choose a category', :class => 'form-control'}
+      %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :referral_promotion %>
+      <%= f.check_box :referral_promotion %>
+    </div>
+
     <div class="actions">
       <%= f.submit(:class => 'btn btn-success') %>
     </div>
