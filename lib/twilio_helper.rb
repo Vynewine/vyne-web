@@ -135,8 +135,6 @@ module TwilioHelper
         "#{order.order_schedule[:from].strftime('%b %d, %Y %l:%M %p')} -" +
         "#{order.order_schedule[:to].strftime('%l:%M %p')} " +
         "(Fulfillment at: #{order.order_schedule[:schedule_date].strftime('%b %d, %Y %l:%M %p')})"
-
-        log schedule_message
       end
 
       account_sid = Rails.application.config.twilio_account_sid
@@ -145,11 +143,20 @@ module TwilioHelper
 
       @client = Twilio::REST::Client.new account_sid, auth_token
 
-      message = @client.account.messages.create(
-          :body => 'New Vyne Order! Id: ' + order_id.to_s + '. ' + schedule_message,
-          :to => Rails.application.config.vyne_order_notification_number,
-          :from => twilio_number
-      )
+      unless Rails.application.config.vyne_order_notification_number.blank?
+        numbers = Rails.application.config.vyne_order_notification_number.split(',')
+
+        numbers.each do |number|
+
+          log 'Sending admin order notification to: ' + number
+
+          message = @client.account.messages.create(
+              :body => 'New Vyne Order! Id: ' + order_id.to_s + '. ' + schedule_message,
+              :to => number,
+              :from => twilio_number
+          )
+        end
+      end
 
     rescue Twilio::REST::RequestError => exception
       log_error exception.message
