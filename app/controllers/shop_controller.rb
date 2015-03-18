@@ -83,6 +83,14 @@ class ShopController < ApplicationController
       # Set Order Status Created
       @order.status_id = Status.statuses[:created]
 
+      # Create Stripe Customer
+      payment_results = create_stripe_customer(@order)
+      unless payment_results.blank?
+        logger.error payment_results
+        render json: payment_results, status: :unprocessable_entity
+        return
+      end
+
       # Apply Promotions
       PromotionHelper.apply_promotion(@order)
 
@@ -90,14 +98,6 @@ class ShopController < ApplicationController
       unless @order.save
         logger.error @order.errors.full_messages.join(', ')
         render json: @order.errors, status: :unprocessable_entity
-        return
-      end
-
-      # Create Stripe Customer
-      payment_results = create_stripe_customer(@order)
-      unless payment_results.blank?
-        logger.error payment_results
-        render json: payment_results, status: :unprocessable_entity
         return
       end
 

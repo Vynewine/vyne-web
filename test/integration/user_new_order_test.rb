@@ -43,9 +43,11 @@ class UserNewOrderTest < ActiveSupport::TestCase
     email = Time.now.strftime('%Y%m%d%H%M%S') + '@vyne.london'
     password = 'password'
 
-    @driver.get(@base_url + '/')
+    @driver.get(@base_url + '/promo')
+    #@driver.get(@base_url + '/')
 
-    enter_postcode_first_page('n17rj')
+    enter_promo_code('JAKUB-PH15','n17rj')
+    #enter_postcode_first_page('n17rj')
     select_bottle_for_category(2)
     select_wine_by_occasion
     confirm_order_selection
@@ -55,6 +57,14 @@ class UserNewOrderTest < ActiveSupport::TestCase
     submit_order
 
     @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'declined')]").displayed? }
+
+    @driver.find_element(:id, 'pmnm').clear
+    @driver.find_element(:id, 'pmnm').clear
+    @driver.find_element(:id, 'pmnm').send_keys '4111111111111111'
+
+    submit_order
+
+    @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Thank you for ordering')]").displayed? }
   end
 
   test 'New user two bottles' do
