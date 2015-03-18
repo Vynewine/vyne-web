@@ -164,6 +164,10 @@
         <div class="row">
           <div class="col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1">
             <%= render 'layouts/message' %>
+            <div id="postcode-error" class="alert alert-danger fade in" style="display: none;">
+              <button class="close" data-dismiss="alert">×</button>
+              Please enter valid postcode
+            </div>
           </div>
         </div>
 
@@ -172,12 +176,12 @@
             <div class="row">
               <div class="col-xs-12">
                 <div class="animated fadeIn">
-                  <form class="translucent center-form" action="/promo" method="post">
+                  <form class="translucent center-form" id="promo-form" action="/promo" method="post">
                     <div class="form-group">
-                      <input type="text" name="promo_code" class="form-control" value="<%= @code %>" placeholder="Promo Code"/>
+                      <input type="text" name="promo_code" class="form-control" id="promo-code" value="<%= @code %>" placeholder="Promo Code"/>
                     </div>
                     <div class="form-group">
-                      <input type="text" name="postcode" class="form-control" value="<%= params[:postcode] %>" placeholder="Enter postcode (e.g. EC4Y 8AU)"/>
+                      <input type="text" name="postcode" id="postcode" class="form-control" value="<%= params[:postcode] %>" placeholder="Enter postcode (e.g. EC4Y 8AU)"/>
                     </div>
                     <%= hidden_field_tag(request_forgery_protection_token.to_s, form_authenticity_token) %>
                     <div class="form-group">
@@ -189,6 +193,29 @@
             </div>
           </div>
         </div>
+        <script>
+            $('#promo-form').submit(function (e) {
+                e.preventDefault();
+
+                var postcode = $('#postcode').val();
+                var $postcodeError = $('#postcode-error');
+
+                analytics.track('Promo code entered', {
+                    promoCode: $('#promo-code').val(),
+                    postcode: postcode
+                });
+
+                var isValidPostcode = validatePostcode(postcode);
+
+                if(isValidPostcode) {
+                    $postcodeError.hide();
+                    this.submit();
+                } else {
+                    $postcodeError.show();
+                }
+
+            });
+        </script>
     <% end %>
 
   </div>
