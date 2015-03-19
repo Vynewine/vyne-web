@@ -4,6 +4,12 @@
       <%= f.label :title %>
       <%= f.text_field :title, :class => 'form-control' %>
     </div>
+
+    <div class="form-group">
+      <%= f.label :description %>
+      <%= f.text_field :description, :class => 'form-control' %>
+    </div>
+
     <div class="form-group">
       <%= f.label :category %>
       <%=
@@ -17,6 +23,11 @@
     </div>
 
     <div class="form-group">
+      <%= f.label :new_accounts_only %>
+      <%= f.check_box :new_accounts_only %>
+    </div>
+
+    <div class="form-group">
       <%= f.label :free_delivery %>
       <%= f.check_box :free_delivery %>
     </div>
@@ -27,7 +38,7 @@
     </div>
 
     <div class="form-group">
-      <%= f.label :bottle_category_id %>
+      <%= f.label :bottle_category_id, 'Free bottle category' %>
       <%= f.select :bottle_category_id,
                    content_tag(:option, 'N/A', :value => '')+
                            options_from_collection_for_select(@categories.order(:id),
@@ -37,11 +48,6 @@
                    {},
                    {:prompt => 'Choose a category', :class => 'form-control'}
       %>
-    </div>
-
-    <div class="form-group">
-      <%= f.label :referral_promotion %>
-      <%= f.check_box :referral_promotion %>
     </div>
 
     <div class="actions">

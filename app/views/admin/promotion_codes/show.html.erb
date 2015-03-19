@@ -30,6 +30,19 @@
       </div>
     </li>
 
+    <% unless @promotion_code.user.blank? %>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-md-12">
+              <strong>User:</strong>
+              <%= link_to admin_user_path(@promotion_code.user) do %>
+                  <%= "#{@promotion_code.user.name} - #{@promotion_code.user.email}" %>
+              <% end %>
+            </div>
+          </div>
+        </li>
+    <% end %>
+
     <li class="list-group-item">
       <div class="row">
         <div class="col-md-12">

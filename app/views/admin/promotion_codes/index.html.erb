@@ -48,65 +48,67 @@
   </ul>
 </div>
 
-
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <div class="row">
-      <div class="col-sm-5"><h3 class="panel-title">User Referral Codes for <%= @promotion.title %></h3></div>
-      <div class="col-sm-7"><%= will_paginate @referral_codes, :class => 'vyne_pagination' %></div>
-    </div>
-  </div>
-
-  <table class="table table-bordered">
-    <thead>
-    <tr>
-      <th>Id</th>
-      <th>Code</th>
-      <th>Active</th>
-      <th>User</th>
-      <th></th>
-    </tr>
-    </thead>
-
-    <tbody>
-    <% unless @referral_codes.blank? %>
-        <% @referral_codes.each do |code| %>
-            <tr>
-              <td><%= code.id %></td>
-              <td><%= code.code %></td>
-              <td><%= code.active %></td>
-              <td>
-                <% if code.user.blank? %>
-                    deleted?
-                <% else %>
-                    <%= link_to admin_user_path(code.user) do %>
-                        <%= "#{code.user.id} - #{code.user.name} - #{code.user.email}" %>
-                    <% end %>
-                <% end %>
-              </td>
-              <td class="button-wrapper">
-                <%= link_to edit_admin_promotion_promotion_code_path(params[:promotion_id], code, :category => :referral_code), class: 'btn btn-default' do %>
-                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                <% end %>
-              </td>
-            </tr>
-        <% end %>
-    <% end %>
-    </tbody>
-  </table>
-  <ul class="list-group">
-    <li class="list-group-item">
-      <div class="row">
-        <div class="col-xs-4">
-          <%= link_to admin_promotion_path(params[:promotion_id]), class: 'btn btn-default' do %>
-              <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back To Promotion
-          <% end %>
-          <%= link_to 'New User Referral Code', new_admin_promotion_promotion_code_path(:category => :referral_code), :class => 'btn btn-primary' %>
+<% if @promotion.referral_promotion %>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-sm-5"><h3 class="panel-title">User Referral Codes for <%= @promotion.title %></h3></div>
+          <div class="col-sm-7"><%= will_paginate @referral_codes, :class => 'vyne_pagination' %></div>
         </div>
       </div>
-    </li>
-  </ul>
-</div>
+
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th>Id</th>
+          <th>Code</th>
+          <th>Active</th>
+          <th>User</th>
+          <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <% unless @referral_codes.blank? %>
+            <% @referral_codes.each do |code| %>
+                <tr>
+                  <td><%= code.id %></td>
+                  <td><%= code.code %></td>
+                  <td><%= code.active %></td>
+                  <td>
+                    <% if code.user.blank? %>
+                        deleted?
+                    <% else %>
+                        <%= link_to admin_user_path(code.user) do %>
+                            <%= "#{code.user.id} - #{code.user.name} - #{code.user.email}" %>
+                        <% end %>
+                    <% end %>
+                  </td>
+                  <td class="button-wrapper">
+                    <%= link_to edit_admin_promotion_promotion_code_path(params[:promotion_id], code, :category => :referral_code), class: 'btn btn-default' do %>
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                    <% end %>
+                  </td>
+                </tr>
+            <% end %>
+        <% end %>
+        </tbody>
+      </table>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-xs-4">
+              <%= link_to admin_promotion_path(params[:promotion_id]), class: 'btn btn-default' do %>
+                  <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back To Promotion
+              <% end %>
+              <%= link_to 'New User Referral Code', new_admin_promotion_promotion_code_path(:category => :referral_code), :class => 'btn btn-primary' %>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+<% end %>
+
 
 
 

@@ -14,6 +14,7 @@ class Admin::PromotionsController < ApplicationController
 
   def new
     @promotion = Promotion.new
+    @categories = Category.all
   end
 
   def edit
@@ -57,7 +58,9 @@ class Admin::PromotionsController < ApplicationController
         :free_delivery,
         :extra_bottle,
         :bottle_category_id,
-        :referral_promotion
+        :referral_promotion,
+        :description,
+        :new_accounts_only
     )
   end
 

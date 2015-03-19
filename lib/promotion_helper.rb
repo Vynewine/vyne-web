@@ -166,10 +166,14 @@ module PromotionHelper
 
   end
 
-  def self.get_promotion_text(user, promo_code, warehouse)
+  def self.get_promotion_info(user, promo_code, warehouse)
 
     promo = nil
-    promo_text = ''
+    promo_info = {
+        title: '',
+        description: '',
+        errors: []
+    }
 
     if user.blank?
       unless promo_code.blank?
@@ -187,7 +191,8 @@ module PromotionHelper
 
     unless promo.blank?
 
-      promo_text = promo.title
+      promo_info[:title] = promo.title
+      promo_info[:description] = promo.description
 
       unless warehouse.blank?
 
@@ -198,12 +203,12 @@ module PromotionHelper
         )
 
         if warehouse_promotion.blank?
-          promo_text = "We're sorry but looks like Merchant in your area in not taking part in '#{promo.title}' promotion at the moment"
+          promo_info[:errors] = ["We're sorry but looks like Merchant in your area in not taking part in '#{promo.title}' promotion at the moment"]
         end
       end
     end
 
-    promo_text
+    promo_info
   end
 
   def self.log(message)

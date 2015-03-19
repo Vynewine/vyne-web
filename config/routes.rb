@@ -39,7 +39,12 @@ Rails.application.routes.draw do
 
   # ------------
 
-  resources :share, :help, :jobs, :availability, :merchants, :account, :promo
+  resources :share, :help, :jobs, :availability, :merchants, :account
+  resources :promo do
+    collection do
+      post 'apply_to_cart'
+    end
+  end
   resources :delivery do
     collection do
       get 'get_courier_location'
@@ -160,10 +165,7 @@ Rails.application.routes.draw do
       resources :warehouse_promotions
       resources :promotion_codes
     end
-    resources :referrals do
-      resources :referral_codes
-    end
-
+    resources :referrals
     resources :user_promotions
 
     post '/orders/list' => 'orders#list'

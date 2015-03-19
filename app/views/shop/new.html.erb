@@ -22,7 +22,7 @@
       <input type="hidden" id="slot_from" name="slot_from" value="<%= params[:slot_from] %>"/>
       <input type="hidden" id="slot_to" name="slot_to" value="<%= params[:slot_to] %>"/>
       <input type="hidden" id="filterPostcode" name="filterPostcode" value="<%= params[:postcode] %>"/>
-      <input type="hidden" id="promotion" name="promotion" value="<%= @promotion %>"/>
+      <input type="hidden" id="promotion" value="<%= @promotion %>"/>
 
     <%# ============================= Select Bottle ============================= %>
 
@@ -245,6 +245,7 @@
         <a href="" class="back-nav"></a>
         <h2>Review order</h2>
 
+        <div id="cart"></div>
         <table class="order-table">
           <tr>
             <th width="80%">Wine</th>
@@ -267,10 +268,12 @@
           <tr class="promotion">
             <td colspan="2" class="promotion-area">
               <div class="promotion-heading">
-                <i class="fa fa-gift"></i> Promotion:
+                <i class="fa fa-gift"></i> Promotion: <span class="promotion-title" id="promotion-title"></span>
               </div>
 
-              <div class="promotion-name"></div>
+              <span class="promotion-description" id="promotion-description"></span>
+              <div class="promotion-errors" id="promotion-errors"></div>
+
             </td>
           </tr>
           <tr class="total" >

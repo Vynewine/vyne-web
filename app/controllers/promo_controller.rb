@@ -78,4 +78,8 @@ class PromoController < ApplicationController
       return
     end
   end
+
+  def apply_to_cart
+    puts params[:wines]
+  end
 end

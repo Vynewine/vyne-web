@@ -36,7 +36,8 @@ class ShopController < ApplicationController
     @warehouse = Warehouse.find(params[:warehouse_id])
     promo = nil
 
-    @promotion = PromotionHelper.get_promotion_text(user_signed_in? ? current_user : nil, cookies[:promo_code], @warehouse)
+    promo_info = PromotionHelper.get_promotion_info(user_signed_in? ? current_user : nil, cookies[:promo_code], @warehouse)
+    @promotion = promo_info.to_json unless promo_info.blank?
 
   end
 

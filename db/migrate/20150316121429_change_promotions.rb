@@ -25,12 +25,6 @@ class ChangePromotions < ActiveRecord::Migration
     rename_column :warehouse_promotions, :price_range_min, :extra_bottle_price_min
     rename_column :warehouse_promotions, :price_range_max, :extra_bottle_price_max
 
-    # TODO: Migration First
-
-    # TODO: 1. Migrate referral_codes to promotion_codes and drop referral_codes 2. Migrate user_promotions to referrals
-    # Drop from referrals: promotion_id, user_id,
-    # Drop from user_promotions: referral_code_id, category, friend_id,
-    # Drop referral_codes
     remove_column :user_promotions, :category
 
   end

@@ -135,16 +135,17 @@ var resetEventsForCart = function () {
     }
 };
 
-var loadWines = function() {
-    if($('body.shop').length && $('body.new').length) {
+var loadWines = function () {
+    if ($('body.shop').length && $('body.new').length) {
         var savedWines = $.cookie('wines');
-        if(savedWines) {
-            if(JSON.parse(savedWines).length > 0) {
+        if (savedWines) {
+            if (JSON.parse(savedWines).length > 0) {
                 $('input[name="wines"]').val(savedWines);
                 wines = JSON.parse(savedWines);
-                createCartPage(wines, wines.length -1);
+                createCartPage(wines, wines.length - 1);
                 orderSwiper.swipeTo(2, 500);
                 resetEventsForCart();
+                renderCart(wines);
             }
         }
     }
@@ -460,6 +461,7 @@ $(function () {
         wines[wineCount].category = $(this).closest('.bottle-info').data('category-id');
         wines[wineCount].priceMin = $(this).closest('.bottle-info').data('price-min');
         wines[wineCount].priceMax = $(this).closest('.bottle-info').data('price-max');
+        wines[wineCount].id = wineCount;
 
         analytics.track('Bottle chosen', {
             category: wines[wineCount].category
@@ -789,7 +791,8 @@ $(function () {
     $('.add-same-bottle-link').click(function (e) {
         e.preventDefault();
         wineCount++;
-        wines[wineCount] = wines[wineCount - 1];
+        wines[wineCount] = $.extend(true, {}, wines[wineCount - 1]);
+        wines[wineCount].id = wineCount;
         createCartPage(wines, wineCount);
         $('.add-bottle').hide();
 
@@ -1282,7 +1285,6 @@ function createCartPage(wines, wineCount) {
 
         $('.add-bottle').before($('<tr>').addClass('order-bottle').append($td).append($pricetd));
 
-        //Reset prefs
         clearPreferences();
 
     });
@@ -1329,12 +1331,13 @@ var resetEventsForEmptyCart = function () {
     });
 };
 
+var lowerDeliveryCost = 2.5;
+var higherDeliveryCost = 3.50;
+
 function calculateTotalCost() {
     secondBottle = false;
     var totalMinimum = 0.00;
     var totalMaximum = 0.00;
-    var lowerDeliveryCost = 2.5;
-    var higherDeliveryCost = 3.50;
     var deliveryCost = 0.0;
     var $deliveryDisclaimer = $('#delivery-disclaimer');
 
@@ -1385,15 +1388,35 @@ function calculateTotalCost() {
     $.cookie('wines', JSON.stringify(wines));
 }
 
-var applyPromotions = function() {
-    var $promo = $('#promotion');
+var applyPromotions = function () {
+    var promoInfo = JSON.parse($('#promotion').val());
+    var $promotionErrors = $('#promotion-errors');
+    var $promotionTitle = $('#promotion-title');
+    var $promotionDescription = $('#promotion-description');
     var $promoArea = $('.promotion-area');
 
-    if($promo.val() !== '') {
-        $('.promotion-name').text('1x - ' + $promo.val() + ' (£0.00)');
+    $promotionErrors.hide();
+    $promotionTitle.hide();
+    $promotionDescription.hide();
+    $promoArea.hide();
+
+    if (promoInfo.errors.length || promoInfo.title !== '' || promoInfo.description !== '') {
         $promoArea.show();
+    }
+
+    if (promoInfo.errors.length) {
+        $promotionErrors.text(promoInfo.errors.join(', '));
+        $promotionErrors.show();
     } else {
-        $promoArea.hide();
+        if (promoInfo.title !== '') {
+            $promotionTitle.text(promoInfo.title);
+            $promotionTitle.show();
+        }
+
+        if (promoInfo.description !== '') {
+            $promotionDescription.text(promoInfo.description);
+            $promotionDescription.show();
+        }
     }
 };
 
@@ -1415,7 +1438,7 @@ var currentSlidePosition = function () {
     }
 };
 
-var currentSlideName = function() {
+var currentSlideName = function () {
     if (typeof(orderSwiper) === "undefined") {
         return '';
     } else {
@@ -1485,7 +1508,7 @@ var updateOrderSummary = function () {
             .text(chooseBottleText);
     }
 
-    if (wines.length > 0 && arePreferencesSelected(wines[0]) && !secondBottle ) {
+    if (wines.length > 0 && arePreferencesSelected(wines[0]) && !secondBottle) {
         $choosePreferencesSection = $check.clone()
             .text(choosePreferencesText);
     } else {
@@ -1493,7 +1516,7 @@ var updateOrderSummary = function () {
             .text(choosePreferencesText);
     }
 
-    if((wines.length > 0 && !arePreferencesSelected(wines[0])) || (secondBottle && wines.length > 1 && !arePreferencesSelected(wines[1]))) {
+    if ((wines.length > 0 && !arePreferencesSelected(wines[0])) || (secondBottle && wines.length > 1 && !arePreferencesSelected(wines[1]))) {
         $choosePreferencesSection.append($now);
     }
 
@@ -1602,15 +1625,15 @@ var updateOrderSummary = function () {
 
 };
 
-var selectedBottlesSummary = function($deliverySummary) {
+var selectedBottlesSummary = function ($deliverySummary) {
 
     var $selectedBottlesSummary = [];
 
-    if(wines.length > 0) {
+    if (wines.length > 0) {
 
         $selectedBottlesSummary.push($('<div>').addClass('center').append($('<strong>').text('Wines Selected')));
 
-        wines.forEach(function(wine) {
+        wines.forEach(function (wine) {
             var $summary = $('<div>').text(wineSummary(wine));
             $selectedBottlesSummary.push($summary)
         });
@@ -1619,41 +1642,41 @@ var selectedBottlesSummary = function($deliverySummary) {
     $deliverySummary.append($selectedBottlesSummary);
 };
 
-var promoSummary = function($deliverySummary) {
+var promoSummary = function ($deliverySummary) {
 
-    var $promo = $('#promotion');
+    var promo = JSON.parse($('#promotion').val());
 
-    if($promo.val() !== '') {
-        $deliverySummary.append($('<div>').append('<i>').addClass('fa fa-gift').text(' Promotion: 1x - ' + $promo.val() + ' (£0.00)'));
+    if (promo.title !== '') {
+        $deliverySummary.append($('<div>').append('<i>').addClass('fa fa-gift').text(' Promotion: ' + promo.title + ' - ' + promo.description));
     }
 };
 
-var wineSummary = function(wine) {
+var wineSummary = function (wine) {
     var summary = [];
 
-    if(wine.quantity) {
+    if (wine.quantity) {
         summary.push(wine.quantity + 'x')
     }
 
-    if(wine.label) {
+    if (wine.label) {
         summary.push(wine.label);
     }
 
-    if(wine.occasionName) {
+    if (wine.occasionName) {
         summary.push(wine.occasionName);
     }
 
-    if(wine.food.length > 0) {
-        wine.food.forEach(function(food) {
+    if (wine.food.length > 0) {
+        wine.food.forEach(function (food) {
             summary.push(food.name + (food.preparationName ? ' (' + food.preparationName + ')' : ''));
         });
     }
 
-    if(wine.wineType && wine.wineType.name) {
+    if (wine.wineType && wine.wineType.name) {
         summary.push(wine.wineType.name);
     }
 
-    if(wine.specificWine) {
+    if (wine.specificWine) {
         summary.push(wine.specificWine);
     }
 

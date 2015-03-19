@@ -16,6 +16,8 @@
         <div class="col-md-12">
           <strong>Title:</strong>
           <%= @promotion.title %>
+          <strong>Description:</strong>
+          <%= @promotion.description %>
         </div>
       </div>
     </li>
@@ -32,6 +34,14 @@
         <div class="col-md-12">
           <strong>Active:</strong>
           <%= @promotion.active %>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>For New Accounts Only:</strong>
+          <%= @promotion.new_accounts_only %>
         </div>
       </div>
     </li>

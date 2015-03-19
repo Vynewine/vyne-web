@@ -702,9 +702,14 @@
                         padding: 60px 10px;
                         position: relative;
 
-                        .order-table {
+                        .order-table, .order-table-cart {
                             width: 100%;
                             text-align: left;
+
+                            .cart-divider {
+                                border-bottom: 1px #222 solid;
+                                margin: 5px 0 5px 0;
+                            }
 
                             .order-table-bottle-price {
                                 padding: 0;
@@ -723,7 +728,7 @@
                                 position: relative;
                                 border: 1px #222 solid;
 
-                                .delete {
+                                .delete, .delete-bottle {
                                     position: absolute;
                                     top: 50%;
                                     left: -15px;
@@ -755,7 +760,7 @@
                                 }
 
                                 span {
-                                    display: block;
+                                    display: inline;
 
                                     &.label {
                                         font-size: 22px;
@@ -835,7 +840,15 @@
                             .promotion-area {
                                 text-align: center;
 
-                                .promotion-name {
+                                .promotion-title {
+                                    display: inline;
+                                }
+
+                                .promotion-description {
+                                    font-size: 10pt;
+                                }
+
+                                .promotion-errors {
 
                                 }
                             }

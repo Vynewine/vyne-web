@@ -11,11 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150316121429) do
+ActiveRecord::Schema.define(version: 20150318184812) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "pg_stat_statements"
   enable_extension "postgis"
 
   create_table "addresses", force: true do |t|
@@ -24,11 +23,11 @@ ActiveRecord::Schema.define(version: 20150316121429) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.spatial  "coordinates",  limit: {:srid=>0, :type=>"point"}
     t.string   "line_2"
     t.string   "company_name"
     t.string   "country"
     t.string   "city"
-    t.spatial  "coordinates",  limit: {:srid=>0, :type=>"point"}
   end
 
   add_index "addresses", ["deleted_at"], :name => "index_addresses_on_deleted_at"
@@ -161,14 +160,6 @@ ActiveRecord::Schema.define(version: 20150316121429) do
   add_index "devices", ["deleted_at"], :name => "index_devices_on_deleted_at"
   add_index "devices", ["key"], :name => "index_devices_on_key", :unique => true
   add_index "devices", ["warehouse_id"], :name => "index_devices_on_warehouse_id"
-
-  create_table "devices_warehouses", id: false, force: true do |t|
-    t.integer  "device_id"
-    t.integer  "warehouse_id"
-    t.datetime "deleted_at"
-  end
-
-  add_index "devices_warehouses", ["deleted_at"], :name => "index_devices_warehouses_on_deleted_at"
 
   create_table "food_items", force: true do |t|
     t.integer  "order_item_id"
@@ -407,20 +398,7 @@ ActiveRecord::Schema.define(version: 20150316121429) do
     t.boolean  "referral_promotion"
   end
 
-  create_table "referral_codes", force: true do |t|
-    t.integer  "referral_id"
-    t.string   "code"
-    t.boolean  "active",      default: true
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "referral_codes", ["referral_id"], :name => "index_referral_codes_on_referral_id"
-
   create_table "referrals", force: true do |t|
-    t.integer  "promotion_id"
-    t.integer  "user_id"
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -428,9 +406,6 @@ ActiveRecord::Schema.define(version: 20150316121429) do
     t.integer  "referred_user_id"
     t.integer  "existing_user_id"
   end
-
-  add_index "referrals", ["promotion_id"], :name => "index_referrals_on_promotion_id"
-  add_index "referrals", ["user_id"], :name => "index_referrals_on_user_id"
 
   create_table "regions", force: true do |t|
     t.string   "name"
@@ -508,8 +483,6 @@ ActiveRecord::Schema.define(version: 20150316121429) do
 
   create_table "user_promotions", force: true do |t|
     t.integer  "user_id"
-    t.integer  "referral_code_id"
-    t.integer  "friend_id"
     t.boolean  "redeemed",          default: false, null: false
     t.boolean  "can_be_redeemed",   default: false, null: false
     t.datetime "deleted_at"
@@ -519,8 +492,6 @@ ActiveRecord::Schema.define(version: 20150316121429) do
     t.integer  "referral_id"
   end
 
-  add_index "user_promotions", ["friend_id"], :name => "index_user_promotions_on_friend_id"
-  add_index "user_promotions", ["referral_code_id"], :name => "index_user_promotions_on_referral_code_id"
   add_index "user_promotions", ["user_id"], :name => "index_user_promotions_on_user_id"
 
   create_table "users", force: true do |t|

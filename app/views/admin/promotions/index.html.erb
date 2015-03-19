@@ -8,8 +8,11 @@
     <tr>
       <th>Id</th>
       <th>Title</th>
+      <th>Description</th>
       <th>Category</th>
       <th>Active</th>
+      <th>Used for referrals</th>
+      <th>For new accounts only</th>
       <th></th>
     </tr>
     </thead>
@@ -19,13 +22,15 @@
         <tr>
           <td><%= promotion.id %></td>
           <td><%= promotion.title %></td>
+          <td><%= promotion.description %></td>
           <td><%= promotion.category %></td>
           <td><%= promotion.active %></td>
+          <td><%= promotion.referral_promotion %></td>
+          <td><%= promotion.new_accounts_only %></td>
           <td class="button-wrapper">
             <%= link_to admin_promotion_path(promotion, :page => params[:page]), class: 'btn btn-default' do %>
                 <i class="glyphicon glyphicon-search"></i>
             <% end %>
-
           </td>
         </tr>
     <% end %>
@@ -35,6 +40,18 @@
   <ul class="list-group">
     <li class="list-group-item">
       <%= link_to 'New Promotion', new_admin_promotion_path, :class => 'btn btn-primary' %>
+    </li>
+
+  </ul>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">User Referrals</h3>
+  </div>
+
+  <ul class="list-group">
+    <li class="list-group-item">
       <%= link_to admin_referrals_path, class: 'btn btn-default' do %>
           <i class="fa fa-share-alt"></i> Referrals
       <% end %>
@@ -42,6 +59,9 @@
 
   </ul>
 </div>
+
+
+
 
 
 
