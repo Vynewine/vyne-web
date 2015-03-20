@@ -40,11 +40,7 @@ Rails.application.routes.draw do
   # ------------
 
   resources :share, :help, :jobs, :availability, :merchants, :account
-  resources :promo do
-    collection do
-      post 'apply_to_cart'
-    end
-  end
+  resources :promo
   resources :delivery do
     collection do
       get 'get_courier_location'

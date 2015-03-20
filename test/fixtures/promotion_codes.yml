@@ -8,3 +8,8 @@ referral_one:
   code: JOE-SHMO
   category: 1 #referral_code
   user: client
+
+free_reserver_bottle:
+  promotion: free_reserver_bottle
+  code: VIP-VYNE
+  category: 0

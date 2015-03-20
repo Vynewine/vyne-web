@@ -11,5 +11,6 @@ class CleanupPromotions < ActiveRecord::Migration
     add_column :promotions, :description, :text
     add_column :promotions, :new_accounts_only, :boolean, default: true
 
+    rename_column :promotions, :bottle_category_id, :free_bottle_category_id
   end
 end

@@ -19,3 +19,9 @@ promo_order:
   address: one
   warehouse: two
   delivery_price: 3.5
+
+free_bottle:
+  status: one
+  client: client
+  address: one
+  warehouse: two

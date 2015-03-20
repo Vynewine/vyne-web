@@ -33,4 +33,9 @@ class PromotionHelperTest < ActiveSupport::TestCase
     assert_equal('JOHN-DOE', user.promotion_codes.first.code)
   end
 
+  test 'Can give a free promotion' do
+    free_order = orders(:free_bottle)
+    assert(PromotionHelper.is_free_promotion(free_order))
+  end
+
 end

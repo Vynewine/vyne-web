@@ -65,6 +65,6 @@ class OrderItem < ActiveRecord::Base
   end
 
   def final_price
-    PromotionHelper.calculate_order_item_price(self, self.user_promotion)
+    PromotionHelper.calculate_order_item_price(self)
   end
 end

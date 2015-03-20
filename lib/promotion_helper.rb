@@ -2,11 +2,14 @@ module PromotionHelper
 
   @logger = Logging.logger['PromotionHelper']
 
-  def self.calculate_order_item_price(order_item, user_promotion)
-    if user_promotion.blank?
+  def self.calculate_order_item_price(order_item)
+    if order_item.user_promotion.blank?
       order_item.price
     else
-      if user_promotion.promotion_code.promotion.extra_bottle
+      if order_item.user_promotion.promotion_code.promotion.extra_bottle
+        0
+      elsif order_item.user_promotion.free_bottle_category != nil &&
+          order_item.category == order_item.user_promotion.free_bottle_category
         0
       else
         order_item.price
@@ -112,25 +115,42 @@ module PromotionHelper
   end
 
   def self.apply_promotion(order)
-    user_promotion = UserPromotion
-                         .where(:user => order.client, :can_be_redeemed => true, :redeemed => false)
-                         .order('id DESC').first
 
-    unless user_promotion.blank?
+    log "Applying promotion for order #{order.id}"
 
-      # Different logic for different promotion will go here in the future
-      if user_promotion.promotion_code.promotion.extra_bottle
-        order.order_items.new({
-                                  :quantity => 1,
-                                  :user_promotion => user_promotion
-                              })
+    begin
+      user_promotion = UserPromotion
+                           .where(:user => order.client, :can_be_redeemed => true, :redeemed => false)
+                           .order('id DESC').first
+
+      unless user_promotion.blank?
+
+        # Different logic for different promotion will go here in the future
+        if user_promotion.promotion_code.promotion.extra_bottle
+          order.order_items.new({
+                                    :quantity => 1,
+                                    :user_promotion => user_promotion
+                                })
+        elsif user_promotion.free_bottle_category != nil
+
+          item = order.order_items.select{|item| item.category == user_promotion.free_bottle_category}.first
+
+          unless item.blank?
+            item.user_promotion = user_promotion
+          end
+          
+        end
+
+        user_promotion.redeemed = true
+
+        unless user_promotion.save
+          log_error ['Error while applying user promotion'] + user_promotion.errors.full_messages
+        end
       end
-
-      user_promotion.redeemed = true
-
-      unless user_promotion.save
-        logger.error ['Error while applying user promotion'] + user_promotion.errors.full_messages
-      end
+    rescue Exception => exception
+      message = "Error occurred while applying promotion: #{exception.class} - #{exception.message}"
+      log_error message
+      log_error exception
     end
   end
 
@@ -168,10 +188,14 @@ module PromotionHelper
 
   def self.get_promotion_info(user, promo_code, warehouse)
 
-    promo = nil
+    promotion = nil
     promo_info = {
         title: '',
         description: '',
+        free_delivery: false,
+        extra_bottle: false,
+        free_bottle_category: '',
+        new_accounts_only: true,
         errors: []
     }
 
@@ -179,36 +203,78 @@ module PromotionHelper
       unless promo_code.blank?
         promo_code = PromotionCode.find_by(code: promo_code)
         unless promo_code.blank?
-          promo = promo_code.promotion
+          promotion = promo_code.promotion
         end
       end
     else
       user_promotion = UserPromotion.find_by(:user => user, :can_be_redeemed => true, :redeemed => false)
       unless user_promotion.blank?
-        promo = user_promotion.promotion_code.promotion
+        promotion = user_promotion.promotion_code.promotion
       end
     end
 
-    unless promo.blank?
+    unless promotion.blank?
 
-      promo_info[:title] = promo.title
-      promo_info[:description] = promo.description
+      promo_info[:title] = promotion.title
+      promo_info[:description] = promotion.description
+      promo_info[:free_delivery] = promotion.free_delivery
+      promo_info[:extra_bottle] = promotion.extra_bottle
+      promo_info[:free_bottle_category] = promotion.free_bottle_category.id
+      promo_info[:new_accounts_only] = promotion.new_accounts_only
 
       unless warehouse.blank?
 
         warehouse_promotion = WarehousePromotion.find_by(
             :warehouse => warehouse,
-            :promotion => promo,
+            :promotion => promotion,
             :active => true
         )
 
         if warehouse_promotion.blank?
-          promo_info[:errors] = ["We're sorry but looks like Merchant in your area in not taking part in '#{promo.title}' promotion at the moment"]
+          promo_info[:errors] = ["We're sorry but looks like Merchant in your area in not taking part in '#{promotion.title}' promotion at the moment"]
         end
       end
     end
 
     promo_info
+  end
+
+  def self.is_free_promotion(order)
+
+    log "Checking if free promotion is available for the order #{order.id}"
+
+    begin
+
+      user_promotion = UserPromotion
+                           .where(:user => order.client, :can_be_redeemed => true, :redeemed => false)
+                           .order('id DESC').first
+
+      if user_promotion.blank?
+        return false
+      else
+
+        is_free = false
+
+        promotion = user_promotion.promotion_code.promotion
+
+        unless promotion.free_bottle_category.blank?
+          if order.order_items.length == 1 && order.order_items[0].category == promotion.free_bottle_category
+            if promotion.free_delivery
+              is_free = true
+            end
+          end
+        end
+
+        log "User promotion #{user_promotion.id} is free: #{is_free}"
+
+        return is_free
+      end
+
+    rescue Exception => exception
+      message = "Error occurred while process_sharing_reward: #{exception.class} - #{exception.message}"
+      log_error message
+      log_error exception
+    end
   end
 
   def self.log(message)

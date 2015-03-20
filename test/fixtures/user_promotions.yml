@@ -1,1 +1,5 @@
-
+free_reserver_bottle:
+  user: client
+  promotion_code: free_reserver_bottle
+  can_be_redeemed: true
+  redeemed: false

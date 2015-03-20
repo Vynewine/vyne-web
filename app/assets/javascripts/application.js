@@ -107,6 +107,7 @@ var wine = function () {
     this.occasionName = '';
     this.wineType = {id: 0, name: ''};
     this.complete = false;
+    this.promoPrice = null
 };
 
 //Object to store food details
@@ -121,6 +122,7 @@ var wineCount = 0;
 var secondBottle = false;
 var orderSwiper;
 var userEstablished = false;
+var free = false;
 
 /**
  * When we're in the cart there are always 3 swiper events
@@ -161,6 +163,8 @@ var loadWines = function () {
                 resetEventsForCart();
             }
         }
+
+        updateOrderSummary();
     }
 };
 
@@ -303,6 +307,10 @@ $(function () {
 
                 if (swiper.activeSlide().id == 'delivery-panel') {
                     verifyAddress();
+                }
+
+                if(swiper.activeSlide().id == 'payment-panel') {
+                    checkPromotions();
                 }
             }
         },
@@ -1414,4 +1422,16 @@ var arePreferencesSelected = function (wine) {
     }
 };
 
-updateOrderSummary();
+var checkPromotions = function(){
+    var newCardForm = $('#new_card');
+    var promotionArea = $('#promotion-payment');
+
+    if(free) {
+        newCardForm.hide();
+        promotionArea.show();
+    } else {
+        newCardForm.show();
+        promotionArea.hide();
+    }
+
+};

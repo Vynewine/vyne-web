@@ -7,3 +7,11 @@ for_new_users:
   active: true
   category: wine
   referral_promotion: true
+
+free_reserver_bottle:
+  title: 'VIP'
+  active: true
+  category: wine
+  referral_promotion: false
+  free_bottle_category: reserve
+  free_delivery: true

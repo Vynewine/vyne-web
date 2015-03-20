@@ -10,7 +10,7 @@ class PromoController < ApplicationController
 
       unless current_user.promotion_codes.blank?
 
-        promo_codes = current_user.promotion_codes.select{|code| code.active}.sort_by(&:created_at).reverse!
+        promo_codes = current_user.promotion_codes.select { |code| code.active }.sort_by(&:created_at).reverse!
 
         unless promo_codes.blank?
           promo_code = promo_codes.map { |code| code.code }.first
@@ -77,9 +77,5 @@ class PromoController < ApplicationController
       redirect_to availability_index_path({:postcode => params[:postcode]})
       return
     end
-  end
-
-  def apply_to_cart
-    puts params[:wines]
   end
 end

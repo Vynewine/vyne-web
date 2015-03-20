@@ -169,19 +169,31 @@ if ($('body.shop').length) {
             $form.find('input[type="submit"]').prop('disabled', true);
             // Submits form if there is an old card entry,
             // Creates Stripe token if there is a new card entry.
-            var oldCard = $('#old-card');
-            if (oldCard.val() !== '0' && oldCard.val() !== '') {
+
+            if(free) {
+
                 analytics.track('Order placed', {
-                    card: 'Old card'
+                    card: 'Free order'
                 });
 
                 processFinalOrderSubmit();
-            } else {
-                analytics.track('Order placed', {
-                    card: 'New card'
-                });
 
-                Stripe.card.createToken($form, stripeResponseHandler);
+            } else {
+                var oldCard = $('#old-card');
+                if (oldCard.val() !== '0' && oldCard.val() !== '') {
+
+                    analytics.track('Order placed', {
+                        card: 'Old card'
+                    });
+
+                    processFinalOrderSubmit();
+                } else {
+                    analytics.track('Order placed', {
+                        card: 'New card'
+                    });
+
+                    Stripe.card.createToken($form, stripeResponseHandler);
+                }
             }
         });
 

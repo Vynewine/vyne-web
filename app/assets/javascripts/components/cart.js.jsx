@@ -2,6 +2,8 @@ var renderCart = function (wines) {
 
     if ($('body.shop.new').length) {
 
+        wines = applyPromotions(wines);
+
         var promoInfo = JSON.parse($('#promotion').val());
 
         React.render(
@@ -11,6 +13,22 @@ var renderCart = function (wines) {
 
         PubSub.publish('cart-update', wines);
     }
+};
+
+var applyPromotions = function (wines) {
+
+    var promoInfo = JSON.parse($('#promotion').val());
+
+    if (promoInfo.free_bottle_category) {
+        for (var i = 0; i < wines.length; ++i) {
+            if (wines[i].category === promoInfo.free_bottle_category) {
+                wines[i].promoPrice = 0;
+                break;
+            }
+        }
+    }
+
+    return wines;
 };
 
 var renderMiniCart = function (msg, data) {
@@ -27,7 +45,14 @@ PubSub.subscribe('cart-update', renderMiniCart);
 var Cart = React.createClass({
     getInitialState: function () {
         return {
-            wines: this.props.wines
+            wines: this.props.wines ? this.props.wines : []
+        }
+    },
+    componentWillReceiveProps: function (newProps) {
+        if (newProps.wines.length) {
+            this.setState({
+                wines: applyPromotions(newProps.wines)
+            });
         }
     },
     handleWinesChange: function (newWines) {
@@ -46,6 +71,12 @@ var Cart = React.createClass({
         $.cookie('wines', JSON.stringify(newWines));
 
         PubSub.publish('cart-update', newWines);
+
+        if (newWines.length) {
+            this.setState({
+                wines: applyPromotions(newWines)
+            });
+        }
     },
     handleRemoveBottle: function (id) {
 
@@ -81,7 +112,7 @@ var Cart = React.createClass({
                         {cartItems}
                         <Cart.ManageBottles wines={this.state.wines} onWineChange={this.handleWinesChange} />
                         <Cart.Promotions promoInfo={this.props.promoInfo} />
-                        <Cart.Totals wines={this.state.wines} />
+                        <Cart.Totals wines={this.state.wines} promoInfo={this.props.promoInfo} />
                     </tbody>
                 </table>
                 <Cart.Checkout wines={this.state.wines} />
@@ -110,6 +141,23 @@ Cart.Item = React.createClass({
             })
         }
 
+        var price = '';
+
+        if (this.props.wine.promoPrice === 0) {
+            price = (
+                <div>
+                    <div className="price-div">
+                        <span className="price">£{this.props.wine.promoPrice}</span>
+                    </div>
+                    <div>
+                        <span className="price-old">£{parseInt(this.props.wine.priceMin)}-{parseInt(this.props.wine.priceMax)}</span>
+                    </div>
+                </div>
+            );
+        } else {
+            price = (<span className="price">£{parseInt(this.props.wine.priceMin)}-{parseInt(this.props.wine.priceMax)}</span>);
+        }
+
         return (
             <tr className="order-bottle-cart" key={this.props.wine.id}>
                 <td className="order-table-bottle wine-bottle">
@@ -131,7 +179,7 @@ Cart.Item = React.createClass({
                     <ul className="food">{foods}</ul>
                 </td>
                 <td className="order-table-bottle-price">
-                    <span className="price">£{parseInt(this.props.wine.priceMin)}-{parseInt(this.props.wine.priceMax)}</span>
+                {price}
                 </td>
             </tr>
         )
@@ -143,7 +191,9 @@ Cart.ManageBottles = React.createClass({
 
         var wines = this.props.wines;
         var theSameWine = $.extend(true, {}, wines[0]);
+
         theSameWine.id = wines[0].id + 1;
+        theSameWine.promoPrice = null;
 
         wines.push(theSameWine);
 
@@ -267,8 +317,14 @@ Cart.Totals = React.createClass({
         var deliveryDisclaimer = '';
 
         this.props.wines.forEach(function (wine) {
-            totalMinimum += parseFloat(wine.priceMin);
-            totalMaximum += parseFloat(wine.priceMax);
+            if(wine.promoPrice !== null) {
+                totalMinimum += wine.promoPrice;
+                totalMaximum += wine.promoPrice;
+            } else {
+                totalMinimum += parseFloat(wine.priceMin);
+                totalMaximum += parseFloat(wine.priceMax);
+            }
+
             if (wine.category == 1) {
                 deliveryCost = higherDeliveryCost;
             } else {
@@ -280,13 +336,30 @@ Cart.Totals = React.createClass({
             deliveryCost = lowerDeliveryCost;
         }
 
-        totalMinimum += deliveryCost;
-        totalMaximum += deliveryCost;
+
+
+        if(this.props.promoInfo.free_delivery) {
+            deliveryCost = 0;
+        }
 
         if (deliveryCost == lowerDeliveryCost) {
             deliveryDisclaimer = '(flat fee)';
         } else {
-            deliveryDisclaimer = '(wine under £15.00)';
+            if(deliveryCost === 0) {
+                deliveryDisclaimer = '';
+            } else {
+                deliveryDisclaimer = '(wine under £15.00)';
+            }
+
+        }
+
+        totalMinimum += deliveryCost;
+        totalMaximum += deliveryCost;
+
+        if(parseInt(totalMinimum + totalMaximum) === 0) {
+            free = true;
+        } else {
+            free = false;
         }
 
         return (

@@ -114,6 +114,17 @@ class Order < ActiveRecord::Base
   end
 
   def calculate_delivery_price
+
+    # Check for free delivery promotion
+    promotion_items = order_items.select { |item| !item.user_promotion.blank? }
+
+    promotion_items.each do |item|
+      if item.free_delivery
+        self.delivery_price = 0
+        return
+      end
+    end
+
     # Delivery price for one house wine £3.5 otherwise £2.5
     wines = order_items.select { |item| item.user_promotion.blank? }
 

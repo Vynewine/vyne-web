@@ -57,7 +57,7 @@ class Admin::PromotionsController < ApplicationController
         :active,
         :free_delivery,
         :extra_bottle,
-        :bottle_category_id,
+        :free_bottle_category_id,
         :referral_promotion,
         :description,
         :new_accounts_only

@@ -390,6 +390,7 @@
              select_style = 'display: none;'
            end
         %>
+
         <%= select_tag "orderCard", options_for_select(paymentCards, selected_card), :name => "", style: select_style %>
 
         <div id="new_card">
@@ -398,6 +399,9 @@
           <div><input type="text" id="pmxp" size="5"  placeholder="MM/YY" /></div>
         </div>
 
+        <div id="promotion-payment" class="promotion-payment">
+          No credit card nesessary with this free promotion.
+        </div>
 
         <!-- Hidden fields -->
         <input type="hidden" id="old-card" name="old_card" />

@@ -759,6 +759,10 @@
                                     color: rgba(255, 255, 255, 0.5);
                                 }
 
+                                .price-div {
+                                    text-align: center;
+                                }
+
                                 span {
                                     display: inline;
 
@@ -775,6 +779,11 @@
 
                                     &.price {
                                         text-align: center;
+                                    }
+
+                                    &.price-old {
+                                        text-align: center;
+                                        text-decoration: line-through;
                                     }
 
                                     &.wineType,
@@ -964,6 +973,12 @@
                             text-align: center;
                         }
 
+                    }
+
+                    .promotion-payment {
+                        margin: 20px;
+                        text-align: center;
+                        display: none;
                     }
 
                 }

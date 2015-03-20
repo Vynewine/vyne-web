@@ -34,3 +34,8 @@ promo_order_wine3:
   order: promo_order
   user_promotion: client_new_account
   price: 17
+
+promo_free_bottle:
+  quantity: 1
+  category: reserve
+  order: free_bottle
