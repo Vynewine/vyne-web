@@ -1,9 +1,7 @@
 <header class="main-header">
   <div class="wrapper wrapper-fluid">
-    <%= link_to root_path, { :class=>"cart-link", data: { no_turbolink: true } } do %>
-      <%= image_tag asset_path("icons/bag@2x.png"), :alt => "Cart" %>
-      <span class="cart-count">0</span>
-    <% end %>
+    <div id="mini-cart"></div>
+
     <%= link_to root_path, { :class=>"logo", data: { no_turbolink: true } } do %><%= image_tag "logo@2x.png", :alt => "Logo" %><% end %>
     <a href="" class="menu-link">
       <div class="top"></div>

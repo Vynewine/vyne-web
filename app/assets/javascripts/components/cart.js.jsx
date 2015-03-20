@@ -1,4 +1,5 @@
 var renderCart = function (wines) {
+
     if ($('body.shop.new').length) {
 
         var promoInfo = JSON.parse($('#promotion').val());
@@ -7,8 +8,21 @@ var renderCart = function (wines) {
             <Cart wines={wines} promoInfo={promoInfo} />,
             document.getElementById('cart')
         );
+
+        PubSub.publish('cart-update', wines);
     }
 };
+
+var renderMiniCart = function (msg, data) {
+
+    React.render(
+        <MiniCart wines={data} />,
+        document.getElementById('mini-cart')
+    );
+
+};
+
+PubSub.subscribe('cart-update', renderMiniCart);
 
 var Cart = React.createClass({
     getInitialState: function () {
@@ -18,15 +32,20 @@ var Cart = React.createClass({
     },
     handleWinesChange: function (newWines) {
 
-        console.log('sweet');
-
         this.setState({
             wines: newWines
         });
 
+        if (!newWines.length) {
+            resetEventsForEmptyCart();
+            wineCount = 0;
+        }
+
         // Update Rest of the app
         wines = newWines;
         $.cookie('wines', JSON.stringify(newWines));
+
+        PubSub.publish('cart-update', newWines);
     },
     handleRemoveBottle: function (id) {
 
@@ -34,6 +53,10 @@ var Cart = React.createClass({
             if (wine.id === id) {
                 this.state.wines.splice(index, 1);
             }
+        }.bind(this));
+
+        this.state.wines.forEach(function (wine, index) {
+            wine.id = index;
         }.bind(this));
 
         this.handleWinesChange(this.state.wines);
@@ -48,7 +71,6 @@ var Cart = React.createClass({
 
         return (
             <div>
-                React Cart Start
                 <table className="order-table-cart">
                     <thead></thead>
                     <tbody>
@@ -62,14 +84,15 @@ var Cart = React.createClass({
                         <Cart.Totals wines={this.state.wines} />
                     </tbody>
                 </table>
-                React Card End
+                <Cart.Checkout wines={this.state.wines} />
             </div>
         )
     }
 });
 
 Cart.Item = React.createClass({
-    handleRemoveBottle: function (id) {
+    handleRemoveBottle: function (id, e) {
+        e.preventDefault();
         this.props.onBottleRemove(id);
     },
     render: function () {
@@ -96,9 +119,15 @@ Cart.Item = React.createClass({
                         onClick={this.handleRemoveBottle.bind(this, this.props.wine.id)}
                     >x</a>
                     <div className="wine-bottle"></div>
-                    <span className="label">{this.props.wine.label}</span>
-                    <span className="occasionName">{this.props.wine.occasionName}</span>
-                    <span className="wineType">{this.props.wine.wineType.name}</span>
+                    <div>
+                        <span className="label">{this.props.wine.label}</span>
+                    </div>
+                    <div>
+                        <span className="occasionName">{this.props.wine.occasionName}</span>
+                    </div>
+                    <div>
+                        <span className="wineType">{this.props.wine.wineType.name}</span>
+                    </div>
                     <ul className="food">{foods}</ul>
                 </td>
                 <td className="order-table-bottle-price">
@@ -111,6 +140,7 @@ Cart.Item = React.createClass({
 
 Cart.ManageBottles = React.createClass({
     handleAddTheSameBottle: function () {
+
         var wines = this.props.wines;
         var theSameWine = $.extend(true, {}, wines[0]);
         theSameWine.id = wines[0].id + 1;
@@ -118,17 +148,39 @@ Cart.ManageBottles = React.createClass({
         wines.push(theSameWine);
 
         this.props.onWineChange(wines);
+
+        secondBottle = false;
+
+        analytics.track('Review order', {
+            action: 'Add same bottle'
+        });
     },
     handleAddAnotherBottle: function () {
-        console.log('another bottle');
-    },
-    handleAddBottle: function() {
 
+        secondBottle = true;
+
+        orderSwiper.swipeTo(0, 500);
+
+        analytics.track('Review order', {
+            action: 'Add another bottle'
+        });
+    },
+    handleAddBottle: function () {
+
+        secondBottle = false;
+
+        orderSwiper.swipeTo(0, 500);
+
+        analytics.track('Review order', {
+            action: 'Add a bottle'
+        });
     },
     render: function () {
 
+        var visibility = {display: 'table-row'};
+
         var addBottle = '';
-        if(this.props.wines.length === 1) {
+        if (this.props.wines.length === 1) {
             addBottle = (
                 <div>
                     <div>
@@ -142,7 +194,7 @@ Cart.ManageBottles = React.createClass({
                     </div>
                 </div>
             )
-        } else if(this.props.wines.length === 0) {
+        } else if (this.props.wines.length === 0) {
             addBottle = (
                 <div>
                     <div>No bottles selected</div>
@@ -151,14 +203,13 @@ Cart.ManageBottles = React.createClass({
                 </div>
             )
         } else {
-            return false;
+            visibility = {display: 'none'};
         }
 
         return (
-            <tr className="add-bottle">
+            <tr className="add-bottle" style={visibility}>
                 <td colSpan="2">
                 {addBottle}
-
                 </td>
             </tr>
         )
@@ -215,7 +266,6 @@ Cart.Totals = React.createClass({
         var deliveryCost = 0.00;
         var deliveryDisclaimer = '';
 
-
         this.props.wines.forEach(function (wine) {
             totalMinimum += parseFloat(wine.priceMin);
             totalMaximum += parseFloat(wine.priceMax);
@@ -258,6 +308,58 @@ Cart.Totals = React.createClass({
                 </td>
             </tr>
 
+        )
+    }
+});
+
+Cart.Checkout = React.createClass({
+    handleCheckout: function (e) {
+        e.preventDefault();
+        orderSwiper.swipeNext();
+    },
+    render: function () {
+
+        if (!this.props.wines.length) {
+            return false;
+        }
+
+        return (
+            <div className="btn-checkout">
+                <a href="" onClick={this.handleCheckout} className="btn btn__full-width">Finalise Order</a>
+            </div>
+        )
+    }
+});
+
+MiniCart = React.createClass({
+    handleCartClick: function (e) {
+
+        e.preventDefault();
+
+        cleanupUnfinishedWines();
+        resetEventsForCart();
+        updateOrderSummary();
+
+        orderSwiper.swipeTo(2, 500, false);
+
+        analytics.track('Review order', {
+            action: 'Cart link clicked',
+            cart_count: this.props.wines.length
+        });
+    },
+    render: function () {
+
+        var countStyle = {display: 'none'};
+
+        if (this.props.wines.length) {
+            countStyle = {display: 'block'};
+        }
+
+        return (
+            <a className="cart-link" href="" onClick={this.handleCartClick} style={countStyle}>
+                <div className="mini-cart-image"></div>
+                <span className="cart-count" >{this.props.wines.length}</span>
+            </a>
         )
     }
 });

@@ -23,12 +23,20 @@
             height: auto;
         }
 
+        .mini-cart-image {
+            width: 16px;
+            height: 20px;
+            background-image: url(asset-path('icons/bag@2x.png'));
+            background-repeat: no-repeat;
+            background-size: 100%;
+        }
+
         .cart-count {
             top: 9px;
             right: 9px;
             width: 16px;
             color: white;
-            display: none;
+            display: inline;
             line-height: 1;
             padding: 2px 0;
             font-size: 1.2rem;

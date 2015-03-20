@@ -145,9 +145,9 @@ class UserNewOrderTest < ActiveSupport::TestCase
     enter_promo_code('UNCORK','n17rj')
     select_bottle_for_category(2)
     select_wine_by_occasion
-    select_second_bottle
-    select_bottle_for_category(2)
-    select_wine_by_food
+    # select_second_bottle
+    # select_bottle_for_category(2)
+    # select_wine_by_food
     confirm_order_selection
     register_new_user(email, password)
     register_new_address
