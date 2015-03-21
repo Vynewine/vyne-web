@@ -14,7 +14,8 @@
                   (<%= @order_item.category.name.capitalize %>)
               <% end %>
 
-              <%= @order_item.preferences.to_sentence(last_word_connector: ' and ').capitalize %>.
+              <%= @order_item.preferences.blank? ? '' : @order_item.preferences.to_sentence(last_word_connector: ' and ').capitalize + '. ' %>
+              <%= @order_item.user_promotion.blank? ? '' : 'Promotion: ' + @order_item.user_promotion.promotion_code.promotion.title.capitalize + '.' %>
 
               <% unless @order_item.warehouse_promotion.blank? %>
                   <div><%= @order_item.warehouse_promotion %></div>

@@ -34,3 +34,11 @@ supplier:
   encrypted_password: 'test'
   roles: supplier
   addresses: addresses(:three)
+
+client_2:
+  first_name: 'John'
+  last_name: 'Doe'
+  email: 'client_2@vyne.london'
+  encrypted_password: 'test'
+  roles: client
+  addresses: addresses(:three)

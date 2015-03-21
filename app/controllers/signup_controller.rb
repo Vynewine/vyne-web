@@ -29,9 +29,8 @@ class SignupController < ApplicationController
 
       unless cookies[:promo_code].blank?
         errors = PromotionHelper.add_promotion(new_user, cookies[:promo_code])
-        if errors.blank?
-          cookies.delete :promo_code
-        else
+        cookies.delete :promo_code
+        unless errors.blank?
           logger.error errors
         end
       end

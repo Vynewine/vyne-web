@@ -8,8 +8,8 @@ module PromotionHelper
     else
       if order_item.user_promotion.promotion_code.promotion.extra_bottle
         0
-      elsif order_item.user_promotion.free_bottle_category != nil &&
-          order_item.category == order_item.user_promotion.free_bottle_category
+      elsif order_item.user_promotion.promotion_code.promotion.free_bottle_category != nil &&
+          order_item.category == order_item.user_promotion.promotion_code.promotion.free_bottle_category
         0
       else
         order_item.price
@@ -23,7 +23,7 @@ module PromotionHelper
 
     begin
 
-      promo_code = PromotionCode.find_by(:code => code)
+      promo_code = PromotionCode.find_by(:code => code, :active => true)
 
       if promo_code.blank?
         message = "Promo code #{code} not found"
@@ -131,14 +131,18 @@ module PromotionHelper
                                     :quantity => 1,
                                     :user_promotion => user_promotion
                                 })
-        elsif user_promotion.free_bottle_category != nil
+        elsif user_promotion.promotion_code.promotion.free_bottle_category != nil
 
-          item = order.order_items.select{|item| item.category == user_promotion.free_bottle_category}.first
+          item = order.order_items.select { |item| item.category ==
+              user_promotion.promotion_code.promotion.free_bottle_category }.first
 
           unless item.blank?
             item.user_promotion = user_promotion
+            unless item.save
+              log_error ['Error while applying user promotion'] + item.errors.full_messages
+            end
           end
-          
+
         end
 
         user_promotion.redeemed = true
@@ -201,7 +205,7 @@ module PromotionHelper
 
     if user.blank?
       unless promo_code.blank?
-        promo_code = PromotionCode.find_by(code: promo_code)
+        promo_code = PromotionCode.find_by(code: promo_code, active: true)
         unless promo_code.blank?
           promotion = promo_code.promotion
         end
@@ -219,7 +223,7 @@ module PromotionHelper
       promo_info[:description] = promotion.description
       promo_info[:free_delivery] = promotion.free_delivery
       promo_info[:extra_bottle] = promotion.extra_bottle
-      promo_info[:free_bottle_category] = promotion.free_bottle_category.id
+      promo_info[:free_bottle_category] = promotion.free_bottle_category.blank? ? '' : promotion.free_bottle_category.id
       promo_info[:new_accounts_only] = promotion.new_accounts_only
 
       unless warehouse.blank?

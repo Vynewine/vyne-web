@@ -66,7 +66,7 @@ class PromoController < ApplicationController
       return
     end
 
-    promotion_code = PromotionCode.find_by(code: @code)
+    promotion_code = PromotionCode.find_by(code: @code, active: true)
 
     if promotion_code.blank?
       flash.now[:error] = "We can't locate promo code provided. Please make sure it's correct and enter it again."

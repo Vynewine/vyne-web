@@ -185,8 +185,6 @@ class ShopControllerTest < ActionController::TestCase
 
     order_details =  JSON.parse @response.body
 
-    puts JSON.pretty_generate(order_details)
-
     order = Order.find(order_details['id'])
 
     assert_equal(2, order.order_items.count)
@@ -194,6 +192,25 @@ class ShopControllerTest < ActionController::TestCase
     assert(1, user.user_promotions.select{|promotion| promotion.can_be_redeemed}.count)
     assert(1, user.user_promotions.select{|promotion| promotion.redeemed}.count)
     assert_equal(2.5, order.delivery_price)
+  end
+
+  test 'Will create order with free promotion for new user' do
+
+    user = users(:client_2)
+
+    sign_in(:user, user)
+
+    post :create, post_data_single_reserve
+
+    order_details =  JSON.parse @response.body
+
+    order = Order.find(order_details['id'])
+
+    assert_equal(1, order.order_items.count)
+    assert_equal(1, order.order_items.select{|item| item.user_promotion == user.user_promotions.first}.count)
+    assert(1, user.user_promotions.select{|promotion| promotion.can_be_redeemed}.count)
+    assert(1, user.user_promotions.select{|promotion| promotion.redeemed}.count)
+    assert_equal(0.0, order.delivery_price)
   end
 
   def post_data
@@ -254,6 +271,27 @@ class ShopControllerTest < ActionController::TestCase
         'wines' => '[
       {
         "quantity":1, "category":"' + categories(:house).id.to_s + '",
+        "label":"House", "price":"£15", "specificWine":"",
+        "food":[{"id":"14","name":"fish"}, {"id":"35", "name":"herbs"}, {"id":"10", "name":"cured meat"} ],"occasion":[]
+      }
+      ]',
+        'address_s' => '',
+        'address_d' => '',
+        'address_id' => addresses(:one).id,
+        'old_card' => '0',
+        'new_card' => '1111',
+        'new_brand' => '1',
+        'stripeToken' => 'tok_14tFx92eZvKYlo2CxthO99kb'
+    }
+  end
+
+  def post_data_single_reserve
+    {
+        'email' => '',
+        'warehouse_id' => warehouses(:one),
+        'wines' => '[
+      {
+        "quantity":1, "category":"' + categories(:reserve).id.to_s + '",
         "label":"House", "price":"£15", "specificWine":"",
         "food":[{"id":"14","name":"fish"}, {"id":"35", "name":"herbs"}, {"id":"10", "name":"cured meat"} ],"occasion":[]
       }

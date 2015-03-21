@@ -26,6 +26,10 @@ var applyPromotions = function (wines) {
                 break;
             }
         }
+    } else {
+        for (var i = 0; i < wines.length; ++i) {
+                wines[i].promoPrice = null;
+        }
     }
 
     return wines;
@@ -240,7 +244,7 @@ Cart.ManageBottles = React.createClass({
                         <span className="or">or</span>
                     </div>
                     <div>
-                        <a className="btn btn__small add-bottle-link another-bottle" onClick={this.handleAddAnotherBottle}>Add another bottle</a>
+                        <a className="btn btn__small add-bottle-link another-bottle" id="add-another-bottle" onClick={this.handleAddAnotherBottle}>Add another bottle</a>
                     </div>
                 </div>
             )
@@ -398,7 +402,7 @@ Cart.Checkout = React.createClass({
 
         return (
             <div className="btn-checkout">
-                <a href="" onClick={this.handleCheckout} className="btn btn__full-width">Finalise Order</a>
+                <a href="" id="checkout" onClick={this.handleCheckout} className="btn btn__full-width">Finalise Order</a>
             </div>
         )
     }

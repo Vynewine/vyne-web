@@ -13,32 +13,29 @@ module OrderHelper
 
     value = (order.total_price * 100).to_i
 
-
     if order.charge_id.blank? && order.status_id == Status.statuses[:advised]
 
       if value == 0
         order.charge_id = 'Free Order'
-        log 'Free Order'
+        log 'Zero Value Order'
+      elsif admin
+        order.charge_id = 'Admin'
+        log 'Not charging Admins'
+      elsif order.free
+        log 'Not Charging Free Orders'
+        order.charge_id = 'Free'
       else
         stripe_card_id = order.payment.stripe_card_id
         stripe_customer_id = order.payment.user.stripe_id
-        if admin
-          order.charge_id = 'Admin'
-          log 'Not charging Admins'
-        elsif order.free
-          log 'Not Charging Free Orders'
-          order.charge_id = 'Free'
-        else
-          results = StripeHelper.charge_card(value, stripe_card_id, stripe_customer_id)
+        results = StripeHelper.charge_card(value, stripe_card_id, stripe_customer_id)
 
-          if results[:errors].blank?
-            order.charge_id = results[:data].id
-          else
-            response[:errors] = results[:errors]
-            log_error(response[:errors].join(', '))
-            order.status_id = Status.statuses[:payment_failed]
-            return response
-          end
+        if results[:errors].blank?
+          order.charge_id = results[:data].id
+        else
+          response[:errors] = results[:errors]
+          log_error(response[:errors].join(', '))
+          order.status_id = Status.statuses[:payment_failed]
+          return response
         end
       end
     else
@@ -89,4 +86,5 @@ module OrderHelper
   def self.log_error(message)
     @logger.error message
   end
+
 end

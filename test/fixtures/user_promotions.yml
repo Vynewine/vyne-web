@@ -1,5 +1,17 @@
-free_reserver_bottle:
+free_extra_bottle:
   user: client
+  promotion_code: vyne_uncork
+  can_be_redeemed: true
+  redeemed: false
+
+free_reserver_bottle_redeemed:
+  user: client_2
+  promotion_code: free_reserver_bottle
+  can_be_redeemed: true
+  redeemed: true
+
+free_reserver_bottle_not_redeemed:
+  user: client_2
   promotion_code: free_reserver_bottle
   can_be_redeemed: true
   redeemed: false

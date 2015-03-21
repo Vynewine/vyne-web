@@ -293,11 +293,18 @@ module UserMailer
                                        :path => '/orders/' + order.id.to_s
                                    })
 
-      if order.payment.brand == 3 # American Express
-        card_number = '**** ****** ' + order.payment.number
+
+      if order.payment.blank?
+        card_number = 'No Card Used'
       else
-        card_number = '**** **** **** ' + order.payment.number
+        if order.payment.brand == 3 # American Express
+          card_number = '**** ****** ' + order.payment.number
+        else
+          card_number = '**** **** **** ' + order.payment.number
+        end
       end
+
+
 
       mandrill = Mandrill::API.new Rails.application.config.mandrill
       template_name = 'receipt-2tftochv1'

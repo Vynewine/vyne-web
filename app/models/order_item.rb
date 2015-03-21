@@ -30,9 +30,6 @@ class OrderItem < ActiveRecord::Base
         preferences << 'Specific Wine: ' + specific_wine
       end
 
-      unless user_promotion.blank?
-        preferences << 'Promotion: ' + user_promotion.to_s
-      end
     else
 
       food_items.each_with_index do |item, index|

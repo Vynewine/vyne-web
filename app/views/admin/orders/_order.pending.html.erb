@@ -38,7 +38,8 @@
                         <% else %>
                             complete
                         <% end %>
-                        <%= order_item.preferences.to_sentence(last_word_connector: ' and ').capitalize %>.
+                        <%= order_item.preferences.blank? ? '' : order_item.preferences.to_sentence(last_word_connector: ' and ').capitalize + '. ' %>
+                        <%= order_item.user_promotion.blank? ? '' : 'Promotion: ' + order_item.user_promotion.promotion_code.promotion.title.capitalize + '.' %>
                       </div>
                     </div>
 

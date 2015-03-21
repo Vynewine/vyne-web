@@ -1,6 +1,7 @@
 wine:
   title: 'Mystery Bottle'
   category: wine
+  extra_bottle: true
 
 for_new_users:
   title: 'Get Bottles'

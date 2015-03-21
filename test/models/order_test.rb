@@ -137,4 +137,9 @@ class OrderTest < ActiveSupport::TestCase
 
   end
 
+  test 'Total price will be zero for orders with free promotion' do
+    free_order = orders(:free_bottle_advised)
+    assert_equal(0.0, free_order.total_price.to_f)
+  end
+
 end

@@ -1,6 +1,6 @@
 json.order do
   json.(@order, :id, :order_schedule, :created_at, :total_price, :delivery_price, :estimated_total_max_price,
-      :estimated_total_min_price, :advisory_completed_at, :order_change_timeout_seconds, :cancellation_note )
+      :estimated_total_min_price, :advisory_completed_at, :order_change_timeout_seconds, :cancellation_note)
 
   json.can_request_substitution @order.can_request_substitution?
 
@@ -35,7 +35,14 @@ json.order do
 
   json.order_items(@order.order_items) do |item|
     json.extract! item, :id, :quantity, :advisory_note, :preferences
-    json.price item.final_price
+
+    if item.user_promotion.blank?
+      json.price item.price
+    else
+      json.price item.user_promotion.promotion_code.promotion.extra_bottle ? 0 : item.price
+    end
+
+    json.final_price item.final_price
 
     unless item.category.blank?
       json.category item.category, :id, :name, :price_min, :price_max
@@ -45,6 +52,7 @@ json.order do
       json.user_promotion do
         json.code item.user_promotion.promotion_code.code
         json.title item.user_promotion.promotion_code.promotion.title
+        json.description item.user_promotion.promotion_code.promotion.description
       end
     end
 

@@ -74,38 +74,27 @@ var WinePreferences = React.createClass({
             )
         };
 
-        var promotion = '';
-        var addPromotion = function (description) {
-            promotion = (
-                <div>
-                    <div className="order-divider"></div>
-                    <div className="row">
+        var addPromotion = function (description, key) {
+            preferences.push(
+                (
+                    <div className="row" key={key}>
                         <div className="col-xs-12">
                             <span className="section-promotion">
                                 <i className="fa fa-gift"></i>{' '}
                                 Promotion: {description}</span>
                         </div>
                     </div>
-                </div>
+                )
             )
         };
 
         if (this.props.orderItems.length) {
 
-            var wines = this.props.orderItems.filter(function (item) {
-                return !item.user_promotion;
-            });
+            this.props.orderItems.forEach(function (item, index) {
 
-            var promoWines = this.props.orderItems.filter(function (item, index) {
-                return item.user_promotion;
-            });
-
-            wines.forEach(function (item, index) {
-
-                if (index === 1) {
-                    preferences.push((<div className="order-divider" key="break"></div>));
+                if (index > 0) {
+                    preferences.push((<div className="order-divider" key={'divider-' + index}></div>));
                 }
-
 
                 if (item.category) {
                     addPreference('Category', item.category.name +
@@ -113,12 +102,13 @@ var WinePreferences = React.createClass({
                     '-' + parseFloat(item.category.price_max).toFixed(2) + ')', item.id + 'cat');
                 }
 
-                addPreference('Preferences', item.preferences.join(', '), item.id + 'pref');
+                if (item.preferences.length) {
+                    addPreference('Preferences', item.preferences.join(', '), item.id + 'pref');
+                }
 
-            });
-
-            promoWines.forEach(function (item) {
-                addPromotion(item.user_promotion.title);
+                if (item.user_promotion) {
+                    addPromotion(item.user_promotion.title + ' - ' + item.user_promotion.description, item.id + 'promo' );
+                }
             });
         }
 
@@ -132,7 +122,6 @@ var WinePreferences = React.createClass({
                     </div>
                 </div>
                 {preferences}
-                {promotion}
                 <div className="order-divider"></div>
 
             </div>
@@ -223,12 +212,25 @@ var WineInfo = React.createClass({
         var wineDescription = [
             detailsRow('Bottle Preferences', orderItem.preferences.join(', '), 1),
             detailsRow('Wine Selection', orderItem.quantity + 'x - ' + wine.full_info, 2),
-            detailsRow('Price', '£' + parseFloat(orderItem.price).toFixed(2), 3)
+
         ];
+
+        if(orderItem.price == orderItem.final_price) {
+            wineDescription.push(detailsRow('Price', '£' + parseFloat(orderItem.final_price).toFixed(2), 3));
+        } else {
+            wineDescription.push(detailsRow('Price', '£' + parseFloat(orderItem.final_price).toFixed(2) + ' (£' + parseFloat(orderItem.price).toFixed(2) +')', 3));
+        }
 
         if (this.props.orderItem.advisory_note) {
             wineDescription.push(
                 detailsRow('Merchant Note', this.props.orderItem.advisory_note, 1.1)
+            );
+        }
+
+        if(this.props.orderItem.user_promotion) {
+            wineDescription.push(
+                detailsRow('Promotion', this.props.orderItem.user_promotion.title + ' - ' +
+                this.props.orderItem.user_promotion.description, 1.2)
             );
         }
 
@@ -305,7 +307,14 @@ var WineInfo = React.createClass({
 var Totals = React.createClass({
     render: function () {
 
-        var total = parseFloat(this.props.order.estimated_total_min_price).toFixed(2) + ' - ' + parseFloat(this.props.order.estimated_total_max_price).toFixed(2);
+        var total = '';
+        var minPrice = parseFloat(this.props.order.estimated_total_min_price).toFixed(2);
+        var maxPrice = parseFloat(this.props.order.estimated_total_max_price).toFixed(2);
+        if (minPrice === maxPrice) {
+            total = minPrice;
+        } else {
+            total = minPrice + ' - ' + maxPrice;
+        }
 
         if (this.props.order.advisory_completed_at && this.props.order.status.label !== 'cancelled') {
             total = parseFloat(this.props.order.total_price).toFixed(2)
@@ -1074,7 +1083,6 @@ var clearMainOrderComponent = function () {
             mainOrderComponent.setProps({
                 clear: true
             });
-            React.unmountComponentAtNode(document.getElementById('order-details'));
             mainOrderComponent = null;
         }
     }

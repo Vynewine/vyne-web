@@ -210,7 +210,6 @@ class MerchantsController < ApplicationController
 
     promotion = nil
     promotion_code = ''
-    promotion_category = ''
 
     if user_signed_in?
 
@@ -227,7 +226,7 @@ class MerchantsController < ApplicationController
 
     else
       unless cookies[:promo_code].blank?
-        promo_code = PromotionCode.find_by(code: cookies[:promo_code])
+        promo_code = PromotionCode.find_by(code: cookies[:promo_code], active: true )
         unless promo_code.blank?
           promotion = promo_code.promotion
           promotion_code = promo_code.code

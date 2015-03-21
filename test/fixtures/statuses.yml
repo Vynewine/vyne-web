@@ -21,3 +21,6 @@ six:
 seven:
   id: 7
   label: 'cancelled'
+advised:
+  id: 11
+  label: 'advised'

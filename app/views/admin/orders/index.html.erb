@@ -117,8 +117,9 @@
                                       </a>
                                   <% end %>
                                     <%= "#{order_item.quantity}x - " %>
-                                 Preferences: <%= order_item.preferences.to_sentence(last_word_connector: ' and ').capitalize %>.
-                                  <%= order_item.wine.nil? ? ' - Not Advised' : " - Wine Selection: #{order_item.wine.display_name}" %>
+                                  <%= order_item.preferences.blank? ? '' : 'Preferences: ' + order_item.preferences.to_sentence(last_word_connector: ' and ').capitalize  + '. '%>
+                                  <%= order_item.user_promotion.blank? ? '' : 'Promotion: ' + order_item.user_promotion.promotion_code.promotion.title.capitalize + '. ' %>
+                                  <%= order_item.wine.nil? ? 'Not Advised' : "Wine Selection: #{order_item.wine.display_name}" %>
                                 </div>
                               </div>
                           <% end %>

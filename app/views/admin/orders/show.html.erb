@@ -210,7 +210,8 @@
               </td>
           <% end %>
           <td>
-            <%= item.preferences.to_sentence(last_word_connector: ' and ').capitalize %>.
+            <%= item.preferences.blank? ? '' : item.preferences.to_sentence(last_word_connector: ' and ').capitalize + '. '%>
+            <%= item.user_promotion.blank? ? '' : 'Promotion: ' + item.user_promotion.promotion_code.promotion.title.capitalize + '.' %>
           </td>
           <td>x<%= item.quantity %></td>
           <td>

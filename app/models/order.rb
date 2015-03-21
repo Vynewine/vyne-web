@@ -29,13 +29,43 @@ class Order < ActiveRecord::Base
   end
 
   def estimated_total_min_price
-      total = (order_items.map { |item| item.category.blank? ? 0 : item.category.price_min }).inject(:+)
-      total + (delivery_price.blank? ? 0 : delivery_price)
+    all_prices = order_items.map do |item|
+      item_price = 0
+      unless item.category.blank?
+        item_price = item.category.price_min
+        unless item.user_promotion.blank?
+          unless item.user_promotion.promotion_code.promotion.free_bottle_category.blank?
+            if item.category == item.user_promotion.promotion_code.promotion.free_bottle_category
+              item_price = 0
+            end
+          end
+        end
+      end
+      item_price
+    end
+
+    total = all_prices.inject(:+)
+    total + (delivery_price.blank? ? 0 : delivery_price)
   end
 
   def estimated_total_max_price
-      total = (order_items.map { |item| item.category.blank? ? 0 : item.category.price_max }).inject(:+)
-      total + (delivery_price.blank? ? 0 : delivery_price)
+    all_prices = order_items.map do |item|
+      item_price = 0
+      unless item.category.blank?
+        item_price = item.category.price_max
+        unless item.user_promotion.blank?
+          unless item.user_promotion.promotion_code.promotion.free_bottle_category.blank?
+            if item.category == item.user_promotion.promotion_code.promotion.free_bottle_category
+              item_price = 0
+            end
+          end
+        end
+      end
+      item_price
+    end
+
+    total = all_prices.inject(:+)
+    total + (delivery_price.blank? ? 0 : delivery_price)
   end
 
   def total_wine_cost
@@ -119,7 +149,7 @@ class Order < ActiveRecord::Base
     promotion_items = order_items.select { |item| !item.user_promotion.blank? }
 
     promotion_items.each do |item|
-      if item.free_delivery
+      if item.user_promotion.promotion_code.promotion.free_delivery
         self.delivery_price = 0
         return
       end

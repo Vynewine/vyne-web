@@ -39,3 +39,13 @@ promo_free_bottle:
   quantity: 1
   category: reserve
   order: free_bottle
+
+promo_free_bottle_advised:
+  quantity: 1
+  category: reserve
+  order: free_bottle_advised
+  wine: two
+  price: 16.00
+  user_promotion: free_reserver_bottle_used
+
+

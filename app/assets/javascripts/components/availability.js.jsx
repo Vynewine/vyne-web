@@ -33,28 +33,27 @@ var Promotion = React.createClass({
             )
         };
 
-        if (this.isMounted()) {
 
-            if (this.props.deliveryOptions.today_warehouse) {
+        if (this.props.deliveryOptions.today_warehouse) {
 
-                if (this.props.deliveryOptions.promotion) {
+            if (this.props.deliveryOptions.promotion) {
 
-                    var promotion = this.props.deliveryOptions.promotion;
+                var promotion = this.props.deliveryOptions.promotion;
 
-                    if (!this.props.deliveryOptions.today_warehouse.id) {
-                        setPromotion('We currently don\'t deliver to your area, but if you register now, we\'ll save' +
-                        ' your promotion (code ' + promotion.code + ' - "' + promotion.title + '") in your account,' +
-                        ' and let you know when we deliver to this postcode. ', true);
+                if (!this.props.deliveryOptions.today_warehouse.id) {
+                    setPromotion('We currently don\'t deliver to your area, but if you register now, we\'ll save' +
+                    ' your promotion (code ' + promotion.code + ' - "' + promotion.title + '") in your account,' +
+                    ' and let you know when we deliver to this postcode. ', true);
 
-                    } else {
-                        setPromotion('Your promotion (code ' + promotion.code +
-                        ' - "' + promotion.title + '") will be applied to your order automatically upon checkout.', false);
-                    }
                 } else {
-                    return false;
+                    setPromotion('Your promotion (code ' + promotion.code +
+                    ' - "' + promotion.title + '") will be applied to your order automatically upon checkout.', false);
                 }
+            } else {
+                return false;
             }
         }
+
 
         return (
             <div>
@@ -126,24 +125,21 @@ var CheckPostcode = React.createClass({
         var labelClass = 'app-label loading';
         var labelText = 'Checking your postcode';
 
-        if (this.isMounted()) {
+        if (this.props.deliveryOptions.today_warehouse) {
+            if (!this.props.deliveryOptions.today_warehouse.id) {
+                labelClass = 'app-label danger';
+                labelText = 'Not available in your area yet';
+            } else {
+                labelClass = 'app-label success fadeIn';
 
-            if (this.props.deliveryOptions.today_warehouse) {
-                if (!this.props.deliveryOptions.today_warehouse.id) {
-                    labelClass = 'app-label danger';
-                    labelText = 'Not available in your area yet';
+                if (this.props.deliveryOptions.today_warehouse.coming_soon) {
+                    labelText = 'On demand delivery available in West London ' +
+                    moment(this.props.deliveryOptions.today_warehouse.active_from).format('dddd MMMM Do');
                 } else {
-                    labelClass = 'app-label success fadeIn';
 
-                    if (this.props.deliveryOptions.today_warehouse.coming_soon) {
-                        labelText = 'On demand delivery available in West London ' +
-                        moment(this.props.deliveryOptions.today_warehouse.active_from).format('dddd MMMM Do');
-                    } else {
-
-                        labelText = 'Vyne delivers to your area';
-                    }
-
+                    labelText = 'Vyne delivers to your area';
                 }
+
             }
         }
 

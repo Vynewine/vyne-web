@@ -117,12 +117,21 @@
 <% unless order.order_items.select { |item| !item.user_promotion.blank? }.blank?
      promo_item = order.order_items.select { |item| !item.user_promotion.blank? }.first
 %>
-    <% unless promo_item.blank? || !promo_item.user_promotion.promotion_code.promotion.extra_bottle %>
-        <div style="margin: 15px 0 15px 0">
-            <span style="color:#FFFFFF; font-size:27px">
+    <% unless promo_item.blank? %>
+        <% if promo_item.user_promotion.promotion_code.promotion.extra_bottle %>
+            <div style="margin: 15px 0 15px 0">
+            <span style="color:#FFFFFF; font-size:22px">
                 Promotion: Extra promotional bottle will be added to your order!
             </span>
-        </div>
+            </div>
+        <% elsif !promo_item.user_promotion.promotion_code.promotion.free_bottle_category.blank? %>
+            <div style="margin: 15px 0 15px 0">
+            <span style="color:#FFFFFF; font-size:22px">
+              <%= promo_item.preferences.to_sentence(last_word_connector: ' and ').capitalize + '. '%> <br/>
+              <%= "Promotion: #{promo_item.user_promotion.promotion_code.promotion.title} - #{promo_item.user_promotion.promotion_code.promotion.description}"  %>
+            </span>
+            </div>
+        <% end %>
     <% end %>
 
 <% end %>
