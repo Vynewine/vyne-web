@@ -44,7 +44,7 @@
                            options_from_collection_for_select(@categories.order(:id),
                                                               'id',
                                                               'name_with_ranges',
-                                                              :selected => @promotion.bottle_category_id),
+                                                              :selected => @promotion.free_bottle_category_id),
                    {},
                    {:prompt => 'Choose a category', :class => 'form-control'}
       %>
