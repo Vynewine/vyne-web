@@ -107,12 +107,13 @@ var Cart = React.createClass({
         return (
             <div>
                 <table className="order-table-cart">
-                    <thead></thead>
-                    <tbody>
+                    <thead>
                         <tr>
                             <th width="80%">Wine</th>
                             <th width="20%">Price</th>
                         </tr>
+                    </thead>
+                    <tbody>
                         {cartItems}
                         <Cart.ManageBottles wines={this.state.wines} onWineChange={this.handleWinesChange} />
                         <Cart.Promotions promoInfo={this.props.promoInfo} />
@@ -273,8 +274,10 @@ Cart.ManageBottles = React.createClass({
 Cart.Promotions = React.createClass({
     render: function () {
 
-        if (!this.props.promoInfo || !this.props.promoInfo.title) {
-            return false;
+        var promoStyle = {display: 'none'};
+
+        if (this.props.promoInfo.title) {
+            promoStyle = {display: 'table-row'};
         }
 
         var title = '';
@@ -294,7 +297,7 @@ Cart.Promotions = React.createClass({
         }
 
         return (
-            <tr className="promotion">
+            <tr className="promotion" style={promoStyle}>
                 <td colSpan="2" className="promotion-area">
                     {title}
                     {description}
