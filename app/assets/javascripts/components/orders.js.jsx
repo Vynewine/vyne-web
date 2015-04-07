@@ -209,11 +209,13 @@ var WineInfo = React.createClass({
             )
         };
 
-        var wineDescription = [
-            detailsRow('Bottle Preferences', orderItem.preferences.join(', '), 1),
-            detailsRow('Wine Selection', orderItem.quantity + 'x - ' + wine.full_info, 2),
+        var wineDescription = [];
 
-        ];
+        if(orderItem.preferences.length) {
+            wineDescription.push(detailsRow('Bottle Preferences', orderItem.preferences.join(', '), 1));
+        }
+
+        wineDescription.push(detailsRow('Wine Selection', orderItem.quantity + 'x - ' + wine.full_info, 2));
 
         if(orderItem.price == orderItem.final_price) {
             wineDescription.push(detailsRow('Price', '£' + parseFloat(orderItem.final_price).toFixed(2), 3));
