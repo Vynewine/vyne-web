@@ -64,4 +64,21 @@ class PromotionCode < ActiveRecord::Base
   def generate_key
     rand(36**4).to_s(36)
   end
+
+  def restrictions
+    restrictions = []
+
+    unless self.expiration_date.blank?
+      if self.expiration_date <= Time.now
+        restrictions << 'Requested promotion code has expired.'
+      end
+    end
+
+    if self.redeem_count_limit > 0
+      if self.redeem_count >= self.redeem_count_limit
+        restrictions << 'Maximum redeem limit has been reached.'
+      end
+    end
+    restrictions
+  end
 end

@@ -31,6 +31,12 @@ module PromotionHelper
         return [message]
       end
 
+      unless promo_code.restrictions.blank?
+        message = promo_code.restrictions.join(' ')
+        log_error message
+        return [message]
+      end
+
       user_promotion = UserPromotion.new(
           user: user,
           redeemed: false,
@@ -70,6 +76,13 @@ module PromotionHelper
           log_error ["Can't save user promotion for user #{user_promotion.user.id}"] + user_promotion.errors.full_messages
           return user_promotion.errors.full_messages
         end
+      end
+
+      promo_code.redeem_count += 1
+
+      unless promo_code.save
+        log_error ["Can't save promotion code"] + promo_code.errors.full_messages
+        return promo_code.errors.full_messages
       end
 
     rescue Exception => exception

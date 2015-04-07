@@ -17,7 +17,7 @@ class Admin::PromotionCodesController < ApplicationController
   end
 
   def new
-      @promotion_code = PromotionCode.new
+    @promotion_code = PromotionCode.new
   end
 
   def edit
@@ -52,7 +52,13 @@ class Admin::PromotionCodesController < ApplicationController
   end
 
   def promotion_code_params
-    params.require(:promotion_code).permit(:code, :active, :expiration_date, :redeem_count_limit, :category, :user_id)
+    params.require(:promotion_code).permit(:code,
+                                           :active,
+                                           :expiration_date,
+                                           :redeem_count_limit,
+                                           :category,
+                                           :user_id,
+                                           :redeem_count)
   end
 
   private

@@ -34,6 +34,11 @@
           <%= f.number_field :redeem_count_limit, step: 1, :class => 'form-control' %>
         </div>
 
+        <div class="form-group">
+          <%= f.label :redeem_count %> (current)
+          <%= f.number_field :redeem_count, step: 1, :class => 'form-control' %>
+        </div>
+
     <% else %>
         <div class="form-group">
           <%= f.label :user %><br>

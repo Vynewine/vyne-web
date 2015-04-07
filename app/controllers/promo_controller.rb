@@ -72,10 +72,16 @@ class PromoController < ApplicationController
       flash.now[:error] = "We can't locate promo code provided. Please make sure it's correct and enter it again."
       render :index
       return
-    else
-      cookies[:promo_code] = {:value => @code, :expires => 1.month.from_now}
-      redirect_to availability_index_path({:postcode => params[:postcode]})
+    end
+
+    unless promotion_code.restrictions.blank?
+      flash.now[:error] = promotion_code.restrictions.join(' ')
+      render :index
       return
     end
+
+    cookies[:promo_code] = {:value => @code, :expires => 1.month.from_now}
+    redirect_to availability_index_path({:postcode => params[:postcode]})
+
   end
 end

@@ -11,6 +11,7 @@
       <th>Active</th>
       <th>Expiration Date</th>
       <th>Redeem Count Limit</th>
+      <th>Current Redeem Count</th>
       <th></th>
     </tr>
     </thead>
@@ -24,6 +25,7 @@
               <td><%= code.active %></td>
               <td><%= code.expiration_date.blank? ? "Doesn't expire" : code.expiration_date %></td>
               <td><%= code.redeem_count_limit == 0 ? 'No limit' : code.redeem_count_limit %></td>
+              <td><%= code.redeem_count %></td>
               <td class="button-wrapper">
                 <%= link_to edit_admin_promotion_promotion_code_path(params[:promotion_id], code), class: 'btn btn-default' do %>
                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>

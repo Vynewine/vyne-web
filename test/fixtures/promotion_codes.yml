@@ -13,3 +13,37 @@ free_reserver_bottle:
   promotion: free_reserver_bottle
   code: VIP-VYNE
   category: 0
+
+expired_promo_code:
+  promotion: free_reserver_bottle
+  code: VIP-VYNE-EX
+  category: 0
+  expiration_date: <%= 1.day.ago %>
+
+not_expired_promo_code:
+  promotion: free_reserver_bottle
+  code: VIP-VYNE-CURRENT
+  category: 0
+  expiration_date: <%= Time.now.tomorrow %>
+
+inactive_promo_code:
+  promotion: free_reserver_bottle
+  code: VYNE-INACTIVE
+  category: 0
+  active: false
+
+redeem_count_exceeded_promo_code:
+  promotion: free_reserver_bottle
+  code: VYNE-REDEEM-COUNT-EXCEEDED
+  category: 0
+  redeem_count_limit: 5
+  redeem_count: 5
+
+redeem_count_not_exceeded_promo_code:
+  promotion: free_reserver_bottle
+  code: VYNE-REDEEM-COUNT-NOT-EXCEEDED
+  category: 0
+  redeem_count_limit: 5
+  redeem_count: 4
+
+
