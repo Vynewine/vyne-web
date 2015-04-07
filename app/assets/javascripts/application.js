@@ -1430,7 +1430,6 @@ var checkPromotions = function(){
         newCardForm.hide();
         promotionArea.show();
     } else {
-        newCardForm.show();
         promotionArea.hide();
     }
 

@@ -170,7 +170,7 @@ if ($('body.shop').length) {
             // Submits form if there is an old card entry,
             // Creates Stripe token if there is a new card entry.
 
-            if(free) {
+            if (free) {
 
                 analytics.track('Order placed', {
                     card: 'Free order'
@@ -308,8 +308,17 @@ if ($('body.shop').length) {
 
                 $errorList.empty().hide();
 
-                analytics.track('Order successfully created', {
-                    order_id: data.id
+                analytics.track('Order successfully created');
+
+                var products = [];
+
+                JSON.parse(wines).forEach(function (wine) {
+                    products.push({id: wine.category, name: wine.label});
+                });
+
+                analytics.track('Completed Order', {
+                    orderId: data.id,
+                    products: products
                 });
 
                 $.cookie('wines', '[]');
