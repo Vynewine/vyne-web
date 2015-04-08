@@ -1,0 +1,187 @@
+<div class="row">
+  <div class="col-lg-10 col-lg-offset-1 col-md-8 col-md-offset-2 col-xs-12 col-xs-offset-0">
+    <% unless @promotion.blank? || @promotion[:promo_code].blank? %>
+        <div class="row">
+          <div class="col-sm-6 col-xs-12">
+            <div class="row">
+              <div class="col-xs-12">
+                <h3 class="app-title">
+                  Refer friends. Get bottles.
+                </h3>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12">
+                <div>
+                  Give your personal code to friends. When they make their first order
+                  they'll get an extra bottle on us AND we'll add an extra bottle to your next order.
+                </div>
+                <div class="divider"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="description-content">
+                  <div>
+                    <span class="description">Your Code: </span>
+
+                    <div>
+                      <%= @promotion[:promo_code] %>
+                    </div>
+                  </div>
+                </div>
+                <div class="description-content">
+                  <div>
+                    <span class="description">Share: </span>
+                  </div>
+                  <a href="https://twitter.com/intent/tweet?text=Use my Vyne promo code <%= @promotion[:promo_code] %> to get an extra bottle of wine with your first order. http://vyne.co.uk/?promo=<%= @promotion[:promo_code] %>" target="_blank" class="share-code"><span class="fa fa-twitter"></span></a>
+
+                  <% facebook_url = 'https://www.facebook.com/dialog/feed?' +
+                          'app_id=1585515301707227' +
+                          '&display=popup' +
+                          '&name=' + ('Try Vyne using my promo code: ' + @promotion[:promo_code] + ' to get an extra bottle with your first order!').html_safe +
+                          '&description=' + ('Discover London’s top wine cellars. Personal bottle recommendation by sommeliers as you order.').html_safe +
+                          '&caption=' + ('Delivered in minutes from the best wine merchants.').html_safe +
+                          '&link=' + ('https://www.vyne.co.uk/promo/?promo=' + @promotion[:promo_code]).html_safe +
+                          '&picture=' + ('https://www.vyne.co.uk/vyne.cellar.jpg').html_safe +
+                          '&redirect_uri=https://www.vyne.co.uk/'
+
+                  %>
+                  <a href="<%= facebook_url %>" target="_blank" class="share-code"><span class="fa fa-facebook"></span></a>
+                  <a href="mailto:?subject=You're going to love Vyne&body=Use my Vyne promo code <%= @promotion[:promo_code] %> to get an extra bottle of wine with your first order. http://vyne.co.uk/?promo=<%= @promotion[:promo_code] %>" target="_blank" class="share-code"><i class="fa fa-envelope-o"></i></a>
+
+                  <div>
+                    <span class="description">Link:</span>
+                    http://vyne.co.uk/?promo=<%= @promotion[:promo_code] %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-xs-12">
+            <div class="row">
+              <div class="col-xs-12">
+                <h3 class="app-title">
+                  Redeem promotion
+                </h3>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12">
+                <div>
+                  If you have a promotion code please enter it below.
+                </div>
+                <div class="divider"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="animated fadeIn">
+                  <%= render 'layouts/message' %>
+                  <form class="translucent center-form" id="promo-form" action="/promo" method="post">
+                    <div class="form-group">
+                      <input type="text" name="promo_code" class="form-control" id="promo-code" placeholder="Promo Code"/>
+                    </div>
+                    <%= hidden_field_tag(request_forgery_protection_token.to_s, form_authenticity_token) %>
+                    <div class="form-group">
+                      <input type="submit" class="btn btn-primary btn-sm btn-block" value="Apply"/>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+    <% end %>
+
+    <% unless current_user.user_promotions.blank? %>
+        <div class="row">
+          <div class="col-sm-6 col-xs-12">
+            <h3 class="app-title">
+              Your Promotions
+            </h3>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="row">
+              <% if @promotion[:referrals].blank? %>
+                  <div class="col-md-4 col-sm-6 col-xs-12">
+                    <div class="description-content">
+                      <div class="description">Shared Promotions</div>
+                    </div>
+
+                    None of your friends have yet signed up using your promo code.
+                    <div class="divider"></div>
+                  </div>
+              <% end %>
+
+              <% unless @promotion[:redeemable_promotions].blank? %>
+                  <div class="col-md-4 col-sm-6 col-xs-12">
+                    <div class="description-content">
+                      <div class="description">Active promotions</div>
+                      <div class="content">Will be automatically applied to your order upon checkout:</div>
+                    </div>
+
+                    <% @promotion[:redeemable_promotions].each do |user_promotion| %>
+                        <%= user_promotion.promotion_code.code %>
+                        - <%= user_promotion.promotion_code.promotion.title %>
+                        <% unless user_promotion.referral.blank? %>
+                            (Referred user: <%= user_promotion.referral.referred_user.name %>)
+                        <% end %>
+                        <div class="divider"></div>
+                    <% end %>
+                  </div>
+              <% end %>
+
+              <% unless @promotion[:pending_promotions].blank? %>
+                  <div class="col-md-4 col-sm-6 col-xs-12">
+                    <div class="description-content">
+                      <div class="description">Pending promotions</div>
+                      <div class="content">Your promotions will become active once your friend uses her/his
+                        promotion:
+                      </div>
+                    </div>
+
+                    <% @promotion[:pending_promotions].each do |user_promotion| %>
+                        <% if user_promotion.referral.blank? %>
+                            <% logger.error "User promotion #{user_promotion.id} should be redeemable"%>
+                        <% else %>
+                            <p>Your friend <%= user_promotion.referral.referred_user.name %> signed up using
+                              your promo code but
+                              have not yet made a purchase.</p>
+                        <% end %>
+                    <% end %>
+                    <div class="divider"></div>
+                  </div>
+              <% end %>
+
+              <% unless @promotion[:redeemed_promotions].blank? %>
+                  <div class="col-md-4 col-sm-6 col-xs-12">
+
+                    <div class="description-content">
+                      <div class="description">Redeemed promotions</div>
+                      <div class="content">Promotions applied to your previous orders:</div>
+                    </div>
+
+                    <% @promotion[:redeemed_promotions].each do |promo| %>
+                        <div>
+                          <%= "Promotion title: #{promo.promotion_code.promotion.title}. Applied on: " %><%= local_time(promo.created_at, '%b %d, %Y %l:%M %p') %>
+                          <% unless promo.referral.blank? %>
+                              (Referred user: <%= promo.referral.referred_user.name %>)
+                          <% end %>
+                        </div>
+                        <div class="divider"></div>
+                    <% end %>
+
+                  </div>
+              <% end %>
+
+            </div>
+          </div>
+        </div>
+    <% end %>
+  </div>
+</div>

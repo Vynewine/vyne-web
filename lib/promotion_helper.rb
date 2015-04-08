@@ -37,6 +37,14 @@ module PromotionHelper
         return [message]
       end
 
+      existing_user_promotion = UserPromotion.find_by(:user => user, :promotion_code => promo_code)
+
+      unless existing_user_promotion.blank?
+        message = 'You can only redeem promo code once.'
+        log_error message
+        return [message]
+      end
+
       user_promotion = UserPromotion.new(
           user: user,
           redeemed: false,

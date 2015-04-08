@@ -309,7 +309,7 @@ $(function () {
                     verifyAddress();
                 }
 
-                if(swiper.activeSlide().id == 'payment-panel') {
+                if (swiper.activeSlide().id == 'payment-panel') {
                     checkPromotions();
                 }
             }
@@ -1422,15 +1422,26 @@ var arePreferencesSelected = function (wine) {
     }
 };
 
-var checkPromotions = function(){
+var checkPromotions = function () {
     var newCardForm = $('#new_card');
     var promotionArea = $('#promotion-payment');
+    var orderCard = $('#orderCard');
 
-    if(free) {
+    if (free) {
         newCardForm.hide();
+        orderCard.hide();
         promotionArea.show();
     } else {
-        promotionArea.hide();
-    }
 
+        promotionArea.hide();
+
+        if ($('#orderCard').find('option').length > 1) {
+            newCardForm.hide();
+            orderCard.show();
+        }
+        else {
+            newCardForm.show();
+            orderCard.hide();
+        }
+    }
 };
