@@ -14,6 +14,8 @@
         <span class="icon-bar"></span>
       </button>
 
+      <div class="mini-cart" id="mini-cart" style="width: 46px; height: 46px; float: right !important;">
+      </div>
 
       <!-- HEADER LOGO -->
       <% if controller_name == 'home' && action_name == 'index' %>
@@ -37,7 +39,12 @@
       <!-- NAVIGATION LINKS -->
       <ul id="header-nav" class="nav navbar-nav">
 
+
         <li><a href="#hero" class="hidden">Top</a></li>
+        <li>
+          <div class="mini-cart-uncollapsed" id="mini-cart-uncollapsed">
+          </div>
+        </li>
         <li><a href="/promo" class="external">Promo</a></li>
         <% if controller_name == 'home' && action_name == 'index' %>
             <li><a href="#how-it-works">How it Works</a></li>
@@ -99,6 +106,12 @@
             </li>
         <% end %>
       </ul>
+
     </nav>
+
+
+
+
+
   </div>
 </header>

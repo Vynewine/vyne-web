@@ -321,7 +321,7 @@ if ($('body.shop').length) {
                     products: products
                 });
 
-                $.cookie('wines', '[]');
+                $.cookie('wines', '[]', { path: '/' });
 
                 window.location.replace('/orders/' + data.id);
             }

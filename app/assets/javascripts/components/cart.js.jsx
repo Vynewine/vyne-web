@@ -72,7 +72,7 @@ var Cart = React.createClass({
 
         // Update Rest of the app
         wines = newWines;
-        $.cookie('wines', JSON.stringify(newWines));
+        $.cookie('wines', JSON.stringify(newWines), { path: '/' });
         updateOrderSummary();
 
         PubSub.publish('cart-update', newWines);

@@ -39,6 +39,34 @@ class ShopController < ApplicationController
     promo_info = PromotionHelper.get_promotion_info(user_signed_in? ? current_user : nil, cookies[:promo_code], @warehouse)
     @promotion = promo_info.to_json unless promo_info.blank?
 
+
+    unless params[:postcode].blank?
+      cookies[:postcode] = params[:postcode]
+    end
+
+    unless params[:warehouse_id].blank?
+      cookies[:warehouse_id] = {:value => params[:warehouse_id], :expires => 1.hour.from_now}
+    end
+
+
+    if params[:slot_date].blank?
+      cookies.delete :slot_date
+    else
+      cookies[:slot_date] = {:value => params[:slot_date], :expires => 1.hour.from_now}
+    end
+
+    if params[:slot_from].blank?
+      cookies.delete :slot_from
+    else
+      cookies[:slot_from] = {:value => params[:slot_from], :expires => 1.hour.from_now}
+    end
+
+    if params[:slot_to].blank?
+      cookies.delete :slot_to
+    else
+      cookies[:slot_to] = {:value => params[:slot_to], :expires => 1.hour.from_now}
+    end
+
   end
 
   def confirmed

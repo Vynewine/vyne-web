@@ -128,7 +128,7 @@
   <table class="table table-bordered">
     <thead>
     <tr>
-      <th>Warehouse Id</th>
+      <th>Id</th>
       <th>Title</th>
       <th>Active</th>
       <th>Extra Bottle Price Range</th>
@@ -140,7 +140,7 @@
         <% @warehouse_promotions.each do |warehouse_promotions| %>
             <tr>
               <td><%= warehouse_promotions.id %></td>
-              <td><%= warehouse_promotions.warehouse.title %></td>
+              <td><%= warehouse_promotions.warehouse.short_name %></td>
               <td><%= warehouse_promotions.active %></td>
               <td>(<%= warehouse_promotions.extra_bottle_price_min %>
                 - <%= warehouse_promotions.extra_bottle_price_max %>)

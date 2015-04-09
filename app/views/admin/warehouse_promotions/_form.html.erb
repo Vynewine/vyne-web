@@ -7,7 +7,7 @@
       <% current_warehouse = @warehouse_promotion.warehouse_id %>
 
       <%= f.select :warehouse_id,
-                   options_from_collection_for_select(@warehouses, 'id', 'title', :selected => current_warehouse), {},
+                   options_from_collection_for_select(@warehouses, 'id', 'short_name', :selected => current_warehouse), {},
                    {:prompt => 'Choose a Warehouse', :class => 'form-control'}
       %>
 

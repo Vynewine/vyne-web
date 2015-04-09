@@ -289,7 +289,12 @@
           </div>
 
           <a href="#" id="delivery-details" class="btn">Delivery details</a>
+
         </div>
+        <div style="text-align: center; padding: 10px">
+          <%= link_to 'Forgot your password?', new_password_path(resource_name), data: { no_turbolink: true } %>
+        </div>
+
         <div class="order-summary"></div>
       </div>
     </div>
@@ -321,7 +326,9 @@
 
         <div id="new_delivery_address" style="display:none;">
           <div style="margin-bottom: 10px; text-align: center">
-            <span>Your Postcode: <span style="text-transform: uppercase;" id="addr-pc-text"><%= params[:postcode]%></span></span>
+            <span>Your Postcode:
+              <span style="text-transform: uppercase;" id="addr-pc-text"><%= params[:postcode]%></span></span>
+            <a href="/availability?postcode=<%= params[:postcode].gsub(' ', '+') %>" data-no-turbolink="true" class="change-delivery">(change)</a>
           </div>
           <div>
             <select id="suggested-addresses">

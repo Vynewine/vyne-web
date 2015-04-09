@@ -6,12 +6,12 @@ class Admin::WarehousePromotionsController < ApplicationController
 
   def new
     @warehouse_promotion = WarehousePromotion.new
-    @warehouses = Warehouse.where(:active => true)
+    @warehouses = Warehouse.all
   end
 
   def edit
     @warehouse_promotion = WarehousePromotion.find(params[:id])
-    @warehouses = Warehouse.where(:active => true)
+    @warehouses = Warehouse.all
   end
 
   def create
@@ -33,7 +33,7 @@ class Admin::WarehousePromotionsController < ApplicationController
     if @warehouse_promotion.update(warehouse_promotion_params)
       redirect_to admin_promotion_path(params[:promotion_id]), notice: 'Warehouse promotion was successfully updated.'
     else
-      flash[:error] = @referral_code.errors.full_messages.join(', ')
+      flash[:error] = @warehouse_promotion.errors.full_messages.join(', ')
       redirect_to admin_promotion_path(params[:promotion_id])
     end
   end
@@ -51,6 +51,6 @@ class Admin::WarehousePromotionsController < ApplicationController
   end
 
   def warehouse_promotion_params
-    params.require(:warehouse_promotion).permit(:warehouse_id, :active, :price_range_min, :price_range_max)
+    params.require(:warehouse_promotion).permit(:warehouse_id, :active, :extra_bottle_price_min, :extra_bottle_price_max)
   end
 end

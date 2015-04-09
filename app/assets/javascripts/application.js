@@ -1118,7 +1118,7 @@ function createCartPage(wines, wineCount) {
     $('.cart-count').show().text(bottlesInTheCart);
     updateOrderSummary();
     $('input[name="wines"]').val(JSON.stringify(wines));
-    $.cookie('wines', JSON.stringify(wines));
+    $.cookie('wines', JSON.stringify(wines), { path: '/' });
 
 }
 
@@ -1212,8 +1212,18 @@ var updateOrderSummary = function () {
         deliveryText += ' - ASAP'
     }
 
+    deliveryText += ' ';
+
     var $deliverySummary = $('<div>').addClass('order-summary-major-section');
     var $deliveryText = $check.clone().text(deliveryText);
+
+    $deliveryText.append($('<a>')
+        .attr({
+            href: '/availability?postcode=' + postcode.replace(' ', '+'),
+            'data-no-turbolink': 'true'
+        })
+        .addClass('change-delivery')
+        .text('(change delivery)'));
     $deliverySummary.append($('<div>').append($deliveryText));
     $middle.append($deliverySummary);
 
