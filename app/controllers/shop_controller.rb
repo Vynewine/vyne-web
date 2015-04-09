@@ -139,10 +139,10 @@ class ShopController < ApplicationController
         @order.status_id = Status.statuses[:pending]
       else
         if slot_info[:type] == :live
-          schedule_date = Time.parse(params[:slot_date] + ' ' + slot_info[:from])
+          schedule_date = Time.parse(params[:slot_date] + ' ' + slot_info[:from] + ' ' + warehouse.time_zone).utc
         else
           # Deliveries scheduled for daytime slot are send for fulfillment 1 hour before delivery window.
-          schedule_date = Time.parse(params[:slot_date] + ' ' + slot_info[:from]) - 1.hour
+          schedule_date = Time.parse(params[:slot_date] + ' ' + slot_info[:from] + ' ' + warehouse.time_zone).utc - 1.hour
         end
       end
 
@@ -153,8 +153,8 @@ class ShopController < ApplicationController
       else
         @order.information = {
             slot_date: params[:slot_date],
-            slot_from: slot_info[:from],
-            slot_to: slot_info[:to],
+            slot_from: Time.parse(params[:slot_date] + ' ' + slot_info[:from] + ' ' + warehouse.time_zone).utc.strftime('%H:%M'),
+            slot_to: Time.parse(params[:slot_date] + ' ' + slot_info[:to] + ' ' + warehouse.time_zone).utc.strftime('%H:%M'),
             slot_type: slot_info[:type],
             schedule_date: schedule_date,
             warehouse_id: warehouse_id

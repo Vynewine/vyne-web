@@ -134,10 +134,11 @@ class Order < ActiveRecord::Base
   end
 
   def order_schedule
-    unless information.blank? || information['slot_date'].blank?
+
+    unless information.blank? || information['slot_date'].blank? || warehouse.blank?
       {
-          from: Time.parse(information['slot_date'] + ' ' + information['slot_from']),
-          to: Time.parse(information['slot_date'] + ' ' + information['slot_to']),
+          from: Time.parse(information['slot_date'] + ' ' + information['slot_from'] + ' UTC'),
+          to: Time.parse(information['slot_date'] + ' ' + information['slot_to'] + ' UTC'),
           schedule_date: information['schedule_date'].blank? ? '' : Time.parse(information['schedule_date'])
       }
     end

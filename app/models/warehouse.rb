@@ -171,12 +171,16 @@ class Warehouse < ActiveRecord::Base
     end
   end
 
-  def local_time
-    #TODO: In the future we'll make time zone identifier configurable
-    time_zone_identifier = 'Europe/London'
+  def local_time(time = Time.now.getutc)
+    time_zone_identifier = time_zone
     tz = TZInfo::Timezone.get(time_zone_identifier)
     # current local time
-    tz.utc_to_local(Time.now.getutc)
+    tz.utc_to_local(time)
+  end
+
+  def time_zone
+    #TODO: In the future we'll make time zone identifier configurable
+    'Europe/London'
   end
 
   def area=(area)

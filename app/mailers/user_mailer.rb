@@ -76,9 +76,11 @@ module UserMailer
       booked_slot = nil
 
       unless order.order_schedule.blank?
-        booked_slot = "between #{order.order_schedule[:from].strftime('%l:%M %P')} and
-                    #{order.order_schedule[:to].strftime('%l:%M %P')} on
-                    #{order.order_schedule[:to].strftime('%-d/%-m/%Y')} "
+        from = order.warehouse.local_time(order.order_schedule[:from])
+        to = order.warehouse.local_time(order.order_schedule[:to])
+        booked_slot = "between #{from.strftime('%l:%M %P')} and
+                    #{to.strftime('%l:%M %P')} on
+                    #{to.strftime('%-d/%-m/%Y')} "
       end
 
       if booked_slot.blank?
@@ -152,9 +154,11 @@ module UserMailer
       booked_slot = nil
 
       unless order.order_schedule.blank?
-        booked_slot = "between #{order.order_schedule[:from].strftime('%l:%M %P')} and
-                    #{order.order_schedule[:to].strftime('%l:%M %P')} on
-                    #{order.order_schedule[:to].strftime('%-d/%-m/%Y')} "
+        from = order.warehouse.local_time(order.order_schedule[:from])
+        to = order.warehouse.local_time(order.order_schedule[:to])
+        booked_slot = "between #{from.strftime('%l:%M %P')} and
+                    #{to.strftime('%l:%M %P')} on
+                    #{to.strftime('%-d/%-m/%Y')} "
       end
 
       if booked_slot.blank?

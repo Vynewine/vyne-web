@@ -45,9 +45,11 @@ class PromoController < ApplicationController
     if user_signed_in?
 
       if promotion_code.promotion.new_accounts_only
-        flash.now[:error] = 'This promotion is for new customers only.'
-        render :index
-        return
+        unless current_user.orders.blank?
+          flash.now[:error] = 'This promotion is for new customers only.'
+          render :index
+          return
+        end
       end
 
       errors = PromotionHelper.add_promotion(current_user, promotion_code.code)
