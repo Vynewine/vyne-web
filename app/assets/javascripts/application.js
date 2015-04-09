@@ -87,6 +87,9 @@ var checkForMobileDevice = function () {
         // remove all element with class "remove-on-mobile-device"
         $('.remove-on-mobile-device').remove();
     }
+
+    //TODO: This is to clean-up old cookie. Can be removed after 01-07-2015
+    $.removeCookie('wines', { path: '/shop' });
 };
 
 var events = [];
