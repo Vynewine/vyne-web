@@ -73,6 +73,7 @@ var Cart = React.createClass({
         // Update Rest of the app
         wines = newWines;
         $.cookie('wines', JSON.stringify(newWines), { path: '/' });
+        $('input[name="wines"]').val(JSON.stringify(newWines));
         updateOrderSummary();
 
         PubSub.publish('cart-update', newWines);
@@ -178,6 +179,9 @@ Cart.Item = React.createClass({
                     </div>
                     <div>
                         <span className="occasionName">{this.props.wine.occasionName}</span>
+                    </div>
+                    <div>
+                        <span className="occasionName">{this.props.wine.specificWine}</span>
                     </div>
                     <div>
                         <span className="wineType">{this.props.wine.wineType.name}</span>
