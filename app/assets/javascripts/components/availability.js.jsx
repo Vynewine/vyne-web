@@ -14,7 +14,7 @@ var Promotion = React.createClass({
                     <div>
                         <div className="row">
                             <div className="col-xs-12">
-                                <a href="/users/sign_up" >Register Here</a>
+                                <a href="/users/sign_up" className="btn btn-primary btn-sm" >Register your promotion here</a>
                             </div>
                         </div>
                     </div>
@@ -41,9 +41,8 @@ var Promotion = React.createClass({
                 var promotion = this.props.deliveryOptions.promotion;
 
                 if (!this.props.deliveryOptions.today_warehouse.id) {
-                    setPromotion('We currently don\'t deliver to your area, but if you register now, we\'ll save' +
-                    ' your promotion (code ' + promotion.code + ' - "' + promotion.title + '") in your account,' +
-                    ' and let you know when we deliver to this postcode. ', true);
+                    setPromotion('We currently don\'t deliver to your area. Register now and we\'ll save' +
+                    ' your promotion in your account.', true);
 
                 } else {
                     setPromotion('Your promotion (code ' + promotion.code +
