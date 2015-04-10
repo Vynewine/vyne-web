@@ -65,7 +65,7 @@ class UserNewOrderTest < ActiveSupport::TestCase
     @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Thank you for ordering')]").displayed? }
   end
 
-  test 'New user two bottles' do
+  test 'New user two different bottles' do
 
     email = Time.now.strftime('%Y%m%d%H%M%S') + '@vyne.london'
     password = 'password'
@@ -85,6 +85,32 @@ class UserNewOrderTest < ActiveSupport::TestCase
     submit_order
 
     @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Thank you for ordering')]").displayed? }
+  end
+
+  test 'New user two of the same bottles' do
+
+    email = Time.now.strftime('%Y%m%d%H%M%S') + '@vyne.london'
+    password = 'password'
+
+    @driver.get(@base_url + '/')
+
+    enter_postcode_first_page('n17rj')
+    select_bottle_for_category(2)
+    select_wine_by_occasion
+    add_same_bottle
+    confirm_order_selection
+    register_new_user(email, password)
+    register_new_address
+    register_new_credit_card
+    submit_order
+
+    @wait.until { @driver.find_element(:xpath, "//*[contains(text(), 'Thank you for ordering')]").displayed? }
+
+    assert_xpath('Reserve (£15.00-20.00)', '//*[@id="order-details"]/div/div[2]/div[1]/div[2]/div[2]/div/span[3]')
+    assert_xpath('Reserve (£15.00-20.00)', '//*[@id="order-details"]/div/div[2]/div[1]/div[2]/div[5]/div/span[3]')
+    assert_xpath('32.50 - 42.50', '//*[@id="order-details"]/div/div[2]/div[1]/div[3]/div/div[2]/span[2]')
+    assert_xpath('2.50', '//*[@id="order-details"]/div/div[2]/div[1]/div[3]/div/div[1]/span[2]')
+
   end
 
   test 'Existing user one bottle' do
@@ -142,7 +168,7 @@ class UserNewOrderTest < ActiveSupport::TestCase
 
     @driver.get(@base_url + '/promo')
 
-    enter_promo_code(promo_code,'n17rj')
+    enter_promo_code(promo_code, 'n17rj')
     select_bottle_for_category(2)
     select_wine_by_occasion
     select_second_bottle
@@ -166,7 +192,7 @@ class UserNewOrderTest < ActiveSupport::TestCase
 
     @driver.get(@base_url + '/promo')
 
-    enter_promo_code(promo_code,'n17rj')
+    enter_promo_code(promo_code, 'n17rj')
     select_bottle_for_category(2)
     select_wine_by_occasion
     confirm_order_selection
@@ -183,7 +209,7 @@ class UserNewOrderTest < ActiveSupport::TestCase
 
     @driver.get(@base_url + '/promo')
 
-    enter_promo_code('VYNEHEROES','n17rj')
+    enter_promo_code('VYNEHEROES', 'n17rj')
     select_bottle_for_category(2)
     select_wine_by_occasion
     confirm_order_selection
@@ -220,13 +246,78 @@ class UserNewOrderTest < ActiveSupport::TestCase
     @wait.until { @driver.find_element(:xpath, "//*[@id=\"document\"]//*[contains(text(), '#{email}')]").displayed? }
   end
 
+  test 'Manipulate shopping cart' do
+
+    @driver.get(@base_url + '/')
+
+    enter_postcode_first_page('n17rj')
+    select_bottle_for_category(2)
+    select_wine_by_occasion
+
+    assert_xpath('Reserve', '//*[@id="cart"]/div/table/tbody/tr[1]/td[1]/div[2]/span')
+    assert_xpath('Party', '//*[@id="cart"]/div/table/tbody/tr[1]/td[1]/div[3]/span')
+    assert_xpath('Light Red', '//*[@id="cart"]/div/table/tbody/tr[1]/td[1]/div[5]/span')
+    assert_xpath('15', '//*[@id="cart"]/div/table/tbody/tr[1]/td[2]/span/span[2]')
+    assert_xpath('20', '//*[@id="cart"]/div/table/tbody/tr[1]/td[2]/span/span[4]')
+    assert_xpath('2.50', '//*[@id="cart"]/div/table/tbody/tr[4]/td/div[1]/span[4]')
+    assert_xpath('17.50', '//*[@id="cart"]/div/table/tbody/tr[4]/td/div[3]/span[4]/span[1]')
+    assert_xpath('22.50', '//*[@id="cart"]/div/table/tbody/tr[4]/td/div[3]/span[4]/span[3]')
+
+    add_same_bottle
+
+    assert_xpath('Reserve', '//*[@id="cart"]/div/table/tbody/tr[2]/td[1]/div[2]/span')
+    assert_xpath('Party', '//*[@id="cart"]/div/table/tbody/tr[2]/td[1]/div[3]/span')
+    assert_xpath('Light Red', '//*[@id="cart"]/div/table/tbody/tr[2]/td[1]/div[5]/span')
+    assert_xpath('15', '//*[@id="cart"]/div/table/tbody/tr[2]/td[2]/span/span[2]')
+    assert_xpath('20', '//*[@id="cart"]/div/table/tbody/tr[2]/td[2]/span/span[4]')
+    assert_xpath('2.50', '//*[@id="cart"]/div/table/tbody/tr[5]/td/div[1]/span[4]')
+    assert_xpath('32.50', '//*[@id="cart"]/div/table/tbody/tr[5]/td/div[3]/span[4]/span[1]')
+    assert_xpath('42.50', '//*[@id="cart"]/div/table/tbody/tr[5]/td/div[3]/span[4]/span[3]')
+
+    remove_second_bottle
+    select_second_bottle
+    select_bottle_for_category(1)
+    select_wine_by_food
+
+    assert_xpath('House', '//*[@id="cart"]/div/table/tbody/tr[2]/td[1]/div[2]/span')
+    assert_xpath('beef (grill & BBQ)', '//*[@id="cart"]/div/table/tbody/tr[2]/td[1]/ul/li[1]')
+    assert_xpath('green vegetables (roasted)', '//*[@id="cart"]/div/table/tbody/tr[2]/td[1]/ul/li[2]')
+    assert_xpath('pasta', '//*[@id="cart"]/div/table/tbody/tr[2]/td[1]/ul/li[3]')
+    assert_xpath('10', '//*[@id="cart"]/div/table/tbody/tr[2]/td[2]/span/span[2]')
+    assert_xpath('15', '//*[@id="cart"]/div/table/tbody/tr[2]/td[2]/span/span[4]')
+    assert_xpath('27.50', '//*[@id="cart"]/div/table/tbody/tr[5]/td/div[3]/span[4]/span[1]')
+    assert_xpath('37.50', '//*[@id="cart"]/div/table/tbody/tr[5]/td/div[3]/span[4]/span[3]')
+
+    remove_first_bottle
+
+    assert_xpath('3.50', '//*[@id="cart"]/div/table/tbody/tr[4]/td/div[1]/span[4]')
+    assert_xpath('13.50', '//*[@id="cart"]/div/table/tbody/tr[4]/td/div[3]/span[4]/span[1]')
+    assert_xpath('18.50', '//*[@id="cart"]/div/table/tbody/tr[4]/td/div[3]/span[4]/span[3]')
+
+  end
+
+  test 'Choose specific wine' do
+    @driver.get(@base_url + '/')
+
+    enter_postcode_first_page('n17rj')
+    select_bottle_for_category(2)
+    select_specific_wine('Chateau Margaux')
+    assert_xpath('Reserve', '//*[@id="cart"]/div/table/tbody/tr[1]/td[1]/div[2]/span')
+    assert_xpath('Chateau Margaux', '//*[@id="cart"]/div/table/tbody/tr[1]/td[1]/div[4]/span')
+
+  end
+
+  def assert_xpath(expected_value, xpath)
+    assert_equal(expected_value, @driver.find_element(:xpath, xpath).text)
+  end
+
   def enter_promo_code(promo_code, postcode)
 
-      puts 'Entering Promo Code'
-      @driver.find_element(:name, 'promo_code').send_keys promo_code
-      @driver.find_element(:name, 'postcode').send_keys postcode
-      @driver.find_element(:css, 'input[type=\'submit\']').click
-      @driver.find_element(:xpath, "//button[contains(text(),'Now')]").click
+    puts 'Entering Promo Code'
+    @driver.find_element(:name, 'promo_code').send_keys promo_code
+    @driver.find_element(:name, 'postcode').send_keys postcode
+    @driver.find_element(:css, 'input[type=\'submit\']').click
+    @driver.find_element(:xpath, "//button[contains(text(),'Now')]").click
 
   end
 
@@ -267,6 +358,25 @@ class UserNewOrderTest < ActiveSupport::TestCase
     @driver.find_element(:id, 'add-another-bottle').click
   end
 
+  def add_same_bottle
+    puts 'Adding the same bottle'
+    @wait.until { @driver.find_element(:css, '#review-panel').displayed? }
+    #@wait.until { @driver.find_element(:link, '#add-another-bottle').displayed? }
+    @driver.find_element(:id, 'add-same-bottle').click
+  end
+
+  def remove_first_bottle
+    puts 'Removing First Bottle'
+    @wait.until { @driver.find_element(:css, '#review-panel').displayed? }
+    @driver.find_element(:xpath, '//*[@id="cart"]/div/table/tbody/tr[1]/td[1]/a').click
+  end
+
+  def remove_second_bottle
+    puts 'Removing Second Bottle'
+    @wait.until { @driver.find_element(:css, '#review-panel').displayed? }
+    @driver.find_element(:xpath, '//*[@id="cart"]/div/table/tbody/tr[2]/td[1]/a').click
+  end
+
   def select_wine_by_food
     puts 'Selecting wine by food'
     @wait.until { @driver.find_element(:link, 'With food').displayed? }
@@ -282,6 +392,13 @@ class UserNewOrderTest < ActiveSupport::TestCase
     @driver.find_element(:css, '#food-38 > a > img[alt=\'image description\']').click
     @driver.find_element(:id, 'select-preferences').click
 
+  end
+
+  def select_specific_wine(specific_wine = 'bordeaux')
+    putc 'Selecting specific wine'
+    @wait.until { @driver.find_element(:id, 'specific-wine').displayed? }
+    @driver.find_element(:xpath, '//*[@id="matching-wine"]/div/input').send_keys specific_wine
+    @driver.find_element(:id, 'specific-wine').click
   end
 
   def confirm_order_selection

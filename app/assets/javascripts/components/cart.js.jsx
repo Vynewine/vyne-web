@@ -244,7 +244,7 @@ Cart.ManageBottles = React.createClass({
             addBottle = (
                 <div>
                     <div>
-                        <a className="btn btn__small add-same-bottle-link" onClick={this.handleAddTheSameBottle}>Add same bottle</a>
+                        <a className="btn btn__small add-same-bottle-link" id="add-same-bottle" onClick={this.handleAddTheSameBottle}>Add same bottle</a>
                     </div>
                     <div>
                         <span className="or">or</span>
