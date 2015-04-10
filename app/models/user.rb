@@ -61,4 +61,17 @@ class User < ActiveRecord::Base
     has_role?(:admin) || has_role?(:superadmin)
   end
 
+  def referral_code
+    code = ''
+
+    unless promotion_codes.blank?
+      promo_code = promotion_codes.select { |promo_code| promo_code.active && promo_code.referral_code? }.first
+      unless promo_code.blank?
+        code = promo_code.code
+      end
+    end
+
+    code
+  end
+
 end

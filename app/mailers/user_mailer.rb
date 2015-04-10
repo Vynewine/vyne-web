@@ -536,6 +536,53 @@ module UserMailer
     end
   end
 
+  def self.account_registration(user)
+
+    log "Sending account registration for user #{user.email}"
+
+    begin
+
+      mandrill = Mandrill::API.new Rails.application.config.mandrill
+      template_name = 'account-registration'
+      message = {
+          :subject => 'Thank you for registering with Vyne',
+          :from_email => 'hello@vyne.co.uk',
+          :from_name => 'Vyne Team',
+          :to => [
+              {
+                  :email => user.email,
+                  :name => user.first_name
+              }
+          ],
+          :merge_vars => [
+              {
+                  :rcpt => user.email,
+                  :vars => [
+                      {
+                          :name => 'FIRSTNAME',
+                          :content => user.first_name
+                      },
+                      {
+                          :name => 'PROMOCODE',
+                          :content => user.referral_code
+                      }
+                  ]
+              }
+          ]
+      }
+
+      mandrill.messages.send_template template_name, nil, message
+
+    rescue Mandrill::Error => exception
+      log_error "A Mandrill error occurred account_registration: #{exception.class} - #{exception.message}"
+      raise
+    rescue Exception => exception
+      message = "Error occurred while sending email account_registration: #{exception.class} - #{exception.message} - for user: #{user.email}"
+      log_error message
+      log_error exception.backtrace
+    end
+  end
+
   private
 
   def self.log(message)

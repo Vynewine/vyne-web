@@ -35,6 +35,8 @@ class SignupController < ApplicationController
         end
       end
 
+      Resque.enqueue(UserEmailNotification, new_user.id, :account_registration)
+
       sign_in(:user, new_user)
       render :json => new_user.to_json
     else

@@ -23,6 +23,8 @@ class RegistrationsController < Devise::RegistrationsController
           logger.error errors
         end
       end
+
+      Resque.enqueue(UserEmailNotification, current_user.id, :account_registration)
     end
 
   end
