@@ -317,8 +317,6 @@ class Warehouse < ActiveRecord::Base
 
   def get_delivery_block_by(time)
 
-    puts get_delivery_block_by: time
-
     block = nil
     agenda = self.agendas.select { |agenda| agenda.day == time.wday }.first
 
