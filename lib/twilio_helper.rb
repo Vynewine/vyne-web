@@ -133,9 +133,7 @@ module TwilioHelper
       unless order.order_schedule.blank?
         from = order.warehouse.local_time(order.order_schedule[:from])
         to = order.warehouse.local_time(order.order_schedule[:to])
-        booked_slot = "between #{from.strftime('%l:%M %P')} and
-                    #{to.strftime('%l:%M %P')} on
-                    #{to.strftime('%-d/%-m/%Y')} "
+        booked_slot = "between #{from.strftime('%l:%M %P')} and #{to.strftime('%l:%M %P')} on #{to.strftime('%-d/%-m/%Y')} "
         schedule_message = 'Delivery Window: ' +
             "#{booked_slot} - " +
             "(Fulfillment at: #{order.warehouse.local_time(order.order_schedule[:schedule_date]).strftime('%b %d, %Y %l:%M %p')})"

@@ -11,8 +11,8 @@ var OrderSummary = React.createClass({
         var deliveryTime = 'ASAP';
 
         if (this.props.order.order_schedule) {
-            var deliveryFrom = moment.utc(this.props.order.order_schedule.from);
-            var deliveryTo = moment.utc(this.props.order.order_schedule.to);
+            var deliveryFrom = moment(this.props.order.order_schedule.from);
+            var deliveryTo = moment(this.props.order.order_schedule.to);
             deliveryTime = deliveryFrom.format('dddd MMMM Do') + ' between ' + deliveryFrom.format('h:mm a') + ' and ' + deliveryTo.format('h:mm a');
         }
 
@@ -29,7 +29,7 @@ var OrderSummary = React.createClass({
         };
 
         section('Order Id', this.props.order.id, 1);
-        section('Created', moment.utc(this.props.order.created_at).format('dddd MMMM Do h:mm a'), 2);
+        section('Created', moment(this.props.order.created_at).format('dddd MMMM Do h:mm a'), 2);
 
         if (this.props.order.status && this.props.order.warehouse && this.props.order.address) {
             if (this.props.order.status.label == 'cancelled') {
