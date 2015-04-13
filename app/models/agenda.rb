@@ -115,7 +115,7 @@ class Agenda < ActiveRecord::Base
   end
 
   # Based on time provided we have to determine which slots are still available for given day
-  # Block slots can only be booked up to 2 hours before
+  # Block slots can only be booked up to 1 hours before
   # Live slots can only be booked up to the minute before
 
   def available_delivery_blocks(time)
@@ -127,7 +127,7 @@ class Agenda < ActiveRecord::Base
     # Reset date to compare with Postgres Time
     time = time.change(:month => 1, :day => 1, :year => 2000)
 
-    lead_time_for_block_time_slots = 2.hour
+    lead_time_for_block_time_slots = 1.hour
 
     all_slots = block_slots.select { |slot| slot[:from] >= (time + lead_time_for_block_time_slots) } +
         live_slots.select { |slot| slot[:from] >= (time) }

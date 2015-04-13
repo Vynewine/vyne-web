@@ -151,6 +151,9 @@ class ShopController < ApplicationController
             warehouse_id: warehouse_id
         }
       else
+
+        puts slot_info: slot_info
+
         @order.information = {
             slot_date: params[:slot_date],
             slot_from: Time.parse(params[:slot_date] + ' ' + slot_info[:from] + ' ' + warehouse.time_zone).utc.strftime('%H:%M'),
@@ -160,6 +163,10 @@ class ShopController < ApplicationController
             warehouse_id: warehouse_id
         }
       end
+
+      puts utc_should_be: Time.parse(params[:slot_date] + ' ' + slot_info[:from] + ' ' + warehouse.time_zone).utc
+
+
 
       if @order.save
         # Client Email
