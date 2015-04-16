@@ -139,9 +139,13 @@ class Wine < ActiveRecord::Base
 
   def compositions_array
     comp = []
-    composition.composition_grapes.each do |c|
-      comp.push({:name => c.grape.name, :percentage => c.percentage})
+
+    unless composition.blank?
+      composition.composition_grapes.each do |c|
+        comp.push({:name => c.grape.name, :percentage => c.percentage})
+      end
     end
+
     return comp
   end
 
