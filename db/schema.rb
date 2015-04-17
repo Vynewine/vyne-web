@@ -23,11 +23,11 @@ ActiveRecord::Schema.define(version: 20150407163218) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.spatial  "coordinates",  limit: {:srid=>0, :type=>"point"}
     t.string   "line_2"
     t.string   "company_name"
     t.string   "country"
     t.string   "city"
-    t.spatial  "coordinates",  limit: {:srid=>0, :type=>"point"}
   end
 
   add_index "addresses", ["deleted_at"], :name => "index_addresses_on_deleted_at"
@@ -160,14 +160,6 @@ ActiveRecord::Schema.define(version: 20150407163218) do
   add_index "devices", ["deleted_at"], :name => "index_devices_on_deleted_at"
   add_index "devices", ["key"], :name => "index_devices_on_key", :unique => true
   add_index "devices", ["warehouse_id"], :name => "index_devices_on_warehouse_id"
-
-  create_table "devices_warehouses", id: false, force: true do |t|
-    t.integer  "device_id"
-    t.integer  "warehouse_id"
-    t.datetime "deleted_at"
-  end
-
-  add_index "devices_warehouses", ["deleted_at"], :name => "index_devices_warehouses_on_deleted_at"
 
   create_table "food_items", force: true do |t|
     t.integer  "order_item_id"
@@ -559,18 +551,6 @@ ActiveRecord::Schema.define(version: 20150407163218) do
 
   add_index "vinifications", ["deleted_at"], :name => "index_vinifications_on_deleted_at"
 
-  create_table "warehouse_categories", force: true do |t|
-    t.integer  "warehouse_id"
-    t.integer  "category_id"
-    t.boolean  "enabled"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "warehouse_categories", ["category_id"], :name => "index_warehouse_categories_on_category_id"
-  add_index "warehouse_categories", ["warehouse_id"], :name => "index_warehouse_categories_on_warehouse_id"
-
   create_table "warehouse_promotions", force: true do |t|
     t.integer  "warehouse_id"
     t.integer  "promotion_id"
@@ -596,13 +576,13 @@ ActiveRecord::Schema.define(version: 20150407163218) do
     t.datetime "deleted_at"
     t.boolean  "active"
     t.boolean  "registered_with_shutl"
+    t.spatial  "delivery_area",         limit: {:srid=>0, :type=>"polygon"}
     t.string   "key"
     t.boolean  "house_available",                                            default: true
     t.boolean  "reserve_available",                                          default: true
     t.boolean  "fine_available",                                             default: true
     t.boolean  "cellar_available",                                           default: true
     t.datetime "active_from"
-    t.spatial  "delivery_area",         limit: {:srid=>0, :type=>"polygon"}
   end
 
   add_index "warehouses", ["address_id"], :name => "index_warehouses_on_address_id"

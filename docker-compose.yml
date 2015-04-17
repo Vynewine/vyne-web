@@ -1,0 +1,26 @@
+db:  
+  image: mdillon/postgis
+  ports:
+    - "5432:5432"
+
+redis:  
+  image: redis
+  ports:
+    - "6379"
+
+solrhost:
+  image: makuk66/docker-solr
+  ports:
+    - "8983:8983"
+
+web:  
+  build: .
+  command: rails s
+  volumes:
+    - .:/myapp
+  ports:
+    - "3000:3000"
+  links:
+    - db
+    - redis
+    - solrhost
