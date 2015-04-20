@@ -1,21 +1,24 @@
 <%= form_for([:admin, @appellation]) do |f| %>
-  <% if @appellation.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@appellation.errors.count, "error") %> prohibited this appellation from being saved:</h2>
 
-      <ul>
-      <% @appellation.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
+    <div class="form-group">
+      <%= f.label :name %><br>
+      <%= f.text_field :name, :class => 'form-control' %>
     </div>
-  <% end %>
 
-  <div class="field">
-    <%= f.label :name %><br>
-    <%= f.text_field :name %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+    <div class="form-group">
+      <%= f.label :classification %><br>
+      <%= f.text_field :classification, :class => 'form-control' %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :region_id %><br>
+      <%= f.select :region_id,
+                   options_from_collection_for_select(@regions, 'id', 'name', :selected => @appellation.region_id), {},
+                   {:prompt => 'Choose a region', :class => 'form-control'}
+      %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit(:class => 'btn btn-success') %>
+    </div>
 <% end %>

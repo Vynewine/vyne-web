@@ -1,43 +1,51 @@
-<%= render :partial => "layouts/winemenu" %>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="row">
+      <div class="col-md-6">
+        <h3 class="panel-title">Appellations</h3>
+      </div>
+      <div class="col-md-6">
+        <%= will_paginate @appellations, :class => 'vyne_pagination' %>
+      </div>
+    </div>
+  </div>
 
-<h1>Listing appellations</h1>
-<%= link_to 'Upload', controller: 'appellations', action: 'upload' %><br/><br/><br/>
-<table>
-  <thead>
+  <table class="table table-bordered">
+
+    <thead>
     <tr>
       <th>Id</th>
       <th>Name</th>
+      <th>Classification</th>
       <th>Region</th>
-      <th colspan="3"></th>
+      <th></th>
     </tr>
-  </thead>
+    </thead>
 
-  <tbody>
+    <tbody>
     <% @appellations.each do |appellation| %>
-      <tr>
-        <td><%= appellation.id %></td>
-        <td><%= appellation.name %></td>
-        <td><%= appellation.region.name %></td>
-        <td class="button-wrapper">
-          <%= link_to admin_appellation_path(appellation) do %>
-            <i class="flaticon stroke zoom-1"></i>
-          <% end %>
-        </td>
-        <td class="button-wrapper">
-          <%= link_to edit_admin_appellation_path(appellation) do %>
-            <i class="flaticon stroke pencil-2"></i>
-          <% end %>
-        </td>
-        <td class="button-wrapper">
-          <%= link_to admin_appellation_path(appellation), method: :delete, data: { confirm: 'Are you sure?' } do %>
-            <i class="flaticon stroke trash-2"></i>
-          <% end %>
-        </td>
-      </tr>
+        <tr>
+          <td><%= appellation.id %></td>
+          <td><%= appellation.name %></td>
+          <td><%= appellation.classification %></td>
+          <td><%= appellation.region.name %></td>
+          <td class="button-wrapper">
+            <%= link_to admin_appellation_path(appellation), class: 'btn btn-default' do %>
+                <i class="glyphicon glyphicon-search"></i>
+            <% end %>
+          </td>
+        </tr>
     <% end %>
-  </tbody>
-</table>
+    </tbody>
 
-<br>
+  </table>
 
-<%= link_to 'New Appellation', new_admin_appellation_path %>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <%= link_to upload_admin_appellations_path, class: 'btn btn-default' do %>
+          <i class="glyphicon glyphicon-cloud-upload" aria-hidden="true"></i> Upload
+      <% end %>
+      <%= link_to 'New Appellation', new_admin_appellation_path, :class => 'btn btn-primary' %>
+    </li>
+  </ul>
+</div>
