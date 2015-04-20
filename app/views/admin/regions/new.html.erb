@@ -1,5 +1,21 @@
-<h1>New region</h1>
-
-<%= render 'form' %>
-
-<%= link_to 'Back', admin_regions_path %>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">New Region</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-6">
+        <%= render 'form' %>
+      </div>
+    </div>
+  </div>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-md-12">
+        <%= link_to admin_regions_path, class: 'btn btn-default' do %>
+            <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

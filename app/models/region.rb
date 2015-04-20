@@ -3,4 +3,6 @@ class Region < ActiveRecord::Base
 
   belongs_to :country
   belongs_to :appellation
+
+  validates :name, :country_id, :presence => true
 end

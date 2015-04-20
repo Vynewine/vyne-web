@@ -39,21 +39,6 @@ class Wine < ActiveRecord::Base
 
   validates :name, :producer_id, :presence => true
 
-  # validates :compulsory_fields
-
-  # def compulsory_fields
-  #   if self.name.nil? || self.name.empty?
-  #     self.errors.add(:name, "needs a name" )
-  #   end
-  #   if self.vintage.nil? || self.vintage.empty?
-  #     self.errors.add(:vintage, "needs a vintage" )
-  #   end
-  #   if self.producer.nil? || self.producer_id.empty?
-  #     self.errors.add(:producer_id, "needs a producer" )
-  #   end
-  # end
-
-
   # Solr & sunspot:
   searchable do
     text :name

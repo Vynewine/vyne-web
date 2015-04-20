@@ -1,71 +1,50 @@
 class Admin::RegionsController < ApplicationController
   include GenericImporter
-  layout "admin"
+  layout 'admin'
   before_action :authenticate_user!
   authorize_actions_for AdminAuthorizer # Triggers user check
   before_action :set_region, only: [:show, :edit, :update, :destroy]
 
-  # GET /regions
-  # GET /regions.json
   def index
-    @regions = Region.all.order(:id)
+    @regions = Region.order(:id).page(params[:page])
   end
 
-  # GET /regions/1
-  # GET /regions/1.json
   def show
   end
 
-  # GET /regions/new
   def new
     @region = Region.new
     @countries = Country.all
   end
 
-  # GET /regions/1/edit
   def edit
     @countries = Country.all
   end
 
-  # POST /regions
-  # POST /regions.json
   def create
     @region = Region.new(region_params)
-    @region.country = Country.find( params[ :country ] )
-    respond_to do |format|
-      if @region.save
-        format.html { redirect_to [:admin, @region], notice: 'Region was successfully created.' }
-        format.json { render :show, status: :created, location: @region }
-      else
-        format.html { render :new }
-        format.json { render json: @region.errors, status: :unprocessable_entity }
-      end
+    if @region.save
+      redirect_to admin_region_path(@region), notice: 'Region was successfully created.'
+    else
+      @countries = Country.all
+      flash.now[:error] = @region.errors.full_messages.join(', ')
+      render :new
     end
   end
 
-  # PATCH/PUT /regions/1
-  # PATCH/PUT /regions/1.json
   def update
-    @region.country = Country.find( params[ :country ] )
-    respond_to do |format|
-      if @region.update(region_params)
-        format.html { redirect_to [:admin, @region], notice: 'Region was successfully updated.' }
-        format.json { render :show, status: :ok, location: @region }
-      else
-        format.html { render :edit }
-        format.json { render json: @region.errors, status: :unprocessable_entity }
-      end
+    if @region.update(region_params)
+      redirect_to admin_region_path(@region), notice: 'Region was successfully updated.'
+    else
+      @countries = Country.all
+      flash.now[:error] = @region.errors.full_messages.join(', ')
+      render :edit
     end
   end
 
-  # DELETE /regions/1
-  # DELETE /regions/1.json
   def destroy
     @region.destroy
-    respond_to do |format|
-      format.html { redirect_to admin_regions_url, notice: 'Region was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    redirect_to admin_regions_url, notice: 'Region was successfully destroyed.'
   end
 
   def import
@@ -83,13 +62,12 @@ class Admin::RegionsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_region
-      @region = Region.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def region_params
-      params.require(:region).permit(:name, :country)
-    end
+  def set_region
+    @region = Region.find(params[:id])
+  end
+
+  def region_params
+    params.require(:region).permit(:name, :country_id)
+  end
 end

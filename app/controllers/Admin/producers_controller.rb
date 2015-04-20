@@ -1,69 +1,50 @@
 class Admin::ProducersController < ApplicationController
   include GenericImporter
-  layout "admin"
+  layout 'admin'
   before_action :authenticate_user!
   authorize_actions_for AdminAuthorizer
   before_action :set_producer, only: [:show, :edit, :update, :destroy]
 
-  # GET /producers
-  # GET /producers.json
   def index
     @producers = Producer.order(:id).page(params[:page])
   end
 
-  # GET /producers/1
-  # GET /producers/1.json
   def show
   end
 
-  # GET /producers/new
   def new
     @producer = Producer.new
     @countries = Country.all
   end
 
-  # GET /producers/1/edit
   def edit
     @countries = Country.all
   end
 
-  # POST /producers
-  # POST /producers.json
   def create
     @producer = Producer.new(producer_params)
-    respond_to do |format|
-      if @producer.save
-        format.html { redirect_to [:admin, @producer], notice: 'Producer was successfully created.' }
-        format.json { render :show, status: :created, location: @producer }
-      else
-        format.html { render :new }
-        format.json { render json: @producer.errors, status: :unprocessable_entity }
-      end
+    if @producer.save
+      redirect_to [:admin, @producer], notice: 'Producer was successfully created.'
+    else
+      @countries = Country.all
+      flash.now[:error] = @producer.errors.full_messages.join(', ')
+      render :new
     end
   end
 
-  # PATCH/PUT /producers/1
-  # PATCH/PUT /producers/1.json
   def update
-    respond_to do |format|
-      if @producer.update(producer_params)
-        format.html { redirect_to [:admin, @producer], notice: 'Producer was successfully updated.' }
-        format.json { render :show, status: :ok, location: @producer }
-      else
-        format.html { render :edit }
-        format.json { render json: @producer.errors, status: :unprocessable_entity }
-      end
+    if @producer.update(producer_params)
+      redirect_to [:admin, @producer], notice: 'Producer was successfully updated.'
+    else
+      @countries = Country.all
+      flash.now[:error] = @producer.errors.full_messages.join(', ')
+      render :edit
     end
   end
 
-  # DELETE /producers/1
-  # DELETE /producers/1.json
   def destroy
     @producer.destroy
-    respond_to do |format|
-      format.html { redirect_to admin_producers_url, notice: 'Producer was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    redirect_to admin_producers_url, notice: 'Producer was successfully destroyed.'
   end
 
   def import
@@ -82,13 +63,13 @@ class Admin::ProducersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_producer
-      @producer = Producer.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def producer_params
-      params.require(:producer).permit(:name, :country_id, :note)
-    end
+  def set_producer
+    @producer = Producer.find(params[:id])
+  end
+
+  def producer_params
+    params.require(:producer).permit(:name, :country_id, :note)
+  end
+
 end
