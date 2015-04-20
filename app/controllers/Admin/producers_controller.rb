@@ -8,7 +8,7 @@ class Admin::ProducersController < ApplicationController
   # GET /producers
   # GET /producers.json
   def index
-    @producers = Producer.all.order(:id)
+    @producers = Producer.order(:id).page(params[:page])
   end
 
   # GET /producers/1
@@ -31,7 +31,6 @@ class Admin::ProducersController < ApplicationController
   # POST /producers.json
   def create
     @producer = Producer.new(producer_params)
-    @producer.country = Country.find( params[ :country ] )
     respond_to do |format|
       if @producer.save
         format.html { redirect_to [:admin, @producer], notice: 'Producer was successfully created.' }
@@ -46,7 +45,6 @@ class Admin::ProducersController < ApplicationController
   # PATCH/PUT /producers/1
   # PATCH/PUT /producers/1.json
   def update
-    @producer.country = Country.find( params[ :country ] )
     respond_to do |format|
       if @producer.update(producer_params)
         format.html { redirect_to [:admin, @producer], notice: 'Producer was successfully updated.' }
@@ -91,6 +89,6 @@ class Admin::ProducersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def producer_params
-      params.require(:producer).permit(:name, :country)
+      params.require(:producer).permit(:name, :country_id, :note)
     end
 end

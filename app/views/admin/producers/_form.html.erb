@@ -1,28 +1,22 @@
 <%= form_for([:admin, @producer]) do |f| %>
-  <% if @producer.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@producer.errors.count, "error") %> prohibited this producer from being saved:</h2>
 
-      <ul>
-      <% @producer.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
+  <div class="form-group">
     <%= f.label :name %><br>
-    <%= f.text_field :name %>
+    <%= f.text_field :name, :class => 'form-control' %>
   </div>
-  <div class="field">
+  <div class="form-group">
     <%= f.label :country %><br>
-    <%= select_tag :country,
-        options_from_collection_for_select(@countries, "id", "name", :selected => @producer.country_id),
-        :prompt => "Choose a country"
+    <%= f.select :country_id,
+        options_from_collection_for_select(@countries, 'id', 'name', :selected => @producer.country_id), {},
+        {:prompt => 'Choose a country', :class => 'form-control'}
     %>
   </div>
+    <div class="form-group">
+      <%= f.label :note %><br>
+      <%= f.text_field :note, :class => 'form-control' %>
+    </div>
+
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit(:class => 'btn btn-success') %>
   </div>
 <% end %>
