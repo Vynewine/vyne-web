@@ -3,4 +3,6 @@ class CompositionGrape < ActiveRecord::Base
 
   belongs_to :composition
   belongs_to :grape
+
+  validates :grape_id, :composition_id, :presence => true
 end

@@ -1,6 +1,6 @@
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title">New Composition</h3>
+    <h3 class="panel-title">New Grape for composition <%= params[:composition_id]%></h3>
   </div>
   <div class="panel-body">
     <div class="row">
@@ -12,7 +12,7 @@
   <div class="panel-footer">
     <div class="row">
       <div class="col-md-12">
-        <%= link_to admin_compositions_path, class: 'btn btn-default' do %>
+        <%= link_to admin_composition_path(params[:composition_id]), class: 'btn btn-default' do %>
             <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back
         <% end %>
       </div>

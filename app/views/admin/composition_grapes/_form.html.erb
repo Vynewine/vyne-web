@@ -1,0 +1,19 @@
+<%= form_for([:admin, @composition, @composition_grape]) do |f| %>
+
+    <div class="form-group">
+      <%= f.label :grape_id %><br>
+      <%= f.select :grape_id,
+                   options_from_collection_for_select(@grapes, 'id', 'name', :selected => @composition_grape.grape_id), {},
+                   {:prompt => 'Choose a grape', :class => 'form-control'}
+      %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :percentage %><br>
+      <%= f.number_field :percentage, :class => 'form-control', :step => 'any' %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit(:class => 'btn btn-success') %>
+    </div>
+<% end %>

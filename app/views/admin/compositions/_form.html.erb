@@ -1,25 +1,11 @@
 <%= form_for([:admin, @composition]) do |f| %>
-  <% if @composition.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@composition.errors.count, "error") %> prohibited this composition from being saved:</h2>
 
-      <ul>
-      <% @composition.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-    NOT DONE
-
-  <div class="field">
+  <div class="form-group">
     <%= f.label :name %><br>
-    <%= f.text_field :name %>
+    <%= f.text_field :name, :class => 'form-control' %>
   </div>
 
-
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit(:class => 'btn btn-success') %>
   </div>
 <% end %>
