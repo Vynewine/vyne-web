@@ -1,6 +1,22 @@
-<h1>Editing subregion</h1>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Editing Subregion</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-6">
+        <%= render 'form' %>
+      </div>
+    </div>
+  </div>
 
-<%= render 'form' %>
-
-<%= link_to 'Show', [:admin, @subregion] %>
-<%= link_to 'Back', admin_subregions_path %>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-md-12">
+        <%= link_to admin_subregions_path, class: 'btn btn-default' do %>
+            <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

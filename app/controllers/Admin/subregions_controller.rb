@@ -1,70 +1,52 @@
 class Admin::SubregionsController < ApplicationController
   include GenericImporter
-  layout "admin"
+  layout 'admin'
   before_action :authenticate_user!
-  authorize_actions_for AdminAuthorizer # Triggers user check
+  authorize_actions_for AdminAuthorizer
   before_action :set_subregion, only: [:show, :edit, :update, :destroy]
 
-  # GET /subregions
-  # GET /subregions.json
   def index
-    @subregions = Subregion.all.order(:id)
+    @subregions = Subregion.order(:id).page(params[:page])
   end
 
-  # GET /subregions/1
-  # GET /subregions/1.json
   def show
   end
 
-  # GET /subregions/new
   def new
     @subregion = Subregion.new
-    @regions = Region.all
+    @regions = Region.all.order(:name)
   end
 
-  # GET /subregions/1/edit
   def edit
-    @regions = Region.all
+    @regions = Region.all.order(:name)
   end
 
-  # POST /subregions
-  # POST /subregions.json
   def create
     @subregion = Subregion.new(subregion_params)
-    @subregion.region = Region.find( params[ :region_id ] )
-    respond_to do |format|
-      if @subregion.save
-        format.html { redirect_to [:admin, @subregion], notice: 'Subregion was successfully created.' }
-        format.json { render :show, status: :created, location: @subregion }
-      else
-        format.html { render :new }
-        format.json { render json: @subregion.errors, status: :unprocessable_entity }
-      end
+
+    if @subregion.save
+      redirect_to admin_subregion_path(@subregion), notice: 'Subregion was successfully created.'
+    else
+      @regions = Region.all.order(:name)
+      flash.now[:error] = @subregion.errors.full_messages.join(', ')
+      render :new
     end
   end
 
-  # PATCH/PUT /subregions/1
-  # PATCH/PUT /subregions/1.json
   def update
-    respond_to do |format|
-      if @subregion.update(subregion_params)
-        format.html { redirect_to [:admin, @subregion], notice: 'Subregion was successfully updated.' }
-        format.json { render :show, status: :ok, location: @subregion }
-      else
-        format.html { render :edit }
-        format.json { render json: @subregion.errors, status: :unprocessable_entity }
-      end
+
+    if @subregion.update(subregion_params)
+      redirect_to admin_subregion_path(@subregion), notice: 'Subregion was successfully updated.'
+    else
+      @regions = Region.all.order(:name)
+      flash.now[:error] = @subregion.errors.full_messages.join(', ')
+      render :edit
     end
   end
 
-  # DELETE /subregions/1
-  # DELETE /subregions/1.json
   def destroy
     @subregion.destroy
-    respond_to do |format|
-      format.html { redirect_to admin_subregions_url, notice: 'Subregion was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    redirect_to admin_subregions_url, notice: 'Subregion was successfully destroyed.'
   end
 
   def import
@@ -82,13 +64,11 @@ class Admin::SubregionsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_subregion
-      @subregion = Subregion.find(params[:id])
-    end
+  def set_subregion
+    @subregion = Subregion.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def subregion_params
-      params.require(:subregion).permit(:name, :region_id)
-    end
+  def subregion_params
+    params.require(:subregion).permit(:name, :region_id)
+  end
 end

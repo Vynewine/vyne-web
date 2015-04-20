@@ -1,14 +1,49 @@
-<p id="notice"><%= notice %></p>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Subregion Details</h3>
+  </div>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Id:</strong>
+          <%= @subregion.id %>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Name:</strong>
+          <%= @subregion.name %>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Region:</strong>
+          <%= @subregion.region.name %>
+        </div>
+      </div>
+    </li>
+  </ul>
 
-<p>
-  <strong>Name:</strong>
-  <%= @subregion.name %>
-</p>
-
-<p>
-  <strong>Region:</strong>
-  <%= @subregion.region.name %>
-</p>
-
-<%= link_to 'Edit', edit_admin_subregion_path(@subregion) %>
-<%= link_to 'Back', admin_subregions_path %>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-xs-6">
+        <%= link_to admin_subregions_path, class: 'btn btn-default' do %>
+            <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back To Subregions
+        <% end %>
+        <%= link_to edit_admin_subregion_path(@subregion), class: 'btn btn-default' do %>
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+        <% end %>
+      </div>
+      <div class="col-xs-6 text-right">
+        <%= link_to admin_subregion_path(@subregion), method: :delete, data: {confirm: 'Are you sure?'}, class: 'btn btn-danger' do %>
+            <i class="glyphicon glyphicon-trash"></i>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
