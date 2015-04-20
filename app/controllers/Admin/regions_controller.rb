@@ -2,7 +2,7 @@ class Admin::RegionsController < ApplicationController
   include GenericImporter
   layout 'admin'
   before_action :authenticate_user!
-  authorize_actions_for AdminAuthorizer # Triggers user check
+  authorize_actions_for AdminAuthorizer
   before_action :set_region, only: [:show, :edit, :update, :destroy]
 
   def index
@@ -51,13 +51,9 @@ class Admin::RegionsController < ApplicationController
     results = import_data(params[:file], :regions, %w(region_id name country_id))
 
     if results[:success]
-      respond_to do |format|
-        format.html { redirect_to admin_regions_path, notice: 'Regions were successfully uploaded.' }
-      end
+      redirect_to admin_regions_path, notice: 'Regions were successfully uploaded.'
     else
-      respond_to do |format|
-        format.html { redirect_to upload_admin_regions_path, alert: results[:errors].join(', ') }
-      end
+      redirect_to upload_admin_regions_path, alert: results[:errors].join(', ')
     end
   end
 
@@ -70,4 +66,5 @@ class Admin::RegionsController < ApplicationController
   def region_params
     params.require(:region).permit(:name, :country_id)
   end
+
 end

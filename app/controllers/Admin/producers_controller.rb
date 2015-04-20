@@ -52,13 +52,9 @@ class Admin::ProducersController < ApplicationController
     results = import_data(params[:file], :producers, %w(producer_id name country_id note))
 
     if results[:success]
-      respond_to do |format|
-        format.html { redirect_to admin_producers_path, notice: 'Producers were successfully uploaded.' }
-      end
+      redirect_to admin_producers_path, notice: 'Producers were successfully uploaded.'
     else
-      respond_to do |format|
-        format.html { redirect_to upload_admin_producers_path, alert: results[:errors].join(', ') }
-      end
+      redirect_to upload_admin_producers_path, alert: results[:errors].join(', ')
     end
   end
 

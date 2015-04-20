@@ -39,6 +39,9 @@
 
   <ul class="list-group">
     <li class="list-group-item">
+      <%= link_to upload_admin_subregions_path, class: 'btn btn-default' do %>
+          <i class="glyphicon glyphicon-cloud-upload" aria-hidden="true"></i> Upload
+      <% end %>
       <%= link_to 'New Subregion', new_admin_subregion_path, :class => 'btn btn-primary' %>
     </li>
   </ul>
