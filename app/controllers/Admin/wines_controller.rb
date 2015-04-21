@@ -100,7 +100,7 @@ class Admin::WinesController < ApplicationController
 
     if uploaded_file.nil?
       respond_to do |format|
-        format.html { redirect_to upload_admin_inventories_path, alert: 'Please specify file to upload.' }
+        format.html { redirect_to upload_admin_wines_path, alert: 'Please specify file to upload.' }
       end
       return
     end
@@ -111,7 +111,7 @@ class Admin::WinesController < ApplicationController
 
     if file_extension != '.csv'
       respond_to do |format|
-        format.html { redirect_to upload_admin_inventories_path, alert: 'File must be .csv format' }
+        format.html { redirect_to upload_admin_wines_path, alert: 'File must be .csv format' }
       end
       return
     end
