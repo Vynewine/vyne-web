@@ -41,6 +41,25 @@ module GenericImporter
       end
     end
 
+    case importer
+      when :producers
+        reset_db_sequence('producers_id_seq', 'producers')
+      when :regions
+        reset_db_sequence('regions_id_seq', 'regions')
+      when :subregions
+        reset_db_sequence('subregions_id_seq', 'subregions')
+      when :locales
+        reset_db_sequence('locales_id_seq', 'locales')
+      when :appellations
+        reset_db_sequence('appellations_id_seq', 'appellations')
+      when :maturations
+        reset_db_sequence('maturations_id_seq', 'maturations')
+      when :vinifications
+        reset_db_sequence('vinifications_id_seq', 'vinifications')
+      when :grapes
+        reset_db_sequence('grapes_id_seq', 'grapes')
+    end
+
     results
 
   end
@@ -307,5 +326,9 @@ module GenericImporter
       end
     end
     true
+  end
+
+  def reset_db_sequence(seq_name, table_name)
+    ActiveRecord::Base.connection.execute("SELECT SETVAL('#{seq_name}', (SELECT MAX(id) FROM #{table_name}))")
   end
 end

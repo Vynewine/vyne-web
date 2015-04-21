@@ -93,6 +93,9 @@ module CompositionImporter
         end
       end
 
+      ActiveRecord::Base.connection.execute("SELECT SETVAL('compositions_id_seq', (SELECT MAX(id) FROM compositions))")
+      ActiveRecord::Base.connection.execute("SELECT SETVAL('composition_grapes_id_seq', (SELECT MAX(id) FROM composition_grapes))")
+
     rescue Exception => exception
       message = "Error occurred while importing compositions: #{exception.class} - #{exception.message}"
       log_error message
