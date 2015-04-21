@@ -37,7 +37,8 @@ class Wine < ActiveRecord::Base
   has_many :warehouses, through: :inventories
   has_many :categories, through: :inventories
 
-  validates :name, :producer_id, :presence => true
+  validates :name, :producer_id, :type_id, :presence => true
+  validates :wine_key, :uniqueness => true
 
   # Solr & sunspot:
   searchable do

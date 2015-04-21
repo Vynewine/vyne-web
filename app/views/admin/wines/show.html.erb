@@ -1,76 +1,153 @@
-<p id="notice"><%= notice %></p>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Wine Details</h3>
+  </div>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-sm-6">
+          <strong>Id:</strong>
+          <%= @wine.id %>
+        </div>
+        <div class="col-sm-6">
+          <strong>Key:</strong>
+          <%= @wine.wine_key %>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-sm-6">
+          <strong>Name:</strong>
+          <%= @wine.name %>
+        </div>
+        <div class="col-sm-6">
+          <strong>Producer:</strong>
+          <%= if @wine.producer.nil? then
+                'Unknown'
+              else
+                @wine.producer.name
+              end %>
+        </div>
 
-<p>
-  <strong>Id:</strong>
-  <%= @wine.id %>
-</p>
+      </div>
+    </li>
 
-<p>
-  <strong>Key:</strong>
-  <%= @wine.wine_key %>
-</p>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-sm-6">
+          <strong>Vintage:</strong>
+          <%= @wine.txt_vintage %>
+        </div>
+        <div class="col-sm-6">
+          <strong>Origin</strong>
+          <%= image_tag "flags/#{@wine.producer.country.alpha_2}.png", :alt => @wine.producer.country.name %>
+          - <%= @wine.producer.country.name %>
+        </div>
+      </div>
+    </li>
 
-<p>
-  <strong>Origin</strong>
-  <%= image_tag "flags/#{@wine.producer.country.alpha_2}.png", :alt => @wine.producer.country.name %> - <%= @wine.producer.country.name %>
-</p>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-sm-6">
+          <strong>Region:</strong>
+          <%= if @wine.region.nil? then
+                'Unknown'
+              else
+                @wine.region.name
+              end %>
+        </div>
+        <div class="col-sm-6">
+          <strong>Sub-region:</strong>
+          <%= if @wine.subregion.nil? then
+                'Unknown'
+              else
+                @wine.subregion.name
+              end %>
+        </div>
+      </div>
+    </li>
 
-<p>
-  <strong>Name:</strong>
-  <%= @wine.name %>
-</p>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-sm-6">
+          <strong>Locale</strong>
+          <%= if @wine.locale.nil? then
+                'Unknown'
+              else
+                @wine.locale.name
+              end %>
+        </div>
+        <div class="col-sm-6">
+          <strong>Appellation:</strong>
+          <%= if @wine.appellation.nil? then
+                'Unknown'
+              else
+                @wine.appellation.name
+              end %>
+        </div>
+      </div>
+    </li>
 
-<p>
-  <strong>Vintage:</strong>
-  <%= @wine.vintage %>
-</p>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-sm-6">
+          <strong>Type:</strong>
+          <%= @wine.type.name %>
+        </div>
+        <div class="col-sm-6">
+          <strong>Composition:</strong>
+          <% if @wine.composition %>
+              <%= @wine.composition.id %> - <%= @wine.composition.composition_grapes.map { |comp| comp.grape.name }.join(', ') %>
+          <% else %>
+              N/A
+          <% end %>
+        </div>
+      </div>
+    </li>
 
-<p>
-  <strong>Producer:</strong>
-  <%= if @wine.producer.nil? then 'Unknown' else @wine.producer.name end %>
-</p>
-<p>
-  <strong>Sub-region:</strong>
-  <%= if @wine.subregion.nil? then 'Unknown' else @wine.subregion.name end %>
-</p>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-sm-6">
+          <strong>Single estate:</strong>
+          <%= @wine.single_estate %>
+        </div>
+        <div class="col-sm-6">
+          <strong>Alcohol:</strong>
+          <%= @wine.alcohol %>
+        </div>
+      </div>
+    </li>
 
-<p>
-  <strong>Appellation:</strong>
-  <%= if @wine.appellation.nil? then 'Unknown' else @wine.appellation.name end %>
-</p>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-sm-6">
+          <strong>Note:</strong>
+          <%= @wine.note %>
+        </div>
+        <div class="col-sm-6">
+          <strong>Bottle Size:</strong>
+          <%= @wine.bottle_size %>
+        </div>
+      </div>
+    </li>
 
-<p>
-  <strong>Type:</strong>
-  <%= @wine.type.name %>
-</p>
-
-
-<% if @wine.composition %>
-<p>
-  <strong>Composition:</strong>
-  <%= @wine.composition.composition_grapes.map { |comp| comp.grape.name}.join(', ') %>
-</p>
-<% end %>
-
-<p>
-  <strong>Single estate:</strong>
-  <%= @wine.single_estate %>
-</p>
-
-<p>
-  <strong>Alcohol:</strong>
-  <%= @wine.alcohol %>
-</p>
-
-<p>
-  <strong>Note</strong>
-  <%= @wine.note %>
-</p>
-
-<p>
-  <strong>Maturation:</strong>
-  <%= if @wine.maturation.nil? then ' - ' else @wine.maturation.description end %>
-</p>
-
-<%= link_to 'Edit', edit_admin_wine_path(@wine) %>
-<%= link_to 'Back', admin_wines_path %>
+  </ul>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-xs-6">
+        <%= link_to admin_wines_path, class: 'btn btn-default' do %>
+            <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back
+        <% end %>
+        <%= link_to edit_admin_wine_path(@wine), class: 'btn btn-default' do %>
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+        <% end %>
+      </div>
+      <div class="col-xs-6 text-right">
+        <%= link_to admin_wine_path(@wine), method: :delete, data: {confirm: 'Are you sure?'}, class: 'btn btn-danger' do %>
+            <i class="glyphicon glyphicon-trash"></i>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,74 +1,81 @@
-<%= render :partial => "layouts/winemenu" %>
-
-  <div class="row">
-    <div class="col-md-12">
-      <table>
-        <tr>
-          <td style="vertical-align: bottom"><%= will_paginate @wines, :class => 'apple_pagination' %></td>
-          <td></td>
-        </tr>
-      </table>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="row">
+      <div class="col-md-3">
+        <h3 class="panel-title">Wines</h3>
+      </div>
+      <div class="col-md-9">
+        <%= will_paginate @wines, :class => 'vyne_pagination' %>
+      </div>
     </div>
   </div>
-  <div class="row top-buffer">
-    <div class="col-md-12">
-      <table class="table table-bordered">
-        <thead>
+
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>Id</th>
+      <th>Key</th>
+      <th>Origin</th>
+      <th>Name</th>
+      <th>Vintage</th>
+      <th>Producer</th>
+      <th>Region</th>
+      <th>Sub-region</th>
+      <th>Appellation</th>
+      <th>Type</th>
+      <th></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <% @wines.each do |wine| %>
         <tr>
-          <th>Id</th>
-          <th>Key</th>
-          <th>Origin</th>
-          <th>Name</th>
-          <th>Vintage</th>
-          <th>Producer</th>
-          <th>Region</th>
-          <th>Sub-region</th>
-          <th>Appellation</th>
-          <th>Type</th>
-          <th colspan="3"></th>
+          <td><%= wine.id %></td>
+          <td><%= wine.wine_key %></td>
+          <td>
+            <%= image_tag "flags/#{wine.producer.country.alpha_2}.png", :alt => wine.producer.country.name %>
+          </td>
+          <td><%= wine.name %></td>
+          <td><%= wine.vintage %></td>
+          <td><%= if wine.producer.nil? then
+                    ' - '
+                  else
+                    wine.producer.name
+                  end %></td>
+          <td><%= if wine.region.nil? then
+                    ' - '
+                  else
+                    wine.region.name
+                  end %></td>
+          <td><%= if wine.subregion.nil? then
+                    ' - '
+                  else
+                    wine.subregion.name
+                  end %></td>
+          <td><%= if wine.appellation.nil? then
+                    ' - '
+                  else
+                    wine.appellation.name
+                  end %></td>
+          <td><%= wine.type.name %></td>
+
+          <td class="button-wrapper">
+            <%= link_to admin_wine_path(wine), class: 'btn btn-default' do %>
+                <i class="glyphicon glyphicon-search"></i>
+            <% end %>
+
+          </td>
         </tr>
-        </thead>
-
-        <tbody>
-        <% @wines.each do |wine| %>
-            <tr>
-              <td><%= wine.id %></td>
-              <td><%= wine.wine_key %></td>
-              <td>
-                <%= image_tag "flags/#{wine.producer.country.alpha_2}.png", :alt => wine.producer.country.name %>
-              </td>
-              <td><%= wine.name %></td>
-              <td><%= wine.vintage %></td>
-              <td><%= if wine.producer.nil? then ' - ' else wine.producer.name end %></td>
-              <td><%= if wine.region.nil? then ' - ' else wine.region.name end %></td>
-              <td><%= if wine.subregion.nil? then ' - ' else wine.subregion.name end %></td>
-              <td><%= if wine.appellation.nil? then ' - ' else wine.appellation.name end %></td>
-              <td><%= wine.type.name %></td>
-
-              <td class="button-wrapper">
-                <%= link_to admin_wine_path(wine) do %>
-                    <i class="flaticon stroke zoom-1"></i>
-                <% end %>
-              </td>
-              <td class="button-wrapper">
-                <%= link_to edit_admin_wine_path(wine) do %>
-                    <i class="flaticon stroke pencil-2"></i>
-                <% end %>
-              </td>
-              <td class="button-wrapper">
-                <%= link_to admin_wine_path(wine), method: :delete, data: { confirm: 'Are you sure?' } do %>
-                    <i class="flaticon stroke trash-2"></i>
-                <% end %>
-              </td>
-            </tr>
-        <% end %>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
+    <% end %>
+    </tbody>
+  </table>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <%= link_to upload_admin_wines_path, class: 'btn btn-default' do %>
+          <i class="glyphicon glyphicon-cloud-upload" aria-hidden="true"></i> Upload
+      <% end %>
       <%= link_to 'New Wine', new_admin_wine_path, :class => 'btn btn-primary' %>
-      <%= link_to 'Upload Wine', { :controller => 'wines', :action => 'upload' }, :class => 'btn btn-primary'  %>
-    </div>
-  </div>
+    </li>
+  </ul>
+</div>
+

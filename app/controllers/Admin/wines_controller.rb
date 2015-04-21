@@ -1,78 +1,51 @@
 class Admin::WinesController < ApplicationController
   include WineImporter
 
-  layout "admin"
+  layout 'admin'
   before_filter :authenticate_user!
   authorize_actions_for AdminAuthorizer
   before_action :set_wine, only: [:show, :edit, :update, :destroy]
 
-  # GET /wines
-  # GET /wines.json
   def index
     @wines = Wine.order(:id).page(params[:page])
   end
 
-  # GET /wines/1
-  # GET /wines/1.json
   def show
   end
 
-  # GET /wines/new
   def new
     @wine = Wine.new
     fetch_data
   end
 
-  # GET /wines/1/edit
   def edit
     fetch_data
   end
 
-  # POST /wines
-  # POST /wines.json
   def create
 
-    puts json: params[:wine]
+      @wine = Wine.new(wine_params)
 
-    # Validating
-    if params[:wine][:name].empty? || params[:wine][:vintage].empty? || params[:wine][:producer_id].empty? ||
-        params[:wine][:type_id].empty?
-      fetch_data
-      @wine = Wine.new
-      flash.now[:alert] = 'Wine cannot be saved, please fill name, vintage and producer'
-      render :new
-    else
+      unless @wine.valid?
+        fetch_data
+        flash.now[:alert] = @wine.errors.full_messages.join(', ')
+        render :new
+        return
+      end
 
-      @wine = Wine.new
-
-      @wine.name = params[:wine][:name]
-      @wine.vintage = params[:wine][:vintage]
-      @wine.single_estate = params[:wine][:single_estate]
-      @wine.alcohol = params[:wine][:alcohol]
-      @wine.producer_id = params[:wine][:producer_id]
-      @wine.region_id = params[:wine][:region_id]
-      @wine.subregion_id = params[:wine][:subregion_id]
-      @wine.locale_id = params[:wine][:locale_id]
-      @wine.appellation_id = params[:wine][:appellation_id]
-      @wine.maturation_id = params[:wine][:maturation_id]
-      @wine.type_id = params[:wine][:type_id]
-      @wine.vinification_id = params[:wine][:vinification_id]
-      @wine.composition_id = params[:wine][:composition_id]
-      @wine.note = params[:wine][:note]
-      @wine.bottle_size = params[:wine][:bottle_size]
-
-      @wine.wine_key = WineImporter.create_wine_key_from_wine(@wine)
+      if params[:wine][:wine_key].blank?
+        @wine.wine_key = WineImporter.create_wine_key_from_wine(@wine)
+      else
+        @wine.wine_key = params[:wine][:wine_key]
+      end
 
       if @wine.save
-        respond_to do |format|
-          format.html { redirect_to [:admin, @wine], notice: 'Wine was successfully created.' }
-        end
+        redirect_to admin_wine_path(@wine), notice: 'Wine was successfully created.'
       else
         fetch_data
         flash.now[:alert] = @wine.errors.full_messages.join(', ')
         render :new
       end
-    end
   end
 
   def fetch_data
@@ -87,22 +60,24 @@ class Admin::WinesController < ApplicationController
     @vinifications = Vinification.all.order(:id)
   end
 
-  # PATCH/PUT /wines/1
-  # PATCH/PUT /wines/1.json
   def update
-    respond_to do |format|
-      if @wine.update(wine_params)
-        format.html { redirect_to [:admin, @wine], notice: 'Wine was successfully updated.' }
-        format.json { render :show, status: :ok, location: @wine }
-      else
-        format.html { render :edit }
-        format.json { render json: @wine.errors, status: :unprocessable_entity }
-      end
+
+    if params[:wine][:wine_key].blank?
+      @wine.wine_key = WineImporter.create_wine_key_from_wine(@wine)
+    else
+      @wine.wine_key = params[:wine][:wine_key]
     end
+
+    if @wine.update(wine_params)
+      redirect_to [:admin, @wine], notice: 'Wine was successfully updated.'
+    else
+      flash.now[:error] = @wine.errors.full_messages.join(', ')
+      fetch_data
+      render :edit
+    end
+
   end
 
-  # DELETE /wines/1
-  # DELETE /wines/1.json
   def destroy
     @wine.destroy
     respond_to do |format|
@@ -146,7 +121,7 @@ class Admin::WinesController < ApplicationController
     if results[:errors].blank?
       redirect_to admin_wines_path, notice: 'Wines were successfully uploaded.'
     else
-      redirect_to admin_wines_path, :flash => {:error => results[:errors].join(', ') }
+      redirect_to admin_wines_path, :flash => {:error => results[:errors].join(', ')}
     end
 
   end

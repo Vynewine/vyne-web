@@ -1,121 +1,98 @@
 <%= form_for([:admin, @wine]) do |f| %>
-    <% if @wine.errors.any? %>
-        <div id="error_explanation">
-          <h2><%= pluralize(@wine.errors.count, "error") %> prohibited this wine from being saved:</h2>
-          <ul>
-            <% @wine.errors.full_messages.each do |message| %>
-                <li><%= message %></li>
-            <% end %>
-          </ul>
-        </div>
-    <% end %>
 
-    <div class="field">
+    <div class="form-group">
       <%= f.label :wine_key %> - Leave blank to automatically create new one.<br>
-      <%= f.text_field :wine_key %>
+      <%= f.text_field :wine_key, :class => 'form-control' %>
     </div>
 
-    <div class="field">
+    <div class="form-group">
       <%= f.label :name %> <span style="color: red">*</span> <br>
-      <%= f.text_field :name %>
+      <%= f.text_field :name, :class => 'form-control' %>
     </div>
-    <div class="field">
-      <%= f.label :vintage %> <span style="color: red">*</span> <br>
-      <%= f.number_field :vintage %>
+
+    <div class="form-group">
+      <%= f.label :producer_id %> <span style="color: red">*</span> <br>
+      <%= f.select :producer_id, options_from_collection_for_select(@producers, 'id', 'name', :selected => @wine.producer_id),
+                   {:include_blank => 'Choose a Producer'},
+                   {:class => 'form-control'} %>
     </div>
-    <div class="field">
+
+    <div class="form-group">
+      <%= f.label :type_id %> <span style="color: red">*</span> <br>
+      <%= f.select :type_id,
+                   options_from_collection_for_select(@types, 'id', 'name', :selected => @wine.type_id),
+                   {:include_blank => 'Choose a Type'}, {:class => 'form-control'}
+      %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :vintage %>
+      <%= f.number_field :vintage, :class => 'form-control' %>
+    </div>
+    <div class="form-group">
       <%= f.label :single_estate %>
       <br>
       <%= f.check_box :single_estate %>
     </div>
-    <div class="field">
-      <%= f.label :alcohol %> (e.g "12.5")<br>
-      <%= f.number_field :alcohol, :step => 'any' %>% vol
+    <div class="form-group">
+      <%= f.label :alcohol %> (e.g "12.5") % vol<br>
+      <%= f.number_field :alcohol, :step => 'any', :class => 'form-control' %>
     </div>
 
-    <div class="field">
-      <%= f.label :producer_id %> <span style="color: red">*</span> <br>
-      <%= f.select :producer_id, options_from_collection_for_select(@producers, "id", "name", :selected => @wine.producer_id),
-                   :prompt => "Choose a Producer" %>
-    </div>
 
-    <div class="field">
+
+    <div class="form-group">
       <%= f.label :region_id %> <br>
       <%= f.select :region_id,
-                   options_from_collection_for_select(@regions, "id", "name", :selected => @wine.region_id),
-                   :prompt => "Choose a Region"
+                   options_from_collection_for_select(@regions, 'id', 'name', :selected => @wine.region_id),
+                   {:include_blank => 'Choose a Region'},
+                   {:class => 'form-control'}
       %>
     </div>
 
-    <div class="field">
+    <div class="form-group">
       <%= f.label :subregion_id %> (e.g "Pavia")<br>
       <%= f.select :subregion_id,
-                   options_from_collection_for_select(@subregions, "id", "name", :selected => @wine.subregion_id),
-                   :prompt => "Choose a Sub-region"
+                   options_from_collection_for_select(@subregions, 'id', 'name', :selected => @wine.subregion_id),
+                   {:include_blank => 'Choose a Sub-region'}, {:class => 'form-control'}
       %>
     </div>
 
-    <div class="field">
-      <%= f.label :local_id %><br>
+    <div class="form-group">
+      <%= f.label :locale_id %><br>
       <%= f.select :locale_id,
-                   options_from_collection_for_select(@locales, "id", "name", :selected => @wine.locale_id),
-                   :prompt => "Choose a Locale"
+                   options_from_collection_for_select(@locales, 'id', 'name', :selected => @wine.locale_id),
+                   {:include_blank => 'Choose a Locale'}, {:class => 'form-control'}
       %>
     </div>
 
-    <div class="field">
+    <div class="form-group">
       <%= f.label :appellation_id %> (e.g "Bonarda dell'Otrepo Pavese")<br>
       <%= f.select :appellation_id,
-                   options_from_collection_for_select(@appellations, "id", "name", :selected => @wine.appellation_id),
-                   :prompt => "Choose an Appellation"
+                   options_from_collection_for_select(@appellations, 'id', 'name', :selected => @wine.appellation_id),
+                   {:include_blank => 'Choose an Appellation'}, {:class => 'form-control'}
       %>
     </div>
 
-    <div class="field">
-      <%= f.label :maturation_id %> (e.g "Bonarda dell'Otrepo Pavese")<br>
-      <%= f.select :maturation_id,
-                   options_from_collection_for_select(@maturations, "id", "id", :selected => @wine.maturation_id),
-                   :prompt => "Choose a Maturation"
-      %>
-    </div>
-
-    <div class="field">
-      <%= f.label :type_id %> <span style="color: red">*</span> <br>
-      <%= f.select :type_id,
-                   options_from_collection_for_select(@types, "id", "name", :selected => @wine.type_id),
-                   :prompt => "Choose a Type"
-      %>
-    </div>
-
-    <div class="field">
+    <div class="form-group">
       <%= f.label :composition_id %><br>
       <%= f.select :composition_id,
-                   options_from_collection_for_select(@compositions, "id", "id", :selected => @wine.composition_id),
-                   :prompt => "Choose a Composition"
+                   options_from_collection_for_select(@compositions, 'id', 'details', :selected => @wine.composition_id),
+                   {:include_blank => 'Choose a Composition'}, {:class => 'form-control'}
       %>
     </div>
 
-    <div class="field">
-      <%= f.label :vinification_id %><br>
-      <%= f.select :vinification_id,
-                   options_from_collection_for_select(@compositions, "id", "id", :selected => @wine.vinification_id),
-                   :prompt => "Choose a Vinification"
-      %>
+    <div class="form-group">
+      <%= f.label :note, 'Note' %> (e.g "Fruity, floral, balanced")<br>
+      <%= f.text_field :note, :class => 'form-control' %>
     </div>
 
-    <div class="field">
-      <%= f.label :note, "Note" %> (e.g "Fruity, floral, balanced")<br>
-      <%= f.text_field :note %>
+    <div class="form-group">
+      <%= f.label :bottle_size, 'Bottle Size' %> (e.g 75, 150)<br>
+      <%= f.number_field :bottle_size, :class => 'form-control' %>
     </div>
-
-    <div class="field">
-      <%= f.label :bottle_size, "Bottle Size" %> (e.g 75, 150)<br>
-      <%= f.number_field :bottle_size %>
-    </div>
-
-
 
     <div class="actions">
-      <%= f.submit %>
+      <%= f.submit(:class => 'btn btn-success') %>
     </div>
 <% end %>

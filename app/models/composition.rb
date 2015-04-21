@@ -12,4 +12,8 @@ class Composition < ActiveRecord::Base
     text.join(', ')
   end
 
+  def details
+    "#{id} - #{to_s}"
+  end
+
 end
