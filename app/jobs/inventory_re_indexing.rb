@@ -10,6 +10,13 @@ class InventoryReIndexing
       wines.each do |wine_id|
         wine = Wine.find(wine_id)
         Sunspot.index wine
+
+        unless wine.inventories.blank?
+          wine.inventories.each do |inventory|
+            Sunspot.index inventory
+          end
+        end
+
       end
       Sunspot.commit
     end

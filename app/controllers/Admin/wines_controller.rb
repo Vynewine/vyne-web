@@ -41,6 +41,9 @@ class Admin::WinesController < ApplicationController
 
       if @wine.save
         redirect_to admin_wine_path(@wine), notice: 'Wine was successfully created.'
+
+        Resque.enqueue(InventoryReIndexing, [@wine.id])
+
       else
         fetch_data
         flash.now[:alert] = @wine.errors.full_messages.join(', ')
@@ -69,6 +72,9 @@ class Admin::WinesController < ApplicationController
     end
 
     if @wine.update(wine_params)
+
+      Resque.enqueue(InventoryReIndexing, [@wine.id])
+
       redirect_to [:admin, @wine], notice: 'Wine was successfully updated.'
     else
       flash.now[:error] = @wine.errors.full_messages.join(', ')
@@ -79,11 +85,11 @@ class Admin::WinesController < ApplicationController
   end
 
   def destroy
+    @wine.wine_key = "#{@wine.wine_key}-retired-#{@wine.id}"
+    @wine.save
     @wine.destroy
-    respond_to do |format|
-      format.html { redirect_to admin_wines_url, notice: 'Wine was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+
+    redirect_to admin_wines_url, notice: 'Wine was successfully destroyed.'
   end
 
   def upload
