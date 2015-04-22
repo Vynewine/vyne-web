@@ -140,3 +140,10 @@ gem 'logging-rails', :require => 'logging/rails'
 
 # Segment IO
 gem 'analytics-ruby', :require => 'segment/analytics'
+
+
+# Bower Gems
+source 'https://rails-assets.org' do
+  gem 'rails-assets-react-router'
+  gem 'rails-assets-flux'
+end
