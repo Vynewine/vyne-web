@@ -14,7 +14,8 @@ var Promotion = React.createClass({
                     <div>
                         <div className="row">
                             <div className="col-xs-12">
-                                <a href="/users/sign_up" className="btn btn-primary btn-sm" >Register your promotion here</a>
+                                <a href="/users/sign_up" className="btn btn-primary btn-sm">Register your promotion
+                                    here</a>
                             </div>
                         </div>
                     </div>
@@ -26,7 +27,7 @@ var Promotion = React.createClass({
                     <div className="row">
                         <div className="col-xs-12 promotion-message">
                             <i className="fa fa-gift"></i> {message}
-                        {signUpLink}
+                            {signUpLink}
                         </div>
                     </div>
                 </div>
@@ -56,7 +57,7 @@ var Promotion = React.createClass({
 
         return (
             <div>
-            {promotion_section}
+                {promotion_section}
             </div>
         )
     }
@@ -145,12 +146,13 @@ var CheckPostcode = React.createClass({
         return (
             <div>
                 <p className="animated fadeIn text-danger" style={errorLabelStyle}>Not a valid postcode</p>
+
                 <div className="form-group">
                     <input type="text" className="form-control postcode-input"
-                        placeholder="Enter postcode (e.g. EC4Y 8AU)"
-                        onChange={this.handleChange}
-                        value={this.state.filterPostcode}
-                    />
+                           placeholder="Enter postcode (e.g. EC4Y 8AU)"
+                           onChange={this.handleChange}
+                           value={this.state.filterPostcode}
+                        />
                 </div>
 
                 <p className={labelClass}>
@@ -189,8 +191,8 @@ var LiveDelivery = React.createClass({
                     <div className="form-group form-group-submit">
                         <form method="get" action="shop/neworder">
                             <button type="submit" className="btn btn-primary btn-lg app-btn">Now</button>
-                            <input name="warehouse_id" type="hidden" value={this.state.warehouse.id} />
-                            <input name="postcode" type="hidden" value={(this.state.filterPostcode)} />
+                            <input name="warehouse_id" type="hidden" value={this.state.warehouse.id}/>
+                            <input name="postcode" type="hidden" value={(this.state.filterPostcode)}/>
                         </form>
                     </div>
 
@@ -226,7 +228,7 @@ var LiveDelivery = React.createClass({
 
         return (
             <div>
-            {deliverNow}
+                {deliverNow}
             </div>
         );
     }
@@ -294,7 +296,7 @@ var BlockDelivery = React.createClass({
                     text = slot.day + ' (' + moment(slot.date).format('MMM Do') + ') ' + slot.from + ' - ' + slot.to;
                 }
 
-                options.push(<option key={key} data-value={JSON.stringify(slot)} value={key} >{text}</option>)
+                options.push(<option key={key} data-value={JSON.stringify(slot)} value={key}>{text}</option>)
             }.bind(this));
 
 
@@ -320,6 +322,7 @@ var BlockDelivery = React.createClass({
                             Enter your work postcode for&nbsp;
                             <strong>bookable daytime slots today</strong>
                         </h4>
+
                         <p>
                             <h4 className="circled-text">or</h4>
                         </p>
@@ -341,20 +344,21 @@ var BlockDelivery = React.createClass({
             deliverLater = (
                 <div>
 
-                {slotsMessage}
+                    {slotsMessage}
 
                     <form method="get" action="shop/neworder">
                         <div className="form-group">
                             <select className="form-control app-btn" onChange={this.selectSlot}>
-                            {options}
+                                {options}
                             </select>
                         </div>
 
-                        <input name="postcode" type="hidden" value={(this.state.filterPostcode)} />
-                        <input name="warehouse_id" type="hidden" value={this.state.slotWarehouse} />
-                        <input name="slot_date" type="hidden" value={this.state.slotDate} />
-                        <input name="slot_from" type="hidden" value={this.state.slotFrom} />
-                        <input name="slot_to" type="hidden" value={this.state.slotTo} />
+                        <input name="postcode" type="hidden" value={(this.state.filterPostcode)}/>
+                        <input name="warehouse_id" type="hidden" value={this.state.slotWarehouse}/>
+                        <input name="slot_date" type="hidden" value={this.state.slotDate}/>
+                        <input name="slot_from" type="hidden" value={this.state.slotFrom}/>
+                        <input name="slot_to" type="hidden" value={this.state.slotTo}/>
+
                         <div className="form-group">
                             <button type="submit" className="btn btn-primary btn-lg app-btn">Book Now</button>
                         </div>
@@ -376,8 +380,8 @@ var BlockDelivery = React.createClass({
 
         return (
             <div>
-            {or}
-            {deliverLater}
+                {or}
+                {deliverLater}
             </div>
         );
     }
@@ -435,6 +439,7 @@ var MailingList = React.createClass({
             error = (
                 <div>
                     <p className="animated fadeIn text-danger" style={errorLabelStyle}>{this.state.error}</p>
+
                     <p></p>
                 </div>
             );
@@ -452,21 +457,23 @@ var MailingList = React.createClass({
 
                     <div className="form-group form-group-submit">
                         <h4>Or we can let you know when we’re coming your way</h4>
+
                         <div className="form-group">
                             <input
                                 className="form-control app-btn postcode-input"
                                 type="text"
                                 placeholder="Email"
                                 onChange={this.handleChange}
-                            />
+                                />
                         </div>
                         <button
                             type="submit"
                             className="btn btn-primary btn-lg app-btn"
-                            onClick={this.signUp.bind(this, this.state.email)}>Sign Up</button>
+                            onClick={this.signUp.bind(this, this.state.email)}>Sign Up
+                        </button>
 
                     </div>
-                {error}
+                    {error}
                 </div>
             );
         } else if (this.state.showThankYou) {
@@ -481,7 +488,7 @@ var MailingList = React.createClass({
 
         return (
             <div>
-            {signupForm}
+                {signupForm}
             </div>
         );
     }
@@ -516,24 +523,24 @@ var Availability = React.createClass({
             <div>
                 <Promotion
                     deliveryOptions={this.state.deliveryOptions}
-                />
+                    />
                 <CheckPostcode
                     initialFilterPostcode={this.state.postcode}
                     onPostcodeChange={this.handlePostcodeChange}
                     deliveryOptions={this.state.deliveryOptions}
-                />
+                    />
                 <LiveDelivery
                     deliveryOptions={this.state.deliveryOptions}
                     initialFilterPostcode={this.state.postcode}
-                />
+                    />
                 <BlockDelivery
                     deliveryOptions={this.state.deliveryOptions}
                     initialFilterPostcode={this.state.postcode}
-                />
+                    />
                 <MailingList
                     deliveryOptions={this.state.deliveryOptions}
                     initialFilterPostcode={this.state.postcode}
-                />
+                    />
             </div>
         );
     }
@@ -614,7 +621,7 @@ var renderAvailability = function () {
             postCode = $.cookie('postcode')
         }
 
-        React.render(<Availability initialFilterPostcode={postCode} />,
+        React.render(<Availability initialFilterPostcode={postCode}/>,
             document.getElementById('availability-component'));
     }
 };

@@ -39,7 +39,7 @@ Rails.application.routes.draw do
 
   # ------------
 
-  resources :share, :help, :jobs, :availability, :merchants, :account
+  resources :share, :help, :jobs, :availability, :merchants, :account, :new
   resources :promo
   resources :delivery do
     collection do
