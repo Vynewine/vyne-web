@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150407163218) do
+ActiveRecord::Schema.define(version: 20150424092743) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,11 +23,11 @@ ActiveRecord::Schema.define(version: 20150407163218) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
-    t.spatial  "coordinates",  limit: {:srid=>0, :type=>"point"}
     t.string   "line_2"
     t.string   "company_name"
     t.string   "country"
     t.string   "city"
+    t.spatial  "coordinates",  limit: {:srid=>0, :type=>"point"}
   end
 
   add_index "addresses", ["deleted_at"], :name => "index_addresses_on_deleted_at"
@@ -100,6 +100,41 @@ ActiveRecord::Schema.define(version: 20150407163218) do
 
   add_index "bottlings", ["deleted_at"], :name => "index_bottlings_on_deleted_at"
 
+  create_table "cart_items", force: true do |t|
+    t.integer  "cart_id"
+    t.integer  "wine_id"
+    t.integer  "occasion_id"
+    t.integer  "type_id"
+    t.integer  "category_id"
+    t.string   "specific_wine"
+    t.integer  "quantity"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "cart_items", ["cart_id"], :name => "index_cart_items_on_cart_id"
+  add_index "cart_items", ["occasion_id"], :name => "index_cart_items_on_occasion_id"
+  add_index "cart_items", ["type_id"], :name => "index_cart_items_on_type_id"
+  add_index "cart_items", ["wine_id"], :name => "index_cart_items_on_wine_id"
+
+  create_table "carts", force: true do |t|
+    t.integer  "warehouse_id"
+    t.string   "client"
+    t.string   "postcode"
+    t.integer  "address_id"
+    t.integer  "payment_id"
+    t.datetime "expire_on"
+    t.datetime "merged_at"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "carts", ["address_id"], :name => "index_carts_on_address_id"
+  add_index "carts", ["payment_id"], :name => "index_carts_on_payment_id"
+  add_index "carts", ["warehouse_id"], :name => "index_carts_on_warehouse_id"
+
   create_table "categories", force: true do |t|
     t.string   "name"
     t.integer  "price"
@@ -161,6 +196,14 @@ ActiveRecord::Schema.define(version: 20150407163218) do
   add_index "devices", ["key"], :name => "index_devices_on_key", :unique => true
   add_index "devices", ["warehouse_id"], :name => "index_devices_on_warehouse_id"
 
+  create_table "devices_warehouses", id: false, force: true do |t|
+    t.integer  "device_id"
+    t.integer  "warehouse_id"
+    t.datetime "deleted_at"
+  end
+
+  add_index "devices_warehouses", ["deleted_at"], :name => "index_devices_warehouses_on_deleted_at"
+
   create_table "food_items", force: true do |t|
     t.integer  "order_item_id"
     t.integer  "food_id"
@@ -168,6 +211,7 @@ ActiveRecord::Schema.define(version: 20150407163218) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.integer  "cart_item_id"
   end
 
   add_index "food_items", ["deleted_at"], :name => "index_food_items_on_deleted_at"
@@ -551,6 +595,18 @@ ActiveRecord::Schema.define(version: 20150407163218) do
 
   add_index "vinifications", ["deleted_at"], :name => "index_vinifications_on_deleted_at"
 
+  create_table "warehouse_categories", force: true do |t|
+    t.integer  "warehouse_id"
+    t.integer  "category_id"
+    t.boolean  "enabled"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "warehouse_categories", ["category_id"], :name => "index_warehouse_categories_on_category_id"
+  add_index "warehouse_categories", ["warehouse_id"], :name => "index_warehouse_categories_on_warehouse_id"
+
   create_table "warehouse_promotions", force: true do |t|
     t.integer  "warehouse_id"
     t.integer  "promotion_id"
@@ -576,13 +632,13 @@ ActiveRecord::Schema.define(version: 20150407163218) do
     t.datetime "deleted_at"
     t.boolean  "active"
     t.boolean  "registered_with_shutl"
-    t.spatial  "delivery_area",         limit: {:srid=>0, :type=>"polygon"}
     t.string   "key"
     t.boolean  "house_available",                                            default: true
     t.boolean  "reserve_available",                                          default: true
     t.boolean  "fine_available",                                             default: true
     t.boolean  "cellar_available",                                           default: true
     t.datetime "active_from"
+    t.spatial  "delivery_area",         limit: {:srid=>0, :type=>"polygon"}
   end
 
   add_index "warehouses", ["address_id"], :name => "index_warehouses_on_address_id"
