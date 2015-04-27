@@ -9,7 +9,7 @@ var renderApp = function () {
             <Route name="app" path="/" handler={Main}>
                 <DefaultRoute handler={CheckPostcodeNewContainer}/>
                 <Route name="check-postcode" handler={CheckPostcodeNewContainer}/>
-                <Route name="check-availability" path="/check-availability/:postcode" handler={CheckAvailabilityContainer}/>
+                <Route name="check-availability" path="/check-availability/" handler={CheckAvailabilityContainer}/>
                 <Route name="choose-bottles" handler={ChooseBottles}/>
                 <Route name="match-by" handler={MatchBy}/>
             </Route>

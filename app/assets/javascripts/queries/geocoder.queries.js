@@ -19,7 +19,7 @@ var GeocoderQueries = Marty.createQueries({
             AddressCookieApi.setLat(latLng.lat);
             AddressCookieApi.setLng(latLng.lng);
 
-            this.dispatch(AppConstants.RECEIVE_COORDINATES, latLng);
+            this.dispatch(AddressConstants.RECEIVE_COORDINATES, latLng);
 
         }.bind(this));
     }

@@ -1,9 +1,9 @@
 var AddressStore = Marty.createStore({
     id: 'AddressStore',
     handlers: {
-        geocodePostcode: AppConstants.GEOCODE_POSTCODE,
-        validatePostcode: AppConstants.VALIDATE_POSTCODE,
-        receiveCoordinates: AppConstants.RECEIVE_COORDINATES
+        geocodePostcode: AddressConstants.GEOCODE_POSTCODE,
+        validatePostcode: AddressConstants.VALIDATE_POSTCODE,
+        receiveCoordinates: AddressConstants.RECEIVE_COORDINATES
     },
     getInitialState: function () {
 

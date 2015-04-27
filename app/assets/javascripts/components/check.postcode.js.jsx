@@ -19,8 +19,7 @@ var CheckPostcodeNew = React.createClass({
         });
 
         if(newProps.isValidPostcode && newProps.postcode) {
-            this.context.router.transitionTo('check-availability', {postcode: newProps.postcode})
-
+            this.context.router.transitionTo('check-availability')
         }
     },
     handlePostcodeChange: function (event) {
