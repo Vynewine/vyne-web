@@ -145,5 +145,6 @@ gem 'analytics-ruby', :require => 'segment/analytics'
 # Bower Gems
 source 'https://rails-assets.org' do
   gem 'rails-assets-react-router'
-  gem 'rails-assets-flux'
+  # gem 'rails-assets-flux'
+  gem 'rails-assets-marty'
 end

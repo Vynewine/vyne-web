@@ -1,12 +1,9 @@
-//= require flux
+//= require marty
 //= require react-router
+//= require_tree ./constants
+//= require_tree ./actions
+//= require_tree ./sources
+//= require_tree ./queries
+//= require_tree ./stores
 //= require_tree ./components
 //= require routes
-
-/**
- * GLOBALS
- */
-var Globals = {
-    postcode: '',
-    warehouseId: null
-};

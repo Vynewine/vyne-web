@@ -7,9 +7,9 @@ var renderApp = function () {
     if ($('#new-app').length) {
         var routes = (
             <Route name="app" path="/" handler={Main}>
-                <DefaultRoute handler={CheckPostcodeNew}/>
-                <Route name="check-postcode" handler={CheckPostcodeNew}/>
-                <Route name="check-availability" path="/check-availability/:postcode" handler={CheckAvailability}/>
+                <DefaultRoute handler={CheckPostcodeNewContainer}/>
+                <Route name="check-postcode" handler={CheckPostcodeNewContainer}/>
+                <Route name="check-availability" path="/check-availability/:postcode" handler={CheckAvailabilityContainer}/>
                 <Route name="choose-bottles" handler={ChooseBottles}/>
                 <Route name="match-by" handler={MatchBy}/>
             </Route>

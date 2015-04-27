@@ -1,28 +1,48 @@
 var CheckPostcodeNew = React.createClass({
     getInitialState: function () {
         return {
-            postcode: ''
+            postcode: '',
+            showInvalidPostcodeError: false
         };
     },
     contextTypes: {
         router: React.PropTypes.func
     },
     componentDidMount: function () {
-        if (Globals.postcode !== '') {
-            this.setState({postcode: Globals.postcode});
+        if (this.props.postcode !== '') {
+            this.setState({postcode: this.props.postcode});
+        }
+    },
+    componentWillReceiveProps: function (newProps) {
+        this.setState({
+            showInvalidPostcodeError: !newProps.isValidPostcode
+        });
+
+        if(newProps.isValidPostcode && newProps.postcode) {
+            this.context.router.transitionTo('check-availability', {postcode: newProps.postcode})
+
         }
     },
     handlePostcodeChange: function (event) {
         this.setState({postcode: event.target.value});
-        Globals.postcode = event.target.value;
     },
     handleCheckPostcode: function (event) {
         event.preventDefault();
-        this.context.router.transitionTo('check-availability', {postcode: this.state.postcode})
+        AddressActionCreators.validatePostcode(this.state.postcode);
     },
     render: function () {
+
+        var invalidPostcodeError = '';
+
+        if(this.state.showInvalidPostcodeError) {
+            invalidPostcodeError = (<p className="animated fadeIn text-danger">Not a valid postcode</p>);
+        } else {
+            invalidPostcodeError = '';
+        }
+
         return (
             <div>
+                {invalidPostcodeError}
                 <form className="form home-form">
                     <div className="form-group">
                         <input type="text" className="form-control postcode-input"
@@ -40,5 +60,17 @@ var CheckPostcodeNew = React.createClass({
                 </form>
             </div>
         );
+    }
+});
+
+var CheckPostcodeNewContainer = Marty.createContainer(CheckPostcodeNew, {
+    listenTo: AddressStore,
+    fetch: {
+        postcode() {
+            return AddressStore.getPostcode()
+        },
+        isValidPostcode(){
+            return AddressStore.isValidPostcode()
+        }
     }
 });
