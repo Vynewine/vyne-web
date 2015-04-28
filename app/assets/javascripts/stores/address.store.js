@@ -8,20 +8,16 @@ var AddressStore = Marty.createStore({
     getInitialState: function () {
 
         return {
-            isValidPostcode: false,
+            isValidPostcode: AddressCookieApi.isValidPostcode(),
             postcode: AddressCookieApi.getPostcode(),
-            lat: AddressCookieApi.getLat(),
-            lng: AddressCookieApi.getLng()
+            latLng: AddressCookieApi.getLatLng()
         };
     },
     getPostcode: function () {
         return this.state['postcode'];
     },
-    getLat: function () {
-        return this.state['lat'];
-    },
-    getLng: function () {
-        return this.state['lng'];
+    getLatLng: function () {
+        return this.state['latLng'];
     },
     isValidPostcode: function () {
         return this.state['isValidPostcode'];
@@ -34,6 +30,7 @@ var AddressStore = Marty.createStore({
             this.state['isValidPostcode'] = true;
             this.state['postcode'] = postcode;
             AddressCookieApi.setPostcode(postcode);
+            AddressCookieApi.setIsValidPostcode(true);
 
             analytics.track('Postcode validation', {
                 postcode: postcode,
@@ -43,6 +40,7 @@ var AddressStore = Marty.createStore({
             this.state['isValidPostcode'] = false;
             this.state['postcode'] = '';
             AddressCookieApi.setPostcode('');
+            AddressCookieApi.setIsValidPostcode(false);
 
             analytics.track('Postcode validation', {
                 postcode: postcode,
@@ -62,9 +60,7 @@ var AddressStore = Marty.createStore({
     },
     receiveCoordinates: function(latLng) {
 
-        this.state['lat'] = latLng.lat;
-        this.state['lng'] = latLng.lng;
-
+        this.state['latLng'] = latLng;
         this.hasChanged();
     }
 });

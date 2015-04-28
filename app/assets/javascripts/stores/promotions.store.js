@@ -10,10 +10,20 @@ var PromotionStore = Marty.createStore({
         };
     },
     getPromotion: function () {
-        return PromotionQueries.for(this).getPromotion();
+        return this.fetch({
+            id: 'promotion',
+            locally: function () {
+                if (this.hasAlreadyFetched('promotion')) {
+                    return this.state['promotion']
+                }
+            },
+            remotely: function () {
+                return PromotionQueries.for(this).getPromotion();
+            }
+        });
     },
     setPromotion: function (res) {
-        this.session['promotion'] = res.data;
+        this.state['promotion'] = res.data;
         this.hasChanged();
     }
 });

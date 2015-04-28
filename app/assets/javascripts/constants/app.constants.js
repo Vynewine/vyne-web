@@ -1,3 +1,7 @@
+var ErrorConstants = Marty.createConstants([
+    'SET_ERRORS'
+]);
+
 var AddressConstants = Marty.createConstants([
     'VALIDATE_POSTCODE',
     'GEOCODE_POSTCODE',

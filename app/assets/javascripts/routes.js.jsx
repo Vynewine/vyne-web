@@ -6,7 +6,7 @@ var Link = Router.Link;
 var renderApp = function () {
     if ($('#new-app').length) {
         var routes = (
-            <Route name="app" path="/" handler={Main}>
+            <Route name="app" path="/" handler={MainContainer}>
                 <DefaultRoute handler={CheckPostcodeNewContainer}/>
                 <Route name="check-postcode" handler={CheckPostcodeNewContainer}/>
                 <Route name="check-availability" path="/check-availability/" handler={CheckAvailabilityContainer}/>

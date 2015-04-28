@@ -5,14 +5,12 @@ var WarehouseStore = Marty.createStore({
         setWarehouse: WarehouseConstants.SET_WAREHOUSE
     },
     getInitialState: function () {
-        return {
-            weDeliver: false
-        };
+        return { };
     },
     weDeliver: function () {
         return this.state['weDeliver'];
     },
-    getByLocation: function (lat, lng) {
+    getByLocation: function (latLng) {
         //return this.fetch({
         //    id: String(lat) + String(lng),
         //    locally: function () {
@@ -23,7 +21,7 @@ var WarehouseStore = Marty.createStore({
         //    }
         //});
 
-        return WarehouseQueries.for(this).getWarehouseForLocation(lat, lng);
+        return WarehouseQueries.for(this).getWarehouseForLocation(latLng);
     },
     setWarehouse: function (res) {
         console.log(res);

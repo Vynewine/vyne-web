@@ -7,16 +7,19 @@ var AddressCookieApi = Marty.createStateSource({
     setPostcode: function (postcode) {
         this.set('postcode', postcode);
     },
-    getLat: function () {
-        return this.get('lat');
+    getLatLng: function () {
+        return {lat: this.get('lat'), lng: this.get('lng')};
     },
     setLat: function (lat) {
         return this.set('lat', lat);
     },
-    getLng: function () {
-        return this.get('lng');
-    },
     setLng: function (lng) {
         return this.set('lng', lng);
+    },
+    isValidPostcode() {
+        return this.get('isValidPostcode');
+    },
+    setIsValidPostcode(valid) {
+        return this.set('isValidPostcode', valid);
     }
 });

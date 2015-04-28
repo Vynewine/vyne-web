@@ -1,8 +1,7 @@
 var CheckAvailability = React.createClass({
     getInitialState: function () {
         return {
-            lat: 0,
-            lng: 0
+            latLng: {lat: 0, lng: 0}
         };
     },
     contextTypes: {
@@ -16,16 +15,15 @@ var CheckAvailability = React.createClass({
         //TODO: Do something else if postcode in a query was changed.
     },
     componentWillReceiveProps: function (newProps) {
-        if (newProps.lat && newProps.lng) {
+        if (newProps.latLng && newProps.latLng.lat && newProps.latLng.lng) {
 
-            if (this.state.lat !== newProps.lat || this.state.lng !== newProps.lng) {
+            if (this.state.latLng.lat !== newProps.latLng.lat || this.state.latLng.lng !== newProps.latLng.lng) {
 
                 this.setState({
-                    lat: newProps.lat,
-                    lng: newProps.lng
+                    latLng: newProps.latLng
                 });
 
-                WarehouseActionCreators.getByLocation(newProps.lat, newProps.lng);
+                WarehouseActionCreators.getByLocation(newProps.latLng);
             }
         }
     },
@@ -34,11 +32,11 @@ var CheckAvailability = React.createClass({
             <div>
                 <CheckAvailability.Promotion
                     promotion={this.props.promotion}
+                    weDeliver={this.props.weDeliver}
                     />
                 <CheckAvailability.Results
                     postcode={this.props.postcode}
-                    lat={this.props.lat}
-                    lng={this.props.lng}
+                    latLng={this.props.latLng}
                     weDeliver={this.props.weDeliver}
                     />
             </div>
@@ -52,8 +50,8 @@ CheckAvailability.Results = React.createClass({
             <div>
                 <div className="row">
                     <div>Selected: {this.props.postcode}</div>
-                    <div>lat: {this.props.lat}</div>
-                    <div>lng: {this.props.lng}</div>
+                    <div>lat: {this.props.latLng.lat}</div>
+                    <div>lng: {this.props.latLng.lng}</div>
                     <div>we deliver!: {String(this.props.weDeliver)}</div>
                 </div>
             </div>
@@ -96,23 +94,20 @@ CheckAvailability.Promotion = React.createClass({
         };
 
 
-        if (this.props.deliveryOptions.today_warehouse) {
+        if (this.props.promotion.code && typeof(this.props.weDeliver) !== 'undefined') {
 
-            if (this.props.deliveryOptions.promotion) {
+            var promotion = this.props.promotion;
 
-                var promotion = this.props.deliveryOptions.promotion;
+            if (!this.props.weDeliver) {
+                setPromotion('We currently don\'t deliver to your area. Register now and we\'ll save' +
+                ' your promotion in your account.', true);
 
-                if (!this.props.deliveryOptions.today_warehouse.id) {
-                    setPromotion('We currently don\'t deliver to your area. Register now and we\'ll save' +
-                    ' your promotion in your account.', true);
-
-                } else {
-                    setPromotion('Your promotion (code ' + promotion.code +
-                    ' - "' + promotion.title + '") will be applied to your order automatically upon checkout.', false);
-                }
             } else {
-                return false;
+                setPromotion('Your promotion (code ' + promotion.code +
+                ' - "' + promotion.title + '") will be applied to your order automatically upon checkout.', false);
             }
+        } else {
+            return false;
         }
 
 
@@ -130,11 +125,8 @@ var CheckAvailabilityContainer = Marty.createContainer(CheckAvailability, {
         postcode() {
             return AddressStore.getPostcode();
         },
-        lat() {
-            return AddressStore.getLat();
-        },
-        lng() {
-            return AddressStore.getLng();
+        latLng() {
+            return AddressStore.getLatLng();
         },
         isValidPostcode() {
             return AddressStore.isValidPostcode()
@@ -143,7 +135,14 @@ var CheckAvailabilityContainer = Marty.createContainer(CheckAvailability, {
             return WarehouseStore.weDeliver();
         },
         promotion(){
-            return PromotionStore.promotion();
+            return PromotionStore.getPromotion();
         }
+    },
+    pending() {
+        return <div className='loading'>Loading...</div>;
+    },
+    failed(errors) {
+        console.log(errors)
+        return <div className='error'>Failed to load room. {errors}</div>;
     }
 });
