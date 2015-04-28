@@ -53,10 +53,10 @@ class Admin::WinesController < ApplicationController
 
   def fetch_data
     @producers = Producer.all.order(:name)
-    @regions = Region.all.order(:name)
-    @subregions = Subregion.all.order(:name)
-    @locales = Locale.all.order(:name)
-    @appellations = Appellation.all.order(:name)
+    @regions = Region.joins(:country).order('countries.name, name')
+    @subregions = Subregion.joins(:region).order('regions.name, name')
+    @locales = Locale.joins(:subregion).order('subregions.name, name')
+    @appellations = Appellation.joins(:region).order('regions.name, name')
     @types = Type.all.order(:name)
     @compositions = Composition.all.order(:id)
     @maturations = Maturation.all.order(:id)

@@ -12,7 +12,7 @@
 
     <div class="form-group">
       <%= f.label :producer_id %> <span style="color: red">*</span> <br>
-      <%= f.select :producer_id, options_from_collection_for_select(@producers, 'id', 'name', :selected => @wine.producer_id),
+      <%= f.select :producer_id, options_from_collection_for_select(@producers, 'id', 'dropdown_label', :selected => @wine.producer_id),
                    {:include_blank => 'Choose a Producer'},
                    {:class => 'form-control'} %>
     </div>
@@ -44,7 +44,7 @@
     <div class="form-group">
       <%= f.label :region_id %> <br>
       <%= f.select :region_id,
-                   options_from_collection_for_select(@regions, 'id', 'name', :selected => @wine.region_id),
+                   options_from_collection_for_select(@regions, 'id', 'dropdown_label', :selected => @wine.region_id),
                    {:include_blank => 'Choose a Region'},
                    {:class => 'form-control'}
       %>
@@ -53,7 +53,7 @@
     <div class="form-group">
       <%= f.label :subregion_id %> (e.g "Pavia")<br>
       <%= f.select :subregion_id,
-                   options_from_collection_for_select(@subregions, 'id', 'name', :selected => @wine.subregion_id),
+                   options_from_collection_for_select(@subregions, 'id', 'dropdown_label', :selected => @wine.subregion_id),
                    {:include_blank => 'Choose a Sub-region'}, {:class => 'form-control'}
       %>
     </div>
@@ -61,7 +61,7 @@
     <div class="form-group">
       <%= f.label :locale_id %><br>
       <%= f.select :locale_id,
-                   options_from_collection_for_select(@locales, 'id', 'name', :selected => @wine.locale_id),
+                   options_from_collection_for_select(@locales, 'id', 'dropdown_label', :selected => @wine.locale_id),
                    {:include_blank => 'Choose a Locale'}, {:class => 'form-control'}
       %>
     </div>
@@ -69,7 +69,7 @@
     <div class="form-group">
       <%= f.label :appellation_id %> (e.g "Bonarda dell'Otrepo Pavese")<br>
       <%= f.select :appellation_id,
-                   options_from_collection_for_select(@appellations, 'id', 'name', :selected => @wine.appellation_id),
+                   options_from_collection_for_select(@appellations, 'id', 'dropdown_label', :selected => @wine.appellation_id),
                    {:include_blank => 'Choose an Appellation'}, {:class => 'form-control'}
       %>
     </div>
@@ -77,7 +77,7 @@
     <div class="form-group">
       <%= f.label :composition_id %><br>
       <%= f.select :composition_id,
-                   options_from_collection_for_select(@compositions, 'id', 'details', :selected => @wine.composition_id),
+                   options_from_collection_for_select(@compositions, 'id', 'dropdown_label', :selected => @wine.composition_id),
                    {:include_blank => 'Choose a Composition'}, {:class => 'form-control'}
       %>
     </div>
@@ -89,7 +89,7 @@
 
     <div class="form-group">
       <%= f.label :bottle_size, 'Bottle Size' %> (e.g 75, 150)<br>
-      <%= f.number_field :bottle_size, :class => 'form-control' %>
+      <%= f.number_field :bottle_size, :step => 'any', :class => 'form-control' %>
     </div>
 
     <div class="actions">
