@@ -8,3 +8,8 @@ var WarehouseConstants = Marty.createConstants([
     'GET_BY_LOCATION',
     'SET_WAREHOUSE'
 ]);
+
+var PromotionConstants = Marty.createConstants([
+    'GET_PROMOTION',
+    'SET_PROMOTION'
+]);

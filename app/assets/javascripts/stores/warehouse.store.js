@@ -27,7 +27,15 @@ var WarehouseStore = Marty.createStore({
     },
     setWarehouse: function (res) {
         console.log(res);
-        this.state['weDeliver'] = true;
+
+        if (res.data.today_warehouse) {
+            if (!res.data.today_warehouse.id) {
+                this.state['weDeliver'] = false;
+            } else {
+                this.state['weDeliver'] = true;
+            }
+        }
+
         this.hasChanged();
     }
 });
