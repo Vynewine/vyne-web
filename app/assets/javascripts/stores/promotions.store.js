@@ -4,11 +4,6 @@ var PromotionStore = Marty.createStore({
         getPromotion: PromotionConstants.GET_PROMOTION,
         setPromotion: PromotionConstants.SET_PROMOTION
     },
-    getInitialState: function () {
-        return {
-            weDeliver: false
-        };
-    },
     getPromotion: function () {
         return this.fetch({
             id: 'promotion',

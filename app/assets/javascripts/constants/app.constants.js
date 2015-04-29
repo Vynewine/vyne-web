@@ -3,9 +3,7 @@ var ErrorConstants = Marty.createConstants([
 ]);
 
 var AddressConstants = Marty.createConstants([
-    'VALIDATE_POSTCODE',
-    'GEOCODE_POSTCODE',
-    'RECEIVE_COORDINATES'
+    'SET_POSTCODE'
 ]);
 
 var WarehouseConstants = Marty.createConstants([

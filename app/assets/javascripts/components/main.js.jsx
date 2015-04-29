@@ -9,12 +9,20 @@ var Main = React.createClass({
         var name = this.context.router.getCurrentPath();
         return (
             <div>
-                This is main
-                <Link to="check-postcode" params={{postcode: "123"}}>Check Postcode</Link>
-                <Link to="choose-bottles">Choose Bottles</Link>
-                <Link to="match-by">Match By</Link>
 
-                <span>{this.props.errors}</span>
+                <div className="row">
+                    <div className="col-xs-12">
+                        <Link to="check-postcode" params={{postcode: "123"}}>Check Postcode</Link>
+                        <Link to="choose-bottles">Choose Bottles</Link>
+                        <Link to="match-by">Match By</Link>
+                    </div>
+                </div>
+
+                <div className="row">
+                    <div className="col-xs-12">
+                        <span>{this.props.errors}</span>
+                    </div>
+                </div>
 
                 <TimeoutTransitionGroup component="div"
                                         enterTimeout={500}
