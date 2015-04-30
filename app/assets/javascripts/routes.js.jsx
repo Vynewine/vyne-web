@@ -2,6 +2,7 @@ var Router = ReactRouter;
 var Route = Router.Route;
 var DefaultRoute = Router.DefaultRoute;
 var Link = Router.Link;
+var VyneRouter;
 
 var renderApp = function () {
     if ($('#new-app').length) {
@@ -15,7 +16,11 @@ var renderApp = function () {
             </Route>
         );
 
-        Router.run(routes, function (Handler) {
+        VyneRouter = Router.create({
+            routes: routes
+        });
+
+        VyneRouter.run(function (Handler) {
             React.render(<Handler/>, document.getElementById('new-app'));
         });
     }

@@ -9,7 +9,7 @@ var CheckAvailability = React.createClass({
     },
     componentWillReceiveProps: function (newProps) {
         if (newProps.latLng && newProps.latLng.lat && newProps.latLng.lng) {
-            return WarehouseStore.getByLocation(this.props.latLng);
+            return WarehouseStore.getByLocation(newProps.latLng);
         }
     },
     render: function () {
@@ -160,7 +160,11 @@ CheckAvailability.BlockDelivery = React.createClass({
             slotDate: this.state.date,
             slotFrom: this.state.from,
             slotTo: this.state.to
+        }).then(function() {
+
         });
+
+
     },
     selectSlot: function (event) {
         var slot = $(event.target).find("option:selected").data('value');

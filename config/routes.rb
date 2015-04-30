@@ -184,7 +184,10 @@ Rails.application.routes.draw do
 
   namespace :api, :defaults => {:format => :json} do
     namespace :v1 do
-      resources :cart, :warehouses, :promotions
+      resources :warehouses, :promotions
+      resources :cart do
+        resources :cart_items
+      end
     end
   end
 end

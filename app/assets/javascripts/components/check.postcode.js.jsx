@@ -17,10 +17,6 @@ var CheckPostcodeNew = React.createClass({
         this.setState({
             showInvalidPostcodeError: !newProps.isValidPostcode
         });
-
-        if(newProps.isValidPostcode) {
-            this.context.router.transitionTo('check-availability')
-        }
     },
     handlePostcodeChange: function (event) {
         this.setState({postcode: event.target.value});

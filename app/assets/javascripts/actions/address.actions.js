@@ -10,26 +10,56 @@ var AddressActionCreators = Marty.createActionCreators({
 
             valid = true;
 
-            var geocoder = new google.maps.Geocoder();
+            geocodePostcode(postcode, function(latLng) {
 
-            geocoder.geocode({'address': 'London+' + postcode + '+UK'}, function (results, status) {
+                if(latLng.lat && latLng.lng) {
 
-                var latLng = {
-                    lat: '',
-                    lng: ''
-                };
+                    this.dispatch(AddressConstants.SET_POSTCODE, postcode, valid, latLng);
 
-                if (status == google.maps.GeocoderStatus.OK) {
-                    latLng.lat = results[0].geometry.location.lat();
-                    latLng.lng = results[0].geometry.location.lng();
+                    VyneRouter.transitionTo('check-availability')
+
+                } else {
+                    this.dispatch(ErrorConstants.SET_ERRORS, ["We're sorry byt we couldn't find your postcode."]);
                 }
-
-                return this.dispatch(AddressConstants.SET_POSTCODE, postcode, valid, latLng);
 
             }.bind(this));
 
         } else {
             this.dispatch(AddressConstants.SET_POSTCODE, postcode, valid);
         }
+    },
+    // TODO: Should use Marty.rehydrate() for this?
+    initiate: function() {
+
+        var postcode = AddressCookieApi.getPostcode();
+
+        if(postcode) {
+            geocodePostcode(postcode, function(latLng) {
+                if(latLng.lat && latLng.lng) {
+                    this.dispatch(AddressConstants.SET_POSTCODE, postcode, true, latLng);
+                }
+            }.bind(this));
+        }
     }
 });
+
+var geocodePostcode = function(postcode, callback) {
+
+    var geocoder = new google.maps.Geocoder();
+
+    geocoder.geocode({'address': 'London+' + postcode + '+UK'}, function (results, status) {
+
+        var latLng = {
+            lat: null,
+            lng: null
+        };
+
+        if (status == google.maps.GeocoderStatus.OK) {
+
+            latLng.lat = results[0].geometry.location.lat();
+            latLng.lng = results[0].geometry.location.lng();
+        }
+
+        callback(latLng)
+    });
+};

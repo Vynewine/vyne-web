@@ -5,6 +5,10 @@ var Main = React.createClass({
     contextTypes: {
         router: React.PropTypes.func
     },
+    componentDidMount: function () {
+        AddressActionCreators.initiate();
+        CartActionCreators.initiate();
+    },
     render: function () {
         var name = this.context.router.getCurrentPath();
         return (

@@ -57,6 +57,15 @@ class API::V1::CartController < ApplicationController
 
   end
 
+  def show
+    cart = Cart.find(params[:id])
+
+    render :json => {
+               status: :success,
+               data: cart
+           }
+  end
+
   private
 
   def set_cart(cart)

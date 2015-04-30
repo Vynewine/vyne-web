@@ -1,6 +1,6 @@
-var CartHttpApi = Marty.createStateSource({
+var CartItemsHttpApi = Marty.createStateSource({
     type: 'http',
-    id: 'CartHttpApi',
+    id: 'CartItemsHttpApi',
     baseUrl: '/api/v1/cart',
     create: function (params) {
         return this.post({
@@ -27,8 +27,5 @@ var CartHttpApi = Marty.createStateSource({
                 slot_to: params.slotTo
             }
         });
-    },
-    show: function(cartId) {
-        return this.get('/' + cartId);
     }
 });
