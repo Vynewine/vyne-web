@@ -75,10 +75,16 @@ CheckAvailability.Results = React.createClass({
 });
 
 CheckAvailability.LiveDelivery = React.createClass({
-
+    bookLive: function () {
+        CartActionCreators.createOrUpdate({
+            postcode: this.props.postcode,
+            warehouseId: this.props.warehouse.id,
+            deliveryType: 'live'
+        });
+    },
     render: function () {
 
-        if(!this.props.weDeliver) {
+        if (!this.props.weDeliver) {
             return false;
         }
 
@@ -88,9 +94,8 @@ CheckAvailability.LiveDelivery = React.createClass({
             deliverNow = (
                 <div>
                     <div className="form-group form-group-submit">
-                        <form method="get" action="shop/neworder">
-                            <button type="submit" className="btn btn-primary btn-lg app-btn">Now</button>
-                        </form>
+                        <button type="submit" onClick={this.bookLive} className="btn btn-primary btn-lg app-btn">Now
+                        </button>
                     </div>
 
                     <h4>Delivery in minutes</h4>
@@ -131,6 +136,32 @@ CheckAvailability.LiveDelivery = React.createClass({
 });
 
 CheckAvailability.BlockDelivery = React.createClass({
+    componentDidMount: function () {
+        this.setFirstSlot(this.props.deliverySlots);
+    },
+    componentWillReceiveProps: function (nextProps) {
+        this.setFirstSlot(nextProps.deliverySlots)
+    },
+    setFirstSlot: function (deliverySlots) {
+        if (deliverySlots && deliverySlots.length) {
+            this.setState({
+                date: deliverySlots[0].date,
+                from: deliverySlots[0].from,
+                to: deliverySlots[0].to,
+                slotWarehouse: deliverySlots[0].warehouse_id
+            });
+        }
+    },
+    bookSlot: function () {
+        CartActionCreators.createOrUpdate({
+            postcode: this.props.postcode,
+            warehouseId: this.state.slotWarehouse,
+            deliveryType: 'scheduled',
+            slotDate: this.state.date,
+            slotFrom: this.state.from,
+            slotTo: this.state.to
+        });
+    },
     selectSlot: function (event) {
         var slot = $(event.target).find("option:selected").data('value');
         this.setState({
@@ -141,10 +172,11 @@ CheckAvailability.BlockDelivery = React.createClass({
             slotTo: slot.to,
             slotWarehouse: slot.warehouse_id
         });
+
     },
     render: function () {
 
-        if(!this.props.weDeliver) {
+        if (!this.props.weDeliver) {
             return false;
         }
 
@@ -213,18 +245,19 @@ CheckAvailability.BlockDelivery = React.createClass({
 
                     {slotsMessage}
 
-                    <form method="get" action="shop/neworder">
-                        <div className="form-group">
-                            <select className="form-control app-btn" onChange={this.selectSlot}>
-                                {options}
-                            </select>
-                        </div>
+                    <div className="form-group">
+                        <select className="form-control app-btn" onChange={this.selectSlot}>
+                            {options}
+                        </select>
+                    </div>
 
 
-                        <div className="form-group">
-                            <button type="submit" className="btn btn-primary btn-lg app-btn">Book Now</button>
-                        </div>
-                    </form>
+                    <div className="form-group">
+                        <button type="submit" onClick={this.bookSlot} className="btn btn-primary btn-lg app-btn">Book
+                            Now
+                        </button>
+                    </div>
+
                 </div>
 
             );
