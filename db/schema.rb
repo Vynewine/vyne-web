@@ -124,7 +124,7 @@ ActiveRecord::Schema.define(version: 20150424092743) do
     t.string   "postcode"
     t.integer  "address_id"
     t.integer  "payment_id"
-    t.integer  "delivery_type",       null: false
+    t.integer  "delivery_type"
     t.datetime "delivery_expires_on"
     t.json     "delivery_schedule"
     t.datetime "expire_on"

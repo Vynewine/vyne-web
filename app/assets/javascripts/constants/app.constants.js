@@ -20,3 +20,7 @@ var CartConstants = Marty.createConstants([
     'SET_CART',
     'RESET_CART'
 ]);
+
+var CartItemsConstants = Marty.createConstants([
+    'SET_CART_ITEM'
+]);

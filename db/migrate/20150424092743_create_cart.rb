@@ -6,7 +6,7 @@ class CreateCart < ActiveRecord::Migration
       t.string :postcode
       t.references :address, index: true
       t.references :payment, index: true
-      t.integer :delivery_type, null: false
+      t.integer :delivery_type
       t.datetime :delivery_expires_on
       t.json :delivery_schedule
       t.datetime :expire_on, index: true

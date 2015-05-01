@@ -186,6 +186,8 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :warehouses, :promotions
       resources :cart do
+        post :create_item
+        post :update_item
         resources :cart_items
       end
     end
