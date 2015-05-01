@@ -1,6 +1,6 @@
 <!-- HEADER
   ================================= -->
-<header id="header" class="header-section section section-dark navbar navbar-fixed-top">
+<header id="header" class="header-section section section-dark navbar navbar-fixed-top <% if controller_name == 'posts' || controller_name == 'tags' %>posts<% end %> ">
 
   <div class="container-fluid">
 
@@ -95,7 +95,7 @@
 
         <% else %>
             <li>
-              <%= link_to 'Sign in', login_path, class: 'external' %>
+              <%= link_to 'Sign in', main_app.login_path, class: 'external' %>
             </li>
         <% end %>
 

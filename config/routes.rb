@@ -2,6 +2,8 @@ require 'resque/server'
 
 Rails.application.routes.draw do
 
+  mount Monologue::Engine, at: '/book-of-vyne'
+
   namespace :admin do
     get 'advisors/index'
   end
@@ -181,6 +183,7 @@ Rails.application.routes.draw do
   end
 
   mount Resque::Server.new, at: '/resque'
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

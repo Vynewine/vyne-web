@@ -647,6 +647,9 @@ iframe {
         box-shadow: none;
         min-height: 60px;
     }
+    &.posts {
+        background-color: rgba(0, 0, 0, 0.85);
+    }
 }
 
 .navbar-nav {
@@ -2403,6 +2406,12 @@ body.enable-preloader {
     text-align: center;
 }
 
+/**
+ * ========================================
+ * REACT TRANSITIONS
+ * ========================================
+ */
+
 .example-enter {
     opacity: 0.01;
     transition: opacity .5s ease-in;
@@ -2419,4 +2428,21 @@ body.enable-preloader {
 
 .example-leave.example-leave-active {
     opacity: 0.01;
+}
+
+/**
+ * ========================================
+ * BLOG
+ * ========================================
+ */
+
+.tags {
+    margin: 10px 0 0 0;
+}
+.tag {
+    margin: 0 5px 0 0;
+}
+
+.social-tagline {
+    padding: 0 0 10px 0;
 }

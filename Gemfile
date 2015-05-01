@@ -140,3 +140,6 @@ gem 'logging-rails', :require => 'logging/rails'
 
 # Segment IO
 gem 'analytics-ruby', :require => 'segment/analytics'
+
+# Blog
+gem 'monologue'

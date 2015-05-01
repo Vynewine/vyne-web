@@ -1,0 +1,15 @@
+<section class="section section-gray">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
+
+        <div class="tag-search">
+          <%= t('.showing_post_with_tag') %>
+          <strong>'<%= @tag.name %>'</strong>. <%= link_to t('.show_all_posts'), :root %>
+        </div>
+
+        <%= render @posts %>
+      </div>
+    </div>
+  </div>
+</section>
