@@ -142,4 +142,4 @@ gem 'logging-rails', :require => 'logging/rails'
 gem 'analytics-ruby', :require => 'segment/analytics'
 
 # Blog
-gem 'monologue'
+gem 'monologue', :git => 'https://github.com/jipiboily/monologue.git'
