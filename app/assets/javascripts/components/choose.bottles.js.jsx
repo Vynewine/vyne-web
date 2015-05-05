@@ -2,9 +2,18 @@ var Router = ReactRouter;
 var Link = Router.Link;
 
 var ChooseBottles = React.createClass({
+    componentDidMount: function () {
+        if(!this.props.cart) {
+            VyneRouter.transitionTo('/');
+        }
+    },
     chooseBottle: function (id, e) {
         e.preventDefault();
-        console.log(id);
+
+        CartActionCreators.createOrUpdateItem({
+            categoryId: id,
+            itemId: this.props.currentCartItemId
+        });
     },
     render: function () {
         return (
@@ -47,5 +56,17 @@ var ChooseBottles = React.createClass({
                 </div>
             </div>
         );
+    }
+});
+
+var ChooseBottlesContainer = Marty.createContainer(ChooseBottles, {
+    listenTo: CartStore,
+    fetch: {
+        cart() {
+            return CartStore.getCart()
+        },
+        currentCartItemId() {
+            return CartStore.currentCartItemId()
+        }
     }
 });

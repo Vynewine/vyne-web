@@ -141,7 +141,7 @@ gem 'logging-rails', :require => 'logging/rails'
 # Segment IO
 gem 'analytics-ruby', :require => 'segment/analytics'
 
-Blog
+# Blog
 gem 'monologue', :git => 'https://github.com/jipiboily/monologue.git'
 
 # Bower Gems

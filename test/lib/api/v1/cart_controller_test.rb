@@ -46,4 +46,14 @@ class API::V1::CartControllerTest < ActionController::TestCase
 
     assert_equal(cart.id.to_s, @response.cookies['cart_id'])
   end
+
+  test 'Will create cart item' do
+    cart = carts(:anonymous)
+    post :create_item, :cart_id => cart.id, :category_id => 2
+
+    cart_items = CartItem.where(cart_id: cart.id)
+
+    assert_equal(1, cart_items.length)
+    assert_equal(2, cart_items[0].category_id)
+  end
 end

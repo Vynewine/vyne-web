@@ -16,7 +16,7 @@ class CreateCart < ActiveRecord::Migration
     end
 
     create_table :cart_items do |t|
-      t.references :cart, index: true
+      t.references :cart, index: true, null: false
       t.references :wine, index: true
       t.references :occasion, index: true
       t.references :type, index: true

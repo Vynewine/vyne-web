@@ -6,8 +6,7 @@ var Main = React.createClass({
         router: React.PropTypes.func
     },
     componentDidMount: function () {
-        AddressActionCreators.initiate();
-        CartActionCreators.initiate();
+
     },
     render: function () {
         var name = this.context.router.getCurrentPath();

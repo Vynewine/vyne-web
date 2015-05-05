@@ -28,7 +28,6 @@ var AddressActionCreators = Marty.createActionCreators({
             this.dispatch(AddressConstants.SET_POSTCODE, postcode, valid);
         }
     },
-    // TODO: Should use Marty.rehydrate() for this?
     initiate: function() {
 
         var postcode = AddressCookieApi.getPostcode();

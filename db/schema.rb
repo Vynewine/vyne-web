@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150501100564) do
+ActiveRecord::Schema.define(version: 20150505092743) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -101,7 +101,7 @@ ActiveRecord::Schema.define(version: 20150501100564) do
   add_index "bottlings", ["deleted_at"], :name => "index_bottlings_on_deleted_at"
 
   create_table "cart_items", force: true do |t|
-    t.integer  "cart_id"
+    t.integer  "cart_id",       null: false
     t.integer  "wine_id"
     t.integer  "occasion_id"
     t.integer  "type_id"

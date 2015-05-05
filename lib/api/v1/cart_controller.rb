@@ -16,14 +16,14 @@ class API::V1::CartController < ApplicationController
           :expires => cart.expire_on
       }
 
-      render :json => {
-                 status: :success,
-                 data: cart
-             }
+      @cart = cart
+
+      render :show
+
     else
       render :json => {
                  status: :failure,
-                 messages: cart.errors.full_messages
+                 errors: cart.errors.full_messages
              }
     end
   end
@@ -44,48 +44,71 @@ class API::V1::CartController < ApplicationController
           :expires => cart.expire_on
       }
 
-      render :json => {
-                 status: :success,
-                 data: cart
-             }
+      @cart = cart
+
+      render :show
+
     else
       render :json => {
                  status: :failure,
-                 messages: cart.errors.full_messages
+                 errors: cart.errors.full_messages
              }
     end
 
   end
 
   def show
-    cart = Cart.find(params[:id])
-
-    render :json => {
-               status: :success,
-               data: cart
-           }
+    @cart = Cart.find(params[:id])
   end
 
   def create_item
-    cart_item = CartItem.new({
-                                 cart_id: params[:id]
+
+    @cart_item = CartItem.new({
+                                 cart_id: params[:cart_id]
                              })
 
     unless params[:category_id].blank?
-      cart_item.category_id = params[:category_id]
+      @cart_item.category_id = params[:category_id]
     end
 
-    if cart_item.save
-      render :json => {
-                 status: :success,
-                 data: cart_item
-             }
+    if @cart_item.save
+      @cart = @cart_item.cart
+      render :show_item
     else
       render :json => {
                  status: :failure,
-                 messages: cart_item.errors.full_messages
+                 errors: @cart_item.errors.full_messages
              }
     end
+  end
+
+  def update_item
+
+    if params[:item_id].blank?
+      render :json => {
+                 status: :failure,
+                 errors: ['Cart item id required']
+             }, status: :unprocessable_entity
+
+      return
+    end
+
+    @cart_item = CartItem.find(params[:item_id])
+
+    unless params[:category_id].blank?
+      @cart_item.category_id = params[:category_id]
+    end
+
+    if @cart_item.save
+      @cart = @cart_item.cart
+      render :show_item
+    else
+      render :json => {
+                 status: :failure,
+                 errors: @cart_item.errors.full_messages
+             }
+    end
+
   end
 
   private

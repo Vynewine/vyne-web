@@ -191,7 +191,6 @@ Rails.application.routes.draw do
       resources :cart do
         post :create_item
         post :update_item
-        resources :cart_items
       end
     end
   end

@@ -4,6 +4,7 @@ var AddressStore = Marty.createStore({
         setPostcode: AddressConstants.SET_POSTCODE
     },
     getInitialState: function () {
+        AddressActionCreators.initiate();
 
         return {
             postcode: AddressCookieApi.getPostcode()
