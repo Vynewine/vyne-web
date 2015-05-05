@@ -16,4 +16,16 @@ class Composition < ActiveRecord::Base
     "#{id} - #{to_s}"
   end
 
+  def dropdown_label
+    label = "#{id} - "
+
+    unless name.blank?
+      label += " #{name},"
+    end
+
+    label += " #{to_s}"
+
+    label
+  end
+
 end

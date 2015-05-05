@@ -3,4 +3,15 @@ class Appellation < ActiveRecord::Base
 
   belongs_to :region
   validates :name, :region_id, :presence => true
+
+  def dropdown_label
+    label = ''
+
+    unless region.blank?
+      label += "#{region.name} - "
+    end
+
+    label += name
+
+  end
 end

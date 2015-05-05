@@ -1,0 +1,25 @@
+<% content_for :title do %><%= @post.title %><% end %>
+
+<% content_for :meta_description do %><%= truncate(strip_tags(@post.content), length: 155) %><% end %>
+
+<section class="section section-gray">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
+        <article>
+          <%= render partial: 'monologue/posts/post_header', locals: {post: @post} %>
+          <div class="content" data-monologue="content">
+            <%= raw @post.content %>
+          </div>
+
+          <div class="tags" data-monologue="tags">
+            Tags: <%= render @post.tags %>
+          </div>
+
+          <%= render 'monologue/posts/social_sharing' %>
+
+        </article>
+      </div>
+    </div>
+  </div>
+</section>

@@ -2,6 +2,8 @@ require 'resque/server'
 
 Rails.application.routes.draw do
 
+  mount Monologue::Engine, at: '/book-of-vyne'
+
   namespace :admin do
     get 'advisors/index'
   end
@@ -181,6 +183,7 @@ Rails.application.routes.draw do
   end
 
   mount Resque::Server.new, at: '/resque'
+
 
   namespace :api, :defaults => {:format => :json} do
     namespace :v1 do

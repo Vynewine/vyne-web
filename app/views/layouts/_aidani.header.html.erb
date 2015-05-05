@@ -1,6 +1,6 @@
 <!-- HEADER
   ================================= -->
-<header id="header" class="header-section section section-dark navbar navbar-fixed-top">
+<header id="header" class="header-section section section-dark navbar navbar-fixed-top <% if controller_name == 'posts' || controller_name == 'tags' %>posts<% end %> ">
 
   <div class="container-fluid">
 
@@ -56,6 +56,8 @@
             <li><a href="/#about" class="external">Discover</a></li>
         <% end %>
 
+        <li><a href="/book-of-vyne" class="external">Book of vyne</a></li>
+
         <% if user_signed_in? %>
 
             <li class="dropdown">
@@ -64,12 +66,12 @@
               <ul class="dropdown-menu" role="menu">
                 <li><a href="/account" class="external"><i class="fa fa-user"></i> Account</a></li>
                 <li>
-                  <%= link_to mywines_path, class: 'external' do %>
+                  <%= link_to main_app.mywines_path, class: 'external' do %>
                       <i class="fa fa-briefcase"></i> My Wines
                   <% end %>
                 </li>
                 <li>
-                  <%= link_to promo_index_path, class: 'external' do %>
+                  <%= link_to main_app.promo_index_path, class: 'external' do %>
                       <i class="fa fa-gift"></i> Promotions
                   <% end %>
                 </li>
@@ -78,14 +80,14 @@
                         current_user.has_role?(:superadmin)
                 %>
                     <li>
-                      <%= link_to admin_root_path, data: {no_turbolink: true}, class: 'external' do %>
+                      <%= link_to main_app.admin_root_path, data: {no_turbolink: true}, class: 'external' do %>
                           <i class="fa fa-cog"></i> Admin
                       <% end %>
                     </li>
                 <% end %>
                 <li class="divider"></li>
                 <li>
-                  <%= link_to logout_path, :method => :delete, class: 'external', id: 'logout' do %>
+                  <%= link_to main_app.logout_path, :method => :delete, class: 'external', id: 'logout' do %>
                       <i class="fa fa-sign-out"></i> Sign Out
                   <% end %>
                 </li>
@@ -95,7 +97,7 @@
 
         <% else %>
             <li>
-              <%= link_to 'Sign in', login_path, class: 'external' %>
+              <%= link_to 'Sign in', main_app.login_path, class: 'external' %>
             </li>
         <% end %>
 
