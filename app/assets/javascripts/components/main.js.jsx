@@ -39,7 +39,7 @@ var Main = React.createClass({
 var MainContainer = Marty.createContainer(Main, {
     listenTo: [ErrorsStore],
     fetch: {
-        errors() {
+        errors: function() {
             return ErrorsStore.errors();
         }
     }

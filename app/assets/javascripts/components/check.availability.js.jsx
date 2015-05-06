@@ -289,35 +289,35 @@ CheckAvailability.BlockDelivery = React.createClass({
 var CheckAvailabilityContainer = Marty.createContainer(CheckAvailability, {
     listenTo: [AddressStore, WarehouseStore],
     fetch: {
-        postcode() {
+        postcode: function() {
             return AddressStore.getPostcode();
         },
-        latLng() {
+        latLng: function() {
             return AddressStore.getLatLng();
         },
-        warehouse() {
+        warehouse: function() {
             return WarehouseStore.warehouse();
         },
-        weDeliver() {
+        weDeliver: function() {
             return WarehouseStore.weDeliver();
         },
-        liveDeliveryEnabled(){
+        liveDeliveryEnabled: function(){
             return WarehouseStore.liveDeliveryEnabled();
         },
-        nextOpenWarehouse() {
+        nextOpenWarehouse: function() {
             return WarehouseStore.nextOpenWarehouse();
         },
-        deliverySlots() {
+        deliverySlots: function() {
             return WarehouseStore.deliverySlots();
         },
-        daytimeSlotsAvailable() {
+        daytimeSlotsAvailable: function() {
             return WarehouseStore.daytimeSlotsAvailable();
         }
     },
-    pending() {
+    pending: function() {
         return <div className='loading'>Loading...</div>;
     },
-    failed(errors) {
+    failed: function(errors) {
         console.log(errors)
         return <div className='error'>Failed to load. {errors}</div>;
     }

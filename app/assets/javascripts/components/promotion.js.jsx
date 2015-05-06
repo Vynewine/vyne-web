@@ -57,14 +57,14 @@ PromotionHeader = React.createClass({
 var PromotionHeaderContainer = Marty.createContainer(PromotionHeader, {
     listenTo: [PromotionStore],
     fetch: {
-        promotion(){
+        promotion: function(){
             return PromotionStore.getPromotion();
         }
     },
-    pending() {
+    pending: function() {
         return <div className='loading'>Loading Promotion...</div>;
     },
-    failed(errors) {
+    failed: function(errors) {
         console.log(errors)
         return <div className='error'>Failed to load promotion. {errors}</div>;
     }

@@ -25,14 +25,14 @@ CartReview = React.createClass({
 var CartReviewContainer = Marty.createContainer(CartReview, {
     listenTo: [CartStore],
     fetch: {
-        cart() {
+        cart: function() {
             return CartStore.getCart();
         }
     },
-    pending() {
+    pending: function() {
         return <div className='loading'>Loading...</div>;
     },
-    failed(errors) {
+    failed: function(errors) {
         console.log(errors)
         return <div className='error'>Failed to load. {errors}</div>;
     }

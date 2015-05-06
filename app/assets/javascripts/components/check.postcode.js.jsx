@@ -61,10 +61,10 @@ var CheckPostcodeNew = React.createClass({
 var CheckPostcodeNewContainer = Marty.createContainer(CheckPostcodeNew, {
     listenTo: AddressStore,
     fetch: {
-        postcode() {
+        postcode: function() {
             return AddressStore.getPostcode()
         },
-        isValidPostcode(){
+        isValidPostcode: function(){
             return AddressStore.isValidPostcode()
         }
     }

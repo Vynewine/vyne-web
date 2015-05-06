@@ -59,10 +59,10 @@ var ChooseBottles = React.createClass({
 var ChooseBottlesContainer = Marty.createContainer(ChooseBottles, {
     listenTo: CartStore,
     fetch: {
-        cart() {
+        cart: function() {
             return CartStore.getCart()
         },
-        currentCartItemId() {
+        currentCartItemId: function() {
             return CartStore.currentCartItemId()
         }
     }
