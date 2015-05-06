@@ -18,9 +18,18 @@ var renderApp = function () {
                     <Route name="match-by-food-category" path="/match-by/food/category" handler={MatchByFood.Category}/>
                     <Route name="match-by-food-type" path="/match-by/food/type" handler={MatchByFood.Type}/>
                     <Route name="match-by-food-preparation" path="/match-by/food/preparation" handler={MatchByFood.Preparation}/>
+                    <Route name="match-by-food-review" path="/match-by/food/review" handler={MatchByFood.Review}/>
                 </Route>
                 <Route name="match-by-occasion" path="/match-by/occasion" handler={MatchByOccasion}/>
                 <Route name="match-by-specific-wine" path="/match-by/specific-wine" handler={MatchBySpecificWine}/>
+                <Route name="cart-review" path="/cart-review" handler={CartReviewContainer}/>
+                <Route name="account" path="/account" handler={Account}>
+                    <DefaultRoute handler={Account.Register}/>
+                    <Route name="account-register" path="/account/register" handler={Account.Register}/>
+                    <Route name="account-login" path="/account/login" handler={Account.Login}/>
+                </Route>
+                <Route name="address" path="/address" handler={Address}/>
+                <Route name="payment" path="/payment" handler={Payment}/>
             </Route>
         );
 
