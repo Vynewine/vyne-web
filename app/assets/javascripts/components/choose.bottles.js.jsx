@@ -1,6 +1,3 @@
-var Router = ReactRouter;
-var Link = Router.Link;
-
 var ChooseBottles = React.createClass({
     componentDidMount: function () {
         if(!this.props.cart) {

@@ -20,7 +20,11 @@ var renderApp = function () {
                     <Route name="match-by-food-preparation" path="/match-by/food/preparation" handler={MatchByFood.Preparation}/>
                     <Route name="match-by-food-review" path="/match-by/food/review" handler={MatchByFood.Review}/>
                 </Route>
-                <Route name="match-by-occasion" path="/match-by/occasion" handler={MatchByOccasion}/>
+                <Route name="match-by-occasion" path="/match-by/occasion" handler={MatchByOccasion}>
+                    <DefaultRoute handler={MatchByOccasion.Occasions}/>
+                    <Route name="match-by-occasion-select-occasion" path="/match-by/occasion/select-occasion" handler={MatchByOccasion.Occasions}/>
+                    <Route name="match-by-occasion-select-type" path="/match-by/occasion/select-wine-type" handler={MatchByOccasion.WineTypes}/>
+                </Route>
                 <Route name="match-by-specific-wine" path="/match-by/specific-wine" handler={MatchBySpecificWine}/>
                 <Route name="cart-review" path="/cart-review" handler={CartReviewContainer}/>
                 <Route name="account" path="/account" handler={Account}>

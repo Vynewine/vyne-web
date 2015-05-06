@@ -1,6 +1,3 @@
-var Router = ReactRouter;
-
-
 var Main = React.createClass({
     contextTypes: {
         router: React.PropTypes.func

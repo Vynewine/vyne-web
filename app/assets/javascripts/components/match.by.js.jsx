@@ -1,25 +1,13 @@
-var Router = ReactRouter;
-var Link = Router.Link;
-
-
 var MatchBy = React.createClass({
-    getInitialState: function () {
-        return {
-            specificWine: ''
-        };
-    },
-    handleSpecificWineChange: function (event) {
-        this.setState({specificWine: event.target.value});
-    },
-    matchByFood: function (e) {
+    handleMatchByFood: function (e) {
         e.preventDefault();
         VyneRouter.transitionTo('match-by-food');
     },
-    matchByOccasion: function (e) {
+    handleMatchByOccasion: function (e) {
         e.preventDefault();
         VyneRouter.transitionTo('match-by-occasion');
     },
-    matchBySpecificWine: function (e) {
+    handleMatchBySpecificWine: function (e) {
         e.preventDefault();
         VyneRouter.transitionTo('match-by-specific-wine');
     },
@@ -33,7 +21,7 @@ var MatchBy = React.createClass({
                             <div className="col-sm-12">
                                 <button
                                     className="btn btn-primary"
-                                    onClick={this.matchByFood}
+                                    onClick={this.handleMatchByFood}
                                     >Food
                                 </button>
                             </div>
@@ -42,21 +30,16 @@ var MatchBy = React.createClass({
                             <div className="col-sm-12">
                                 <button
                                     className="btn btn-primary"
-                                    onClick={this.matchByOccasion}
+                                    onClick={this.handleMatchByOccasion}
                                     >Occasion
                                 </button>
                             </div>
                         </div>
                         <div className="row">
                             <div className="col-sm-12">
-                                <input type="text" className="form-control postcode-input"
-                                       placeholder="Enter postcode (e.g. EC4Y 8AU)"
-                                       onChange={this.handleSpecificWineChange}
-                                       value={this.state.specificWine}
-                                    />
                                 <button
                                     className="btn btn-primary"
-                                    onClick={this.matchBySpecificWine}
+                                    onClick={this.handleMatchBySpecificWine}
                                     >Specific Wine
                                 </button>
                             </div>
