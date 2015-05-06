@@ -2446,3 +2446,40 @@ body.enable-preloader {
 .social-tagline {
     padding: 0 0 10px 0;
 }
+
+.blog-heading {
+    position: relative;
+    padding-bottom: 20px;
+    margin: 0 0 30px;
+    font-family: "Montserrat", sans-serif;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    &:after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        display: block;
+        height: 2px;
+        width: 120px;
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+}
+
+.blog-lead {
+    position: relative;
+    line-height: inherit;
+    font-style: italic;
+    font-weight: normal;
+    padding: 10px 0 25px;
+    &:after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        display: block;
+        height: 2px;
+        width: 120px;
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+}
