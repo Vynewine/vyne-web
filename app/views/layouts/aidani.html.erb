@@ -96,11 +96,23 @@
               }
           });
 
-          var bindFacebookEvents = function() {
-              $(document).on('page:load', function() {
+          var bindFacebookEvents = function () {
+              $(document).on('page:fetch', saveFacebookRoot).on('page:change', restoreFacebookRoot).on('page:load', function () {
                   return typeof FB !== "undefined" && FB !== null ? FB.XFBML.parse() : void 0;
               });
               return fb_events_bound = true;
+          };
+
+          var saveFacebookRoot = function () {
+              return fb_root = $('#fb-root').detach();
+          };
+
+          var restoreFacebookRoot = function () {
+              if ($('#fb-root').length > 0) {
+                  return $('#fb-root').replaceWith(fb_root);
+              } else {
+                  return $('body').append(fb_root);
+              }
           };
 
           var loadFacebookSDK = function() {
