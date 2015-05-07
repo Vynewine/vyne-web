@@ -7,27 +7,33 @@ var MatchByFood = React.createClass({
         return (
             <div>
                 Matching Food:
-                <Router.RouteHandler key={name}/>
+                <Router.RouteHandler key={name} {...this.props}/>
             </div>
         );
     }
 });
 
 MatchByFood.Category = React.createClass({
-    handleCategorySelection: function (e) {
-        var category = $(e.target).data('category');
-        console.log(category);
-        VyneRouter.transitionTo('match-by-food-type');
+    handleCategorySelection: function (categoryId) {
+        VyneRouter.transitionTo('match-by-food-type', {id: categoryId});
     },
     render: function () {
+
+        var foods = [];
+
+        this.props.foods.map(function (food) {
+            foods.push(
+                <button key={food.id} className="btn btn-primary"
+                        onClick={this.handleCategorySelection.bind(this, food.id)}>
+                    {food.name}
+                </button>
+            );
+        }.bind(this));
+
         return (
             <div>
                 <div className="row">
-                    <div className="col-xs-1" onClick={this.handleCategorySelection} data-category="meat">Meat</div>
-                    <div className="col-xs-1" onClick={this.handleCategorySelection} data-category="fish">Fish</div>
-                    <div className="col-xs-1" onClick={this.handleCategorySelection} data-category="vegetable">
-                        Vegetable
-                    </div>
+                    {foods}
                 </div>
             </div>
         );
@@ -35,16 +41,59 @@ MatchByFood.Category = React.createClass({
 });
 
 MatchByFood.Type = React.createClass({
-    handleTypeSelection: function (e) {
-        VyneRouter.transitionTo('match-by-food-preparation');
+    componentWillMount: function () {
+
+        if (this.props.params && this.props.params.id) {
+            this.setState({
+                foodCategoryId: this.props.params.id
+            });
+        }
+
+        if (this.props.foods) {
+
+            var foodTypes = [];
+
+            this.props.foods.map(function (food) {
+                if (food.id.toString() === this.props.params.id) {
+                    foodTypes = food.types;
+                }
+            }.bind(this));
+
+            this.setState({
+                foodTypes: foodTypes
+            })
+        }
     },
+    handleTypeSelection: function (type) {
+
+        if(type.hasPreparation) {
+            VyneRouter.transitionTo('match-by-food-preparation');
+        } else {
+            VyneRouter.transitionTo('match-by-food-review');
+        }
+    },
+
     render: function () {
+
+        if (!this.state.foodTypes) {
+            return false;
+        }
+
+        var foodTypes = [];
+
+        this.state.foodTypes.map(function (type) {
+            foodTypes.push(
+                <button key={type.id} className="btn btn-primary"
+                        onClick={this.handleTypeSelection.bind(this, type)}>
+                    {type.name}
+                </button>
+            );
+        }.bind(this));
+
         return (
             <div>
                 <div className="row">
-                    <div className="col-xs-1" onClick={this.handleTypeSelection}>Beef</div>
-                    <div className="col-xs-1" onClick={this.handleTypeSelection}>Chicken</div>
-                    <div className="col-xs-1" onClick={this.handleTypeSelection}>Lamb</div>
+                    {foodTypes}
                 </div>
             </div>
         );
@@ -52,16 +101,27 @@ MatchByFood.Type = React.createClass({
 });
 
 MatchByFood.Preparation = React.createClass({
-    handlePreparationSelection: function (e) {
+    handlePreparationSelection: function (preparation) {
+        console.log(preparation);
         VyneRouter.transitionTo('match-by-food-review');
     },
     render: function () {
+
+        var preparationTypes = [];
+
+        this.props.preparations.map(function(preparation){
+            preparationTypes.push(
+                <button key={preparation.id} className="btn btn-primary"
+                        onClick={this.handlePreparationSelection.bind(this, preparation)}>
+                    {preparation.name}
+                </button>
+            );
+        }.bind(this));
+
         return (
             <div>
                 <div className="row">
-                    <div className="col-xs-1" onClick={this.handlePreparationSelection}>Grill</div>
-                    <div className="col-xs-1" onClick={this.handlePreparationSelection}>BBQ</div>
-                    <div className="col-xs-1" onClick={this.handlePreparationSelection}>Roasted</div>
+                    {preparationTypes}
                 </div>
             </div>
         );
@@ -71,7 +131,7 @@ MatchByFood.Preparation = React.createClass({
 MatchByFood.Review = React.createClass({
     handleAddMoreFoodOptions: function (e) {
         e.preventDefault();
-        VyneRouter.transitionTo('match-by-food-type');
+        VyneRouter.transitionTo('match-by-food');
     },
     handleFoodPreferencesComplete: function (e) {
         e.preventDefault();
@@ -100,5 +160,24 @@ MatchByFood.Review = React.createClass({
                 </div>
             </div>
         );
+    }
+});
+
+var MatchByFoodContainer = Marty.createContainer(MatchByFood, {
+    listenTo: [FoodStore],
+    fetch: {
+        foods: function () {
+            return FoodStore.getFoods();
+        },
+        preparations: function () {
+            return FoodStore.getPreparations();
+        }
+    },
+    pending: function () {
+        return <div className='loading'>Loading...</div>;
+    },
+    failed: function (errors) {
+        console.log(errors)
+        return <div className='error'>Failed to load. {errors}</div>;
     }
 });

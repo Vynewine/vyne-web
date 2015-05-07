@@ -12,27 +12,65 @@ var renderApp = function () {
                 <Route name="check-postcode" handler={CheckPostcodeNewContainer}/>
                 <Route name="check-availability" path="/check-availability/" handler={CheckAvailabilityContainer}/>
                 <Route name="choose-bottles" handler={ChooseBottlesContainer}/>
-                <Route name="match-by" handler={MatchBy} />
-                <Route name="match-by-food" path="/match-by/food" handler={MatchByFood}>
+
+                <Route name="match-by" handler={MatchBy}/>
+
+                /**
+                 * Matching by Food
+                 */
+
+                <Route name="match-by-food" path="/match-by/food" handler={MatchByFoodContainer}>
                     <DefaultRoute handler={MatchByFood.Category}/>
-                    <Route name="match-by-food-category" path="/match-by/food/category" handler={MatchByFood.Category}/>
-                    <Route name="match-by-food-type" path="/match-by/food/type" handler={MatchByFood.Type}/>
-                    <Route name="match-by-food-preparation" path="/match-by/food/preparation" handler={MatchByFood.Preparation}/>
+                    <Route name="match-by-food-type" path="type/:id" handler={MatchByFood.Type}/>
+                    <Route name="match-by-food-preparation" path="/match-by/food/preparation"
+                           handler={MatchByFood.Preparation}/>
                     <Route name="match-by-food-review" path="/match-by/food/review" handler={MatchByFood.Review}/>
                 </Route>
+
+                /**
+                * Matching by Occasion
+                */
+
                 <Route name="match-by-occasion" path="/match-by/occasion" handler={MatchByOccasion}>
                     <DefaultRoute handler={MatchByOccasion.Occasions}/>
-                    <Route name="match-by-occasion-select-occasion" path="/match-by/occasion/select-occasion" handler={MatchByOccasion.Occasions}/>
-                    <Route name="match-by-occasion-select-type" path="/match-by/occasion/select-wine-type" handler={MatchByOccasion.WineTypes}/>
+                    <Route name="match-by-occasion-select-occasion" path="/match-by/occasion/select-occasion"
+                           handler={MatchByOccasion.Occasions}/>
+                    <Route name="match-by-occasion-select-type" path="/match-by/occasion/select-wine-type"
+                           handler={MatchByOccasion.WineTypes}/>
                 </Route>
+
+                /**
+                 * Matching by Specific Wine
+                */
+
                 <Route name="match-by-specific-wine" path="/match-by/specific-wine" handler={MatchBySpecificWine}/>
+
+                /**
+                * Cart Review
+                */
+
                 <Route name="cart-review" path="/cart-review" handler={CartReviewContainer}/>
+
+                /**
+                * User Account
+                */
+
                 <Route name="account" path="/account" handler={Account}>
                     <DefaultRoute handler={Account.Register}/>
                     <Route name="account-register" path="/account/register" handler={Account.Register}/>
                     <Route name="account-login" path="/account/login" handler={Account.Login}/>
                 </Route>
+
+                /**
+                * Address Confirmation
+                */
+
                 <Route name="address" path="/address" handler={Address}/>
+
+                /**
+                * Payment
+                */
+
                 <Route name="payment" path="/payment" handler={Payment}/>
             </Route>
         );
