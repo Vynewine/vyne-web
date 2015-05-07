@@ -84,10 +84,11 @@
 
       <!-- Facebook -->
       <script type="text/javascript">
+          var bindFacebookEvents, fb_events_bound, fb_root, initializeFacebookSDK, loadFacebookSDK, restoreFacebookRoot, saveFacebookRoot;
 
-          var fb_root = null;
+          fb_root = null;
 
-          var fb_events_bound = false;
+          fb_events_bound = false;
 
           $(function() {
               loadFacebookSDK();
@@ -96,18 +97,18 @@
               }
           });
 
-          var bindFacebookEvents = function () {
-              $(document).on('page:fetch', saveFacebookRoot).on('page:change', restoreFacebookRoot).on('page:load', function () {
+          bindFacebookEvents = function() {
+              $(document).on('page:fetch', saveFacebookRoot).on('page:change', restoreFacebookRoot).on('page:load', function() {
                   return typeof FB !== "undefined" && FB !== null ? FB.XFBML.parse() : void 0;
               });
               return fb_events_bound = true;
           };
 
-          var saveFacebookRoot = function () {
+          saveFacebookRoot = function() {
               return fb_root = $('#fb-root').detach();
           };
 
-          var restoreFacebookRoot = function () {
+          restoreFacebookRoot = function() {
               if ($('#fb-root').length > 0) {
                   return $('#fb-root').replaceWith(fb_root);
               } else {
@@ -115,12 +116,12 @@
               }
           };
 
-          var loadFacebookSDK = function() {
+          loadFacebookSDK = function() {
               window.fbAsyncInit = initializeFacebookSDK;
               return $.getScript("//connect.facebook.net/en_US/all.js#xfbml=1");
           };
 
-          var initializeFacebookSDK = function() {
+          initializeFacebookSDK = function() {
               return FB.init({
                   appId: '1585515301707227',
                   channelUrl: '<%= request.protocol %><%= request.host_with_port %>/channel.html',

@@ -2490,4 +2490,7 @@ body.enable-preloader {
  * ========================================
  */
 
-.fb-comments, .fb-comments iframe[style], .fb_iframe_widget > span[style] {width: 100% !important;}
+@media (max-width: 414px) {
+    .fb_iframe_widget > span[style] {width: 100% !important;}
+}
+
