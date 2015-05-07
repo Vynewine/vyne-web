@@ -2483,3 +2483,11 @@ body.enable-preloader {
         background-color: rgba(0, 0, 0, 0.1);
     }
 }
+
+/**
+ * ========================================
+ * FACEBOOK LIKE BUTTON WIDTH FIX
+ * ========================================
+ */
+
+.fb-comments, .fb-comments iframe[style], .fb_iframe_widget > span[style] {width: 100% !important;}
