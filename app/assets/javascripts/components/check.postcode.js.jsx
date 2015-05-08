@@ -8,6 +8,11 @@ var CheckPostcodeNew = React.createClass({
     contextTypes: {
         router: React.PropTypes.func
     },
+    componentWillMount: function () {
+        if(this.props.cartIsFull) {
+            VyneRouter.transitionTo('cart-review');
+        }
+    },
     componentDidMount: function () {
         if (this.props.postcode !== '') {
             this.setState({postcode: this.props.postcode});
@@ -59,13 +64,16 @@ var CheckPostcodeNew = React.createClass({
 });
 
 var CheckPostcodeNewContainer = Marty.createContainer(CheckPostcodeNew, {
-    listenTo: AddressStore,
+    listenTo: [AddressStore, CartStore],
     fetch: {
         postcode: function() {
             return AddressStore.getPostcode()
         },
         isValidPostcode: function(){
             return AddressStore.isValidPostcode()
+        },
+        cartIsFull: function() {
+            return CartStore.cartIsFull();
         }
     }
 });

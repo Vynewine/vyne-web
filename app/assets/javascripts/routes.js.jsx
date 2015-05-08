@@ -34,7 +34,7 @@ var renderApp = function () {
 
                     <Route name="match-by-occasion" path="/match-by/occasion" handler={MatchByOccasionContainer}>
                         <DefaultRoute handler={MatchByOccasion.Occasions}/>
-                        <Route name="match-by-occasion-select-type" path="/match-by/occasion/select-wine-type"
+                        <Route name="match-by-occasion-select-type" path="select-wine-type/:occasionId"
                                handler={MatchByOccasion.WineTypes}/>
                     </Route>
 

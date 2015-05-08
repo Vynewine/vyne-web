@@ -40,6 +40,10 @@ MatchBy.Options = React.createClass({
         VyneRouter.transitionTo('match-by-specific-wine');
     },
     render: function () {
+        if(this.props.cartIsFull) {
+            return false;
+        }
+
         return (
             <div>
                 <div className="row">
@@ -89,6 +93,9 @@ var MatchByContainer = Marty.createContainer(MatchBy, {
         },
         cart: function() {
             return CartStore.getCart();
+        },
+        cartIsFull: function() {
+            return CartStore.cartIsFull();
         }
     },
     pending: function () {

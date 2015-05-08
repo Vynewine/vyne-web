@@ -15,8 +15,7 @@ var MatchByOccasion = React.createClass({
 
 MatchByOccasion.Occasions = React.createClass({
     handleOccasionChoice: function (occasion) {
-        console.log(occasion);
-        VyneRouter.transitionTo('match-by-occasion-select-type');
+        VyneRouter.transitionTo('match-by-occasion-select-type', {occasionId: occasion.id});
     },
     render: function () {
 
@@ -48,8 +47,14 @@ MatchByOccasion.Occasions = React.createClass({
 
 MatchByOccasion.WineTypes = React.createClass({
     handleTypeSelection: function (wineType) {
-        console.log(wineType);
-        VyneRouter.transitionTo('cart-review');
+
+        var cartItem = this.props.currentCartItem;
+
+        cartItem.occasion_id = this.props.params.occasionId;
+        cartItem.type_id = wineType.id;
+
+        CartActionCreators.createOrUpdateItem(cartItem);
+
     },
     render: function () {
 
@@ -57,7 +62,7 @@ MatchByOccasion.WineTypes = React.createClass({
             return false;
         }
 
-        wineTypes = [];
+        var wineTypes = [];
 
         this.props.wineTypes.map(function (wineTpe) {
             wineTypes.push(
@@ -81,13 +86,16 @@ MatchByOccasion.WineTypes = React.createClass({
 });
 
 var MatchByOccasionContainer = Marty.createContainer(MatchByOccasion, {
-    listenTo: [OccasionStore],
+    listenTo: [OccasionStore, CartStore],
     fetch: {
         occasions: function () {
             return OccasionStore.getOccasions();
         },
         wineTypes: function () {
             return OccasionStore.getWineTypes();
+        },
+        currentCartItem: function() {
+            return CartStore.getCurrentCartItem();
         }
     },
     pending: function () {

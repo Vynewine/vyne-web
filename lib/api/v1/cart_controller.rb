@@ -71,6 +71,18 @@ class API::V1::CartController < ApplicationController
       @cart_item.category_id = params[:category_id]
     end
 
+    unless params[:occasion_id].blank?
+      @cart_item.occasion_id = params[:occasion_id]
+    end
+
+    unless params[:type_id].blank?
+      @cart_item.type_id = params[:type_id]
+    end
+
+    unless params[:specific_wine].blank?
+      @cart_item.specific_wine = params[:specific_wine]
+    end
+
 
     if @cart_item.save
 

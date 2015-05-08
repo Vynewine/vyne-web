@@ -7,9 +7,12 @@ var MatchBySpecificWine = React.createClass({
     handleSpecificWineChange: function (event) {
         this.setState({specificWine: event.target.value});
     },
-    handleSpecificWineSelection: function(e) {
-        e.preventDefault();
-        VyneRouter.transitionTo('cart-review');
+    handleSpecificWineSelection: function() {
+        var cartItem = this.props.currentCartItem;
+
+        cartItem.specific_wine = this.state.specificWine;
+
+        CartActionCreators.createOrUpdateItem(cartItem);
     },
     render: function() {
         return (

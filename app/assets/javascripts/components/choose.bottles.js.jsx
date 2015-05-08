@@ -20,6 +20,11 @@ var ChooseBottles = React.createClass({
         VyneRouter.transitionTo('match-by');
     },
     render: function () {
+
+        if(this.props.cartIsFull) {
+            return false;
+        }
+
         return (
             <div>
                 <div className="row">
