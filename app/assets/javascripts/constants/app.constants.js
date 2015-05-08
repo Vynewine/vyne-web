@@ -18,9 +18,6 @@ var PromotionConstants = Marty.createConstants([
 
 var CartConstants = Marty.createConstants([
     'SET_CART',
-    'RESET_CART'
-]);
-
-var CartItemsConstants = Marty.createConstants([
-    'SET_CART_ITEM'
+    'RESET_CART',
+    'SET_CURRENT_CART_ITEM'
 ]);

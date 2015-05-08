@@ -163,17 +163,15 @@ CheckAvailability.BlockDelivery = React.createClass({
         }).then(function() {
 
         });
-
-
     },
     selectSlot: function (event) {
         var slot = $(event.target).find("option:selected").data('value');
         this.setState({
             selectedSlot: slot,
             selectedSlotText: moment(slot.date).format('dddd MMMM Do') + ' between ' + slot.from + ' and ' + slot.to,
-            slotDate: slot.date,
-            slotFrom: slot.from,
-            slotTo: slot.to,
+            date: slot.date,
+            from: slot.from,
+            to: slot.to,
             slotWarehouse: slot.warehouse_id
         });
 

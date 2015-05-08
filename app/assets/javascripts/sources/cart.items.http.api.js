@@ -2,12 +2,10 @@ var CartItemsHttpApi = Marty.createStateSource({
     type: 'http',
     id: 'CartItemsHttpApi',
     baseUrl: '/api/v1/cart',
-    create: function (cartId, params) {
+    create: function (cartId, cartItem) {
         return this.post({
             url: '/' + cartId + '/create_item',
-            body: {
-                category_id: params.categoryId
-            }
+            body: cartItem
         });
     },
     update: function (cartId, params) {

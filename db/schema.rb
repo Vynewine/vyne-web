@@ -102,7 +102,6 @@ ActiveRecord::Schema.define(version: 20150505092743) do
 
   create_table "cart_items", force: true do |t|
     t.integer  "cart_id",       null: false
-    t.integer  "wine_id"
     t.integer  "occasion_id"
     t.integer  "type_id"
     t.integer  "category_id"
@@ -116,7 +115,6 @@ ActiveRecord::Schema.define(version: 20150505092743) do
   add_index "cart_items", ["cart_id"], :name => "index_cart_items_on_cart_id"
   add_index "cart_items", ["occasion_id"], :name => "index_cart_items_on_occasion_id"
   add_index "cart_items", ["type_id"], :name => "index_cart_items_on_type_id"
-  add_index "cart_items", ["wine_id"], :name => "index_cart_items_on_wine_id"
 
   create_table "carts", force: true do |t|
     t.integer  "warehouse_id"

@@ -2,6 +2,9 @@ var Main = React.createClass({
     contextTypes: {
         router: React.PropTypes.func
     },
+    componentWillMount: function() {
+        CartActionCreators.initiate();
+    },
     componentDidMount: function () {
 
     },

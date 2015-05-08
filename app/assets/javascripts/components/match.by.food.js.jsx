@@ -8,14 +8,15 @@ var MatchByFood = React.createClass({
             <div>
                 Matching Food:
                 <Router.RouteHandler key={name} {...this.props}/>
+                {this.props.currentItem}
             </div>
         );
     }
 });
 
 MatchByFood.Category = React.createClass({
-    handleCategorySelection: function (categoryId) {
-        VyneRouter.transitionTo('match-by-food-type', {id: categoryId});
+    handleCategorySelection: function (foodCategoryId) {
+        VyneRouter.transitionTo('match-by-food-type', {foodCategoryId: foodCategoryId});
     },
     render: function () {
 
@@ -43,9 +44,9 @@ MatchByFood.Category = React.createClass({
 MatchByFood.Type = React.createClass({
     componentWillMount: function () {
 
-        if (this.props.params && this.props.params.id) {
+        if (this.props.params && this.props.params.foodCategoryId) {
             this.setState({
-                foodCategoryId: this.props.params.id
+                foodCategoryId: this.props.params.foodCategoryId
             });
         }
 
@@ -54,7 +55,7 @@ MatchByFood.Type = React.createClass({
             var foodTypes = [];
 
             this.props.foods.map(function (food) {
-                if (food.id.toString() === this.props.params.id) {
+                if (food.id.toString() === this.props.params.foodCategoryId) {
                     foodTypes = food.types;
                 }
             }.bind(this));
@@ -67,8 +68,19 @@ MatchByFood.Type = React.createClass({
     handleTypeSelection: function (type) {
 
         if(type.hasPreparation) {
-            VyneRouter.transitionTo('match-by-food-preparation');
+
+            VyneRouter.transitionTo('match-by-food-preparation', {foodId: type.id});
+
         } else {
+
+            var cartItem = this.props.currentCartItem;
+
+            cartItem.food_items.push({
+                food_id: type.id
+            });
+
+            CartActionCreators.updateCurrentCartItem(cartItem);
+
             VyneRouter.transitionTo('match-by-food-review');
         }
     },
@@ -102,7 +114,16 @@ MatchByFood.Type = React.createClass({
 
 MatchByFood.Preparation = React.createClass({
     handlePreparationSelection: function (preparation) {
-        console.log(preparation);
+
+        var cartItem = this.props.currentCartItem;
+
+        cartItem.food_items.push({
+            food_id: this.props.params.foodId,
+            preparation_id: preparation.id
+        });
+
+        CartActionCreators.updateCurrentCartItem(cartItem);
+
         VyneRouter.transitionTo('match-by-food-review');
     },
     render: function () {
@@ -129,18 +150,20 @@ MatchByFood.Preparation = React.createClass({
 });
 
 MatchByFood.Review = React.createClass({
-    handleAddMoreFoodOptions: function (e) {
-        e.preventDefault();
+    handleAddMoreFoodOptions: function () {
         VyneRouter.transitionTo('match-by-food');
     },
-    handleFoodPreferencesComplete: function (e) {
-        e.preventDefault();
+    handleFoodPreferencesComplete: function () {
+
+        CartActionCreators.createOrUpdateItem(this.props.currentCartItem);
+
         VyneRouter.transitionTo('cart-review');
     },
     render: function () {
         return (
             <div>
                 <div className="row">
+                    {JSON.stringify(this.props.currentCartItem)}
                     <div className="col-sm-12">
                         <button
                             className="btn btn-primary"
@@ -164,13 +187,16 @@ MatchByFood.Review = React.createClass({
 });
 
 var MatchByFoodContainer = Marty.createContainer(MatchByFood, {
-    listenTo: [FoodStore],
+    listenTo: [FoodStore, CartStore],
     fetch: {
         foods: function () {
             return FoodStore.getFoods();
         },
         preparations: function () {
             return FoodStore.getPreparations();
+        },
+        currentCartItem: function() {
+            return CartStore.getCurrentCartItem();
         }
     },
     pending: function () {

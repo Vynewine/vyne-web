@@ -64,16 +64,30 @@ class API::V1::CartController < ApplicationController
   def create_item
 
     @cart_item = CartItem.new({
-                                 cart_id: params[:cart_id]
-                             })
+                                  cart_id: params[:cart_id]
+                              })
 
     unless params[:category_id].blank?
       @cart_item.category_id = params[:category_id]
     end
 
+
     if @cart_item.save
+
+      unless params[:food_items].blank?
+        params[:food_items].each do |food_item|
+
+          FoodItem.create!(
+              :food_id => food_item[:food_id],
+              :preparation_id => food_item[:preparation_id],
+              :cart_item => @cart_item
+          )
+
+        end
+      end
+
       @cart = @cart_item.cart
-      render :show_item
+      render :show
     else
       render :json => {
                  status: :failure,
@@ -119,6 +133,10 @@ class API::V1::CartController < ApplicationController
 
     unless params[:postcode].blank?
       cart.postcode = params[:postcode]
+    end
+
+    unless params[:warehouse_id].blank?
+      cart.warehouse_id = params[:warehouse_id]
     end
 
     if user_signed_in?

@@ -8,17 +8,27 @@ var CartActionCreators = Marty.createActionCreators({
                 (function (res) {
                     if (res.status === 200) {
                         this.dispatch(CartConstants.SET_CART, res.body.data.cart);
+
+                        if(res.body.data.cart.cart_items && res.body.data.cart.cart_items.length) {
+                            VyneRouter.transitionTo('cart-review');
+                        }
+
                     } else {
                         if (res.status === 404) {
                             CartCookieApi.resetCartId();
+                            VyneRouter.transitionTo('/');
+                        } else {
+                            this.dispatch(ErrorConstants.SET_ERRORS, res.status);
                         }
-                        this.dispatch(ErrorConstants.SET_ERRORS, res.status);
+
                     }
 
                 }).bind(this)
             ).catch(function (err) {
                     this.dispatch(ErrorConstants.SET_ERRORS, err.message);
                 }.bind(this));
+        } else {
+            VyneRouter.transitionTo('/');
         }
     },
     createOrUpdate: function (params) {
@@ -36,6 +46,7 @@ var CartActionCreators = Marty.createActionCreators({
             (function (res) {
                 if (res.status === 200) {
                     this.dispatch(CartConstants.SET_CART, res.body.data.cart);
+
                     VyneRouter.transitionTo('choose-bottles');
                 } else if (res.status === 404) {
                     this.dispatch(CartConstants.RESET_CART);
@@ -49,29 +60,31 @@ var CartActionCreators = Marty.createActionCreators({
                 this.dispatch(ErrorConstants.SET_ERRORS, err.message);
             }.bind(this));
     },
-    createOrUpdateItem: function (params) {
+    createOrUpdateItem: function (cartItem) {
 
         var cartId = CartCookieApi.getcartId();
-        var cartItemId = params.itemId;
+        var cartItemId = cartItem.itemId;
         var cartRequest;
 
         if (cartItemId) {
-            cartRequest = CartItemsHttpApi.update(cartId, params)
+            cartRequest = CartItemsHttpApi.update(cartId, cartItem)
         } else {
-            cartRequest = CartItemsHttpApi.create(cartId, params)
+            cartRequest = CartItemsHttpApi.create(cartId, cartItem)
         }
 
         return cartRequest.then(function (res) {
             if (res.status === 200) {
-                this.dispatch(CartConstants.SET_CART, res.body.data.cart, res.body.data.cart_item);
-                VyneRouter.transitionTo('match-by');
+                this.dispatch(CartConstants.SET_CART, res.body.data.cart);
+                VyneRouter.transitionTo('cart-review');
             } else {
-
                 this.dispatch(ErrorConstants.SET_ERRORS, res.body.errors ? res.body.errors : [res.status]);
             }
         }.bind(this))
             .catch(function (err) {
                 this.dispatch(ErrorConstants.SET_ERRORS, err.message);
             }.bind(this));
+    },
+    updateCurrentCartItem: function(cartItem) {
+        this.dispatch(CartConstants.SET_CURRENT_CART_ITEM, cartItem);
     }
 });

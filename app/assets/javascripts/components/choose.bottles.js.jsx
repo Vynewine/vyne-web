@@ -1,16 +1,23 @@
 var ChooseBottles = React.createClass({
-    componentDidMount: function () {
+    componentWillMount: function () {
         if(!this.props.cart) {
             VyneRouter.transitionTo('/');
+        }
+
+        if(this.props.cartIsFull) {
+            VyneRouter.transitionTo('cart-review');
         }
     },
     chooseBottle: function (id, e) {
         e.preventDefault();
 
-        CartActionCreators.createOrUpdateItem({
-            categoryId: id,
-            itemId: this.props.currentCartItemId
-        });
+        var cartItem = this.props.currentCartItem;
+
+        cartItem.category_id = id;
+
+        CartActionCreators.updateCurrentCartItem(cartItem);
+
+        VyneRouter.transitionTo('match-by');
     },
     render: function () {
         return (
@@ -60,10 +67,13 @@ var ChooseBottlesContainer = Marty.createContainer(ChooseBottles, {
     listenTo: CartStore,
     fetch: {
         cart: function() {
-            return CartStore.getCart()
+            return CartStore.getCart();
         },
-        currentCartItemId: function() {
-            return CartStore.currentCartItemId()
+        currentCartItem: function() {
+            return CartStore.getCurrentCartItem();
+        },
+        cartIsFull: function() {
+            return CartStore.cartIsFull();
         }
     }
 });

@@ -7,38 +7,39 @@ var MatchByOccasion = React.createClass({
         return (
             <div>
                 Great occasion
-                <Router.RouteHandler key={name}/>
+                <Router.RouteHandler key={name} {...this.props}/>
             </div>
         );
     }
 });
 
 MatchByOccasion.Occasions = React.createClass({
-    handleOccasionChoice: function (e) {
-        e.preventDefault();
+    handleOccasionChoice: function (occasion) {
+        console.log(occasion);
         VyneRouter.transitionTo('match-by-occasion-select-type');
     },
     render: function () {
+
+        if (!this.props.occasions) {
+            return false;
+        }
+
+        var occasions = [];
+
+        this.props.occasions.map(function (occasion) {
+            occasions.push(
+                <button key={occasion.id} className="btn btn-primary"
+                        onClick={this.handleOccasionChoice.bind(this, occasion)}>
+                    {occasion.name}
+                </button>
+            );
+        }.bind(this));
+
+
         return (
             <div>
-
                 <div className="row">
-                    <div className="col-sm-12">
-                        <button
-                            className="btn btn-primary"
-                            onClick={this.handleOccasionChoice}
-                            >Solo
-                        </button>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-sm-12">
-                        <button
-                            className="btn btn-primary"
-                            onClick={this.handleOccasionChoice}
-                            >Date
-                        </button>
-                    </div>
+                    {occasions}
                 </div>
             </div>
         );
@@ -46,33 +47,54 @@ MatchByOccasion.Occasions = React.createClass({
 });
 
 MatchByOccasion.WineTypes = React.createClass({
-    handleTypeSelection: function (e) {
-        e.preventDefault();
+    handleTypeSelection: function (wineType) {
+        console.log(wineType);
         VyneRouter.transitionTo('cart-review');
     },
     render: function () {
+
+        if (!this.props.wineTypes) {
+            return false;
+        }
+
+        wineTypes = [];
+
+        this.props.wineTypes.map(function (wineTpe) {
+            wineTypes.push(
+                <button key={wineTpe.id} className="btn btn-primary"
+                        onClick={this.handleTypeSelection.bind(this, wineTpe)}>
+                    {wineTpe.name}
+                </button>
+            );
+
+        }.bind(this));
+
         return (
             <div>
 
                 <div className="row">
-                    <div className="col-sm-12">
-                        <button
-                            className="btn btn-primary"
-                            onClick={this.handleTypeSelection}
-                            >Red
-                        </button>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-sm-12">
-                        <button
-                            className="btn btn-primary"
-                            onClick={this.handleTypeSelection}
-                            >White
-                        </button>
-                    </div>
+                    {wineTypes}
                 </div>
             </div>
         );
+    }
+});
+
+var MatchByOccasionContainer = Marty.createContainer(MatchByOccasion, {
+    listenTo: [OccasionStore],
+    fetch: {
+        occasions: function () {
+            return OccasionStore.getOccasions();
+        },
+        wineTypes: function () {
+            return OccasionStore.getWineTypes();
+        }
+    },
+    pending: function () {
+        return <div className='loading'>Loading...</div>;
+    },
+    failed: function (errors) {
+        console.log(errors);
+        return <div className='error'>Failed to load. {errors}</div>;
     }
 });
